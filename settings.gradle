@@ -2,5 +2,5 @@ rootProject.name = 'pso-ox'
 
 include ':pso-ox-core'
 include ':pso-ox-berlioz'
-//include ':pso-ox-diffx'
+include ':pso-ox-diffx'
 include ':pso-ox-schematron'
