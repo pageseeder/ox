@@ -49,7 +49,7 @@ public class SchematronCommand implements Command<Result> {
   /**
    * The resource path to the builtin schematron.
    */
-  private static final String BUILTIN_SCHEMA = "com/pageseeder/ox/schematron/builtin/" + DEFAULT_SCHEMA;
+  private static final String BUILTIN_SCHEMA = "org/pageseeder/ox/schematron/builtin/" + DEFAULT_SCHEMA;
 
   /**
    * The model used by this command.
