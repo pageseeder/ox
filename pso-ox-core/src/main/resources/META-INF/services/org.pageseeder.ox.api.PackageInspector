@@ -1,0 +1,4 @@
+org.pageseeder.ox.inspector.HTMLInspector
+org.pageseeder.ox.inspector.PSMLInspector
+org.pageseeder.ox.inspector.ZipInspector
+org.pageseeder.ox.inspector.FileInspector

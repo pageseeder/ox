@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document id="329717" schemaversion="0.9" type="legislation" date="2015-10-24T01:07:50+11:00" status="Published" version="current" level="processed" edit="true">
+	<documentinfo>
+		<uri id="329717" scheme="https" host="ps.timebase.com.au" port="443" path="/ps/lawone/cth/website/content/legislation/act/2009/0001/legislation.psml" decodedpath="/ps/lawone/cth/website/content/legislation/act/2009/0001/legislation.psml" mediatype="application/vnd.pageseeder.psml+xml" documenttype="legislation" created="2015-10-19T06:12:33+11:00" modified="2015-10-24T01:07:50+11:00" docid="cth0113046" title="Appropriation (Nation Building and Jobs) Act (No. 1) 2008-2009">
+			<displaytitle>Appropriation (Nation Building and Jobs) Act (No. 1) 2008-2009</displaytitle>
+		</uri>
+		<reversexrefs>
+			<reversexref uriid="303671" href="../../../../../../../cth/website/content/legislation/act/2013/0132/legislation.psml" frag="legislation-affected-45" urititle="Statute Stocktake (Appropriations) Act 2013" docid="cth0153363" id="3724974" title="Affected By" type="none" forwardtype="none"/>
+			<reversexref uriid="1902219" href="../../../../../../../cth/website/content/legislation/bill/2009/id_112974/legislation.psml" frag="legislation-details" urititle="Appropriation (Nation Building and Jobs) Bill (No. 1) 2008-2009 [No. 2]" docid="cth0112974" id="4469576" title="Enacted From" type="none" forwardtype="none"/>
+			<reversexref uriid="2085258" href="../../../../../../../cth/website/content/legislation/bill/2013/id_152179/legislation.psml" frag="legislation-affected-45" urititle="Statute Stocktake (Appropriations) Bill 2013" docid="cth0152179" id="4640511" title="Affected By" type="none" forwardtype="none"/>
+		</reversexrefs>
+	</documentinfo>
+	<fragmentinfo>
+		<locator id="1289864" fragment="329717-legislation-details" editid="3773314" modified="2015-10-23T19:50:33+11:00"/>
+	</fragmentinfo>
+	<section id="329717-title" title="Title" lockstructure="true" fragmenttype="legislation-tite">
+		<fragment id="329717-title" type="legislation-title">
+			<heading level="1">Appropriation (Nation Building and Jobs) Act (No. 1) 2008-2009</heading>
+		</fragment>
+	</section>
+	<section id="329717-legislation-details" title="Details" lockstructure="true" fragmenttype="legislation-details">
+		<properties-fragment id="329717-legislation-details" type="legislation-details">
+			<property name="legislation-jurisdiction" datatype="string" title="Jurisdiction" value="CTH"/>
+			<property name="legislation-type" datatype="string" title="Type" value="Act"/>
+			<property name="legislation-year" datatype="string" title="Year" value="2009"/>
+			<property name="legislation-number" datatype="string" title="Number" value="1"/>
+			<property name="legislation-principal" datatype="string" title="Principal" value="Yes"/>
+			<property name="legislation-timebase-id" datatype="string" title="TimeBase Id" value="cth/act:2009/1"/>
+			<property name="legislation-lawtracker-id" datatype="string" title="LawTracker Id" value="113046"/>
+			<property name="legislation-enacted-as" datatype="xref" title="Enacted as"/>
+			<property name="legislation-external-key" datatype="string" title="Ext. Key" value="C2009A00001"/>
+			<property name="legislation-subjects" datatype="xref" title="Subjects" count="n">
+				<xref id="3773315" title="" frag="default" reverselink="false" display="document" type="none" uriid="2236332" href="../../../../../../../subject/website/content/subjects/014-subject.psml" docid="sbjt14" urititle="Government" mediatype="application/vnd.pageseeder.psml+xml" documenttype="subject">Government</xref>
+				<xref id="3773316" title="" frag="default" reverselink="false" display="document" type="none" uriid="2236262" href="../../../../../../../subject/website/content/subjects/065-subject.psml" docid="sbjt65" urititle="Government : Appropriation" mediatype="application/vnd.pageseeder.psml+xml" documenttype="subject">Government : Appropriation</xref>
+			</property>
+			<property name="enabling-legislation" datatype="xref" title="Enabling Legislation" count="n"/>
+			<property name="legislation-create-timestamp" datatype="datetime" title="Create Date" value="2009-02-20T15:30:50"/>
+		</properties-fragment>
+	</section>
+	<section id="329717-legislation-status" title="Status" lockstructure="true" fragmenttype="legislation-status">
+		<properties-fragment id="329717-legislation-status" type="legislation-status">
+			<property name="legislation-status" datatype="string" title="Status" value="Repealed"/>
+			<property name="legislation-status-update-timestamp" datatype="datetime" title="Update Date" value="2009-02-20T15:30:50"/>
+		</properties-fragment>
+	</section>
+	<section id="329717-legislation-responsible-department" title="Responsible Departments" fragmenttype="legislation-responsible-department" lockstructure="false">
+		<fragment id="329717-responsible-department-1" type="legislation-responsible-department">
+			<para>Department <inline label="responsible-department"/>
+			</para>
+			<block label="richtext">Comment<block label="responsible-department-comment">
+					<para/>
+				</block>
+			</block>
+		</fragment>
+	</section>
+	<section id="329717-legislation-alternative-title" title="Alternative Titles" fragmenttype="legislation-alternative-title" lockstructure="false">
+		<properties-fragment id="329717-alternative-title-0" type="legislation-alternative-title">
+			<property name="alternative-title-text" datatype="string" title="Title" value=""/>
+			<property name="alternative-title-date" datatype="date" title="Rename Date" value=""/>
+		</properties-fragment>
+	</section>
+	<section id="329717-legislation-summary" title="Summary" lockstructure="true" fragmenttype="legislation-summary">
+		<fragment id="329717-legislation-summary" type="legislation-summary">
+			<para>This Act provides for the appropriation of funds to various measures announced as part of the Government's Nation Building and Jobs Plan. Full details of the measures in this Act are contained in the Explanatory Memorandum.<br/>The main purpose of the Act is to propose appropriations from the Consolidated Revenue Fund (CRF) for the ordinary annual services of the Government in relation to the Nation Building and Jobs Plan.<br/>Appropriations for the ordinary annual services of the Government must be contained in a separate act to other appropriations in accordance with sections 53 and 54 of the Australian Constitution. Other additional annual appropriations in relation to Nation Building and Jobs that are not for the ordinary annual services of the Government are proposed in Appropriation (Nation Building and Jobs) Act (No. 2) 2008-2009.</para>
+		</fragment>
+	</section>
+	<section id="329717-legislation-property" title="Properties" fragmenttype="legislation-property">
+		<fragment id="329717-legislation-property-1" type="legislation-property">
+			<para>Property Type <inline label="property-type">Assent</inline>
+			</para>
+			<para>Effective Date <inline label="property-effective-date">2009-02-18</inline>
+			</para>
+			<block label="richtext">Description<block label="property-description">
+					<para>Gazette No GN 8, 4 March 2009, p 507</para>
+				</block>
+			</block>
+			<para>Update Date <inline label="property-update-timestamp">2009-02-20T15:30:50</inline>
+			</para>
+		</fragment>
+	</section>
+	<section id="329717-legislation-commencement" title="Commencements" fragmenttype="legislation-commencement" lockstructure="false">
+		<fragment id="329717-legislation-commencement-1" type="legislation-commencement">
+			<para>Commencement Date <inline label="commencement-date">2009-02-18</inline>
+			</para>
+			<block label="richtext">Description<block label="commencement-description">
+					<para/>
+				</block>
+			</block>
+			<para>Commences <inline label="commencement-commences">Yes</inline>
+			</para>
+			<para>Update Date <inline label="commencement-update-timestamp">2009-02-23T10:21:44</inline>
+			</para>
+		</fragment>
+	</section>
+	<section id="329717-legislation-affected" title="Affected Legislation" fragmenttype="legislation-affected"/>
+	<section id="329717-legislation-modification" title="Modified Legislation" fragmenttype="legislation-modification"/>
+</document>

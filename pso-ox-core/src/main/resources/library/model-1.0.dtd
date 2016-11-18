@@ -1,0 +1,39 @@
+<!--;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-->
+<!--                                                                        -->
+<!-- Title:         OX DTD for model configuration file                     -->
+<!-- System:        OX                                                      -->
+<!-- Status:        Beta 2                                                  -->
+<!-- Description:   A schema for the defining the OX model                  -->
+<!-- Version:       1.0                                                     -->
+<!-- LastModified:  19 October 2016                                         -->
+<!-- Author(s):     Christophe Lauret                                       --> 
+<!--                Ciber Cai                                               -->
+<!--                                                                        -->
+<!--;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-->
+
+
+
+<!ELEMENT pipelines       (pipeline+ )                                   >
+<!ATTLIST pipelines       version         CDATA     #FIXED        "1.0"  
+                          processors      CDATA     #IMPLIED             >
+
+
+<!ELEMENT pipeline        (step+ )                                       >
+<!ATTLIST pipeline        name            CDATA     #REQUIRED 
+                          description     CDATA     #IMPLIED
+                          accepts         CDATA     #IMPLIED             >
+
+<!ELEMENT step            (parameter* )                                  >
+<!ATTLIST step            id              CDATA     #REQUIRED 
+                          name            CDATA     #IMPLIED 
+                          class           CDATA     #REQUIRED            
+                          callback        CDATA     #IMPLIED             >
+
+<!ELEMENT parameter                                 EMPTY                >
+<!ATTLIST parameter       name            CDATA     #REQUIRED
+                          value           CDATA     #REQUIRED            >
+                          
+<!ELEMENT output                                    EMPTY                > 
+<!ATTLIST output          file            CDATA     #IMPLIED
+                          folder          CDATA     #IMPLIED             >                         
+
