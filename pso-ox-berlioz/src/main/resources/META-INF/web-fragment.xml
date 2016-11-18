@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-fragment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd" id="WebAppFragment_ID" version="3.0"
+     metadata-complete="true">
+  
+  <!--  OX download filter -->   
+  <filter>
+    <filter-name>bzox-download</filter-name>
+    <filter-class>org.pageseeder.ox.berlioz.filter.OXDownload</filter-class>
+    <init-param>
+      <param-name>pattern</param-name>
+      <param-value>/bzox/download/</param-value>
+    </init-param>
+  </filter>
+ 
+  <!-- OX data handle servlet -->
+  <servlet>
+    <servlet-name>bzox-handle</servlet-name>
+    <servlet-class>org.pageseeder.ox.berlioz.servlet.OXHandleData</servlet-class>
+  </servlet>
+
+  <!-- OX status check servlet -->
+  <servlet>
+    <servlet-name>bzox-status-check</servlet-name>
+    <servlet-class>org.pageseeder.ox.berlioz.servlet.OXCheckStatus</servlet-class>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>bzox-handle</servlet-name>
+    <url-pattern>/bzox/handle</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>bzox-status-check</servlet-name>
+    <url-pattern>/bzox/check/status</url-pattern>
+  </servlet-mapping>
+
+  <filter-mapping>
+    <filter-name>bzox-download</filter-name>
+    <url-pattern>/bzox/download/*</url-pattern>
+  </filter-mapping>
+</web-fragment>
