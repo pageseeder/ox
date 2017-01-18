@@ -202,10 +202,12 @@ public final class Model implements XMLWritable {
 
   /**
    * Returns the default model (if only one defined)
+   * 
+   * Note: Before use this Method, check if the OXCOnfig model directory is defined.  
    */
   public static Model getDefault() {
     List<Model> models = listModels();
-    return models.isEmpty() ? null : models.get(0);
+    return models == null || models.isEmpty() ? null : models.get(0);
 
   }
 
@@ -222,9 +224,14 @@ public final class Model implements XMLWritable {
    */
   public static List<Model> listModels(boolean reload) {
     List<Model> models = new ArrayList<Model>();
+
+    System.out.println("Model Directory: " + getModelsDirectory().getAbsoluteFile());
     String[] names = getModelsDirectory().list(new FilenameFilter() {
       @Override
       public boolean accept(File dir, String name) {
+        System.out.println("Dir: " + dir.getAbsoluteFile());
+        System.out.println("Is Directory: " + dir.isDirectory());
+        System.out.println("Name: " + name);
         return dir != null && dir.isDirectory();
       }
     });
