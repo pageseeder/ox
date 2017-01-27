@@ -59,11 +59,11 @@ bintray {
 
   pkg {
     repo       = 'maven'
-    name       = "$gitName"
+    name       = "${gitName}"
     userOrg    = 'pageseeder'
-    desc       = "$project.description"
+    desc       = "$description"
     websiteUrl = "$website"
-    vcsUrl     = "https://github.com/pageseeder/docx.git"
+    vcsUrl     = "https://github.com/pageseeder/${gitName}.git"
     licenses   = ['Apache-2.0']
     labels     = "$labels".split(',')
     githubRepo = "pageseeder/${gitName}"
