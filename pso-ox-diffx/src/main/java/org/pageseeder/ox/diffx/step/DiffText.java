@@ -208,7 +208,7 @@ public class DiffText implements Step {
    * @throws TransformerException Should an error occur while tranforming the content.
    */
   private String toPSMLText(Model model, StepInfo info, File psml, String charset) throws IOException, TransformerException {
-
+    LOGGER.debug("Getting text for PSML.");
     String source = FileUtils.readFileToString(psml, charset);
 
     // Convert to plain text
@@ -232,6 +232,7 @@ public class DiffText implements Step {
    * @throws TransformerException Should an error occur while tranforming the content.
    */
   private String toHTMLText(Model model, StepInfo info, File html, String charset) throws IOException, TransformerException {
+    LOGGER.debug("Getting text for HTML.");
     // We may need to run tidy first
     Tidy tidy = TidyCommand.newTidy(model);
     // tidy.setOnlyErrors(true);
@@ -265,6 +266,8 @@ public class DiffText implements Step {
    * @throws TransformerException Should an error occur while tranforming the content.
    */
   private String toDOCXText(Model model, StepInfo info, File simplified) throws IOException, TransformerException {
+    LOGGER.debug("Getting text for DOCX.");
+    
     //The word file that has the content.
     File documentXML = new File(simplified, "/word/document.xml");
 
