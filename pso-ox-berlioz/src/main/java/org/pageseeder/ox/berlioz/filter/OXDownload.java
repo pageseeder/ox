@@ -56,6 +56,7 @@ public final class OXDownload implements Filter {
     String requestURI = req.getRequestURI();
     //Getting the string after the pattern
     String requestPath = requestURI.substring(requestURI.lastIndexOf(this.pattern) + this.pattern.length());
+    LOGGER.debug("Pattern {}", pattern);
     LOGGER.debug("request PATH {}", requestPath);
 
     if (requestPath == null) {
