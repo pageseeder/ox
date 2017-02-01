@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
  *  <li><var>xsl</var> the stylesheet file to transform, which is a relative path of model folder.
  *  (This parameter will override the property <var>parameter-xsl</var>)</li>
  *  <li><var>display-result</var> whether to display the result xml into Result XML (default: true)</li>
+ *  <li><var>_xslt-</var>Every parameter with the preffix "_xslt-" will be send to the xslt (without the preffix "_xslt-").</li>
  * </ul>
  *
  * <h3>Data Properties</h3>
@@ -110,10 +111,19 @@ public final class Transformation implements Step {
       transformer = templates.newTransformer();
       transformer.setURIResolver(resolver);
 
-      // Add the parameters
+      // Add the parameters from post request
       for (Entry<String, String> p : data.getParameters().entrySet()) {
         transformer.setParameter(p.getKey(), p.getValue());
       }
+      
+      // Add the parameters from step definition in model.xml
+      // these parameters should use the prefix _xslt-
+      for (Entry<String, String> p :info.parameters().entrySet()) {
+        if (p.getKey().startsWith("_xslt-")) {
+          transformer.setParameter(p.getKey().replaceAll("_xslt-", ""), p.getValue());
+        }
+      }
+            
       transformer.transform(new StreamSource(source), new StreamResult(target));
 
       // whether to display the transformation result
