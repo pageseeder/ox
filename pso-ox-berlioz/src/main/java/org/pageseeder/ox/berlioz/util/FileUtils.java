@@ -11,6 +11,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 
 import javax.activation.MimetypesFileTypeMap;
 
@@ -115,18 +121,31 @@ public class FileUtils {
   }
 
   /**
-   * Copies the file using NIO.
-   *
-   * @param from          File to copy
-   * @param to          Target file
-   * @throws IOException Signals that an I/O exception has occurred.
+   * @param source the source file or directory.
+   * @param target the target file or directory.
+   * @throws IOException when IO error occur.
    */
-  public static void copy(File from, File to) throws IOException {
-    createDirectories(to.getParentFile());
-    if (!to.exists()) {
-      to.createNewFile();
+  public static void copy(final File source, final File target) throws IOException {
+    if (source == null) throw new NullPointerException("source directory is null.");
+    if (target == null) throw new NullPointerException("target directory is null.");
+
+    if (source.isFile()) {
+      Files.copy(source.toPath(), target.toPath(), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+    } else if (source.isDirectory()) {
+      Files.walkFileTree(source.toPath(), new SimpleFileVisitor<Path>() {
+        @Override
+        public FileVisitResult preVisitDirectory(final Path dir, final BasicFileAttributes attrs) throws IOException {
+          Files.createDirectories(target.toPath().resolve(source.toPath().relativize(dir)));
+          return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
+          Files.copy(file, target.toPath().resolve(source.toPath().relativize(file)), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+          return FileVisitResult.CONTINUE;
+        }
+      });
     }
-    copy (new FileInputStream(from), new FileOutputStream(to));
   }
 
   /**
