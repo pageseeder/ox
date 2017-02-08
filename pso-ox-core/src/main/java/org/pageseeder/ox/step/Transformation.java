@@ -116,6 +116,11 @@ public final class Transformation implements Step {
         transformer.setParameter(p.getKey(), p.getValue());
       }
       
+      String originalFileName = data.getProperty(PackageData.ORIGINAL_PROPERTY);
+      if (originalFileName != null) {
+        transformer.setParameter("original_file", originalFileName);
+      }
+      
       // Add the parameters from step definition in model.xml
       // these parameters should use the prefix _xslt-
       for (Entry<String, String> p :info.parameters().entrySet()) {

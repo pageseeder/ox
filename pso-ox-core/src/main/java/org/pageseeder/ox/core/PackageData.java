@@ -51,7 +51,7 @@ public final class PackageData implements XMLWritable, Serializable {
   /**
    * The property name of original file.
    */
-  private final static String ORIGINAL_PROPERTY = "_orginial_file";
+  public final static String ORIGINAL_PROPERTY = "_original_file";
 
   /**
    * Indicates whether the cleaner thread was started.
