@@ -93,8 +93,8 @@ public class JobStatus implements XMLWritable, Serializable {
   public void setPercentage(int percentage) {
     if (percentage > 100) {
       this.percentage = 100;
-    } else if (percentage < 1) {
-      this.percentage = 1;
+    } else if (percentage < 0) {
+      this.percentage = -1;// It means unknown
     } else {
       this.percentage = percentage;
     }
@@ -125,7 +125,7 @@ public class JobStatus implements XMLWritable, Serializable {
    * Reset the job status.
    */
   private void reset() {
-    this.percentage = 1;
+    this.percentage = -1;
     this.status = STATUS.PROCESSING;
   }
 }
