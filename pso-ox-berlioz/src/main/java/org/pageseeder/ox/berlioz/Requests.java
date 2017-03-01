@@ -22,7 +22,9 @@ import org.pageseeder.xmlwriter.XMLWriter;
  */
 public final class Requests {
 
-  /** Utility */
+  /**
+   *  Utility.
+   */
   private Requests() {}
 
   /**
@@ -86,11 +88,12 @@ public final class Requests {
   }
 
   /**
-   * Return the list of models
+   * Return the list of models.
+   *
    * @param req The content request.
-   * @param xml
-   * @return
-   * @throws IOException
+   * @param xml the xml
+   * @return the list
+   * @throws IOException Signals that an I/O exception has occurred.
    */
   public static List<Model> listModel(ContentRequest req, XMLWriter xml) throws IOException {
     ensureConfigured();
@@ -101,7 +104,7 @@ public final class Requests {
   }
 
   /**
-   * Ensure the configuration file is set
+   * Ensure the configuration file is set.
    */
   public static void ensureConfigured() {
     OXConfig config = OXConfig.get();

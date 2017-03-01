@@ -121,6 +121,8 @@ public class FileUtils {
   }
 
   /**
+   * Copy.
+   *
    * @param source the source file or directory.
    * @param target the target file or directory.
    * @throws IOException when IO error occur.
@@ -201,10 +203,12 @@ public class FileUtils {
       io.close();
     }
   }
+  
   /**
+   * File name no extension.
    *
-   * @param file
-   * @return
+   * @param file the file
+   * @return the string
    */
   public static String fileNameNoExtension (File file) {
     String nameWithExtension = file.getName();

@@ -20,6 +20,8 @@ public class JobStatus implements XMLWritable, Serializable {
   private static final long serialVersionUID = -6772190282366148257L;
 
   public enum STATUS {
+    /** to indicate the current job is stopped (not started yet). */
+    STOPPED,
 
     /** to indicate the current job is processing. */
     PROCESSING,

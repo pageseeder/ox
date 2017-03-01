@@ -53,8 +53,8 @@ import org.slf4j.LoggerFactory;
  * </ul>
  *
  * <h3>Return</h3>
- * <p>If <var>input</var> does not exist, it returns {@link InvalidResult }.</p>
- * <p>If <var>xsl</var> does not exist, it returns {@link InvalidResult }.</p>
+ * <p>If <var>input</var> does not exist, it returns {@link InvalidResult}.</p>
+ * <p>If <var>xsl</var> does not exist, it returns {@link InvalidResult}.</p>
  * <p>Otherwise return {@link TransformResult}
  *
  *

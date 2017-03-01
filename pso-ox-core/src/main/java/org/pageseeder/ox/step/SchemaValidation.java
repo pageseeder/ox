@@ -44,8 +44,8 @@ import org.xml.sax.SAXException;
  * </ul>
  *
  * <h3>Return</h3>
- * <p>If <var>input</var> does not exist, it returns failed status of {@link SchemaResult }.</p>
- * <p>If <var>schema</var> does not exist, it returns failed status of {@link SchemaResult }.</p>
+ * <p>If <var>input</var> does not exist, it returns failed status of {@link SchemaResult}.</p>
+ * <p>If <var>schema</var> does not exist, it returns failed status of {@link SchemaResult}.</p>
  * <p>Otherwise return {@link SchemaResult}
  *
  *
@@ -54,8 +54,12 @@ import org.xml.sax.SAXException;
  */
 public final class SchemaValidation implements Step {
 
+  /** The Constant LOGGER. */
   private static final Logger LOGGER = LoggerFactory.getLogger(SchemaValidation.class);
 
+  /* (non-Javadoc)
+   * @see org.pageseeder.ox.api.Step#process(org.pageseeder.ox.core.Model, org.pageseeder.ox.core.PackageData, org.pageseeder.ox.api.StepInfo)
+   */
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
     File xml = data.getFile(info.getParameter("input", info.input()));
@@ -82,7 +86,9 @@ public final class SchemaValidation implements Step {
   }
 
   /**
-   * @param data the {@link PackageData}
+   * Gets the schemas.
+   *
+   * @param model the model
    * @param schema the schema name
    * @return the list of schema files
    */
@@ -105,12 +111,14 @@ public final class SchemaValidation implements Step {
   }
 
   /**
+   * Validate XSD schema.
+   *
    * @param model the Model to use
    * @param data the PackageData
    * @param xml  the xml file request to validate
+   * @param resolver the resolver
    * @param schemaFiles the list of schema file.
    * @return the SchemaResult
-   * @throws IOException when I/O error occur
    */
   private static SchemaResult validateXSDSchema(Model model, PackageData data, File xml, LSResourceResolver resolver, File... schemaFiles) {
     if (xml == null) { throw new NullPointerException("Cannot validate a null file"); }
@@ -147,22 +155,28 @@ public final class SchemaValidation implements Step {
   }
 
   /**
-   * A Custom schema Resolver
+   * A Custom schema Resolver.
+   *
    * @author Ciber Cai
    * @since  17 June 2014
    */
   private static class CustomSchemaResolver implements LSResourceResolver {
 
-    /** The schema directory */
+    /**  The schema directory. */
     private final File _schemaDir;
 
     /**
+     * Instantiates a new custom schema resolver.
+     *
      * @param folder the folder to store the schema
      */
     private CustomSchemaResolver(File folder) {
       this._schemaDir = folder;
     }
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSResourceResolver#resolveResource(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+     */
     @Override
     public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
 
@@ -189,91 +203,158 @@ public final class SchemaValidation implements Step {
     }
   }
 
+  /**
+   * The Class LSInputImpl.
+   */
   private static class LSInputImpl implements LSInput {
+    
+    /** The character stream. */
     private Reader characterStream;
+    
+    /** The byte stream. */
     private InputStream byteStream;
+    
+    /** The string data. */
     private String stringData;
+    
+    /** The system id. */
     private String systemId;
+    
+    /** The public id. */
     private String publicId;
+    
+    /** The base URI. */
     private String baseURI;
+    
+    /** The encoding. */
     private String encoding;
+    
+    /** The certified text. */
     private boolean certifiedText;
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSInput#getCharacterStream()
+     */
     @Override
     public Reader getCharacterStream() {
       return this.characterStream;
     }
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSInput#setCharacterStream(java.io.Reader)
+     */
     @Override
     public void setCharacterStream(Reader characterStream) {
       this.characterStream = characterStream;
     }
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSInput#getByteStream()
+     */
     @Override
     public InputStream getByteStream() {
       return this.byteStream;
     }
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSInput#setByteStream(java.io.InputStream)
+     */
     @Override
     public void setByteStream(InputStream byteStream) {
       this.byteStream = byteStream;
     }
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSInput#getStringData()
+     */
     @Override
     public String getStringData() {
       return this.stringData;
     }
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSInput#setStringData(java.lang.String)
+     */
     @Override
     public void setStringData(String stringData) {
       this.stringData = stringData;
     }
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSInput#getSystemId()
+     */
     @Override
     public String getSystemId() {
       return this.systemId;
     }
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSInput#setSystemId(java.lang.String)
+     */
     @Override
     public void setSystemId(String systemId) {
       this.systemId = systemId;
     }
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSInput#getPublicId()
+     */
     @Override
     public String getPublicId() {
       return this.publicId;
     }
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSInput#setPublicId(java.lang.String)
+     */
     @Override
     public void setPublicId(String publicId) {
       this.publicId = publicId;
     }
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSInput#getBaseURI()
+     */
     @Override
     public String getBaseURI() {
       return this.baseURI;
     }
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSInput#setBaseURI(java.lang.String)
+     */
     @Override
     public void setBaseURI(String baseURI) {
       this.baseURI = baseURI;
     }
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSInput#getEncoding()
+     */
     @Override
     public String getEncoding() {
       return this.encoding;
     }
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSInput#setEncoding(java.lang.String)
+     */
     @Override
     public void setEncoding(String encoding) {
       this.encoding = encoding;
     }
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSInput#setCertifiedText(boolean)
+     */
     @Override
     public void setCertifiedText(boolean certifiedText) {
       this.certifiedText = certifiedText;
     }
 
+    /* (non-Javadoc)
+     * @see org.w3c.dom.ls.LSInput#getCertifiedText()
+     */
     @Override
     public boolean getCertifiedText() {
       return this.certifiedText;
@@ -288,19 +369,35 @@ public final class SchemaValidation implements Step {
    */
   private static class SchemaResult extends ResultBase implements Result {
 
-    /** the list of schema files */
+    /**  the list of schema files. */
     private final File[] _schemaFiles;
 
+    /**
+     * Instantiates a new schema result.
+     *
+     * @param model the model
+     * @param data the data
+     */
     private SchemaResult(Model model, PackageData data) {
       super(model, data);
       this._schemaFiles = null;
     }
 
+    /**
+     * Instantiates a new schema result.
+     *
+     * @param model the model
+     * @param data the data
+     * @param schemaFiles the schema files
+     */
     private SchemaResult(Model model, PackageData data, File[] schemaFiles) {
       super(model, data);
       this._schemaFiles = schemaFiles;
     }
 
+    /* (non-Javadoc)
+     * @see org.pageseeder.xmlwriter.XMLWritable#toXML(org.pageseeder.xmlwriter.XMLWriter)
+     */
     @Override
     public void toXML(XMLWriter xml) throws IOException {
       xml.openElement("result");
@@ -335,6 +432,9 @@ public final class SchemaValidation implements Step {
       xml.closeElement();
     }
 
+    /* (non-Javadoc)
+     * @see org.pageseeder.ox.tool.ResultBase#isDownloadable()
+     */
     @Override
     public boolean isDownloadable() {
       return false;

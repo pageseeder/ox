@@ -21,19 +21,25 @@ import org.slf4j.LoggerFactory;
  */
 public class UploadFactory {
 
+  /** The Constant LOGGER. */
   private static final Logger LOGGER = LoggerFactory.getLogger(UploadFactory.class);
 
-  /** Singleton instance  */
+  /**  Singleton instance. */
   private static volatile UploadFactory singleton;
 
-  /** the list of upload job */
+  /**  the list of upload job. */
   private final BlockingQueue<UploadJob> jobs;
 
+  /**
+   * Instantiates a new upload factory.
+   */
   private UploadFactory() {
     this.jobs = new LinkedBlockingQueue<UploadJob>();
   }
 
   /**
+   * Gets the single instance of UploadFactory.
+   *
    * @return the instance of UploadFactory.
    */
   public static UploadFactory getInstance() {
@@ -44,6 +50,8 @@ public class UploadFactory {
   }
 
   /**
+   * Make.
+   *
    * @param req the ContentRequest
    * @return the UploadProcessor.
    * @throws FileUploadException throw exception when FileUPload error occur.
@@ -61,7 +69,9 @@ public class UploadFactory {
   }
 
   /**
-   * @param jobid the id of job
+   * Gets the upload job.
+   *
+   * @param req the req
    * @return the UploadJob
    */
   public UploadJob getUploadJob(ContentRequest req) {

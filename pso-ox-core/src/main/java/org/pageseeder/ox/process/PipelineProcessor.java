@@ -89,7 +89,8 @@ class PipelineProcessor implements Runnable {
     int perc = 100 / pipeline.size();
     int buffer = 5;
     boolean failed = false;
-
+    //Change the status from stopped to processing.
+    job.started();
     LOGGER.debug("total number of step {} ", pipeline.size());
     for (int i = 0; i < pipeline.size(); i++) {
       LOGGER.debug("processing the [{}] step ", i + 1);

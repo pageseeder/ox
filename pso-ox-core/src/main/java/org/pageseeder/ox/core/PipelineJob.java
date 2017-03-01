@@ -141,6 +141,14 @@ public final class PipelineJob implements XMLWritable, Serializable {
   /**
    * Set the job to complete status.
    */
+  public void started() {
+    this.status.setJobStatus(STATUS.PROCESSING);
+    this.status.setPercentage(1);
+  }
+  
+  /**
+   * Set the job to complete status.
+   */
   public void completed() {
     this.status.setJobStatus(STATUS.COMPLETED);
     this.status.setPercentage(100);

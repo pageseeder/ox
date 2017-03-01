@@ -119,15 +119,14 @@ public final class Errors {
 
   /**
    * Write the XML for when a required data cannot process.
-   *
+   * 
    * <p>Also sets the status of the response to 'bad request'.
-   *
+   * 
    * <p>Generator should generally terminate after invoking this method.
    *
    * @param req  The content request
    * @param xml  The XML writer
-   * @param name The name of the invalid parameter
-   *
+   * @param message the message
    * @throws IOException If an error occurs writing XML.
    */
   public static void invalidData(ContentRequest req, XMLWriter xml, String message) throws IOException {
@@ -303,6 +302,13 @@ public final class Errors {
     req.setStatus(ContentStatus.BAD_REQUEST);
   }
 
+  /**
+   * No model.
+   *
+   * @param req the req
+   * @param xml the xml
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
   public static void noModel(ContentRequest req, XMLWriter xml) throws IOException {
     xml.openElement("error");
     xml.attribute("type", "client");
@@ -311,6 +317,13 @@ public final class Errors {
     req.setStatus(ContentStatus.BAD_REQUEST);
   }
 
+  /**
+   * No packagedata.
+   *
+   * @param req the req
+   * @param xml the xml
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
   public static void noPackagedata(ContentRequest req, XMLWriter xml) throws IOException {
     xml.openElement("error");
     xml.attribute("type", "client");
@@ -319,6 +332,13 @@ public final class Errors {
     req.setStatus(ContentStatus.BAD_REQUEST);
   }
 
+  /**
+   * No pipeline.
+   *
+   * @param req the req
+   * @param xml the xml
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
   public static void noPipeline(ContentRequest req, XMLWriter xml) throws IOException {
     xml.openElement("error");
     xml.attribute("type", "client");
@@ -327,6 +347,13 @@ public final class Errors {
     req.setStatus(ContentStatus.BAD_REQUEST);
   }
 
+  /**
+   * No step.
+   *
+   * @param req the req
+   * @param xml the xml
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
   public static void noStep(ContentRequest req, XMLWriter xml) throws IOException {
     xml.openElement("error");
     xml.attribute("type", "client");

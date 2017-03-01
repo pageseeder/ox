@@ -6,6 +6,7 @@ package org.pageseeder.ox.berlioz.generator;
 import java.io.IOException;
 
 import org.pageseeder.berlioz.BerliozException;
+import org.pageseeder.berlioz.GlobalSettings;
 import org.pageseeder.berlioz.content.ContentGenerator;
 import org.pageseeder.berlioz.content.ContentRequest;
 import org.pageseeder.berlioz.content.ContentStatus;
@@ -15,6 +16,9 @@ import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.core.Pipeline;
 import org.pageseeder.ox.core.StepDefinition;
+import org.pageseeder.ox.core.StepJob;
+import org.pageseeder.ox.process.StepJobManager;
+import org.pageseeder.ox.process.StepJobQueue;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,8 +91,22 @@ public class ExecuteStep implements ContentGenerator {
     }
 
     // execute the step
-    Result result = stepDef.exec(data);
-    stepDef.toXML(result, xml);
-
+    if (!stepDef.async()) {
+      //Synchronous
+      Result result = stepDef.exec(data);
+      stepDef.toXML(result, xml);
+    } else {
+      //Asynchronous
+      int noThreads = GlobalSettings.get("ox2.step.threads-number", 
+          StepJobManager.DEAULT_NUMBER_OF_THREAD);
+      int maxStoredCompletedJob = GlobalSettings.get("ox2.step.max-stored-completed-job", 
+          StepJobQueue.DEFAULT_MAX_STORED_COMPLETED_JOB);
+      long maxInactiveTimeAllowed = Long.parseLong(GlobalSettings.get("ox2.step.max-inactive-time-ms", String.valueOf(StepJob.DEFAULT_MAX_INACTIVE_TIME_MS)));
+      StepJobManager manager = new StepJobManager(noThreads, maxStoredCompletedJob);
+      StepJob job = new StepJob(stepDef, data, maxInactiveTimeAllowed);
+      manager.addJob(job);
+      job.toXML(xml);
+      req.setStatus(ContentStatus.ACCEPTED);
+    }
   }
 }

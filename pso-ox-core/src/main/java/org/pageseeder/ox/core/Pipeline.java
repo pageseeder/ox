@@ -159,7 +159,7 @@ public final class Pipeline implements XMLWritable, Serializable {
         this.builder.setPipeline(this.pipeline);
       }
 
-      // step (@id, @name, @class, @callback)
+      // step (@id, @name, @async, @class, @callback)
       else if (localName.equals("step")) {
         this.stepId = attributes.getValue("id");
         String classname = attributes.getValue("class");
@@ -168,6 +168,7 @@ public final class Pipeline implements XMLWritable, Serializable {
 
         this.builder.setStepId(this.stepId);
         this.builder.setStepName(name != null ? name : this.stepId);
+        this.builder.setAsync("true".equalsIgnoreCase(attributes.getValue("async")) ? true : false );
         this.builder.setStepClass(classname);
         this.builder.setCallback(callback);
         this.inStep = true;

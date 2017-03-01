@@ -14,7 +14,7 @@ dependencies {
   compile project(':pso-ox-core')
 
   compile (
-    'org.pageseeder.berlioz:pso-berlioz:0.10.+',
+    'org.pageseeder.berlioz:pso-berlioz:0.11.+',
     'org.pageseeder.xmlwriter:pso-xmlwriter:1.0.+',
     'org.slf4j:slf4j-api:1.7.+',
     'commons-io:commons-io:2.5',

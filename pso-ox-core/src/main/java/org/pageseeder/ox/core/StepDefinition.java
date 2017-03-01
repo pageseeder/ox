@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.api.CallbackStep;
+import org.pageseeder.ox.api.Measurable;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.step.NOPStep;
@@ -47,6 +48,12 @@ public final class StepDefinition implements XMLWritable, Serializable {
   /** The callback step */
   private final CallbackStep _callbackStep;
 
+  /**
+   * Indicate if this step should be executed as asynchronous when the pipeline 
+   * is synchronous.
+   */
+  private final boolean _async;
+  
   /** The output of the step or <code>null</code> for no output. */
   private final String _output;
 
@@ -55,7 +62,6 @@ public final class StepDefinition implements XMLWritable, Serializable {
 
   /** Position of step in pipeline lazily initialized */
   private transient int _position = -1;
-
   /**
    * Creates a new abstract step.
    *
@@ -74,15 +80,15 @@ public final class StepDefinition implements XMLWritable, Serializable {
    * @throws NullPointerException if any of the argument is <code>null</code>
    * @throws IllegalArgumentException If the ID is not valid.
    */
-  private StepDefinition(Model model, Pipeline pipeline, String id, String name, Map<String, String> parameters, String output, Step step) {
-    this(model, pipeline, id, name, parameters, output, step, null);
+  private StepDefinition(Model model, Pipeline pipeline, String id, String name, Map<String, String> parameters, String output, boolean async, Step step) {
+    this(model, pipeline, id, name, parameters, output, async, step, null);
   }
 
   /**
    * Creates a new abstract step.
-   *
+   * 
    * <p>This constructor is <i>protected</i> so that only implementations use it.
-   *
+   * 
    * <p>To create step instance, use the {@link StepFactory}.
    *
    * @param model        The model this step is part of
@@ -92,12 +98,12 @@ public final class StepDefinition implements XMLWritable, Serializable {
    * @param parameters   The list of parameter
    * @param output       The output of step
    * @param step         The step
+   * @param async        The async
    * @param callbackStep The callback step
-   *
    * @throws NullPointerException if any of the argument is <code>null</code>
    * @throws IllegalArgumentException If the ID is not valid.
    */
-  private StepDefinition(Model model, Pipeline pipeline, String id, String name, Map<String, String> parameters, String output, Step step, CallbackStep callbackStep) {
+  private StepDefinition(Model model, Pipeline pipeline, String id, String name, Map<String, String> parameters, String output, boolean async, Step step, CallbackStep callbackStep) {
     if (model == null) { throw new NullPointerException("model is null."); }
     if (pipeline == null) { throw new NullPointerException("pipeline is null."); }
     if (id == null) { throw new NullPointerException("id is null."); }
@@ -107,6 +113,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
     this._id = id;
     this._name = name;
     this._step = step;
+    this._async = async;
     this._callbackStep = callbackStep;
     this._parameters = parameters;
     this._output = output;
@@ -138,6 +145,14 @@ public final class StepDefinition implements XMLWritable, Serializable {
    */
   public final Pipeline pipeline() {
     return this._pipeline;
+  }
+  
+
+  /**
+   * @return The step name.
+   */
+  public final boolean async() {
+    return this._async;
   }
 
   /**
@@ -199,6 +214,19 @@ public final class StepDefinition implements XMLWritable, Serializable {
   }
 
   /**
+   * Return the percentage of the process.
+   * 
+   * @return the pecerntage in %.
+   */
+  public int percentage () {
+    int percentage = -1;
+    if (this._step != null && this._step instanceof Measurable){
+      percentage = ((Measurable)this._step).percentage();
+    }
+    return percentage;
+  }
+  
+  /**
    * @return current Step
    */
   public Step getStep() {
@@ -224,10 +252,12 @@ public final class StepDefinition implements XMLWritable, Serializable {
       xml.attribute("name", name());
     }
 
+    xml.attribute("async", String.valueOf(this.async()));    
+    
     if (this._step != null) {
       xml.attribute("step", this._step.getClass().getName());
-    }
-
+    }   
+    
     if (this._callbackStep != null) {
       xml.attribute("callback", this._callbackStep.getClass().getName());
     }
@@ -328,6 +358,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
 
     private String name;
 
+    private boolean async = false;
     private Map<String, String> parameters = new HashMap<String, String>();
 
     private String output = null;
@@ -386,6 +417,17 @@ public final class StepDefinition implements XMLWritable, Serializable {
       return this;
     }
 
+
+    /**
+     *
+     * @param async the asyn
+     * return the {@link Builder}
+     */
+    public Builder setAsync(boolean async) {
+      this.async = async;
+      return this;
+    }
+    
     /**
      * @param name the name of parameter
      * @param value the value of parameter
@@ -457,9 +499,9 @@ public final class StepDefinition implements XMLWritable, Serializable {
         }
 
         if (callback != null) {
-          definition = new StepDefinition(this._model, this.pipeline, this.id, this.name, this.parameters, this.output, step, callback);
+          definition = new StepDefinition(this._model, this.pipeline, this.id, this.name, this.parameters, this.output, this.async, step, callback);
         } else {
-          definition = new StepDefinition(this._model, this.pipeline, this.id, this.name, this.parameters, this.output, step);
+          definition = new StepDefinition(this._model, this.pipeline, this.id, this.name, this.parameters, this.output, this.async, step);
         }
       } catch (Exception ex) {
         throw new OXException("Unable to build step.", ex);

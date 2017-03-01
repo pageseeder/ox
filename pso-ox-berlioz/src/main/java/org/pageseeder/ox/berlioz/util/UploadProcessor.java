@@ -29,15 +29,22 @@ import org.slf4j.LoggerFactory;
  */
 public final class UploadProcessor {
 
+  /** The Constant LOGGER. */
   private static final Logger LOGGER = LoggerFactory.getLogger(UploadProcessor.class);
 
+  /** The Constant ONE_MB. */
   private static final int ONE_MB = 1024 * 1024; // 1MB
 
+  /** The accept extension. */
   private final String acceptExtension;
 
+  /** The progress listener. */
   private final FileUploadListener progressListener;
+  
+  /** The items. */
   private final List<FileItem> items;
 
+  /** The is multipart. */
   private final boolean isMultipart;
 
   /**
@@ -70,20 +77,30 @@ public final class UploadProcessor {
     this.isMultipart = ServletFileUpload.isMultipartContent(req);
   }
 
-  /***
+  /**
+   * *.
+   *
    * @return the list of FileItem.
    */
   public List<FileItem> getFileItemList() {
     return this.items;
   }
 
-  /***
+  /**
+   * *.
+   *
    * @return the ProgressListener.
    */
   public FileUploadListener getProgressListener() {
     return this.progressListener;
   }
 
+  /**
+   * Progress.
+   *
+   * @param xml the xml
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
   public void progress(XMLWriter xml) throws IOException {
     xml.openElement("uplad");
     xml.attribute("id", "jobid");
@@ -92,14 +109,18 @@ public final class UploadProcessor {
   }
 
   /**
-   * @return
+   * Checks if is multipart.
+   *
+   * @return true, if is multipart
    */
   public boolean isMultipart() {
     return this.isMultipart;
   }
 
-  /***
-   * @param contentType the content type of file.
+  /**
+   * *.
+   *
+   * @param filename the filename
    * @return the status whether it allows to upload.
    */
   public boolean isAllow(String filename) {
@@ -113,6 +134,11 @@ public final class UploadProcessor {
     return false;
   }
 
+  /**
+   * Checks if is supported type.
+   *
+   * @return true, if is supported type
+   */
   public boolean isSupportedType() {
     Iterator<FileItem> iter = this.items.iterator();
     if (iter != null) {
@@ -129,7 +155,9 @@ public final class UploadProcessor {
   }
 
   /**
-   * @return
+   * Gets the parameters.
+   *
+   * @return the parameters
    */
   public Map<String, String> getParameters() {
     Map<String, String> parameters = new HashMap<String, String>();
@@ -147,8 +175,10 @@ public final class UploadProcessor {
     return parameters;
   }
 
-  /***
-   * Return the parameter from FileItem
+  /**
+   * *
+   * Return the parameter from FileItem.
+   *
    * @param name the name of the parameter.
    * @param def the default value of the parameter.
    * @return the specified parameter value.
@@ -177,8 +207,10 @@ public final class UploadProcessor {
     }
   }
 
-  /***
-   * Return the parameter from FileItem
+  /**
+   * *
+   * Return the parameter from FileItem.
+   *
    * @param name the name of the parameter.
    * @return the specified parameter value.
    */
@@ -187,6 +219,8 @@ public final class UploadProcessor {
   }
 
   /**
+   * Gets the total upload size.
+   *
    * @return the upload file size
    */
   public long getTotalUploadSize() {
