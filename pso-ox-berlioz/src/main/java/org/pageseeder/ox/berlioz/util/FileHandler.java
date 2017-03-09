@@ -19,6 +19,7 @@ import org.apache.commons.fileupload.FileUploadBase.InvalidContentTypeException;
 import org.apache.commons.fileupload.FileUploadBase.SizeLimitExceededException;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.pageseeder.berlioz.GlobalSettings;
 import org.pageseeder.ox.OXConfig;
@@ -113,6 +114,13 @@ public final class FileHandler {
           //}
           if (pack != null) {
             String filename = item.getName();
+            LOGGER.debug("Original filename {}", filename);
+            if (!StringUtils.isBlank(filename)) {
+              //It is necessary because the Internet Explore and Edge send the full path of the file
+              //the this method remove all unnecessary path and returns the file name.
+              filename = FilenameUtils.getName(filename);
+              LOGGER.debug("Cleaned filename {}", filename);
+            }
             pack.setProperty("contenttype", item.getContentType());
             pack.setProperty("type", toType(filename));
             pack.setProperty("name", toName(filename));
