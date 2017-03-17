@@ -66,7 +66,7 @@ public class ExecuteStep implements ContentGenerator {
     if (pindex != null) {
       pipeline = model.getPipeline(pindex);
     } else {
-      pipeline = model.getPipeline(0);
+      pipeline = model.getPipelineDefault();
     }
 
     if (pipeline == null) {
@@ -96,17 +96,36 @@ public class ExecuteStep implements ContentGenerator {
       Result result = stepDef.exec(data);
       stepDef.toXML(result, xml);
     } else {
+      long startTime = System.currentTimeMillis();
       //Asynchronous
       int noThreads = GlobalSettings.get("ox2.step.threads-number", 
           StepJobManager.DEAULT_NUMBER_OF_THREAD);
       int maxStoredCompletedJob = GlobalSettings.get("ox2.step.max-stored-completed-job", 
           StepJobQueue.DEFAULT_MAX_STORED_COMPLETED_JOB);
-      long maxInactiveTimeAllowed = Long.parseLong(GlobalSettings.get("ox2.step.max-inactive-time-ms", String.valueOf(StepJob.DEFAULT_MAX_INACTIVE_TIME_MS)));
+      long maxInactiveTimeAllowed = Long.parseLong(GlobalSettings.get("ox2.step.max-inactive-time-ms", String.valueOf(StepJob.DEFAULT_MAX_INACTIVE_TIME_MS)));     
       StepJobManager manager = new StepJobManager(noThreads, maxStoredCompletedJob);
-      StepJob job = new StepJob(stepDef, data, maxInactiveTimeAllowed);
+      StepJob job = new StepJob(stepDef, data, maxInactiveTimeAllowed);      
       manager.addJob(job);
+      
+      //Sametimes the execution of this will be very quickly, then before to return let's give some time and check the new status.
+      long maxTimeToCheck = 30000;// thirty seconds (Because the maxInactiveTimeAllowed could 1 hour, then it limits to 30 seconds
+      long currentTime = 0;
+      do {
+        try {
+          Thread.sleep(5000);
+        } catch (InterruptedException ex) {
+          LOGGER.warn("An interruption exception happened in {}", ex.getMessage()); 
+        }
+        currentTime = System.currentTimeMillis();
+      } while (!job.getStatus().hasCompleted() //While not completed
+          && (currentTime-startTime) <= maxInactiveTimeAllowed // The current time spent to check is less than or equal the time allowed in the config 
+          && (currentTime-startTime) <= maxTimeToCheck);//The current time spent to check is less than or equal the time allowed by default
+      
       job.toXML(xml);
-      req.setStatus(ContentStatus.ACCEPTED);
+      //If the job was not completed yet.
+      if (!job.getStatus().hasCompleted()) {
+        req.setStatus(ContentStatus.ACCEPTED);
+      }
     }
   }
 }

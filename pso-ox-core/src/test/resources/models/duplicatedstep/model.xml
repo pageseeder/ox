@@ -3,7 +3,7 @@
                             "http://www.pageseeder.org/schema/ox/model-1.0.dtd">
 <pipelines>
 
-  <pipeline id="sample-pipeline" name="Sample Pipeline" 
+  <pipeline id="duplicated-step-id" name="Test duplicated step id" 
             description="The sample pipeline will decompress the file uploaded" 
             accepts="application/zip" default="false">
   
@@ -11,23 +11,10 @@
     <step id="decompress-file" name="decompresss file"  class="org.pageseeder.ox.step.Decompression">
       <parameter name="output" value="myoutput"/>
     </step>
-    
-     <!-- produce nothing  -->
-    <step id="produce-nothing" class="org.pageseeder.ox.step.NOPStep"/>
-    
-  </pipeline>
-
-  <pipeline id="default-pipeline" name="Default Pipeline" 
-            description="The default pipeline will decompress the file uploaded" 
-            accepts="application/zip" default="true">
-  
-    <!-- decompress uploaded file  -->
+        <!-- decompress uploaded file  -->
     <step id="decompress-file" name="decompresss file"  class="org.pageseeder.ox.step.Decompression">
       <parameter name="output" value="myoutput"/>
     </step>
-    
-     <!-- produce nothing  -->
-    <step id="produce-nothing" class="org.pageseeder.ox.step.NOPStep"/>
     
   </pipeline>
 </pipelines>

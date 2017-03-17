@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import org.pageseeder.berlioz.BerliozException;
 import org.pageseeder.berlioz.content.ContentRequest;
-import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.berlioz.Errors;
 import org.pageseeder.ox.berlioz.Requests;
 import org.pageseeder.ox.core.Model;

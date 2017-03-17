@@ -184,7 +184,7 @@ public final class StepJob implements XMLWritable, Serializable {
     xml.attribute("status", tempStatus.toString());
     xml.attribute("percentage", tempStatus.getPercentage());
     xml.attribute("message", tempStatus.getMessage());
-    xml.attribute("pipeline", this._step.pipeline().name());
+    xml.attribute("pipeline", this._step.pipeline().id());
     xml.attribute("step", this._step.name());
     this._step.toXML(this.result, xml);      
     xml.closeElement();

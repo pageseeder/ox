@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.pageseeder.ox.OXConfig;
 
-public class ModelTest {
+public class TestModel {
 
   @Before
   public void init() {
@@ -47,4 +47,25 @@ public class ModelTest {
     Assert.assertNotNull(step);
   }
 
+  @Test
+  public void test_duplicated_pipeline() throws Exception {
+    try {
+      Model model = new Model("duplicatedpipeline");
+      model.getPipeline("duplicated-pipeline-id");
+      Assert.fail("It should return an IllegarArgumentException.");
+    } catch (IllegalArgumentException ex) {
+      Assert.assertTrue(ex.getMessage(), true);
+    }
+  }
+ 
+  @Test
+  public void test_duplicated_step() throws Exception {
+    try {
+      Model model = new Model("duplicatedstep");
+      model.getPipeline("duplicated-step-id");
+      Assert.fail("It should return an IllegarArgumentException.");
+    } catch (IllegalArgumentException ex) {
+      Assert.assertTrue(ex.getMessage(), true);
+    }
+  }
 }

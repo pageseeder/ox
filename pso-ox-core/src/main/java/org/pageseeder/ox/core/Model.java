@@ -73,6 +73,21 @@ public final class Model implements XMLWritable {
   }
 
   /**
+   * Add the pipeline to the list and check if it is unique.
+   * 
+   * @param pipeline
+   */
+  private void addPipeline (Pipeline pipeline) {
+    for (Pipeline s : this._pipelines) {
+      //Check the uniqueness of the step
+      if (s.id().equals(pipeline.id())) { 
+        throw new IllegalArgumentException("The model " + this.name() + "already has the pipeline " + pipeline.id());
+      }
+    }
+    this._pipelines.add(pipeline);
+  }
+  
+  /**
    * Loads the model definition to know what the pipelines, steps and parameters are.
    * @return the status of load.
    */
@@ -279,24 +294,36 @@ public final class Model implements XMLWritable {
   }
 
   /**
-   * @param name the name of the pipeline
+   * @param id the id of the pipeline
    * @return the Pipeline based on the name.
    */
-  public Pipeline getPipeline(String name) {
+  public Pipeline getPipeline(String id) {
     load();
     for (Pipeline p : this._pipelines) {
-      if (p.name().equals(name)) { return p; }
+      if (p.id().equals(id)) { return p; }
     }
     return null;
   }
 
   /**
-   * @param index the index of the pipeline
-   * @return the Pipeline based on the specified index.
+   * Return the default pipeline for this model.
+   * 
+   * @return the first Pipeline found which default attribute has value true. If
+   * not found then returns the first.
    */
-  public Pipeline getPipeline(int index) {
+  public Pipeline getPipelineDefault() {
     load();
-    return this._pipelines.get(index);
+    Pipeline defaultPipeline = null;
+    for (Pipeline p : this._pipelines) {
+      if (p.isDefault()) {
+        defaultPipeline = p;
+        break;
+      }
+    }
+    if (defaultPipeline == null && !this._pipelines.isEmpty()) {
+      defaultPipeline = this._pipelines.get(0);
+    }
+    return defaultPipeline;
   }
 
   /**
@@ -370,7 +397,7 @@ public final class Model implements XMLWritable {
         if (localName.equals("pipeline")) {
           Pipeline pipeline = this.handler.getPipeline();
           if (pipeline != null) {
-            this._model._pipelines.add(pipeline); // TODO check the uniqueness of pipeline
+            this._model.addPipeline(pipeline);
           }
           this.handler = null;
         }

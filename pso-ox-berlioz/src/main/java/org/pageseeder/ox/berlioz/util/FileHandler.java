@@ -28,6 +28,7 @@ import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.core.Pipeline;
 import org.pageseeder.ox.core.PipelineJob;
+import org.pageseeder.ox.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +64,7 @@ public final class FileHandler {
         }
       } else {
         for (int i = 0; i < m.size(); i++) {
-          Pipeline pipeline = m.getPipeline(i);
+          Pipeline pipeline = m.getPipelineDefault();
           PipelineJob job = new PipelineJob(pipeline, pack);
           job.setSlowMode(isSlowMode);
           jobs.add(job);
