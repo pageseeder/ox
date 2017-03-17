@@ -9,21 +9,19 @@ An XML processing pipeline doing that hard work
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <pipelines>
-
-  <pipeline id="docx-to-psml" name="DOCX to PSML" accepts="application/vnd.openxmlformats-officedocument.wordprocessingml.document" default="true">
-    <step id="docx-to-psml" name="Import Word document (.docx) as PageSeeder XML (.psml)" class="org.pageseeder.docx.ox.step.DOCXToPSML">
-      <parameter name="output" value="myoutput/generic.psml" />
-      <parameter name="config" value="docx-to-psml/word-import-config.xml" />
+  <pipeline id="xml-validation" name="Validate XML" accepts="application/xml" default="true">
+    <step id="schematron-validation-asynchronous" async="true" name="XML Validation Asynchronous" class="org.pageseeder.ox.schematron.step.SchematronValidation">
+      <parameter name="schema" value="schema.sch"/>
+    </step>
+    <step id="schematron-validation-synchronous" name="XML Validation synchronous" class="org.pageseeder.ox.schematron.step.SchematronValidation">
+      <parameter name="schema" value="schema.sch"/>
     </step>
   </pipeline>
-
-  <pipeline id="psml-to-docx" name="PSML to DOCX" accepts=".psml">
-    <step id="psml-to-docx" name="Import PageSeeder XML (.psml) as Word document (.docx)" class="org.pageseeder.docx.ox.step.PSMLToDOCX">
-      <parameter name="output" value="myoutput/generic.docx" />
-      <parameter name="config" value="psml-to-docx/word-export-config.xml" />
-      <parameter name="dotx" value="psml-to-docx/word-export-template.docx" />
+  
+  <pipeline id="xml-validation2" name="Validate XML(Synchronous)" accepts="application/xml" default="true">
+    <step id="schematron-validation-asynchronous" async="false" name="XML Validation Synchronous" class="org.pageseeder.ox.schematron.step.SchematronValidation">
+      <parameter name="schema" value="schema.sch"/>
     </step>
   </pipeline>
- 
 </pipelines>
 ``` 
