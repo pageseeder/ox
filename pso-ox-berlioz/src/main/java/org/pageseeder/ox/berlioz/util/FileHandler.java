@@ -106,22 +106,15 @@ public final class FileHandler {
     if (isMultipart) {
       List<FileItem> items = processor.getFileItemList();
       for (FileItem item : items) {
-        if (!item.isFormField()) {
-          PackageData pack = null;
+        if (!item.isFormField()) {          
+          String filename = getFilename(item);
           LOGGER.debug("item content type {}", item.getContentType());
+          LOGGER.debug("item filename {}", filename);
           //if (!"application/octet-stream".equals(item.getContentType())) {
-          pack = toPackageData(model, item, item.getName());
+          PackageData pack = toPackageData(model, item, filename);
           LOGGER.debug("pack {}", pack != null ? pack.id() : "null");
           //}
           if (pack != null) {
-            String filename = item.getName();
-            LOGGER.debug("Original filename {}", filename);
-            if (!StringUtils.isBlank(filename)) {
-              //It is necessary because the Internet Explore and Edge send the full path of the file
-              //the this method remove all unnecessary path and returns the file name.
-              filename = FilenameUtils.getName(filename);
-              LOGGER.debug("Cleaned filename {}", filename);
-            }
             pack.setProperty("contenttype", item.getContentType());
             pack.setProperty("type", toType(filename));
             pack.setProperty("name", toName(filename));
@@ -209,7 +202,8 @@ public final class FileHandler {
     if (!dir.exists()) {
       dir.mkdirs();
     }
-    File file = new File(dir, item.isFormField() ? filename : item.getName());
+    LOGGER.debug("Is form field: {}", item.isFormField());
+    File file = new File(dir, item.isFormField() ? filename : getFilename(item));
     int copied = copyTo(stream, file);
     PackageData pack = PackageData.newPackageData(model, file);
     if (copied == 0) {
@@ -228,6 +222,18 @@ public final class FileHandler {
     if (dir == null) {
       config.setModelsDirectory(new File(GlobalSettings.getRepository(), "model"));
     }
+  }
+  
+  private static String getFilename(FileItem item) {
+    String filename = item.getName();
+    LOGGER.debug("Original filename {}", filename);
+    if (!StringUtils.isBlank(filename)) {
+      //It is necessary because the Internet Explore and Edge send the full path of the file
+      //the this method remove all unnecessary path and returns the file name.
+      filename = FilenameUtils.getName(filename);
+      LOGGER.debug("Cleaned filename {}", filename);
+    }
+    return filename;
   }
 
 }
