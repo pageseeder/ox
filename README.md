@@ -34,10 +34,10 @@ An XML processing pipeline doing that hard work
   <parameter name="page-template" value="resources/custom-template-page.psml"/>
   <parameter name="config" value="resources/custom.properties"/>
   <result name="PDF Conversion" id="Process-ID" model="pdf" status="ok" time="14596" downloadable="false" path="converted" input="/pdf-file.pdf">
-    <!-- It is optional in the step -->
+    <!-- It is optional in the step result -->
     <setup>
     
-      <!-- Custom parameters defines in the model.xml for this step -->
+      <!-- Custom parameters defines in the model.xml for this step (they are just examples)-->
       <parameters>
         <parameter name="output" value="converted"/>
         <parameter name="page-template" value="resources/custom-template-page.psml"/>
@@ -45,7 +45,7 @@ An XML processing pipeline doing that hard work
         <parameter name="input" value="/1716-2012.pdf"/>
       </parameters>
       
-      <!-- Some properties values that were used in the PDF Conversion -->
+      <!-- Some properties values that were used to process the file (they are just examples) -->
       <properties>
         <property name="bookmarks" value="false"/>
         <property name="bookmarks.guess.end.page" value="false"/>     
@@ -53,12 +53,12 @@ An XML processing pipeline doing that hard work
         <property name="pages" value="1-9"/>
       </properties>
     </setup>
-    <!-- It is optional in the stpe and is mainly used to return information of the file -->
-    <infos name="AS/NZS 1716:2012 Respiratory protective devices ">
+    <!-- It is optional in the step result and is mainly used to return information of the file -->
+    <infos name="PDF Test">
       <info name="author" value="Standards Word" type="string"/>
       <info name="bookmarks" value="true" type="string"/>
       <!-- info type list. The value has semicolon (';') separated list-->
-      <info name="bookmarks_missing_destination" value="1.1 DEFINITIONS;1.1.1 Respirator" type="list"/>
+      <info name="bookmarks_missing_destination" value="1.1 DEFINITIONS;1.1.1 Sub title" type="list"/>
       <info name="bookmarks_valid" value="false" type="string"/>
       <info name="creation_date" value="" type="string"/>
       <info name="creator" value="" type="string"/>
