@@ -37,7 +37,7 @@ An XML processing pipeline doing that hard work
     <!-- It is optional in the step result -->
     <setup>
     
-      <!-- Custom parameters defines in the model.xml for this step (they are just examples)-->
+      <!-- Custom parameters defined in the model.xml for this step (they are just examples)-->
       <parameters>
         <parameter name="output" value="converted"/>
         <parameter name="page-template" value="resources/custom-template-page.psml"/>
