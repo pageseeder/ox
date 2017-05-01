@@ -80,7 +80,7 @@ public final class StepInfoImpl implements StepInfo {
 
   @Override
   public String getParameter(String name, String def) {
-    String val = this._parameters.get(name);
+    String val = this.getParameter(name);
     return val != null ? val : def;
   }
 
