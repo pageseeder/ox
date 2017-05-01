@@ -12,6 +12,8 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 
+import org.pageseeder.ox.core.PackageData;
+
 /**
  * @author Ciber Cai
  * @since 19 July 2016
@@ -71,5 +73,32 @@ public class FileUtils {
       });
     }
   }
+  
+  /**
+   * 
+   * @param data
+   * @param fromFolder
+   * @param extensions
+   * @return
+   */
+  public static String getFileByExtension(PackageData data, String fromFolder, String ... extensions){
+    if (extensions != null && extensions.length > 0) {
+      File folder = data.getFile(fromFolder);      
+      if (folder.isDirectory()) {
+        for (String filenane:folder.list()){
+          for (int i = 0; i < extensions.length; i++) {
+            if (filenane == extensions[i]) {
+              if(filenane.endsWith(extensions[i])) {
+                fromFolder += "/" + filenane;
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+    return fromFolder;
+  }
+
 
 }

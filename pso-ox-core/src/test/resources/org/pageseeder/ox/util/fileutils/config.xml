@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+
+<config>
+
+  <core>
+    <creator select="Pageseeder"/>
+    <description select="Pageseeder"/>
+    <subject select="1"/>
+    <title select="1"/>
+    <category select="1"/>
+    <version select="1"/>
+    <revision select="1"/> <!--  has to be an integer -->
+    <!-- currently using calculated values -->
+    <created select="Pageseeder"/>
+  </core>
+
+  <!-- =======================SPLIT PROPERTIES======================= -->
+  <default>
+    <defaultparagraphstyle wordstyle="Normal"/>
+    <defaultcharacterstyle wordstyle="Default Paragraph Font"/>
+    <comments generate="false"/>
+  </default>
+
+
+  <!-- default options:"generate-ps-style|none" -->
+  <!-- label options:"generate-ps-style|[name of style]" -->
+  <elements>
+
+    <block default="generate-ps-style">
+      <label wordstyle="Normal Indent"              value="NormalIndent1"/>
+      <label wordstyle="Normal Indent 2"            value="NormalIndent2"/>      
+    </block>
+
+    <!-- default options:"generate-ps-style|none" -->
+    <!-- label options:"generate-ps-style|[name of style]" -->
+    <inline default="generate-ps-style">
+      <tab label="NStab"/>
+      <label wordstyle="Hyperlink"                  value="Hyperlink"/>
+      <fieldcode label="NSPrompt"                   value=" MACROBUTTON  ac_OnHelp [complete/delete]"/>
+    </inline>
+
+    <!-- options:"[existing style name]" -->
+    <heading>
+      <level value="1" numbered="true" wordstyle="heading 1"/>
+      <level value="2" numbered="true" wordstyle="heading 2"/>
+      <level value="3" numbered="true" wordstyle="heading 3"/>
+      <level value="4" numbered="true" wordstyle="heading 4"/>
+      <level value="5" numbered="true" wordstyle="heading 5"/>
+      <level value="6" numbered="true" wordstyle="heading 6"/>
+    </heading>
+
+  </elements>
+
+</config>
