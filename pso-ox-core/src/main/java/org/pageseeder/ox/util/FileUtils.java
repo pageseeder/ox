@@ -76,9 +76,9 @@ public class FileUtils {
   
   /**
    * 
-   * @param data
-   * @param fromFolder
-   * @param extensions
+   * @param data: package of the data
+   * @param fromFolder: directory that It will put the data
+   * @param extensions: extensions that it will verified
    * @return
    */
   public static String getFileByExtension(PackageData data, String fromFolder, String ... extensions){
