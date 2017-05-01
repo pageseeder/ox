@@ -15,8 +15,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import org.pageseeder.ox.core.PackageData;
 
 /**
- * @author Ciber Cai
- * @since 19 July 2016
+ * @author Adriano Akaishi
+ * @since 01/05/2017
  */
 public class FileUtils {
 
