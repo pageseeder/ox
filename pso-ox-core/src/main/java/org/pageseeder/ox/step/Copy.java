@@ -44,16 +44,17 @@ public class Copy implements Step {
 
     // input file
     String source = info.getParameter("input", info.input());
+    
     String destination = info.getParameter("output") != null
         ? info.getParameter("output")
         : (info.input().equals(info.output()) ? (info.output() + ".copy") : info.output());
-
-    File xslRoot = model.getRoot();     
-    File sourceFile = data.getFile(xslRoot + source);
+    
+    File sourceFile = data.getFile(source);
     
     if (sourceFile == null || !sourceFile.exists()) {
-      sourceFile = model.getFile(xslRoot + source);
+      sourceFile = model.getFile(source);
     }
+    
     File destinationFile = data.getFile(destination);
 
     // if the source file (directory) doesn't exist
