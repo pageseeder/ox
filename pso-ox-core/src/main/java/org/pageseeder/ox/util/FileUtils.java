@@ -87,11 +87,9 @@ public class FileUtils {
       if (folder.isDirectory()) {
         for (String filenane:folder.list()){
           for (int i = 0; i < extensions.length; i++) {
-            if (filenane == extensions[i]) {
-              if(filenane.endsWith(extensions[i])) {
-                fromFolder += "/" + filenane;
-                break;
-              }
+            if(filenane.endsWith(extensions[i])) {
+              fromFolder += "/" + filenane;
+              break;
             }
           }
         }
