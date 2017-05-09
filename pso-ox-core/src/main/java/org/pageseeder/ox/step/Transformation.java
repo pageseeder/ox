@@ -228,7 +228,7 @@ public final class Transformation implements Step {
 
       if (this._template != null) {
         xml.openElement("template");
-        xml.attribute("path", this._target);
+        xml.attribute("path", this._template);
         xml.closeElement();
       }
 
