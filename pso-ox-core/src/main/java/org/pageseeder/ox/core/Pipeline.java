@@ -233,13 +233,15 @@ public final class Pipeline implements XMLWritable, Serializable {
         this.stepId = attributes.getValue("id");
         String classname = attributes.getValue("class");
         String callback = attributes.getValue("callback");
-        String name = attributes.getValue("name");
+        String name = attributes.getValue("name");     
+        String viewable = attributes.getValue("viewable");
 
         this.builder.setStepId(this.stepId);
         this.builder.setStepName(name != null ? name : this.stepId);
-        this.builder.setAsync("true".equalsIgnoreCase(attributes.getValue("async")) ? true : false );
+        this.builder.setAsync("true".equalsIgnoreCase(attributes.getValue("async")));
         this.builder.setStepClass(classname);
         this.builder.setCallback(callback);
+        this.builder.setViewable("true".equalsIgnoreCase(viewable));
         this.inStep = true;
       }
 
