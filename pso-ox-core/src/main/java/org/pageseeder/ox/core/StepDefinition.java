@@ -55,7 +55,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
   private final boolean _async;
   
   /**
-   * 
+   * Send of parameter when the pipeline is synchronous. 
    */
   private final boolean _viewable;
   
@@ -270,7 +270,9 @@ public final class StepDefinition implements XMLWritable, Serializable {
     }
 
     xml.attribute("async", String.valueOf(this.async()));    
-    
+
+    xml.attribute("viewable", String.valueOf(this.viewable()));     
+  
     if (this._step != null) {
       xml.attribute("step", this._step.getClass().getName());
     }   
