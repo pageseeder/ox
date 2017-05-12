@@ -28,8 +28,12 @@ public class FileUtils {
   public static void copy(final File source, final File target) throws IOException {
     if (source == null) throw new NullPointerException("source directory is null.");
     if (target == null) throw new NullPointerException("target directory is null.");
-
+   
     if (source.isFile()) {
+      File parentFolder = target.getParentFile();
+      if (parentFolder != null) {
+        parentFolder.mkdirs();
+      }   
       Files.copy(source.toPath(), target.toPath(), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
     } else if (source.isDirectory()) {
       Files.walkFileTree(source.toPath(), new SimpleFileVisitor<Path>() {

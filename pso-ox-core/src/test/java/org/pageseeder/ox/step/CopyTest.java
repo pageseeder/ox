@@ -42,8 +42,7 @@ public class CopyTest {
     Assert.assertTrue(data.getFile("Sample.docx.copy").exists());
     Assert.assertTrue(data.getFile("Sample.docx.copy").length() > 1);
 
-    params.put("to", "sample-copy.docx");
-    info = new StepInfoImpl("step-id", "step name", "Sample.docx", "Sample.docx.copy", params);
+    info = new StepInfoImpl("step-id", "step name", "Sample.docx", "sample-copy.docx", params);
 
     Copy step2 = new Copy();
     step2.process(model, data, info);
@@ -67,14 +66,13 @@ public class CopyTest {
     Assert.assertTrue(data.getFile("m2").exists());
     Assert.assertTrue(data.getFile("m2").listFiles().length > 1);
 
-    params.put("to", "m3");
-    info = new StepInfoImpl("step-id", "step name", "Sample.docx", "Sample.docx.copy", params);
+    info = new StepInfoImpl("step-id", "step name", "m1/Sample.docx", "m3/Sample.docx.copy", params);
 
     Copy step2 = new Copy();
     step2.process(model, data, info);
 
-    Assert.assertTrue(data.getFile("m2").exists());
-    Assert.assertTrue(data.getFile("m2").listFiles().length > 1);
+    Assert.assertTrue(data.getFile("m3/Sample.docx.copy").exists());
+    Assert.assertTrue(data.getFile("m3/Sample.docx.copy").length()> 1);
 
   }
 }
