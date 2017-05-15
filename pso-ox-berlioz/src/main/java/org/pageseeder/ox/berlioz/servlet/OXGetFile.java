@@ -15,10 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.pageseeder.ox.OXConfig;
+import org.pageseeder.ox.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import net.pageseeder.internal.ox.util.StringUtils;
 
 /**
  * <p>A Download {@link Filter} for download file from OX. </p>
