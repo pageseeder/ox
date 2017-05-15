@@ -4,17 +4,6 @@
               xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd" id="WebAppFragment_ID" version="3.0"
      metadata-complete="true">
-  
-  <!--  OX download filter -->   
-  <!-- <filter>
-    <filter-name>bzox-download</filter-name>
-    <filter-class>org.pageseeder.ox.berlioz.filter.OXDownload</filter-class>
-    <init-param>
-      <param-name>pattern</param-name>
-      <param-value>/bzox/download/</param-value>
-    </init-param>
-  </filter> -->
-  
   <!-- OX Download servlet (Returns any file for download) -->
   <servlet>
     <servlet-name>bzox-download</servlet-name>
@@ -32,7 +21,7 @@
  
   <!-- OX View servlet (Return the CSS, JS, HTML etc...) -->
   <servlet>
-    <servlet-name>bzox-internal-view</servlet-name>
+    <servlet-name>bzox-view</servlet-name>
     <servlet-class>org.pageseeder.ox.berlioz.servlet.OXGetFile</servlet-class>
     <init-param>
       <param-name>downloadable</param-name>
