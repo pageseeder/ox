@@ -16,6 +16,19 @@
   </filter>
  
   <!-- OX data handle servlet -->
+    <servlet>
+    <servlet-name>bzox-internal-view</servlet-name>
+    <servlet-class>org.pageseeder.ox.berlioz.servlet.OXGetFile</servlet-class>
+    <init-param>
+      <param-name>allowed</param-name>
+      <param-value>.js,.css,.html,.xml</param-value>
+    </init-param>
+    <init-param>
+      <param-name>pattern</param-name>
+      <param-value>/bzox/view/</param-value>
+    </init-param>
+  </servlet>
+  
   <servlet>
     <servlet-name>bzox-handle</servlet-name>
     <servlet-class>org.pageseeder.ox.berlioz.servlet.OXHandleData</servlet-class>
@@ -26,6 +39,11 @@
     <servlet-name>bzox-status-check</servlet-name>
     <servlet-class>org.pageseeder.ox.berlioz.servlet.OXCheckStatus</servlet-class>
   </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>bzox-internal-view</servlet-name>
+    <url-pattern>/bzox/view/*</url-pattern>
+  </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>bzox-handle</servlet-name>
