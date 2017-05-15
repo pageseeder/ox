@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author Ciber Cai
  * @version 24 June 2016
+ * @deprecated Please use the {@link OXGetFile}
+ * TODO Remove in the version 2.3.0
  */
 public final class OXDownload implements Filter {
 

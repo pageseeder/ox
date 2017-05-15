@@ -6,21 +6,40 @@
      metadata-complete="true">
   
   <!--  OX download filter -->   
-  <filter>
+  <!-- <filter>
     <filter-name>bzox-download</filter-name>
     <filter-class>org.pageseeder.ox.berlioz.filter.OXDownload</filter-class>
     <init-param>
       <param-name>pattern</param-name>
       <param-value>/bzox/download/</param-value>
     </init-param>
-  </filter>
+  </filter> -->
+  
+  <!-- OX Download servlet (Returns any file for download) -->
+  <servlet>
+    <servlet-name>bzox-download</servlet-name>
+    <servlet-class>org.pageseeder.ox.berlioz.servlet.OXGetFile</servlet-class>
+    <init-param>
+      <param-name>downloadable</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>pattern</param-name>
+      <param-value>/bzox/download/</param-value>
+    </init-param>
+  </servlet>
  
-  <!-- OX data handle servlet -->
-    <servlet>
+ 
+  <!-- OX View servlet (Return the CSS, JS, HTML etc...) -->
+  <servlet>
     <servlet-name>bzox-internal-view</servlet-name>
     <servlet-class>org.pageseeder.ox.berlioz.servlet.OXGetFile</servlet-class>
     <init-param>
-      <param-name>allowed</param-name>
+      <param-name>downloadable</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <init-param>
+      <param-name>extesions-allowed</param-name>
       <param-value>.js,.css,.html,.xml</param-value>
     </init-param>
     <init-param>
@@ -39,9 +58,15 @@
     <servlet-name>bzox-status-check</servlet-name>
     <servlet-class>org.pageseeder.ox.berlioz.servlet.OXCheckStatus</servlet-class>
   </servlet>
+
   
   <servlet-mapping>
-    <servlet-name>bzox-internal-view</servlet-name>
+    <servlet-name>bzox-download</servlet-name>
+    <url-pattern>/bzox/download/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>bzox-view</servlet-name>
     <url-pattern>/bzox/view/*</url-pattern>
   </servlet-mapping>
 
@@ -54,9 +79,4 @@
     <servlet-name>bzox-status-check</servlet-name>
     <url-pattern>/bzox/check/status</url-pattern>
   </servlet-mapping>
-
-  <filter-mapping>
-    <filter-name>bzox-download</filter-name>
-    <url-pattern>/bzox/download/*</url-pattern>
-  </filter-mapping>
 </web-fragment>
