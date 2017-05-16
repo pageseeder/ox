@@ -244,9 +244,6 @@ public final class Model implements XMLWritable {
     String[] names = getModelsDirectory().list(new FilenameFilter() {
       @Override
       public boolean accept(File dir, String name) {
-        System.out.println("Dir: " + dir.getAbsoluteFile());
-        System.out.println("Is Directory: " + dir.isDirectory());
-        System.out.println("Name: " + name);
         return dir != null && dir.isDirectory();
       }
     });
