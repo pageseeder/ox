@@ -4,6 +4,7 @@
 package org.pageseeder.ox.berlioz.generator;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import org.pageseeder.berlioz.BerliozException;
 import org.pageseeder.berlioz.GlobalSettings;
@@ -53,6 +54,19 @@ public class ExecuteStep implements ContentGenerator {
     // Fetch the package data
     PackageData data = Requests.getPackageData(req, xml);
 
+    //Add extra step parameters
+    Enumeration<String> extraParameters = req.getParameterNames();
+    while(extraParameters.hasMoreElements()) {
+      String extraParameter = extraParameters.nextElement();
+      if (!extraParameter.equals("id")
+          &&!extraParameter.equals("pipeline")
+          &&!extraParameter.equals("model")
+          &&!extraParameter.equals("step")) {
+        data.setParameter(extraParameter, req.getParameter(extraParameter));
+      }
+    }
+    
+    
     if (data == null) {
       req.setStatus(ContentStatus.NOT_FOUND);
       LOGGER.error("No package data found.");
