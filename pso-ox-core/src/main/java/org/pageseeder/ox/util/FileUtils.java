@@ -79,6 +79,22 @@ public class FileUtils {
   }
   
   /**
+   * Returns the file extension.
+   * @param file
+   * @return
+   */
+  public static String getFileExtension (final File file) {
+    String extension = "";
+    if (file != null) {
+      int lastIndexOf = file.getName().lastIndexOf(".");
+      if (lastIndexOf>0) {
+        extension = file.getName().substring(lastIndexOf + 1);
+      }
+    }
+    return extension;
+  }
+  
+  /**
    * 
    * @param data: package of the data
    * @param fromFolder: directory that It will put the data

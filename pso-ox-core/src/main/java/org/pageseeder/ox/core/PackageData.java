@@ -477,7 +477,7 @@ public final class PackageData implements XMLWritable, Serializable {
 
         LOGGER.debug("ProbeContentType: {}", probeContentType);
         if (StringUtils.isBlank(probeContentType)) {
-          mediaType = this.getProperty("contenttype", "unknown");
+          mediaType = this.getProperty("contenttype", FileUtils.getFileExtension(file));
           LOGGER.debug("mediaType: {}", mediaType);
         } else {
           mediaType = probeContentType;

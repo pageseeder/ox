@@ -26,6 +26,13 @@ public class FileUtilsTest {
     config.setModelsDirectory(modelDir);
   }
   
+  
+  @Test
+  public void getExtension() {
+    File sampleFile = new File("src/test/resources/models/m1/sample.xml");    
+    Assert.assertEquals("Get Extension not working", "xml", FileUtils.getFileExtension(sampleFile));
+  }
+  
   @Test
   public void getXMLFileByExtension() {
     File sampleFile = new File("src/test/resources/models/m1/sample.xml");
