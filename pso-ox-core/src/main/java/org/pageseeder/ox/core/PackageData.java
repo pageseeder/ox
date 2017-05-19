@@ -23,6 +23,7 @@ import org.pageseeder.ox.api.PackageInspector;
 import org.pageseeder.ox.util.FileUtils;
 import org.pageseeder.ox.util.ISO8601;
 import org.pageseeder.ox.util.PeriodicCleaner;
+import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.ox.util.ZipUtils;
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
@@ -101,7 +102,7 @@ public final class PackageData implements XMLWritable, Serializable {
   private PackageData(long created, String id, File file) {
     this._created = created;
     this._id = id;
-    this._mediaType = getMidiaType(file);
+    this._mediaType = getMediaType(file);
     this._dir = getPackageDirectory(this._id);
     this._orig = file != null ? store(file, this._dir) : null;
     if (file != null) {
@@ -460,23 +461,32 @@ public final class PackageData implements XMLWritable, Serializable {
   /**
    * @return the mime type by filename
    */
-  private static String getMidiaType(File file) {
+  private String getMediaType(File file) {
+    String mediaType = "unknown";
     // if it's directory FIXME this could be wrong.
-    if (file != null && file.isDirectory()) { return "text/directory"; }
+    if (file != null && file.isDirectory()) { mediaType = "text/directory"; }
 
     if (file != null && file.exists() && file.isFile()) {
       // psml
-      if (file.getName().endsWith(".psml")) { return "application/vnd.pageseeder.psml+xml"; }
+      if (file.getName().endsWith(".psml")) { mediaType = "application/vnd.pageseeder.psml+xml"; }
 
       Path path = file.toPath();
       try {
-        return Files.probeContentType(path) != null ? Files.probeContentType(path) : "unknown";
+        LOGGER.debug("Path: {}", path);
+        String probeContentType = Files.probeContentType(path); 
+
+        LOGGER.debug("ProbeContentType: {}", probeContentType);
+        if (StringUtils.isBlank(probeContentType)) {
+          mediaType = this.getProperty("contenttype", "unknown");
+          LOGGER.debug("mediaType: {}", mediaType);
+        } else {
+          mediaType = probeContentType;
+        }
       } catch (IOException ex) {
         LOGGER.warn("Cannot fine media type for {}", path);
-        return "unknown";
       }
     }
-    return "unknown";
+    return mediaType;
   }
 
   private static String sanity(String path) {
