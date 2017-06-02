@@ -28,6 +28,18 @@ public class FileUtilsTest {
   
   
   @Test
+  public void write() {
+    try {
+      String fileContent = "First Line"; 
+      File target = new File(OXConfig.getOXTempFolder(), "file-write.txt");
+      FileUtils.write(fileContent, target);
+      Assert.assertEquals(fileContent, FileUtils.read(target));
+    } catch (IOException ex) {
+      Assert.fail();
+    }
+  }
+  
+  @Test
   public void getExtension() {
     File sampleFile = new File("src/test/resources/models/m1/sample.xml");    
     Assert.assertEquals("Get Extension not working", "xml", FileUtils.getFileExtension(sampleFile));

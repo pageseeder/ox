@@ -3,8 +3,13 @@
  */
 package org.pageseeder.ox.util;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.Charset;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -118,5 +123,34 @@ public class FileUtils {
     return fromFolder;
   }
 
-
+  /**
+   * write the file content into the target.
+   * @param fileContent
+   * @param target
+   * @throws IOException
+   */
+  public static void write(String fileContent, File target) throws IOException {
+    Writer writer = null;
+    try {
+      writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(target), "UTF-8"));
+      writer.write(fileContent);
+    } finally {
+      if (writer != null) {
+        writer.close();
+      }
+    }
+  }
+  
+  /**
+   * Returns the content of the source file. 
+   * 
+   * @param source
+   * @return
+   * @throws IOException
+   */
+  public static String read(File source) throws IOException {
+    Charset encoding = Charset.forName("UTF-8");
+    byte[] encoded = Files.readAllBytes(source.toPath());
+    return new String(encoded, encoding);
+  }
 }
