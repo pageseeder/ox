@@ -29,7 +29,7 @@
     </init-param>
     <init-param>
       <param-name>extesions-allowed</param-name>
-      <param-value>.js,.css,.html,.xml</param-value>
+      <param-value>.js,.css,.html,.xml,.png,.jpg,.jpeg</param-value>
     </init-param>
     <init-param>
       <param-name>pattern</param-name>
