@@ -70,10 +70,10 @@ public final class OXGetFile extends HttpServlet {
        // get file
        File file = new File(OXConfig.getOXTempFolder(), requestPath);
        if (file != null && file.exists() && file.isFile()) {
-         String mediaType = getMidiaType(file);
+         String mediaType = getMediaType(file);
   
+         res.setContentType("unknown".equals(mediaType) ? "application/octet-stream" : mediaType);
          if ("true".equals(this.downloadable)) {
-           res.setContentType("unknown".equals(mediaType) ? "application/octet-stream" : mediaType);
            res.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + '"');
          }
          
@@ -139,7 +139,7 @@ public final class OXGetFile extends HttpServlet {
     * @param file the file
     * @return the mime type by filename
     */
-   private static String getMidiaType(File file) {
+   private static String getMediaType(File file) {
      if (file != null && file.exists()) {
        Path path = file.toPath();
        try {
