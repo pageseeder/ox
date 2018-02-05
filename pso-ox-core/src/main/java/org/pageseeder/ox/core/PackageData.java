@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,9 +19,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.api.PackageInspector;
 import org.pageseeder.ox.util.FileUtils;
+import org.pageseeder.ox.util.FilesFinder;
+import org.pageseeder.ox.util.GlobPatternUtils;
 import org.pageseeder.ox.util.ISO8601;
 import org.pageseeder.ox.util.PeriodicCleaner;
 import org.pageseeder.ox.util.StringUtils;
@@ -135,11 +140,35 @@ public final class PackageData implements XMLWritable, Serializable {
    * @param path the relative path in the package
    * @return the File.
    */
+  @Nullable
   public File getFile(String path) {
-    if (path == null) return null;
-    return new File(this._dir, path);
+    List<File> files = getFiles(path);
+    File file = null;
+    if (!files.isEmpty()) {
+      file = files.get(0);
+    }
+    return file;
   }
 
+  /**
+   * @param path the relative path in the package
+   * @return the File.
+   */
+  @NonNull
+  public List<File> getFiles(String path) {
+    List<File> files = new ArrayList<>();
+    if (path != null) {    
+      if (GlobPatternUtils.isGlobPattern(path)) {
+        FilesFinder finder = new FilesFinder(path, this._dir);
+        files = finder.getFiles();
+      } else {
+        files.add(new File(this._dir, path));
+      }
+    }
+    return files;
+  }
+
+  
   /**
    * @param file the file in {@link PackageData}
    * @return the path in {@link PackageData}

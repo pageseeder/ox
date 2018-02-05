@@ -52,6 +52,27 @@ public class TransformationTest {
 
     System.out.println(xml.toString());
     Assert.assertEquals(ResultStatus.OK, result.status());
+  }
+  
+  @Test
+  public void test_processGlobPattern() throws IOException {
+    File file = new File("src/test/resources/models/m1/sample.xml");
+    Model model = new Model("m1");
+    PackageData data = PackageData.newPackageData("Transformation", file);
+    Map<String, String> params = new HashMap<>();
+    params.put("input", "*.xml");
+    params.put("xsl", "xslt-sample.xsl");
+    StepInfoImpl info = new StepInfoImpl("step-id", "step name", "myinput.xml", "myoutput.xml", params);
 
+    Transformation step = new Transformation();
+    Result result = step.process(model, data, info);
+    XMLStringWriter xml = new XMLStringWriter(NamespaceAware.No);
+    result.toXML(xml);
+
+    xml.flush();
+    xml.close();
+
+    System.out.println(xml.toString());
+    Assert.assertEquals(ResultStatus.OK, result.status());
   }
 }

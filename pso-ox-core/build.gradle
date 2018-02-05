@@ -14,6 +14,10 @@ dependencies {
     'org.slf4j:slf4j-api:1.7.+',
   )
 
+  compileOnly (
+    'org.eclipse.jdt:org.eclipse.jdt.annotation:2.0.0'
+  )
+
   runtime(
     'net.sf.saxon:Saxon-HE:9.7.0-2',
     'ch.qos.logback:logback-core:1.1.+',

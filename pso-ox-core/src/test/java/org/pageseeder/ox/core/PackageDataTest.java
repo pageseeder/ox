@@ -5,11 +5,13 @@ package org.pageseeder.ox.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.pageseeder.ox.OXConfig;
+import org.pageseeder.ox.util.FileUtils;
 
 public class PackageDataTest {
 
@@ -91,5 +93,96 @@ public class PackageDataTest {
     Assert.assertThat(data.getPath(inPackageDateFile), org.hamcrest.core.Is.is("/sample.docx"));
 
   }
+  
+  @Test
+  public void test_getFile() {
+    File sampleFile = new File("src/test/resources/models/m1/sample.xml");
+    File toCopy1 = new File("src/test/resources/org/pageseeder/ox/util/filefinder/c.html");
+    File toCopy2 = new File("src/test/resources/org/pageseeder/ox/util/filefinder/folder1/a.html");
+    PackageData data = PackageData.newPackageData(String.valueOf(System.nanoTime()), sampleFile);
+    try {
+      File destinationFolder = new File(data.directory(),  "filefinder");
+      destinationFolder.mkdir();      
+      FileUtils.copy(toCopy1, new File(destinationFolder, "c.html"));
+      FileUtils.copy(toCopy2, new File(destinationFolder, "folder1/a.html"));
+      File test = data.getFile("sample.xml");
+      Assert.assertNotNull(test);
+      Assert.assertTrue(test.exists());
+      test = data.getFile("filefinder/c.html");
+      Assert.assertNotNull(test);
+      Assert.assertTrue(test.exists());
+      test = data.getFile("filefinder/folder1/a.html");
+      Assert.assertNotNull(test);
+      Assert.assertTrue(test.exists());
+    } catch (IOException e) {
+      Assert.fail(e.getMessage());
+    }
+  }
+  
+  @Test
+  public void test_getFileByUsingGlobPattern() {
+    File sampleFile = new File("src/test/resources/models/m1/sample.xml");
+    File toCopy1 = new File("src/test/resources/org/pageseeder/ox/util/filefinder/c.html");
+    File toCopy2 = new File("src/test/resources/org/pageseeder/ox/util/filefinder/folder1/a.html");
+    PackageData data = PackageData.newPackageData(String.valueOf(System.nanoTime()), sampleFile);
+    try {
+      File destinationFolder = new File(data.directory(),  "filefinder");
+      destinationFolder.mkdir();      
+      FileUtils.copy(toCopy1, new File(destinationFolder, "c.html"));
+      FileUtils.copy(toCopy2, new File(destinationFolder, "folder1/a.html"));
+      File test = data.getFile("*.xml");
+      Assert.assertNotNull(test);
+      Assert.assertEquals("sample.xml", test.getName());
+      Assert.assertTrue(test.exists());
+      test = data.getFile("*.html");
+      Assert.assertNull(test);
+      test = data.getFile("**/*.html");
+      Assert.assertNotNull(test);
+      Assert.assertEquals("c.html", test.getName());
+      Assert.assertTrue(test.exists());
+      test = data.getFile("filefinder/folder1/**.html");
+      Assert.assertNotNull(test);
+      Assert.assertEquals("a.html", test.getName());
+      Assert.assertTrue(test.exists());
+    } catch (IOException e) {
+      Assert.fail(e.getMessage());
+    }
+  }
 
+  @Test
+  public void test_getFilesByUsingGlobPattern() {
+    File sampleFile = new File("src/test/resources/models/m1/sample.xml");
+    File toCopy1 = new File("src/test/resources/org/pageseeder/ox/util/filefinder/c.html");
+    File toCopy2 = new File("src/test/resources/org/pageseeder/ox/util/filefinder/folder1/a.html");
+    PackageData data = PackageData.newPackageData(String.valueOf(System.nanoTime()), sampleFile);
+    try {
+      File destinationFolder = new File(data.directory(),  "filefinder");
+      destinationFolder.mkdir();      
+      FileUtils.copy(toCopy1, new File(destinationFolder, "c.html"));
+      FileUtils.copy(toCopy2, new File(destinationFolder, "folder1/a.html"));
+      List<File> files = data.getFiles("**.html");
+      Assert.assertNotNull(files);
+      Assert.assertTrue(files.size()==2);
+      files = data.getFiles("**/*.html");
+      Assert.assertNotNull(files);
+      Assert.assertTrue(files.size()==2);
+      files = data.getFiles("**.*ml");
+      Assert.assertNotNull(files);
+      Assert.assertTrue(files.size()==3);
+      files = data.getFiles("**.{xml,html}");
+      Assert.assertNotNull(files);
+      Assert.assertTrue(files.size()==3);
+      files = data.getFiles("**/*.*ml");
+      Assert.assertNotNull(files);
+      Assert.assertTrue(files.size()==2);
+      files = data.getFiles("**/folder1/*.*ml");
+      Assert.assertNotNull(files);
+      Assert.assertTrue(files.size()==1);
+      files = data.getFiles("**/[a].*ml");
+      Assert.assertNotNull(files);
+      Assert.assertTrue(files.size()==1);
+    } catch (IOException e) {
+      Assert.fail(e.getMessage());
+    }
+  }
 }
