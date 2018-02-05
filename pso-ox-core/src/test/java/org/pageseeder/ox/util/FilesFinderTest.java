@@ -62,6 +62,8 @@ public class FilesFinderTest {
   public void findByDirectory() {
     exec("*folder1/**", "folder1/a.html","folder1/a.java","folder1/a.txt","folder1/test01.html","folder1/test01.java","folder1/test01.txt");
     exec("*folder1/*test*", "folder1/test01.html","folder1/test01.java","folder1/test01.txt");   
+    exec("folder1/**", "folder1/a.html","folder1/a.java","folder1/a.txt","folder1/test01.html","folder1/test01.java","folder1/test01.txt");
+    exec("folder1/*test*", "folder1/test01.html","folder1/test01.java","folder1/test01.txt");
   }
   
   @Test
