@@ -83,9 +83,9 @@ An XML processing pipeline doing that hard work
 
 ### By extension
 
-__`*.java`__ - Matches all files with java extension into base directory.
-__`**.java`__ - Matches all files with java extension into base directory and sub directories.
-__`**/*.java`__ - Matches all files with java extension into sub directories.
+__`*.java`__ - Matches all files with java extension into base directory. 
+__`**.java`__ - Matches all files with java extension into base directory and sub directories. 
+__`**/*.java`__ - Matches all files with java extension into sub directories. 
 
 ### By multiple extension
  
