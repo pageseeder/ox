@@ -20,13 +20,12 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '3.1'
+  gradleVersion = '4.3.1'
   description 'Generates the Gradle wrapper scripts'
 }
-/*
-task publishAllToBintray {
+
+task publishAllToBintray (group: "allette"){
   subprojects.each {
     dependsOn("${it.path}:bintrayUpload" )
   }
 }
-*/
