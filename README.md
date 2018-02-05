@@ -12,9 +12,14 @@ An XML processing pipeline doing that hard work
   <pipeline id="xml-validation" name="Validate XML" accepts="application/xml" default="true">
     <step id="schematron-validation-asynchronous" async="true" name="XML Validation Asynchronous" class="org.pageseeder.ox.schematron.step.SchematronValidation">
       <parameter name="schema" value="schema.sch"/>
+      <!-- Glob pattern for input -->
+      <parameter name="input" value="*.xml"/>
+      <parameter name="output" value="first-validation.xml"/>
     </step>
     <step id="schematron-validation-synchronous" name="XML Validation synchronous" class="org.pageseeder.ox.schematron.step.SchematronValidation">
       <parameter name="schema" value="schema.sch"/>
+      <parameter name="input" value="first-validation.xml"/>
+      <parameter name="output" value="second-validation.xml"/>
     </step>
   </pipeline>
   
@@ -27,6 +32,7 @@ An XML processing pipeline doing that hard work
 ``` 
 
 ## Step Response Example
+
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <step id="conversion-psml" model="pdf" name="Converting" async="true" step="com.pageseeder.ox.pdf.step.PDFToPSML" next-id="zip-converted">
@@ -71,4 +77,28 @@ An XML processing pipeline doing that hard work
     </infos>
   </result>
 </step>
-``` 
+```
+ 
+## Some examples of Glob Pattern (Input Parameter)
+
+### By extension
+
+__`*.java`__ - Matches all files with java extension into base directory.
+__`**.java`__ - Matches all files with java extension into base directory and sub directories.
+__`**/*.java`__ - Matches all files with java extension into sub directories.
+
+### By multiple extension
+ 
+__`*.{html,java}`__ - Matches all files that has extension as html or java into base directory. if you want the  sub directories.
+
+ 
+### By folder
+
+__`*folder1/**`__ - Matches all files into sub directory folder1
+
+ 
+### By single character
+ 
+__`?.java`__ - Matches all files that has any single character as name and extension as java into base directory.
+__`[abc].java`__ - Matches all files that has a or b or c as name and extension as java into base directory.
+__`[!a].java`__ -  Matches all files that has any single character different of 'a' as name and extension as java into base directory.
