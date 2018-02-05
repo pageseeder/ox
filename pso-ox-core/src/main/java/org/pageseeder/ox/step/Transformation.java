@@ -63,10 +63,15 @@ import org.slf4j.LoggerFactory;
  */
 public final class Transformation implements Step {
 
+  /** The Constant LOGGER. */
   private static final Logger LOGGER = LoggerFactory.getLogger(Transformation.class);
 
+  /** The Constant OUTPUT_FOLDER. */
   private static final String OUTPUT_FOLDER = "transformation";
 
+  /* (non-Javadoc)
+   * @see org.pageseeder.ox.api.Step#process(org.pageseeder.ox.core.Model, org.pageseeder.ox.core.PackageData, org.pageseeder.ox.api.StepInfo)
+   */
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
     // input
@@ -152,16 +157,21 @@ public final class Transformation implements Step {
    */
   private static class CustomURIResolver implements URIResolver {
 
-    /** the root of stylesheet **/
+    /**  the root of stylesheet *. */
     private final File _root;
 
     /**
+     * Instantiates a new custom URI resolver.
+     *
      * @param r the folder of the stylesheet
      */
     public CustomURIResolver(File r) {
       this._root = r;
     }
 
+    /* (non-Javadoc)
+     * @see javax.xml.transform.URIResolver#resolve(java.lang.String, java.lang.String)
+     */
     @Override
     public Source resolve(String href, String base) throws TransformerException {
       File xsl = new File(this._root, href);
@@ -178,21 +188,34 @@ public final class Transformation implements Step {
   }
 
   /**
-  *
-  * @author Christophe Lauret
-  * @author Ciber Cai
-  */
+   * The Class TransformResult.
+   *
+   * @author Christophe Lauret
+   * @author Ciber Cai
+   */
   private class TransformResult extends ResultBase implements Result, Downloadable {
 
+    /** The source. */
     private final String _source;
 
+    /** The target. */
     private final String _target;
 
+    /** The template. */
     private final String _template;
 
+    /** The output. */
     private String output = null;
 
-    /** */
+    /**
+     * Instantiates a new transform result.
+     *
+     * @param model the model
+     * @param data the data
+     * @param source the source
+     * @param target the target
+     * @param template the template
+     */
     private TransformResult(Model model, PackageData data, String source, String target, String template) {
       super(model, data);
       this._source = source;
@@ -200,6 +223,9 @@ public final class Transformation implements Step {
       this._template = template;
     }
 
+    /* (non-Javadoc)
+     * @see org.pageseeder.xmlwriter.XMLWritable#toXML(org.pageseeder.xmlwriter.XMLWriter)
+     */
     @Override
     public void toXML(XMLWriter xml) throws IOException {
       xml.openElement("result");
@@ -246,12 +272,18 @@ public final class Transformation implements Step {
       xml.closeElement();
     }
 
+    /* (non-Javadoc)
+     * @see org.pageseeder.ox.api.Downloadable#downloadPath()
+     */
     @Override
     public File downloadPath() {
       File outputFile = data().getFile(this._target);
       return outputFile;
     }
 
+    /* (non-Javadoc)
+     * @see org.pageseeder.ox.tool.ResultBase#isDownloadable()
+     */
     @Override
     public boolean isDownloadable() {
       return true;

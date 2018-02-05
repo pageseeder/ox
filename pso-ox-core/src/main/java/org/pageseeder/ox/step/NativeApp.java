@@ -40,8 +40,12 @@ import org.slf4j.LoggerFactory;
  */
 public class NativeApp implements Step {
 
+  /** The logger. */
   private static Logger LOGGER = LoggerFactory.getLogger(NativeApp.class);
 
+  /* (non-Javadoc)
+   * @see org.pageseeder.ox.api.Step#process(org.pageseeder.ox.core.Model, org.pageseeder.ox.core.PackageData, org.pageseeder.ox.api.StepInfo)
+   */
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
     File app = data.getFile(info.getParameter("input", info.input()));
@@ -97,14 +101,22 @@ public class NativeApp implements Step {
    */
   private static class NativeApplicationResult extends ResultBase implements Result {
 
-    /** A list of logs **/
+    /**  A list of logs *. */
     private List<String> logs;
 
+    /**
+     * Instantiates a new native application result.
+     *
+     * @param model the model
+     * @param data the data
+     */
     private NativeApplicationResult(Model model, PackageData data) {
       super(model, data);
     }
 
     /**
+     * Adds the log.
+     *
      * @param log the log in String
      */
     public void addLog(String log) {
@@ -114,6 +126,9 @@ public class NativeApp implements Step {
       this.logs.add(log);
     }
 
+    /* (non-Javadoc)
+     * @see org.pageseeder.xmlwriter.XMLWritable#toXML(org.pageseeder.xmlwriter.XMLWriter)
+     */
     @Override
     public void toXML(XMLWriter xml) throws IOException {
       xml.openElement("result", true);
@@ -140,6 +155,9 @@ public class NativeApp implements Step {
       xml.closeElement();// result
     }
 
+    /* (non-Javadoc)
+     * @see org.pageseeder.ox.tool.ResultBase#isDownloadable()
+     */
     @Override
     public boolean isDownloadable() {
       return false;

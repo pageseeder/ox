@@ -38,8 +38,12 @@ import org.slf4j.LoggerFactory;
  */
 public class Decompression implements Step {
 
+  /** The logger. */
   private static Logger LOGGER = LoggerFactory.getLogger(Decompression.class);
 
+  /* (non-Javadoc)
+   * @see org.pageseeder.ox.api.Step#process(org.pageseeder.ox.core.Model, org.pageseeder.ox.core.PackageData, org.pageseeder.ox.api.StepInfo)
+   */
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
 
@@ -76,15 +80,20 @@ public class Decompression implements Step {
 
   }
 
+  /**
+   * The Class DecompressionResult.
+   */
   private static class DecompressionResult extends ResultBase implements Result, Downloadable {
 
-    /** the input */
+    /**  the input. */
     private final String _input;
 
-    /** the output */
+    /**  the output. */
     private final String _output;
 
     /**
+     * Instantiates a new decompression result.
+     *
      * @param model  the model
      * @param data the packageData
      * @param input the input
@@ -96,6 +105,9 @@ public class Decompression implements Step {
       this._output = output;
     }
 
+    /* (non-Javadoc)
+     * @see org.pageseeder.xmlwriter.XMLWritable#toXML(org.pageseeder.xmlwriter.XMLWriter)
+     */
     @Override
     public void toXML(XMLWriter xml) throws IOException {
       xml.openElement("result");
@@ -122,12 +134,18 @@ public class Decompression implements Step {
       xml.closeElement();// result
     }
 
+    /* (non-Javadoc)
+     * @see org.pageseeder.ox.api.Downloadable#downloadPath()
+     */
     @Override
     public File downloadPath() {
       File outputFile = data().getFile(this._output);
       return outputFile;
     }
 
+    /* (non-Javadoc)
+     * @see org.pageseeder.ox.tool.ResultBase#isDownloadable()
+     */
     @Override
     public boolean isDownloadable() {
       return false;

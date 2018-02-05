@@ -20,12 +20,16 @@ import java.nio.file.attribute.BasicFileAttributes;
 import org.pageseeder.ox.core.PackageData;
 
 /**
+ * The Class FileUtils.
+ *
  * @author Adriano Akaishi
  * @since 01/05/2017
  */
 public class FileUtils {
 
   /**
+   * Copy.
+   *
    * @param source the source file or directory.
    * @param target the target file or directory.
    * @throws IOException when IO error occur.
@@ -58,6 +62,8 @@ public class FileUtils {
   }
 
   /**
+   * Delete.
+   *
    * @param target the file or directory needs to delete
    * @throws IOException when IO error occur.
    */
@@ -85,8 +91,9 @@ public class FileUtils {
   
   /**
    * Returns the file extension.
-   * @param file
-   * @return
+   *
+   * @param file the file
+   * @return the file extension
    */
   public static String getFileExtension (final File file) {
     String extension = "";
@@ -100,11 +107,12 @@ public class FileUtils {
   }
   
   /**
-   * 
-   * @param data: package of the data
-   * @param fromFolder: directory that It will put the data
-   * @param extensions: extensions that it will verified
-   * @return
+   * Gets the file by extension.
+   *
+   * @param data the data
+   * @param fromFolder the from folder
+   * @param extensions the extensions
+   * @return the file by extension
    */
   public static String getFileByExtension(PackageData data, String fromFolder, String ... extensions){
     if (extensions != null && extensions.length > 0) {
@@ -125,9 +133,10 @@ public class FileUtils {
 
   /**
    * write the file content into the target.
-   * @param fileContent
-   * @param target
-   * @throws IOException
+   *
+   * @param fileContent the file content
+   * @param target the target
+   * @throws IOException Signals that an I/O exception has occurred.
    */
   public static void write(String fileContent, File target) throws IOException {
     Writer writer = null;
@@ -143,10 +152,10 @@ public class FileUtils {
   
   /**
    * Returns the content of the source file. 
-   * 
-   * @param source
-   * @return
-   * @throws IOException
+   *
+   * @param source the source
+   * @return the string
+   * @throws IOException Signals that an I/O exception has occurred.
    */
   public static String read(File source) throws IOException {
     Charset encoding = Charset.forName("UTF-8");

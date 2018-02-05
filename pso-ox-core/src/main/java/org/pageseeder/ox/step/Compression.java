@@ -38,8 +38,12 @@ import org.slf4j.LoggerFactory;
  */
 public class Compression implements Step {
 
+  /** The logger. */
   private static Logger LOGGER = LoggerFactory.getLogger(Compression.class);
 
+  /* (non-Javadoc)
+   * @see org.pageseeder.ox.api.Step#process(org.pageseeder.ox.core.Model, org.pageseeder.ox.core.PackageData, org.pageseeder.ox.api.StepInfo)
+   */
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
 
@@ -74,14 +78,24 @@ public class Compression implements Step {
 
   }
 
+  /**
+   * The Class CompressionResult.
+   */
   private static class CompressionResult extends ResultBase implements Result, Downloadable {
 
+    /** The input. */
     private final String _input;
 
+    /** The output. */
     private final String _output;
 
     /**
-     * @param data
+     * Instantiates a new compression result.
+     *
+     * @param model the model
+     * @param data the data
+     * @param input the input
+     * @param output the output
      */
     private CompressionResult(Model model, PackageData data, String input, String output) {
       super(model, data);
@@ -89,6 +103,9 @@ public class Compression implements Step {
       this._output = output;
     }
 
+    /* (non-Javadoc)
+     * @see org.pageseeder.xmlwriter.XMLWritable#toXML(org.pageseeder.xmlwriter.XMLWriter)
+     */
     @Override
     public void toXML(XMLWriter xml) throws IOException {
       xml.openElement("result");
@@ -111,6 +128,9 @@ public class Compression implements Step {
       xml.closeElement();// result
     }
 
+    /* (non-Javadoc)
+     * @see org.pageseeder.ox.api.Downloadable#downloadPath()
+     */
     @Override
     public File downloadPath() {
       File outputFile = data().getFile(this._output);

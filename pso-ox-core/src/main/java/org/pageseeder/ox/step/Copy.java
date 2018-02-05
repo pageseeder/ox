@@ -39,6 +39,14 @@ public class Copy implements Step {
   /** The logger. */
   private static Logger LOGGER = LoggerFactory.getLogger(Copy.class);
 
+  /**
+   * Process.
+   *
+   * @param model the model
+   * @param data the data
+   * @param info the info
+   * @return the result
+   */
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
 
@@ -71,12 +79,24 @@ public class Copy implements Step {
     return result;
   }
 
+  /**
+   * The Class CopyResult.
+   */
   private static class CopyResult extends ResultBase implements Result, Downloadable {
+    
+    /** The input. */
     private final String _input;
+    
+    /** The output. */
     private final String _output;
 
     /**
-     * @param data
+     * Instantiates a new copy result.
+     *
+     * @param model the model
+     * @param data the data
+     * @param input the input
+     * @param output the output
      */
     private CopyResult(Model model, PackageData data, String input, String output) {
       super(model, data);
@@ -84,6 +104,12 @@ public class Copy implements Step {
       this._output = output;
     }
 
+    /**
+     * To XML.
+     *
+     * @param xml the xml
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     public void toXML(XMLWriter xml) throws IOException {
       xml.openElement("result");
@@ -109,12 +135,22 @@ public class Copy implements Step {
       xml.closeElement();// result
     }
 
+    /**
+     * Download path.
+     *
+     * @return the file
+     */
     @Override
     public File downloadPath() {
       File outputFile = data().getFile(this._output);
       return outputFile;
     }
 
+    /**
+     * Checks if is downloadable.
+     *
+     * @return true, if is downloadable
+     */
     /* (non-Javadoc)
      * @see org.pageseeder.ox.tool.ResultBase#isDownloadable()
      */

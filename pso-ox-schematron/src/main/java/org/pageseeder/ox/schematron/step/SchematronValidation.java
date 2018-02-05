@@ -35,8 +35,17 @@ import org.slf4j.LoggerFactory;
  */
 public final class SchematronValidation implements Step {
 
+  /** The Constant LOGGER. */
   private static final Logger LOGGER = LoggerFactory.getLogger(SchematronValidation.class);
 
+  /**
+   * Process.
+   *
+   * @param model the model
+   * @param data the data
+   * @param info the info
+   * @return the result
+   */
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
     SchematronCommand cmd = new SchematronCommand(model);

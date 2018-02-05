@@ -31,28 +31,46 @@ import org.slf4j.LoggerFactory;
  */
 public final class OXDownload implements Filter {
 
-  /** the logger */
+  /**  the logger. */
   private static final Logger LOGGER = LoggerFactory.getLogger(OXDownload.class);
 
-  /** the buffer size */
+  /**  the buffer size. */
   private static final int BUFFER_SIZE = 2048;
 
-  /** the matching prefix pattern */
+  /**  the matching prefix pattern. */
   private String pattern;
 
+  /* (non-Javadoc)
+   * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
+   */
   @Override
   public void init(FilterConfig config) throws ServletException {
     this.pattern = config.getInitParameter("pattern") != null ? config.getInitParameter("pattern") : "";
   }
 
+  /* (non-Javadoc)
+   * @see javax.servlet.Filter#destroy()
+   */
   @Override
   public void destroy() {}
 
+  /* (non-Javadoc)
+   * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
+   */
   @Override
   public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
     doHttpFilter((HttpServletRequest) req, (HttpServletResponse) res, chain);
   }
 
+  /**
+   * Do http filter.
+   *
+   * @param req the req
+   * @param res the res
+   * @param chain the chain
+   * @throws IOException Signals that an I/O exception has occurred.
+   * @throws ServletException the servlet exception
+   */
   private void doHttpFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
 
     String requestURI = req.getRequestURI();
@@ -100,6 +118,9 @@ public final class OXDownload implements Filter {
   }
 
   /**
+   * Gets the midia type.
+   *
+   * @param file the file
    * @return the mime type by filename
    */
   private static String getMidiaType(File file) {
