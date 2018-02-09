@@ -20,7 +20,12 @@ An XML processing pipeline doing that hard work
       <parameter name="schema" value="schema.sch"/>
       <parameter name="input" value="first-validation.xml"/>
       <parameter name="output" value="second-validation.xml"/>
-    </step>
+    </step>    
+    <!-- Comma separated list example for input parameter -->
+    <step id="Zip" name="Zipping." class="org.pageseeder.ox.step.Compression">
+      <parameter name="input" value="first-validation.xml,second-validation.xml" /> 
+      <parameter name="output" value="validation.zip"/>
+    </step> 
   </pipeline>
   
   <pipeline id="xml-validation2" name="Validate XML(Synchronous)" accepts="application/xml" default="true">
