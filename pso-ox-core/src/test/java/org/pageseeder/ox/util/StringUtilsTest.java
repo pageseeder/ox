@@ -25,6 +25,7 @@ public class StringUtilsTest {
     Assert.assertFalse(StringUtils.isCommaSeparateFileList(",file.java,file2.html"));
     Assert.assertFalse(StringUtils.isCommaSeparateFileList("file.java,"));
     Assert.assertFalse(StringUtils.isCommaSeparateFileList(",file.java"));
-    Assert.assertFalse(StringUtils.isCommaSeparateFileList("file.java"));    
+    Assert.assertFalse(StringUtils.isCommaSeparateFileList("file.java")); 
+    Assert.assertFalse(StringUtils.isCommaSeparateFileList("file.java,,file.java"));    
   }
 }
