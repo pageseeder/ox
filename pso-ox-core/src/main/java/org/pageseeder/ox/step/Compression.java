@@ -4,7 +4,10 @@ package org.pageseeder.ox.step;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.pageseeder.ox.OXErrors;
 import org.pageseeder.ox.api.Downloadable;
 import org.pageseeder.ox.api.Result;
@@ -55,23 +58,24 @@ public class Compression implements Step {
         : (info.output().equals(info.input())) ? (info.output() + ".zip") : info.output();
     LOGGER.debug("input {}, output {}", input, output);
 
-    File inputFile = data.getFile(input);
+    List<File> inputs = data.getFiles(input);
     File outputFile = data.getFile(output);
 
     // if the input file is not exist
-    if (inputFile == null || !inputFile.exists()) { return new InvalidResult(model, data)
-        .error(new FileNotFoundException("Cannot find the input file " + input + ".")); }
-
+    
     CompressionResult result = new CompressionResult(model, data, input, output);
-    if (inputFile != null && inputFile.exists()) {
+    String errorMessage = validateInputFiles(inputs);
+    if (errorMessage.length()==0) {
       try {
-        ZipUtils.zip(inputFile, outputFile);
+        File [] inputsArray = new File[inputs.size()];
+        inputsArray = inputs.toArray(inputsArray);
+        ZipUtils.zipFilesTo(outputFile, inputsArray);
       } catch (IOException ex) {
-        LOGGER.warn("Cannot compress file {} to {}", inputFile, outputFile, ex);
+        LOGGER.warn("Cannot compress file {} to {}", input, outputFile, ex);
         result.setError(ex);
       }
     } else {
-      result.setError(new FileNotFoundException("Cannot find input file " + input + "."));
+      result.setError(new FileNotFoundException(errorMessage));
     }
 
     return result;
@@ -146,4 +150,18 @@ public class Compression implements Step {
     }
   }
 
+  private @NonNull String validateInputFiles(List<File> inputs) {
+    String errorMessage = "";
+    if (Objects.isNull(inputs)) {
+      errorMessage = "input cannot be null.";
+    } else if (inputs.isEmpty()) {
+      errorMessage = "Input cannot be empty.";
+    } else {
+      for (File input:inputs) {
+        if (!input.exists()) 
+          errorMessage= "The input file ( " + input.getName() + " ) does not exist.";
+      }
+    }
+    return errorMessage;
+  }
 }

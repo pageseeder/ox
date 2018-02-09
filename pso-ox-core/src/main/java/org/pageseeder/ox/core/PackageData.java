@@ -158,7 +158,15 @@ public final class PackageData implements XMLWritable, Serializable {
   public List<File> getFiles(String path) {
     List<File> files = new ArrayList<>();
     if (path != null) {    
-      if (GlobPatternUtils.isGlobPattern(path)) {
+      if (StringUtils.isCommaSeparateFileList(path)) {
+        //It is a list of files separated by comma
+        for (String eachInput:path.split(",")) {
+          if (!StringUtils.isBlank(eachInput)) {
+            files.add(new File(this._dir, eachInput));
+          }
+        }
+      } else if (GlobPatternUtils.isGlobPattern(path)) {
+        //The path has Glob pattern
         FilesFinder finder = new FilesFinder(path, this._dir);
         files = finder.getFiles();
       } else {
