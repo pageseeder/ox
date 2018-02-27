@@ -58,7 +58,12 @@ public final class StepDefinition implements XMLWritable, Serializable {
    * Send of parameter when the pipeline is synchronous. 
    */
   private final boolean _viewable;
-  
+
+  /**
+   * Send of parameter when the pipeline is synchronous. 
+   */
+  private final boolean _downloadable;
+
   /** The output of the step or <code>null</code> for no output. */
   private final String _output;
 
@@ -74,21 +79,22 @@ public final class StepDefinition implements XMLWritable, Serializable {
    *
    * <p>To create step instance, use the {@link StepFactory}.
    *
-   * @param model      The model this step is part of
-   * @param pipeline   The pipeline this step is part of
-   * @param id         ID for the step (unique within pipeline)
-   * @param name       The name of step
-   * @param parameters The list of parameter
-   * @param output     The output of step
-   * @param async        The async
-   * @param viewable     The viewable
-   * @param step       The step
+   * @param model         The model this step is part of
+   * @param pipeline      The pipeline this step is part of
+   * @param id            ID for the step (unique within pipeline)
+   * @param name          The name of step
+   * @param parameters    The list of parameter
+   * @param output        The output of step
+   * @param async         The async
+   * @param viewable      The viewable
+   * @param downloadable  The downloadable
+   * @param step          The step
    *
    * @throws NullPointerException if any of the argument is <code>null</code>
    * @throws IllegalArgumentException If the ID is not valid.
    */
-  private StepDefinition(Model model, Pipeline pipeline, String id, String name, Map<String, String> parameters, String output, boolean async, boolean viewable, Step step) {
-    this(model, pipeline, id, name, parameters, output, async, viewable, step, null);
+  private StepDefinition(Model model, Pipeline pipeline, String id, String name, Map<String, String> parameters, String output, boolean async, boolean viewable, boolean downloadable, Step step) {
+    this(model, pipeline, id, name, parameters, output, async, viewable, downloadable, step, null);
   }
 
   /**
@@ -106,12 +112,13 @@ public final class StepDefinition implements XMLWritable, Serializable {
    * @param output       The output of step
    * @param async        The async
    * @param viewable     The viewable
+   * @param downloadable The downloadable
    * @param step         The step
    * @param callbackStep The callback step
    * @throws NullPointerException if any of the argument is <code>null</code>
    * @throws IllegalArgumentException If the ID is not valid.
    */
-  private StepDefinition(Model model, Pipeline pipeline, String id, String name, Map<String, String> parameters, String output, boolean async, boolean viewable, Step step, CallbackStep callbackStep) {
+  private StepDefinition(Model model, Pipeline pipeline, String id, String name, Map<String, String> parameters, String output, boolean async, boolean viewable, boolean downloadable, Step step, CallbackStep callbackStep) {
     if (model == null) { throw new NullPointerException("model is null."); }
     if (pipeline == null) { throw new NullPointerException("pipeline is null."); }
     if (id == null) { throw new NullPointerException("id is null."); }
@@ -123,6 +130,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
     this._step = step;
     this._async = async;
     this._viewable = viewable;
+    this._downloadable = downloadable;
     this._callbackStep = callbackStep;
     this._parameters = parameters;
     this._output = output;
@@ -171,6 +179,14 @@ public final class StepDefinition implements XMLWritable, Serializable {
   public final boolean viewable() {
     return this._viewable;
   }
+  
+  /**
+   * @return is downloadable.
+   */
+  public final boolean downloadable() {
+    return this._downloadable;
+  }
+
   
   /**
    * @return The previous step if any
@@ -273,6 +289,8 @@ public final class StepDefinition implements XMLWritable, Serializable {
 
     xml.attribute("viewable", String.valueOf(this.viewable()));     
   
+    xml.attribute("downloadable", String.valueOf(this.downloadable()));     
+
     if (this._step != null) {
       xml.attribute("step", this._step.getClass().getName());
     }   
@@ -379,6 +397,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
 
     private boolean async = false;
     private boolean viewable = false;
+    private boolean downloadable = false;
     
     private Map<String, String> parameters = new HashMap<String, String>();
 
@@ -457,6 +476,16 @@ public final class StepDefinition implements XMLWritable, Serializable {
      this.viewable = viewable;
      return this;
    }
+   
+   /**
+   *
+   * @param downloadable the downloadable
+   * return the {@link Builder}
+   */
+   public Builder setDownloadable(boolean downloadable) {
+    this.downloadable = downloadable;
+    return this;
+   }
     
     /**
      * @param name the name of parameter
@@ -529,9 +558,9 @@ public final class StepDefinition implements XMLWritable, Serializable {
         }
 
         if (callback != null) {
-          definition = new StepDefinition(this._model, this.pipeline, this.id, this.name, this.parameters, this.output, this.async, this.viewable, step, callback);
+          definition = new StepDefinition(this._model, this.pipeline, this.id, this.name, this.parameters, this.output, this.async, this.viewable, this.downloadable, step, callback);
         } else {
-          definition = new StepDefinition(this._model, this.pipeline, this.id, this.name, this.parameters, this.output, this.async, this.viewable, step);
+          definition = new StepDefinition(this._model, this.pipeline, this.id, this.name, this.parameters, this.output, this.async, this.viewable, this.downloadable, step);
         }
       } catch (Exception ex) {
         throw new OXException("Unable to build step.", ex);
