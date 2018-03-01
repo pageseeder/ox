@@ -60,7 +60,9 @@ public final class OXGetFile extends HttpServlet {
      String requestPath = requestURI.substring(requestURI.lastIndexOf(this.pattern) + this.pattern.length());
      LOGGER.debug("Pattern {}", pattern);
      LOGGER.debug("request PATH {}", requestPath);
-
+     LOGGER.debug("downloadable {}", downloadable);
+     
+     
      if (requestPath == null) {
        res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
        return;
