@@ -107,6 +107,67 @@ public class FileUtils {
   }
   
   /**
+   * Returns the MIME type according file extension.
+   *
+   * @param file the file
+   * @return the mime type
+   */
+  public static String getMimeType (final File file){
+    String mimeType = "unknown";
+    if (file != null && file.exists()) {
+      String extension = FileUtils.getFileExtension(file);
+      switch (extension.toLowerCase()) {
+      case "css":
+        mimeType = "text/css";
+        break;
+      case "csv":
+        mimeType = "text/csv";
+        break;
+      case "docx":
+        mimeType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        break;
+      case "epub":
+        mimeType = "application/epub+zip";
+        break;
+      case "html":
+        mimeType = "text/html";
+        break;
+      case "jpg":
+      case "jpeg":
+        mimeType = "image/jpeg";
+        break;
+      case "js":
+        mimeType = "application/javascript";
+        break;
+      case "pdf":
+        mimeType = "application/pdf";
+        break;
+      case "png":
+        mimeType = "image/png";
+        break;
+      case "psml":
+        mimeType= "application/vnd.pageseeder.psml+xml";
+        break;
+      case "svg":
+        mimeType = "image/svg+xml";
+        break;
+      case "xlsx":
+        mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        break;
+      case "xml":
+        mimeType = "application/xml";
+        break;
+      case "zip":
+        mimeType = "application/zip";
+        break;
+      default:
+        mimeType = "unknown";
+      }
+    }
+    return mimeType;
+  }
+  
+  /**
    * Gets the file by extension.
    *
    * @param data the data

@@ -38,6 +38,21 @@ public class FileUtilsTest {
       Assert.fail();
     }
   }
+
+  @Test
+  public void getMIMEType() {
+    File sampleFile = new File("src/test/resources/models/m1/sample.xml");    
+    Assert.assertEquals("Get MIME type not working", "application/xml", FileUtils.getMimeType(sampleFile));
+    sampleFile = new File("src/test/resources/models/m1/sample.html"); 
+    Assert.assertEquals("Get MIME type not working", "text/html", FileUtils.getMimeType(sampleFile));
+    sampleFile = new File("src/test/resources/models/m1/Sample.docx"); 
+    Assert.assertEquals("Get MIME type not working", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", FileUtils.getMimeType(sampleFile));
+    sampleFile = new File("src/test/resources/models/m1/sample.zip"); 
+    Assert.assertEquals("Get MIME type not working", "application/zip", FileUtils.getMimeType(sampleFile));
+    sampleFile = new File("src/test/resources/models/m1/sample.psml"); 
+    Assert.assertEquals("Get MIME type not working", "application/vnd.pageseeder.psml+xml", FileUtils.getMimeType(sampleFile));
+  }
+  
   
   @Test
   public void getExtension() {

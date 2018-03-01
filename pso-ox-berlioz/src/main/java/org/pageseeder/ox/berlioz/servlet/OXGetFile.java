@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -14,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.pageseeder.ox.OXConfig;
+import org.pageseeder.ox.util.FileUtils;
 import org.pageseeder.ox.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,11 +72,12 @@ public final class OXGetFile extends HttpServlet {
        File file = new File(OXConfig.getOXTempFolder(), requestPath);
        if (file != null && file.exists() && file.isFile()) {
          String mediaType = getMediaType(file);
-  
+         LOGGER.debug("Content type {}.", mediaType);
          res.setContentType("unknown".equals(mediaType) ? "application/octet-stream" : mediaType);
-         if ("true".equals(this.downloadable)) {
-           res.setHeader("Content-Disposition", "attachment; filename=\"" + file.getName() + '"');
-         }
+         
+         String contentDisposition = "true".equals(this.downloadable) ? "attachment" : "inline";
+         LOGGER.debug("Content Disposition {}.", contentDisposition);
+         res.setHeader("Content-Disposition", contentDisposition + "; filename=\"" + file.getName() + '"');
          
          try (InputStream ins = new FileInputStream(file)) {
            // get output stream for servlet
@@ -142,15 +142,6 @@ public final class OXGetFile extends HttpServlet {
     * @return the mime type by filename
     */
    private static String getMediaType(File file) {
-     if (file != null && file.exists()) {
-       Path path = file.toPath();
-       try {
-         return Files.probeContentType(path) != null ? Files.probeContentType(path) : "unknown";
-       } catch (IOException ex) {
-         LOGGER.warn("Cannot fine media type for {}", path);
-         return "unknown";
-       }
-     }
-     return "unknown";
+     return FileUtils.getMimeType(file);
    }
 }
