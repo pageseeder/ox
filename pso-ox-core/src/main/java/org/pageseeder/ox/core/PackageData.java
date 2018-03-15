@@ -157,8 +157,11 @@ public final class PackageData implements XMLWritable, Serializable {
   @NonNull
   public List<File> getFiles(String path) {
     List<File> files = new ArrayList<>();
-    if (path != null) {    
-      if (StringUtils.isCommaSeparateFileList(path)) {
+    if (path != null) {
+      // check if single file first (as some filenames can have ',' or '*' in them
+      if (new File(this._dir, path).exists()) {
+        files.add(new File(this._dir, path));
+      } else if (StringUtils.isCommaSeparateFileList(path)) {
         //It is a list of files separated by comma
         for (String eachInput:path.split(",")) {
           if (!StringUtils.isBlank(eachInput)) {
@@ -170,6 +173,7 @@ public final class PackageData implements XMLWritable, Serializable {
         FilesFinder finder = new FilesFinder(path, this._dir);
         files = finder.getFiles();
       } else {
+        // add it anyway and let the caller decide what to do when it doesn't exist
         files.add(new File(this._dir, path));
       }
     }

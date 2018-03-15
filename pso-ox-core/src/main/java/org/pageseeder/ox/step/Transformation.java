@@ -78,6 +78,10 @@ public final class Transformation implements Step {
     String xml = info.getParameter("input", info.input());
     File source = data.getFile(xml);
 
+    if (source == null || !source.exists()) {
+      source = model.getFile(xml);
+    }
+
     // throw the error
     if (source == null || !source.exists()) { return new InvalidResult(model, data)
         .error(new FileNotFoundException("Cannot find the source file " + xml + ".")); }
@@ -125,7 +129,9 @@ public final class Transformation implements Step {
       if (originalFileName != null) {
         transformer.setParameter("original_file", originalFileName);
       }
-      
+      transformer.setParameter("data-id", data.id());
+      transformer.setParameter("data-repository", data.directory().getAbsolutePath().replace('\\', '/'));
+
       // Add the parameters from step definition in model.xml
       // these parameters should use the prefix _xslt-
       for (Entry<String, String> p :info.parameters().entrySet()) {

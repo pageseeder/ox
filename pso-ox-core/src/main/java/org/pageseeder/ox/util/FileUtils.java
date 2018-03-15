@@ -3,12 +3,7 @@
  */
 package org.pageseeder.ox.util;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -16,6 +11,9 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.pageseeder.ox.core.PackageData;
 
@@ -222,5 +220,53 @@ public class FileUtils {
     Charset encoding = Charset.forName("UTF-8");
     byte[] encoded = Files.readAllBytes(source.toPath());
     return new String(encoded, encoding);
+  }
+
+  /**
+   * Compute the relative path between two files:
+   *   root             descendant            returned
+   *   /a/b/c           /a/b/c/d.txt          d.txt
+   *   /a/b/c           /a/b/c/d/e.txt        d/e.txt
+   *   /a/b/c           /a/b/d.txt            ''
+   *
+   * @param descendant  the descendant file
+   * @param root        the root folder
+   *
+   * @return the relative path if files match, empty string otherwise
+   */
+  public static String relativePath(File descendant, File root) {
+    try {
+      String rootPath = root.getCanonicalPath().replace('\\', '/');
+      String descendantPath = descendant.getCanonicalPath().replace('\\', '/');
+      if (descendantPath.startsWith(rootPath)) return descendantPath.substring(rootPath.length()+1);
+      return "";
+    } catch (IOException ex) {
+      return "";
+    }
+  }
+
+  // ------------------------------------------------------------------
+  // find files methods
+  // ------------------------------------------------------------------
+
+  public static List<File> findFiles(File root, FileFilter filter) {
+    if (!root.exists()) return Collections.emptyList();
+    if (root.isFile()) return Collections.singletonList(root);
+    List<File> all = new ArrayList<>();
+    for (File f : root.listFiles(filter)) {
+      if (f.isDirectory()) all.addAll(findFiles(f, filter));
+      else all.add(f);
+    }
+    return all;
+  }
+
+  public static List<File> findFiles(File root, String extension) {
+    return findFiles(root, filter(extension));
+  }
+
+  private static FileFilter filter(String ext) {
+    if (ext == null) return null;
+    final String extension = ext.charAt(0) == '.' ? ext.toLowerCase() : '.' + ext.toLowerCase();
+    return f -> f.isDirectory() || f.getName().toLowerCase().endsWith(extension);
   }
 }

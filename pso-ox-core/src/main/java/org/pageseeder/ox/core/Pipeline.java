@@ -235,6 +235,7 @@ public final class Pipeline implements XMLWritable, Serializable {
         String callback = attributes.getValue("callback");
         String name = attributes.getValue("name");     
         String viewable = attributes.getValue("viewable");
+        String failOnError = attributes.getValue("fail-on-error");
 
         this.builder.setStepId(this.stepId);
         this.builder.setStepName(name != null ? name : this.stepId);
@@ -242,6 +243,7 @@ public final class Pipeline implements XMLWritable, Serializable {
         this.builder.setStepClass(classname);
         this.builder.setCallback(callback);
         this.builder.setViewable("true".equalsIgnoreCase(viewable));
+        this.builder.setFailOnerror(!"false".equalsIgnoreCase(failOnError)); // default is true
         this.inStep = true;
       }
 
