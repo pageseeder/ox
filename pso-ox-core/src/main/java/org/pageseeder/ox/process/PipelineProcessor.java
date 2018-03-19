@@ -98,7 +98,8 @@ class PipelineProcessor implements Runnable {
       StepDefinition stepDef = pipeline.getStep(i);
       // execute the step
       Result result = stepDef.exec(data);
-
+      job.addStepResult(result);
+      
       status.setPercentage(status.getPercentage() + perc - buffer);
 
       // set the download path if the result object is {@link Downloadable}
@@ -140,9 +141,12 @@ class PipelineProcessor implements Runnable {
       // catch the error
       if (result.status() == ResultStatus.ERROR) {
         LOGGER.debug("result {}", result.status());
-        job.failed(result);
+        job.failed();
         failed = true;
-        break;
+        //If true stop, if false continues
+        if (stepDef.failOnError()) {
+          break;
+        }
       }
     }
     // set the status to completed.

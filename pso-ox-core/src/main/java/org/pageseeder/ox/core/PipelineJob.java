@@ -5,6 +5,8 @@ package org.pageseeder.ox.core;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.pageseeder.ox.api.Result;
@@ -62,7 +64,7 @@ public final class PipelineJob implements XMLWritable, Serializable {
   /**
    * The job result
    */
-  private Result result;
+  private List<Result> results;
 
   /**
    * to indicate the job is in slow land
@@ -82,6 +84,7 @@ public final class PipelineJob implements XMLWritable, Serializable {
     this._pipeline = pipeline;
     this._package = pack;
     this.status = new JobStatus();
+    this.results = new ArrayList<>();
   }
 
   /**
@@ -156,15 +159,6 @@ public final class PipelineJob implements XMLWritable, Serializable {
 
   /**
    * Set the job to error status.
-   * @param result the details of result.
-   */
-  public void failed(Result result) {
-    this.status.setJobStatus(STATUS.ERROR);
-    this.result = result;
-  }
-
-  /**
-   * Set the job to error status.
    */
   public void failed() {
     this.status.setJobStatus(STATUS.ERROR);
@@ -184,6 +178,10 @@ public final class PipelineJob implements XMLWritable, Serializable {
     this.isSlow = slow;
   }
 
+  public void addStepResult (Result result) {
+    if (result != null) this.results.add(result);
+  }
+  
   @Override
   public void toXML(XMLWriter xml) throws IOException {
     xml.openElement("job");
@@ -194,9 +192,13 @@ public final class PipelineJob implements XMLWritable, Serializable {
     if (this.download != null) {
       xml.attribute("path", this.download);
     }
-    if (this.result != null) {
-      this.result.toXML(xml);
-    }
+    
+    xml.openElement("results");
+      for (Result result:results) {
+        result.toXML(xml);
+      }
+    xml.closeElement();//results
+    
     xml.closeElement();
   }
 
