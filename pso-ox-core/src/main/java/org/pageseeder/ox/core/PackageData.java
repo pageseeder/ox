@@ -518,6 +518,8 @@ public final class PackageData implements XMLWritable, Serializable {
 
         LOGGER.debug("ProbeContentType: {}", probeContentType);
         if (StringUtils.isBlank(probeContentType)) {
+          //TODO The contenttype will always be null because this method is called before the properties are defined.
+          LOGGER.debug("Content Type: {}", this.getProperty("contenttype", "unknown"));
           mediaType = this.getProperty("contenttype", FileUtils.getFileExtension(file));
           LOGGER.debug("mediaType: {}", mediaType);
         } else {

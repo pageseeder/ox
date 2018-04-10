@@ -110,14 +110,9 @@ public final class FileHandler {
           String filename = getFilename(item);
           LOGGER.debug("item content type {}", item.getContentType());
           LOGGER.debug("item filename {}", filename);
-          //if (!"application/octet-stream".equals(item.getContentType())) {
           PackageData pack = toPackageData(model, item, filename);
           LOGGER.debug("pack {}", pack != null ? pack.id() : "null");
-          //}
           if (pack != null) {
-            pack.setProperty("contenttype", item.getContentType());
-            pack.setProperty("type", toType(filename));
-            pack.setProperty("name", toName(filename));
             pack.saveProperties();
             packs.add(pack);
           }
@@ -206,6 +201,10 @@ public final class FileHandler {
     File file = new File(dir, item.isFormField() ? filename : getFilename(item));
     int copied = copyTo(stream, file);
     PackageData pack = PackageData.newPackageData(model, file);
+    //TODO This property is used to create the package data (change this logic).
+    pack.setProperty("contenttype", item.getContentType());
+    pack.setProperty("type", toType(filename));
+    pack.setProperty("name", toName(filename));
     if (copied == 0) {
       FileUtils.deleteDirectory(dir);
       pack = null;
