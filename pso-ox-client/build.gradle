@@ -1,0 +1,58 @@
+plugins {
+  id "com.jfrog.bintray" version "1.7"
+}
+
+description = "OX Client"
+
+apply plugin: 'maven-publish'
+apply from: "$rootDir/gradle/publishing.gradle"
+
+repositories {
+  ivy {
+    url 'http://ivy.pageseeder.com/shared'
+    layout 'pattern', {
+      artifact '[organisation]/[module]/[artifact]-[revision](.[ext])'
+      ivy '[organisation]/[module]/ivy-[revision].xml'
+    }
+  }
+}
+
+// Dependencies of the project
+dependencies {
+
+  // module dependencies
+  compile project(':pso-ox-core')
+
+  compile (
+    'org.pageseeder.xmlwriter:pso-xmlwriter:1.0.2',
+    'org.slf4j:slf4j-api:1.7+',
+    'commons-io:commons-io:2.4',    
+    'org.pageseeder.berlioz:pso-berlioz:0.11.+',
+    'org.pageseeder.bastille:pso-bastille:0.10.0',
+    'javax.servlet:javax.servlet-api:3.1.0'
+  )
+
+  runtime(
+    'topologi:topologi-xerces:03',
+    'net.sf.saxon:Saxon-HE:9.7.0-2',
+    'ch.qos.logback:logback-core:1.1.+',
+    'ch.qos.logback:logback-classic:1.1.+'
+  )
+
+  testCompile (
+    'junit:junit:4.12',
+    'xmlunit:xmlunit:1.6'
+  )
+
+}
+
+javadoc {
+  failOnError= false
+}
+
+
+test {
+  testLogging {events 'passed'}
+  include '**Test'
+}
+
