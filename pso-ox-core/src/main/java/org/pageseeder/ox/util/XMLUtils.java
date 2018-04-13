@@ -3,6 +3,7 @@ package org.pageseeder.ox.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -34,34 +35,62 @@ public final class XMLUtils {
   private XMLUtils() {}
 
   /**
+   * Parses the XML.
+   *
+   * @param xmlData the xml data
+   * @param handler the handler
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  public static void parseXML(String xmlData, DefaultHandler handler) throws IOException {
+    if (xmlData == null) throw new NullPointerException("Handle is null");
+    try (StringReader reader = new StringReader(xmlData)) {
+      InputSource source = new InputSource(reader);
+      parseXML(source, handler);
+    }
+  }
+  
+  /**
    * Parse the XML
    * @param in defines the input stream.
    * @param handler defines the handler.
    * @throws IOException the IO error occur.
    */
   public static void parseXML(InputStream in, DefaultHandler handler) throws IOException {
-
     // if no handler provided.
     if (handler == null) { throw new NullPointerException("Handle is null"); }
     if (in == null) { throw new NullPointerException("InputStream is null"); }
 
+    InputSource source = new InputSource(in);
+    source.setEncoding("utf-8");
+
+    parseXML(source, handler);
+  }
+  
+  /**
+   * Parses the XML.
+   *
+   * @param source the source
+   * @param handler the handler
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  private static void parseXML(InputSource source, DefaultHandler handler) throws IOException {
     SAXParserFactory factory = SAXParserFactory.newInstance();
     factory.setValidating(false);
     factory.setNamespaceAware(false);
     factory.setXIncludeAware(true);
 
-    InputSource source = new InputSource(in);
     source.setEncoding("utf-8");
-
-    // And parse!
-    SAXParser parser;
-    try {
-      parser = factory.newSAXParser();
+    try
+    {
+      SAXParser parser = factory.newSAXParser();
       parser.parse(source, handler);
-    } catch (ParserConfigurationException | SAXException ex) {
-      LOGGER.error("Cannot parse ", ex);
+    } catch (ParserConfigurationException e) {
+      LOGGER.error("Parse XML Configurate Error. ", e);
+    } catch (SAXException e) {
+      LOGGER.error("Parse XML SAX Error. ", e);
     }
   }
+  
 
   /**
    * Transform the XML to result.
