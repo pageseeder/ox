@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Map.Entry;
 
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
@@ -25,6 +26,7 @@ import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.tool.InvalidResult;
 import org.pageseeder.ox.tool.ResultBase;
+import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.ox.util.XSLT;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
@@ -139,7 +141,11 @@ public final class Transformation implements Step {
           transformer.setParameter(p.getKey().replaceAll("_xslt-", ""), p.getValue());
         }
       }
-            
+
+      if (!StringUtils.isBlank(info.parameters().get("_xslt-indent"))) {
+        transformer.setOutputProperty(OutputKeys.INDENT, info.parameters().get("_xslt-indent"));
+      }
+      
       transformer.transform(new StreamSource(source), new StreamResult(target));
 
       // whether to display the transformation result

@@ -40,6 +40,7 @@ public class TransformationTest {
     Map<String, String> params = new HashMap<>();
     params.put("input", "sample.xml");
     params.put("xsl", "xslt-sample.xsl");
+    params.put("_xslt-indent", "no");
     StepInfoImpl info = new StepInfoImpl("step-id", "step name", "myinput.xml", "myoutput.xml", params);
 
     Transformation step = new Transformation();
