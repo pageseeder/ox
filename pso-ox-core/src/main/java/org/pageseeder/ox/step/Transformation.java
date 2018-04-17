@@ -141,9 +141,10 @@ public final class Transformation implements Step {
           transformer.setParameter(p.getKey().replaceAll("_xslt-", ""), p.getValue());
         }
       }
-
-      if (!StringUtils.isBlank(info.parameters().get("_xslt-indent"))) {
-        transformer.setOutputProperty(OutputKeys.INDENT, info.parameters().get("_xslt-indent").equalsIgnoreCase("yes")?"yes":"no");
+      
+      String indent = !StringUtils.isBlank(info.parameters().get("_xslt-indent")) ? info.parameters().get("_xslt-indent") : data.getParameter("_xslt-indent");
+      if (!StringUtils.isBlank(indent)) {
+        transformer.setOutputProperty(OutputKeys.INDENT, indent.equalsIgnoreCase("yes")?"yes":"no");
       }
       
       transformer.transform(new StreamSource(source), new StreamResult(target));

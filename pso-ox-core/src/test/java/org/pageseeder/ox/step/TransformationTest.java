@@ -40,7 +40,7 @@ public class TransformationTest {
     Map<String, String> params = new HashMap<>();
     params.put("input", "sample.xml");
     params.put("xsl", "xslt-sample.xsl");
-    params.put("_xslt-indent", "no");
+    params.put("_xslt-indent", "yes");
     StepInfoImpl info = new StepInfoImpl("step-id", "step name", "myinput.xml", "myoutput.xml", params);
 
     Transformation step = new Transformation();
@@ -60,6 +60,7 @@ public class TransformationTest {
     File file = new File("src/test/resources/models/m1/sample.xml");
     Model model = new Model("m1");
     PackageData data = PackageData.newPackageData("Transformation", file);
+    data.setParameter("_xslt-indent", "no");
     Map<String, String> params = new HashMap<>();
     params.put("input", "*.xml");
     params.put("xsl", "xslt-sample.xsl");
