@@ -143,7 +143,7 @@ public final class Transformation implements Step {
       }
 
       if (!StringUtils.isBlank(info.parameters().get("_xslt-indent"))) {
-        transformer.setOutputProperty(OutputKeys.INDENT, info.parameters().get("_xslt-indent"));
+        transformer.setOutputProperty(OutputKeys.INDENT, info.parameters().get("_xslt-indent").equalsIgnoreCase("yes")?"yes":"no");
       }
       
       transformer.transform(new StreamSource(source), new StreamResult(target));
