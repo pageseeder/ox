@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<pipelines> 
+  <pipeline id="basic" name="Basic Test" accepts="application/zip" default="true">
+    <step id="unzip" name="Unzipping." class="org.pageseeder.ox.step.Decompression">
+     <parameter name="output" value="source" /> 
+    </step>
+    <step id="copy" name="Copy Source" viewable="false" class="org.pageseeder.ox.step.Copy">
+      <parameter name="input"  value="source/source.xml"/>
+      <parameter name="output" value="source.xml"/>
+    </step>
+    <step id="clone-xml" name="Clone Source" viewable="false" class="org.pageseeder.ox.step.Transformation">
+      <parameter name="input"  value="source.xml"/>
+      <parameter name="xsl"    value="clone.xsl"/>
+      <parameter name="output" value="target.xml"/>
+    </step>
+    <step id="zip" name="Zipping." class="org.pageseeder.ox.step.Compression">
+      <parameter name="input" value="target.xml" /> 
+      <parameter name="output" value="target.zip"/>
+    </step>
+  </pipeline> 
+</pipelines>
