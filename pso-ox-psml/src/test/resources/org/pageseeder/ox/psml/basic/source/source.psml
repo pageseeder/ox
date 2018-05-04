@@ -1,0 +1,26 @@
+<document id="175653" schemaversion="0.11" date="2018-02-09T17:14:12+11:00" version="current" level="portable">
+	<documentinfo>
+		<uri id="175653" scheme="http" host="ps.allette.com.au" port="8080" path="/ps/allette/www/index.psml" decodedpath="/ps/allette/www/index.psml" external="false" mediatype="application/vnd.pageseeder.psml+xml" created="2016-08-03T13:29:26+10:00" modified="2018-02-09T17:14:12+11:00" title="Home Page">
+			<displaytitle>Home Page</displaytitle>
+		</uri>
+	</documentinfo>
+	<fragmentinfo>
+		<locator id="274971" fragment="1" editid="884343" modified="2016-08-03T14:06:44+10:00"/>
+	</fragmentinfo>
+	<metadata/>
+	<section id="1">
+		<fragment id="1">
+			<para>This group will define the content for the <link href="https://www.allette.com.au">www.allette.com.au</link> Website.</para>
+			<heading level="2">Documents</heading>
+			<para>The <xref id="884332" title="landing page" frag="default" reversefrag="1" reverselink="false" display="manual" type="none" uriid="175683" href="/ps/allette/www/website/landing.psml" urititle="Landing" mediatype="application/vnd.pageseeder.psml+xml" documenttype="references">landing page</xref> is a 'references' document which transcludes the content to display on the main page of the Website. The landing uses a specific template.</para>
+			<para>All other document are either default documents or references documents. The templates on the Website are driven by block labels.</para>
+			<heading level="2">Block labels</heading>
+			<list>
+				<item>
+					<monospace>image-feature</monospace>  defines an image to display as a banner/masthead/hero image on a page. When referenced by the landing page, it is used as a feature image for linking. It MUST be defined first in the document in the <italic>title</italic> section.</item>
+				<item>
+					<monospace>image-side</monospace>  defines an image to display beside the fragment content on portfolio page.</item>
+			</list>
+		</fragment>
+	</section>
+</document>

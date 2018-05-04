@@ -37,8 +37,16 @@ dependencies {
   )
 
   testCompile (
+    project(':pso-ox-berlioz'),
     'junit:junit:4.12',
-    'xmlunit:xmlunit:1.6'
+    'javax.servlet:javax.servlet-api:3.1.0',
+    'org.hamcrest:java-hamcrest:2.0.0.0',
+    'org.hamcrest:hamcrest-junit:2.0.0.0',
+    'org.xmlunit:xmlunit-core:2.3.0',
+    'org.xmlunit:xmlunit-matchers:2.3.0',
+    'org.pageseeder.xmlwriter:pso-xmlwriter:1.0.2',
+    'org.mockito:mockito-all:1.10.19',
+    'org.powermock:powermock-mockito-release-full:1.6.4'
   )
 
 }
