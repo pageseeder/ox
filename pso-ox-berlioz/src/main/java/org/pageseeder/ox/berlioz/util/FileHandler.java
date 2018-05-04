@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -119,7 +120,9 @@ public final class FileHandler {
         }
       }
 
-      Map<String, String> parameters = processor.getParameters();
+      Map<String, String> formParameters = processor.getParameters();
+      Map<String, String[]> urlParameters = req.getParameterMap();
+      Map<String, String> parameters = mixParameters(formParameters, urlParameters); 
       // Add the parameter to each pack
       for (PackageData pack : packs) {
         for (Entry<String, String> parameter : parameters.entrySet()) {
@@ -131,7 +134,27 @@ public final class FileHandler {
     // Return package data
     return packs;
   }
+  
+  private static Map<String, String> mixParameters (Map<String, String> formParameters, Map<String, String[]> urlParameters) {
+    Map<String, String> parameters = new HashMap<String, String>();
+    
+    if (formParameters != null) {
+      parameters.putAll(formParameters);
+    }
+    
+    if (urlParameters != null) {
+      for(Entry<String, String[]> param:urlParameters.entrySet()) {
+        if (!parameters.containsKey(param.getKey())) {
+          parameters.put(param.getKey(), StringUtils.convertToString(param.getValue(), ","));
+        }
+      }
+    }
+    
+    return parameters;
+  }
 
+  
+  
   /**
    * @param stream
    * @param file

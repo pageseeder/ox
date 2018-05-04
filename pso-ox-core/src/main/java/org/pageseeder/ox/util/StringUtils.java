@@ -3,6 +3,7 @@
  */
 package org.pageseeder.ox.util;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -32,5 +33,37 @@ public class StringUtils {
   public static boolean isCommaSeparateFileList(String path) {
     final String FILE_NAME_PATTERN = "[\\d\\w\\\\/:_\\-\\.\\s]";
     return Pattern.matches("(?:" + FILE_NAME_PATTERN + "+(?:," + FILE_NAME_PATTERN + "+)+)?", path);
+  }
+  
+  /**
+   * 
+   * @param values
+   * @param separator
+   * @return
+   */
+  public static String convertToString(String [] values, String separator) {
+    StringBuilder converted = new StringBuilder();
+    if (values != null) {
+      for (String value : values) {
+        if (converted.length() > 0) {
+          converted.append(separator);
+        }
+        converted.append(value);
+      }
+    }
+    return converted.toString();
+  }
+  
+  public static String convertToString(List<String> values, String separator) {
+    StringBuilder converted = new StringBuilder();
+    if (values != null) {
+      for (String value : values) {
+        if (converted.length() > 0) {
+          converted.append(separator);
+        }
+        converted.append(value);
+      }
+    }
+    return converted.toString();
   }
 }
