@@ -13,7 +13,6 @@ dependencies {
   // module dependencies
   compile project(':pso-ox-core')
   compile project(':pso-ox-berlioz')
-  compile project(':pso-ox-psml')
 
   compile (
     'org.pageseeder.berlioz:pso-berlioz:0.11.+',
@@ -25,13 +24,16 @@ dependencies {
     'javax.servlet:javax.servlet-api:3.1.0'
   )
 
-  runtime(
+  runtime(    
+    'topologi:topologi-xerces:03',
     'net.sf.saxon:Saxon-HE:9.7.0-2',
     'ch.qos.logback:logback-core:1.1.+',
-    'ch.qos.logback:logback-classic:1.1.+'
+    'ch.qos.logback:logback-classic:1.1.+',
   )
 
   testCompile (
+    project(':pso-ox-psml'),
+    project(':pso-ox-schematron'),
     'junit:junit:4.12',
     'org.hamcrest:java-hamcrest:2.0.0.0',
     'org.hamcrest:hamcrest-junit:2.0.0.0',
@@ -39,9 +41,8 @@ dependencies {
     'org.xmlunit:xmlunit-matchers:2.3.0',
     'org.pageseeder.xmlwriter:pso-xmlwriter:1.0.2',
     'org.mockito:mockito-all:1.10.19',
-    'org.powermock:powermock-mockito-release-full:1.6.4'
+    'org.powermock:powermock-mockito-release-full:1.6.4',
   )
-
 }
 
 javadoc {
