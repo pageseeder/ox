@@ -1,0 +1,56 @@
+plugins {
+  id "com.jfrog.bintray" version "1.7"
+}
+
+description = "Contains some helpfull classes for test ox."
+
+apply plugin: 'maven-publish'
+apply from: "$rootDir/gradle/publishing.gradle"
+
+// Dependencies of the project
+dependencies {
+
+  // module dependencies
+  compile project(':pso-ox-core')
+  compile project(':pso-ox-berlioz')
+  compile project(':pso-ox-psml')
+
+  compile (
+    'org.pageseeder.berlioz:pso-berlioz:0.11.+',
+    'org.pageseeder.xmlwriter:pso-xmlwriter:1.0.2',
+    'org.slf4j:slf4j-api:1.7.+',
+  )
+
+  compileOnly (
+    'javax.servlet:javax.servlet-api:3.1.0'
+  )
+
+  runtime(
+    'net.sf.saxon:Saxon-HE:9.7.0-2',
+    'ch.qos.logback:logback-core:1.1.+',
+    'ch.qos.logback:logback-classic:1.1.+'
+  )
+
+  testCompile (
+    'junit:junit:4.12',
+    'org.hamcrest:java-hamcrest:2.0.0.0',
+    'org.hamcrest:hamcrest-junit:2.0.0.0',
+    'org.xmlunit:xmlunit-core:2.3.0',
+    'org.xmlunit:xmlunit-matchers:2.3.0',
+    'org.pageseeder.xmlwriter:pso-xmlwriter:1.0.2',
+    'org.mockito:mockito-all:1.10.19',
+    'org.powermock:powermock-mockito-release-full:1.6.4'
+  )
+
+}
+
+javadoc {
+  failOnError= false
+}
+
+
+test {
+  testLogging {events 'passed'}
+  include '**Test'
+}
+
