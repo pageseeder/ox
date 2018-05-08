@@ -61,8 +61,10 @@ public final class OXHandleData extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    resp.setContentType("application/xml");
     XMLWriter xml = new XMLWriterImpl(resp.getWriter());
-
+    xml.xmlDecl();
+    
     // get the model
     String modelName = req.getParameter("model");
     if (modelName == null || modelName.isEmpty()) {

@@ -35,6 +35,8 @@ public final class OXCheckStatus extends HttpServlet {
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     resp.setContentType("application/xml");
     XMLWriter xml = new XMLWriterImpl(resp.getWriter());
+    xml.xmlDecl();
+    
     PipelineJobManager manager = new PipelineJobManager();
 
     String id = req.getParameter("id");
