@@ -16,62 +16,46 @@ import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
 
 /**
- * A simple java object to represent a Job for each Pipeline
+ * A simple java object to represent a Job for each Pipeline.
  *
  * @author Ciber Cai
  * @since  07 November 2014
  */
 public final class PipelineJob implements XMLWritable, Serializable {
 
-  /** the serial version */
+  /**  the serial version. */
   private static final long serialVersionUID = -3028660547170793478L;
 
-  /**
-   * Maximum inactive time in milliseconds
-   */
-  private static final long MAX_INACTIVE_TIME_MS = 60 * 60 * 1000; // 60 minutes
-
-  /**
-   * The job id
-   */
+  /** The max inactive time allowed. */
+  private long maxInactiveTimeAllowed = StepJob.DEFAULT_MAX_INACTIVE_TIME_MS; 
+  
+  /** The job id. */
   private final String _id;
 
-  /**
-   * Time the job was started
-   */
+  /** Time the job was started. */
   private final long _startTime;
 
-  /**
-   * The data package;
-   */
+  /** The data package;. */
   private final PackageData _package;
 
-  /**
-   * The pipeline needs to process
-   */
+  /** The pipeline needs to process. */
   private final Pipeline _pipeline;
 
-  /**
-   * The status of job
-   */
+  /** The status of job. */
   private final JobStatus status;
 
-  /**
-   * The file to download
-   */
+  /** The file to download. */
   private String download;
 
-  /**
-   * The job result
-   */
+  /** The job result. */
   private List<Result> results;
 
-  /**
-   * to indicate the job is in slow land
-   */
+  /** to indicate the job is in slow land. */
   private boolean isSlow = false;
 
   /**
+   * Instantiates a new pipeline job.
+   *
    * @param pipeline The {@link Pipeline }
    * @param pack The {@link PackageData }
    */
@@ -88,6 +72,8 @@ public final class PipelineJob implements XMLWritable, Serializable {
   }
 
   /**
+   * Gets the id.
+   *
    * @return the job id.
    */
   public String getId() {
@@ -95,6 +81,8 @@ public final class PipelineJob implements XMLWritable, Serializable {
   }
 
   /**
+   * Gets the pipeline.
+   *
    * @return the pipeline
    */
   public Pipeline getPipeline() {
@@ -102,6 +90,8 @@ public final class PipelineJob implements XMLWritable, Serializable {
   }
 
   /**
+   * Gets the package data.
+   *
    * @return the package data
    */
   public PackageData getPackageData() {
@@ -109,6 +99,8 @@ public final class PipelineJob implements XMLWritable, Serializable {
   }
 
   /**
+   * Gets the download.
+   *
    * @return the download path
    */
   public String getDownload() {
@@ -116,10 +108,34 @@ public final class PipelineJob implements XMLWritable, Serializable {
   }
 
   /**
+   * Gets the status.
+   *
    * @return the status of the job
    */
   public JobStatus getStatus() {
     return this.status;
+  }
+  
+  
+
+  /**
+   * Gets the max inactive time allowed.
+   *
+   * @return the max inactive time allowed
+   */
+  public long getMaxInactiveTimeAllowed() {
+    return maxInactiveTimeAllowed;
+  }
+
+  /**
+   * Sets the max inactive time allowed.
+   *
+   * @param maxInactiveTimeAllowed the new max inactive time allowed
+   */
+  public void setMaxInactiveTimeAllowed(long maxInactiveTimeAllowed) {
+    if (maxInactiveTimeAllowed > 0) {
+      this.maxInactiveTimeAllowed = maxInactiveTimeAllowed;
+    }
   }
 
   /**
@@ -131,10 +147,12 @@ public final class PipelineJob implements XMLWritable, Serializable {
    * @return status of the job.
    */
   public boolean isInactive() {
-    return System.currentTimeMillis() - this._startTime > MAX_INACTIVE_TIME_MS ? true : false;
+    return System.currentTimeMillis() - this._startTime > getMaxInactiveTimeAllowed() ? true : false;
   }
 
   /**
+   * Checks if is slow job.
+   *
    * @return whether the job is slow job.
    */
   public boolean isSlowJob() {
@@ -165,6 +183,8 @@ public final class PipelineJob implements XMLWritable, Serializable {
   }
 
   /**
+   * Sets the download.
+   *
    * @param download set the download path
    */
   public void setDownload(String download) {
@@ -172,16 +192,26 @@ public final class PipelineJob implements XMLWritable, Serializable {
   }
 
   /**
+   * Sets the slow mode.
+   *
    * @param slow to indicate that the job is to run on slow mode.
    */
   public void setSlowMode(boolean slow) {
     this.isSlow = slow;
   }
 
+  /**
+   * Adds the step result.
+   *
+   * @param result the result
+   */
   public void addStepResult (Result result) {
     if (result != null) this.results.add(result);
   }
   
+  /* (non-Javadoc)
+   * @see org.pageseeder.xmlwriter.XMLWritable#toXML(org.pageseeder.xmlwriter.XMLWriter)
+   */
   @Override
   public void toXML(XMLWriter xml) throws IOException {
     xml.openElement("job");

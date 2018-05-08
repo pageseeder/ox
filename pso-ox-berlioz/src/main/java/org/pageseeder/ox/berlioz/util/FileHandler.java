@@ -29,6 +29,7 @@ import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.core.Pipeline;
 import org.pageseeder.ox.core.PipelineJob;
+import org.pageseeder.ox.core.StepJob;
 import org.pageseeder.ox.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +50,9 @@ public final class FileHandler {
     Model m = new Model(model);
 
     long slowSize = GlobalSettings.get("ox2.slow-mode.size", -1);
-
+    long maxInactiveTimeAllowed = Long.parseLong(GlobalSettings.get("ox2.max-inactive-time-ms", 
+        String.valueOf(StepJob.DEFAULT_MAX_INACTIVE_TIME_MS)));
+    
     for (PackageData pack : packs) {
       boolean isSlowMode = slowSize > 0 && pack.getOriginal().exists() && (pack.getOriginal().length() - slowSize * 1024 > 0);
       LOGGER.debug("slow mode {}", isSlowMode);
@@ -59,6 +62,7 @@ public final class FileHandler {
         if (pipeline != null) {
           PipelineJob job = new PipelineJob(pipeline, pack);
           job.setSlowMode(isSlowMode);
+          job.setMaxInactiveTimeAllowed(maxInactiveTimeAllowed);
           jobs.add(job);
         } else {
           LOGGER.warn("pipeline {} not found", p);

@@ -3,11 +3,15 @@
  */
 package org.pageseeder.ox.process;
 
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.pageseeder.ox.core.JobStatus;
 import org.pageseeder.ox.core.PipelineJob;
+import org.pageseeder.xmlwriter.XMLWritable;
+import org.pageseeder.xmlwriter.XMLWriter;
 
 /**
  * A job queue to store the jobs.
@@ -15,48 +19,55 @@ import org.pageseeder.ox.core.PipelineJob;
  * @author Ciber Cai
  * @since 4 April 2016
  */
-class PipelineJobQueue {
+class PipelineJobQueue implements XMLWritable {
 
-  /** the total number of completed jobs to store in memory */
-  private static final int MAX_COMPLETED_JOBS_TO_STORE = 1000;
+  /**  the total number of completed jobs to store in memory. */
 
-  /** Singleton instance (Lazy init) */
+  private final int _maxStoredCompletedJob;  
+  
+  /**  Singleton instance (Lazy init). */
   private static volatile PipelineJobQueue INSTANCE;
 
-  /** The list of imported jobs */
+  /**  The list of imported jobs. */
   private final BlockingQueue<PipelineJob> _waiting;
 
-  /** the list of slow jobs */
+  /**  the list of slow jobs. */
   private final BlockingQueue<PipelineJob> _slow;
 
-  /** The list of completed jobs */
+  /**  The list of completed jobs. */
   private final BlockingQueue<PipelineJob> _completed;
 
-  /** The current running import job **/
+  /**  The current running import job *. */
   private final BlockingQueue<PipelineJob> _running;
 
   /**
-   * the private constructor
+   * the private constructor.
    */
-  private PipelineJobQueue() {
+  private PipelineJobQueue(int maxStoredCompletedJob) {
     this._waiting = new LinkedBlockingQueue<PipelineJob>();
     this._slow = new LinkedBlockingQueue<PipelineJob>();
     this._completed = new LinkedBlockingQueue<PipelineJob>();
     this._running = new LinkedBlockingQueue<PipelineJob>();
+    this._maxStoredCompletedJob = maxStoredCompletedJob;
 
   }
-
+  
   /**
+   * Gets the single instance of PipelineJobQueue.
+   *
+   * @param maxStoredCompletedJob the max stored completed job
    * @return the instance of ImportProcessor
    */
-  protected static PipelineJobQueue getInstance() {
+  protected static PipelineJobQueue getInstance(int maxStoredCompletedJob) {
     if (INSTANCE == null) {
-      INSTANCE = new PipelineJobQueue();
+      INSTANCE = new PipelineJobQueue(maxStoredCompletedJob);
     }
     return INSTANCE;
   }
 
   /**
+   * Adds the.
+   *
    * @param job the job
    */
   protected void add(PipelineJob job) {
@@ -71,8 +82,11 @@ class PipelineJobQueue {
   }
 
   /**
+   * Next.
+   *
+   * @param slowMode the slow mode
    * @return the next processing job
-   * @throws InterruptedException
+   * @throws InterruptedException the interrupted exception
    */
   protected PipelineJob next(boolean slowMode) throws InterruptedException {
     PipelineJob job = slowMode ? this._slow.take() : this._waiting.take();
@@ -83,6 +97,8 @@ class PipelineJobQueue {
   }
 
   /**
+   * Total.
+   *
    * @return the total number of jobs in the queue.
    */
   protected int total() {
@@ -90,6 +106,8 @@ class PipelineJobQueue {
   }
 
   /**
+   * Gets the.
+   *
    * @param id the id of the job
    * @return the StepJob
    */
@@ -120,6 +138,8 @@ class PipelineJobQueue {
   }
 
   /**
+   * Gets the job status.
+   *
    * @param jobid the id of the job
    * @return the status of job
    */
@@ -131,6 +151,8 @@ class PipelineJobQueue {
   }
 
   /**
+   * Completed.
+   *
    * @param job set the job to completed queue
    */
   protected void completed(PipelineJob job) {
@@ -143,10 +165,32 @@ class PipelineJobQueue {
    */
   private void clearCompletedJob() {
     for (PipelineJob job : this._completed) {
-      if (this._completed.size() >= MAX_COMPLETED_JOBS_TO_STORE && job.isInactive()) {
+      if (this._completed.size() >= this._maxStoredCompletedJob && job.isInactive()) {
         this._completed.remove(job);
       }
     }
   }
 
+  /* (non-Javadoc)
+   * @see org.pageseeder.xmlwriter.XMLWritable#toXML(org.pageseeder.xmlwriter.XMLWriter)
+   */
+  @Override
+  public void toXML(XMLWriter xml) throws IOException {
+    xml.openElement("jobs");
+    toXML(xml, this._completed, "completed");
+    toXML(xml, this._running, "running");
+    toXML(xml, this._slow, "slow");
+    toXML(xml, this._waiting, "waiting");
+    xml.closeElement();
+  }
+  
+  private void toXML(XMLWriter xml, BlockingQueue<PipelineJob> queue, String name) throws IOException {
+    xml.openElement(name);
+    Iterator<PipelineJob> it = queue.iterator();
+    while (it.hasNext()) {
+      PipelineJob job = it.next();
+      job.toXML(xml);
+    }
+    xml.closeElement();
+  }
 }

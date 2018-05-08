@@ -48,6 +48,10 @@
     <servlet-class>org.pageseeder.ox.berlioz.servlet.OXCheckStatus</servlet-class>
   </servlet>
 
+  <servlet>
+    <servlet-name>bzox-list-jobs</servlet-name>
+    <servlet-class>org.pageseeder.ox.berlioz.servlet.OXListJobs</servlet-class>
+  </servlet>
   
   <servlet-mapping>
     <servlet-name>bzox-download</servlet-name>
@@ -67,5 +71,11 @@
   <servlet-mapping>
     <servlet-name>bzox-status-check</servlet-name>
     <url-pattern>/bzox/check/status</url-pattern>
+  </servlet-mapping>
+  
+
+  <servlet-mapping>
+    <servlet-name>bzox-list-jobs</servlet-name>
+    <url-pattern>/bzox/jobs</url-pattern>
   </servlet-mapping>
 </web-fragment>

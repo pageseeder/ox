@@ -3,12 +3,15 @@
  */
 package org.pageseeder.ox.process;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 import org.pageseeder.ox.core.JobStatus;
 import org.pageseeder.ox.core.PipelineJob;
+import org.pageseeder.xmlwriter.XMLWritable;
+import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,13 +21,10 @@ import org.slf4j.LoggerFactory;
  * @author Ciber Cai
  * @since  10 November 2014
  */
-public class PipelineJobManager {
+public class PipelineJobManager implements XMLWritable{
 
   /** the logger */
   private static final Logger LOGGER = LoggerFactory.getLogger(PipelineJobManager.class);
-
-  /** the default number of thread for processing pipeline */
-  private static final int DEAULT_NUMBER_OF_THREAD = 1;
 
   /** a thread executor */
   private static ExecutorService DEFAULT_EXECUTOR = null;
@@ -42,16 +42,16 @@ public class PipelineJobManager {
    * the pipeline job manager
    */
   public PipelineJobManager() {
-    this(DEAULT_NUMBER_OF_THREAD);
+    this(StepJobManager.DEAULT_NUMBER_OF_THREAD, StepJobQueue.DEFAULT_MAX_STORED_COMPLETED_JOB);
   }
 
   /**
    * the pipeline job manager
    * @param nThreads number of pipeline thread.
    */
-  public PipelineJobManager(int nThreads) {
+  public PipelineJobManager(int nThreads, int maxStoredCompletedJob) {
     this._noThreads = nThreads;
-    this._queue = PipelineJobQueue.getInstance();
+    this._queue = PipelineJobQueue.getInstance(maxStoredCompletedJob);
     synchronized (PipelineJobManager.class) {
       if (DEFAULT_EXECUTOR == null) {
         start();
@@ -134,5 +134,13 @@ public class PipelineJobManager {
    */
   public PipelineJob getJobId(String id) {
     return this._queue.get(id);
+  }
+
+  /* (non-Javadoc)
+   * @see org.pageseeder.xmlwriter.XMLWritable#toXML(org.pageseeder.xmlwriter.XMLWriter)
+   */
+  @Override
+  public void toXML(XMLWriter xml) throws IOException {
+    this._queue.toXML(xml);    
   }
 }

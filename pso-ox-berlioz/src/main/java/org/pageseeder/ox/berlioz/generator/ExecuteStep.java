@@ -114,9 +114,9 @@ public class ExecuteStep implements ContentGenerator {
       //Asynchronous
       int noThreads = GlobalSettings.get("ox2.step.threads-number", 
           StepJobManager.DEAULT_NUMBER_OF_THREAD);
-      int maxStoredCompletedJob = GlobalSettings.get("ox2.step.max-stored-completed-job", 
+      int maxStoredCompletedJob = GlobalSettings.get("ox2.max-stored-completed-job", 
           StepJobQueue.DEFAULT_MAX_STORED_COMPLETED_JOB);
-      long maxInactiveTimeAllowed = Long.parseLong(GlobalSettings.get("ox2.step.max-inactive-time-ms", String.valueOf(StepJob.DEFAULT_MAX_INACTIVE_TIME_MS)));     
+      long maxInactiveTimeAllowed = Long.parseLong(GlobalSettings.get("ox2.max-inactive-time-ms", String.valueOf(StepJob.DEFAULT_MAX_INACTIVE_TIME_MS)));     
       StepJobManager manager = new StepJobManager(noThreads, maxStoredCompletedJob);
       StepJob job = new StepJob(stepDef, data, maxInactiveTimeAllowed);      
       manager.addJob(job);

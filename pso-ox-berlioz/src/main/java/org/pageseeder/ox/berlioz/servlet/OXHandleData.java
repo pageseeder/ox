@@ -19,6 +19,8 @@ import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.core.PipelineJob;
 import org.pageseeder.ox.process.PipelineJobManager;
+import org.pageseeder.ox.process.StepJobManager;
+import org.pageseeder.ox.process.StepJobQueue;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.pageseeder.xmlwriter.XMLWriterImpl;
 
@@ -101,7 +103,9 @@ public final class OXHandleData extends HttpServlet {
     List<PipelineJob> jobs = FileHandler.toPipelineJobs(modelName, packs);
 
     // get the pipeline manager
-    PipelineJobManager manager = new PipelineJobManager(GlobalSettings.get("ox2.threads.number", 1));
+    PipelineJobManager manager = new PipelineJobManager(
+        GlobalSettings.get("ox2.threads.number", StepJobManager.DEAULT_NUMBER_OF_THREAD),
+        GlobalSettings.get("ox2.max-stored-completed-job", StepJobQueue.DEFAULT_MAX_STORED_COMPLETED_JOB));
 
     // add the job to que
     xml.openElement("jobs", true);
