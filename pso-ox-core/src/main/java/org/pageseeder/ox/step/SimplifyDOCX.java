@@ -116,6 +116,7 @@ public final class SimplifyDOCX implements Step {
 
       // Resulting XML
       File simplified = new File(target, MAIN_PART);
+      LOGGER.debug("Deleting simplified {}.", simplified.getAbsolutePath());
       simplified.delete();
 
       // Run XSLT

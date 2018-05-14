@@ -63,6 +63,7 @@ public class Decompression implements Step {
 
     // remove the outpuf if exists.
     try {
+      LOGGER.debug("Deleting file {}.", outputFile.getAbsolutePath());
       FileUtils.delete(outputFile);
     } catch (IOException ex) {
       LOGGER.warn("Cannot delete the file {}", outputFile, ex);

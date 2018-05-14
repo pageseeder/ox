@@ -87,8 +87,10 @@ public class UploadFactory {
    * clear the completed job.
    */
   private void clearCompletedJob() {
+    LOGGER.debug("Clean completed jobs.");
     for (UploadJob job : this.jobs) {
       if (job.isInactive()) {
+        LOGGER.debug("Clean completed job {}.", job.getJobId());
         this.jobs.remove(job);
       }
     }

@@ -4,6 +4,6 @@
   It can be overridden by mode specific files.
 -->
 <configuration debug="false">
-  <contextName>TimebaseDRM</contextName>
-  <root level="WARN" />
+  <contextName>pso-ox-berlioz</contextName>
+  <root level="DEBUG" />
 </configuration>

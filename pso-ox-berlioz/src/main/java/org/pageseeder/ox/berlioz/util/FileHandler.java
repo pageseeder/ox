@@ -48,11 +48,11 @@ public final class FileHandler {
     List<PipelineJob> jobs = new ArrayList<PipelineJob>();
     ensureConfigured();
     Model m = new Model(model);
-
+    LOGGER.debug("Model {} Found: {}", model, m != null);
     long slowSize = GlobalSettings.get("ox2.slow-mode.size", -1);
     long maxInactiveTimeAllowed = Long.parseLong(GlobalSettings.get("ox2.max-inactive-time-ms", 
         String.valueOf(StepJob.DEFAULT_MAX_INACTIVE_TIME_MS)));
-    
+    LOGGER.debug("Started creating the Pipeline Jobs");
     for (PackageData pack : packs) {
       boolean isSlowMode = slowSize > 0 && pack.getOriginal().exists() && (pack.getOriginal().length() - slowSize * 1024 > 0);
       LOGGER.debug("slow mode {}", isSlowMode);
@@ -75,8 +75,8 @@ public final class FileHandler {
           jobs.add(job);
         }
       }
-
     }
+    LOGGER.debug("Ended creating the Pipeline Jobs");
 
     return jobs;
   }
@@ -93,8 +93,10 @@ public final class FileHandler {
     // parse the upload request
     UploadProcessor processor = null;
     try {
+      LOGGER.debug("Getting uploaded file.");
       UploadFactory factory = UploadFactory.getInstance();
       processor = factory.make(req);
+      LOGGER.debug("Uploaded file loaded.");
     } catch (SizeLimitExceededException ex) {
       LOGGER.warn("File size exceeds upload limit please choose another file.", ex);
       throw new OXException("File size exceeds the limit of " + GlobalSettings.get("ox2.upload.max-size", 10) + "MB.", ex);
@@ -102,12 +104,14 @@ public final class FileHandler {
       LOGGER.warn("Invalid content type.", ex);
       throw new OXException("Invalid content type.", ex);
     } catch (FileUploadException ex) {
+      LOGGER.error("File Upload Exception: {}", ex);
       throw new OXException("Cannot process the upload request.", ex);
     }
 
     // Check that we have a file upload request
     boolean isMultipart = processor.isMultipart();
 
+    LOGGER.debug("Is it multipart? {}", isMultipart);
     if (isMultipart) {
       List<FileItem> items = processor.getFileItemList();
       for (FileItem item : items) {
@@ -124,9 +128,11 @@ public final class FileHandler {
         }
       }
 
+      LOGGER.debug("Adding parameters to package.");
       Map<String, String> formParameters = processor.getParameters();
       Map<String, String[]> urlParameters = req.getParameterMap();
-      Map<String, String> parameters = mixParameters(formParameters, urlParameters); 
+      Map<String, String> parameters = mixParameters(formParameters, urlParameters);
+      LOGGER.debug("Number of parameters {}", parameters.size());
       // Add the parameter to each pack
       for (PackageData pack : packs) {
         for (Entry<String, String> parameter : parameters.entrySet()) {
@@ -166,7 +172,7 @@ public final class FileHandler {
    * @throws IOException
    */
   private static final int copyTo(InputStream stream, File file) throws IOException {
-    LOGGER.info("Writing file: {}", file.getAbsolutePath());
+    LOGGER.debug("Writing file: {}", file.getAbsolutePath());
     FileOutputStream os = null;
     int copied = 0;
     try {
@@ -218,24 +224,29 @@ public final class FileHandler {
    * @throws IOException
    */
   private static PackageData toPackageData(String model, FileItem item, String filename) throws IOException {
-
+    LOGGER.debug("Starts toPackageData {}/{}", model, filename);
     InputStream stream = item.getInputStream();
     File dir = File.createTempFile("ox.allette.berlioz", ".tmp").getParentFile();
+    LOGGER.debug("Temp directory: {}", dir.getAbsolutePath());
     if (!dir.exists()) {
       dir.mkdirs();
     }
     LOGGER.debug("Is form field: {}", item.isFormField());
     File file = new File(dir, item.isFormField() ? filename : getFilename(item));
+    LOGGER.debug("Temp file: {}", file.getAbsolutePath());
     int copied = copyTo(stream, file);
     PackageData pack = PackageData.newPackageData(model, file);
     //TODO This property is used to create the package data (change this logic).
     pack.setProperty("contenttype", item.getContentType());
     pack.setProperty("type", toType(filename));
     pack.setProperty("name", toName(filename));
+    LOGGER.debug("Filename {}.", filename);
     if (copied == 0) {
+      LOGGER.debug("Deleting file {}.", dir.getAbsolutePath());
       FileUtils.deleteDirectory(dir);
       pack = null;
     }
+    LOGGER.debug("Ends toPackageData {}/{}", model, filename);
     return pack;
   }
 
@@ -245,7 +256,9 @@ public final class FileHandler {
   private static void ensureConfigured() {
     OXConfig config = OXConfig.get();
     File dir = config.getModelsDirectory();
+    LOGGER.debug("Model Directory is null {}", dir == null);
     if (dir == null) {
+      LOGGER.debug("Global Settings {}", GlobalSettings.getAppData());
       config.setModelsDirectory(new File(GlobalSettings.getAppData(), "model"));
     }
   }

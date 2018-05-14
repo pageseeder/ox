@@ -124,9 +124,11 @@ public final class PeriodicCleaner {
       }
       // empty folder
       if (file.listFiles().length == 0) {
+        LOGGER.info("Deleting file {}.", file.getAbsolutePath());
         file.delete();
       }
     } else {
+      LOGGER.info("Deleting file {}.", file.getAbsolutePath());
       file.delete();
     }
   }

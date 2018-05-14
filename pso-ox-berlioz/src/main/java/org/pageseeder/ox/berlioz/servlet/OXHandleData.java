@@ -23,6 +23,8 @@ import org.pageseeder.ox.process.StepJobManager;
 import org.pageseeder.ox.process.StepJobQueue;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.pageseeder.xmlwriter.XMLWriterImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>A servlet to process the upload file by OX {@link PipelineJobManager}.</p>
@@ -45,7 +47,10 @@ import org.pageseeder.xmlwriter.XMLWriterImpl;
  * @version 10 November 2014
  */
 public final class OXHandleData extends HttpServlet {
-
+  /** Logger */
+  private static final Logger LOGGER = LoggerFactory.getLogger(OXHandleData.class);
+  
+  
   /* UploadServlet.java */
   private static final long serialVersionUID = 6721151562078543731L;
 
@@ -63,12 +68,14 @@ public final class OXHandleData extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    LOGGER.debug("Started processing.");
     resp.setContentType("application/xml");
     XMLWriter xml = new XMLWriterImpl(resp.getWriter());
     xml.xmlDecl();
     
     // get the model
     String modelName = req.getParameter("model");
+    LOGGER.debug("Model: {}.", modelName);
     if (modelName == null || modelName.isEmpty()) {
       // get default model
       Requests.ensureConfigured();
@@ -85,6 +92,7 @@ public final class OXHandleData extends HttpServlet {
     List<PackageData> packs = null;
     try {
       packs = FileHandler.receive(modelName, req);
+      LOGGER.debug("Number os packs found: {}.", packs.size());
     } catch (OXException ex) {
       xml.openElement("invalid-data");
       xml.writeText(ex.getMessage());
@@ -101,7 +109,8 @@ public final class OXHandleData extends HttpServlet {
 
     // get the list of pipelineJob
     List<PipelineJob> jobs = FileHandler.toPipelineJobs(modelName, packs);
-
+    LOGGER.debug("Number of pipelines: {}.", jobs.size());
+    
     // get the pipeline manager
     PipelineJobManager manager = new PipelineJobManager(
         GlobalSettings.get("ox2.threads.number", StepJobManager.DEAULT_NUMBER_OF_THREAD),
@@ -112,6 +121,7 @@ public final class OXHandleData extends HttpServlet {
     for (PipelineJob job : jobs) {
       job.toXML(xml);
       manager.addJob(job);
+      LOGGER.debug("Added Pipeline Job to Manager: {}.", job.getId());      
     }
     xml.closeElement();
 
@@ -119,6 +129,7 @@ public final class OXHandleData extends HttpServlet {
       xml.emptyElement("no-package-data");
       resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     }
+    LOGGER.debug("Ended processing.");
   }
 
   /**

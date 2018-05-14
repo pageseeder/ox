@@ -15,6 +15,8 @@ import org.pageseeder.ox.core.PipelineJob;
 import org.pageseeder.ox.process.PipelineJobManager;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.pageseeder.xmlwriter.XMLWriterImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p>A servlet to check the job status.</p>
@@ -28,11 +30,14 @@ import org.pageseeder.xmlwriter.XMLWriterImpl;
  */
 public final class OXCheckStatus extends HttpServlet {
 
+  private final static Logger LOGGER = LoggerFactory.getLogger(OXCheckStatus.class);
+  
   /* UploadServlet.java */
   private static final long serialVersionUID = 6721151562078543731L;
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    LOGGER.debug("Starts OXCheckStatus");
     resp.setContentType("application/xml");
     XMLWriter xml = new XMLWriterImpl(resp.getWriter());
     xml.xmlDecl();
@@ -40,6 +45,7 @@ public final class OXCheckStatus extends HttpServlet {
     PipelineJobManager manager = new PipelineJobManager();
 
     String id = req.getParameter("id");
+    LOGGER.debug("JOB ID {}", id);
     if (id == null) {
       xml.emptyElement("not-job-id-found");
       resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -61,7 +67,7 @@ public final class OXCheckStatus extends HttpServlet {
     xml.close();
 
     resp.setContentLength(xml.toString().length());
-
+    LOGGER.debug("Ends OXCheckStatus");
   }
 
   @Override

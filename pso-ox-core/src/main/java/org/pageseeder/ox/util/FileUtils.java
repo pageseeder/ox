@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.pageseeder.ox.core.PackageData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class FileUtils.
@@ -24,7 +26,7 @@ import org.pageseeder.ox.core.PackageData;
  * @since 01/05/2017
  */
 public class FileUtils {
-
+  private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class);
   /**
    * Copy.
    *
@@ -68,18 +70,21 @@ public class FileUtils {
   public static void delete(final File target) throws IOException {
     // remove the file if exists.
     if (target.exists() && target.isFile()) {
+      LOGGER.debug("Deleting file {}.", target.getAbsolutePath());
       target.delete();
     } else if (target.exists() && target.isDirectory()) {
       //if it's directory
       Files.walkFileTree(target.toPath(), new SimpleFileVisitor<Path>() {
         @Override
         public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
+          LOGGER.debug("Deleting file {}.", file.getFileName());
           file.toFile().delete();
           return FileVisitResult.CONTINUE;
         }
 
         @Override
         public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+          LOGGER.debug("Deleting file {}.", dir.getFileName());
           dir.toFile().delete();
           return FileVisitResult.CONTINUE;
         }

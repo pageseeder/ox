@@ -448,6 +448,7 @@ public final class PackageData implements XMLWritable, Serializable {
    */
   public static PackageData newPackageData(String model, File file) {
     String id = generateID(model);
+    LOGGER.debug("Generating a new package data: {}", id);
     PackageData data = new PackageData(System.currentTimeMillis(), id, file);
     synchronized (PackageData.class) {
       if (!cleanerStarted) {
@@ -457,6 +458,7 @@ public final class PackageData implements XMLWritable, Serializable {
       }
     }
     data.saveProperties();
+    LOGGER.debug("The new package data {} was created.", id);
     return data;
   }
 

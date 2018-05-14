@@ -53,15 +53,18 @@ public final class UploadProcessor {
    * @throws FileUploadException when FilUpload occurs
    */
   protected UploadProcessor(HttpServletRequest req) throws FileUploadException {
+    LOGGER.debug("Instantiate Upload Processor");
     int thresholdSize = GlobalSettings.get("ox2.upload.max-size", 10) * ONE_MB;
     long maxFileSize = GlobalSettings.get("ox2.upload.max-size", 10) * ONE_MB; // Sets the maximum allowed size of a single uploaded file
     long requestSize = GlobalSettings.get("ox2.upload.max-size", 10) * ONE_MB; // Sets the maximum allowed size of a complete request
     this.acceptExtension = GlobalSettings.get("upload.file.accept-extension", "all");
-
+    LOGGER.debug("Instantiate Upload Processor thresholdSize/maxFileSize/requestSize/acceptExtension: {}/{}/{}/{}", thresholdSize, maxFileSize, requestSize, this.acceptExtension);
+    
     // Create a factory for disk-based file items
     DiskFileItemFactory factory = new DiskFileItemFactory();
     factory.setSizeThreshold(thresholdSize);
     factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
+    LOGGER.debug("Disk File Item factory repository {}", factory.getRepository().getAbsolutePath());
     // Create a new file upload handler
     ServletFileUpload upload = new ServletFileUpload(factory);
     upload.setFileSizeMax(maxFileSize);
@@ -72,7 +75,8 @@ public final class UploadProcessor {
 
     // parse the request to get the FileItem
     this.items = upload.parseRequest(req);
-
+    LOGGER.debug("Number of items found {}", this.items != null? items.size():0);
+    
     // check whether is multipart content
     this.isMultipart = ServletFileUpload.isMultipartContent(req);
   }
