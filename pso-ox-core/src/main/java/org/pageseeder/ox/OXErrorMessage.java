@@ -18,7 +18,7 @@ public enum OXErrorMessage implements ErrorMessage {
   FILE_NOT_SELECTED ("OX-CORE-0001", "A file has not been selected."),
   
   /** The file is empty. */
-  FILE_IS_EMPTY ("OX-CORE-0002", "This file is invalid because has empty size.");
+  FILE_IS_EMPTY ("OX-CORE-0002", "This file is invalid because is empty.");
   
   /** The message. */
   private final String message;
@@ -32,7 +32,7 @@ public enum OXErrorMessage implements ErrorMessage {
    * @param message the message
    * @param code the code
    */
-  private OXErrorMessage(String message, String code) {
+  private OXErrorMessage(String code, String message) {
     this.message = message;
     this.code = code;
   }

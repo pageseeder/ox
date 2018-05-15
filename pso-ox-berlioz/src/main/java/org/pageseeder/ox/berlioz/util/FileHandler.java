@@ -272,7 +272,7 @@ public final class FileHandler {
     if (copied == 0) {
       LOGGER.debug("Deleting file {}.", dir.getAbsolutePath());
       FileUtils.deleteDirectory(dir);
-      pack = null;
+      throw new OXException(OXErrorMessage.FILE_IS_EMPTY);
     }
     LOGGER.debug("Ends toPackageData {}/{}", model, filename);
     return pack;

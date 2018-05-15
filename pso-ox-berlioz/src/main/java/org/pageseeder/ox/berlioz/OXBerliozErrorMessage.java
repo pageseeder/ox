@@ -28,7 +28,7 @@ public enum OXBerliozErrorMessage implements ErrorMessage {
    * @param message the message
    * @param code the code
    */
-  private OXBerliozErrorMessage(String message, String code) {
+  private OXBerliozErrorMessage(String code, String message) {
     this.message = message;
     this.code = code;
   }
