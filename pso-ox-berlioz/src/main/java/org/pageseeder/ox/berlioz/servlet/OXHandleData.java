@@ -11,8 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileUploadBase;
 import org.pageseeder.berlioz.GlobalSettings;
 import org.pageseeder.ox.OXException;
+import org.pageseeder.ox.berlioz.Errors;
+import org.pageseeder.ox.berlioz.OXBerliozErrorMessage;
 import org.pageseeder.ox.berlioz.Requests;
 import org.pageseeder.ox.berlioz.util.FileHandler;
 import org.pageseeder.ox.core.Model;
@@ -21,6 +24,7 @@ import org.pageseeder.ox.core.PipelineJob;
 import org.pageseeder.ox.process.PipelineJobManager;
 import org.pageseeder.ox.process.StepJobManager;
 import org.pageseeder.ox.process.StepJobQueue;
+import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.pageseeder.xmlwriter.XMLWriterImpl;
 import org.slf4j.Logger;
@@ -73,63 +77,66 @@ public final class OXHandleData extends HttpServlet {
     XMLWriter xml = new XMLWriterImpl(resp.getWriter());
     xml.xmlDecl();
     
-    // get the model
-    String modelName = req.getParameter("model");
-    LOGGER.debug("Model: {}.", modelName);
-    if (modelName == null || modelName.isEmpty()) {
-      // get default model
-      Requests.ensureConfigured();
-      Model model = Model.getDefault();
-      if (model == null) {
-        xml.emptyElement("no-model");
+    try {      
+      // get the model
+      String modelName = req.getParameter("model");
+      LOGGER.debug("Model: {}.", modelName);
+      if (modelName == null || modelName.isEmpty()) {
+        // get default model
+        Requests.ensureConfigured();
+        Model model = Model.getDefault();
+        if (model == null) {
+          xml.emptyElement("no-model");
+          resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+          return;
+        }
+        modelName = model.name();
+      }
+      
+      String contentType = req.getContentType();
+      if (StringUtils.isBlank(contentType) || !contentType.startsWith(FileUploadBase.MULTIPART)) 
+        throw new OXException(OXBerliozErrorMessage.REQUEST_IS_NOT_MULTIPART);
+      
+      // get packdata
+      List<PackageData> packs = null;
+      packs = FileHandler.receive(modelName, req);
+      LOGGER.debug("Number os packs found: {}.", packs.size());
+
+  
+      if (packs == null || packs.isEmpty()) {
+        xml.emptyElement("no-package-data");
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         return;
       }
-      modelName = model.name();
-    }
-
-    // get packdata
-    List<PackageData> packs = null;
-    try {
-      packs = FileHandler.receive(modelName, req);
-      LOGGER.debug("Number os packs found: {}.", packs.size());
-    } catch (OXException ex) {
-      xml.openElement("invalid-data");
-      xml.writeText(ex.getMessage());
+  
+      // get the list of pipelineJob
+      List<PipelineJob> jobs = FileHandler.toPipelineJobs(modelName, packs);
+      LOGGER.debug("Number of pipelines jobs: {}.", jobs.size());
+      
+      // get the pipeline manager
+      PipelineJobManager manager = new PipelineJobManager(
+          GlobalSettings.get("ox2.threads.number", StepJobManager.DEAULT_NUMBER_OF_THREAD),
+          GlobalSettings.get("ox2.max-stored-completed-job", StepJobQueue.DEFAULT_MAX_STORED_COMPLETED_JOB));
+  
+      // add the job to que
+      xml.openElement("jobs", true);
+      for (PipelineJob job : jobs) {
+        job.toXML(xml);
+        manager.addJob(job);
+        LOGGER.debug("Added Pipeline Job to Manager: {}.", job.getId());      
+      }
       xml.closeElement();
+  
+      if (jobs.isEmpty()) {
+        xml.emptyElement("no-package-data");
+        resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      }
+    } catch (OXException ex) {
+      Errors.oxExceptionHandler(xml, ex);
       resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      return;
+    } finally {
+      LOGGER.debug("Ended processing.");
     }
-
-    if (packs == null || packs.isEmpty()) {
-      xml.emptyElement("no-package-data");
-      resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      return;
-    }
-
-    // get the list of pipelineJob
-    List<PipelineJob> jobs = FileHandler.toPipelineJobs(modelName, packs);
-    LOGGER.debug("Number of pipelines: {}.", jobs.size());
-    
-    // get the pipeline manager
-    PipelineJobManager manager = new PipelineJobManager(
-        GlobalSettings.get("ox2.threads.number", StepJobManager.DEAULT_NUMBER_OF_THREAD),
-        GlobalSettings.get("ox2.max-stored-completed-job", StepJobQueue.DEFAULT_MAX_STORED_COMPLETED_JOB));
-
-    // add the job to que
-    xml.openElement("jobs", true);
-    for (PipelineJob job : jobs) {
-      job.toXML(xml);
-      manager.addJob(job);
-      LOGGER.debug("Added Pipeline Job to Manager: {}.", job.getId());      
-    }
-    xml.closeElement();
-
-    if (jobs.isEmpty()) {
-      xml.emptyElement("no-package-data");
-      resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-    }
-    LOGGER.debug("Ended processing.");
   }
 
   /**

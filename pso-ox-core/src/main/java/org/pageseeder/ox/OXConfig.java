@@ -60,4 +60,15 @@ public class OXConfig {
     return temp;
   }
 
+  /**
+   * @return the Ox template folder
+   */
+  public static File getOXTempUploadFolder() {
+    File tempDir = getOXTempFolder();
+    File temp = new File(tempDir, "upload");
+    if (!temp.exists()) {
+      temp.mkdirs();
+    }
+    return temp;
+  }
 }

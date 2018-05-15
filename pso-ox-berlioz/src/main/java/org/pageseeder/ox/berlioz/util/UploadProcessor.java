@@ -13,10 +13,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.pageseeder.berlioz.GlobalSettings;
+import org.pageseeder.ox.OXException;
+import org.pageseeder.ox.berlioz.OXBerliozErrorMessage;
+import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,9 +55,15 @@ public final class UploadProcessor {
    * A default constructor for UploadProcessor.
    * @param req the ContentRequest
    * @throws FileUploadException when FilUpload occurs
+   * @throws OXException 
    */
-  protected UploadProcessor(HttpServletRequest req) throws FileUploadException {
+  protected UploadProcessor(HttpServletRequest req) throws FileUploadException, OXException {
     LOGGER.debug("Instantiate Upload Processor");
+    String contentType = req.getContentType();
+    LOGGER.debug("Request Content Type '{}'", contentType);
+    if (StringUtils.isBlank(contentType) || !contentType.startsWith(FileUploadBase.MULTIPART)) 
+      throw new OXException(OXBerliozErrorMessage.REQUEST_IS_NOT_MULTIPART);
+    
     int thresholdSize = GlobalSettings.get("ox2.upload.max-size", 10) * ONE_MB;
     long maxFileSize = GlobalSettings.get("ox2.upload.max-size", 10) * ONE_MB; // Sets the maximum allowed size of a single uploaded file
     long requestSize = GlobalSettings.get("ox2.upload.max-size", 10) * ONE_MB; // Sets the maximum allowed size of a complete request

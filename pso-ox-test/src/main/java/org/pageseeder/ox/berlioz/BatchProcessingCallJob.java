@@ -30,19 +30,36 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-
 /**
+ * The Class BatchProcessingCallJob.
+ *
  * @author Carlos Cabral
  * @since 28 Mar. 2018
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(FileHandler.class)
 public class BatchProcessingCallJob {
+  
+  /** The model. */
   private final String _model;
+  
+  /** The pipeline. */
   private final String _pipeline;
+  
+  /** The parameters. */
   private Map<String, String> parameters;
+  
+  /** The input. */
   private final File _input;
   
+  /**
+   * Instantiates a new batch processing call job.
+   *
+   * @param model the model
+   * @param pipeline the pipeline
+   * @param parameters the parameters
+   * @param input the input
+   */
   public BatchProcessingCallJob(String model, String pipeline, Map<String, String> parameters, File input) {
     super();
     this._model = model;
@@ -51,6 +68,14 @@ public class BatchProcessingCallJob {
     this._input = input;
   }
 
+  /**
+   * Execute.
+   *
+   * @return the string
+   * @throws IOException Signals that an I/O exception has occurred.
+   * @throws OXException the OX exception
+   * @throws ServletException the servlet exception
+   */
   public String execute() throws IOException, OXException, ServletException {
     StringWriter writer = new StringWriter();
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -78,11 +103,10 @@ public class BatchProcessingCallJob {
   }
   
   /**
-   * @param model the model name
-   * @param req the ContentRequest
+   * Mocked package list.
+   *
    * @return the list of PackageData
    * @throws IOException when I/O error occur.
-   * @throws OXException
    */
   private List<PackageData> mockedPackageList() throws IOException{
     List<PackageData> packs = new ArrayList<PackageData>();
@@ -109,6 +133,8 @@ public class BatchProcessingCallJob {
   }
   
   /**
+   * To type.
+   *
    * @param filename the specified file
    * @return the type of specified file.
    */
@@ -133,6 +159,9 @@ public class BatchProcessingCallJob {
   }
 
   /**
+   * To name.
+   *
+   * @param filename the filename
    * @return the name of file without extension.
    */
   private String toName(String filename) {

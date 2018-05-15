@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.fileupload.FileUploadException;
 import org.pageseeder.berlioz.content.ContentRequest;
+import org.pageseeder.ox.OXException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,8 +56,9 @@ public class UploadFactory {
    * @param req the ContentRequest
    * @return the UploadProcessor.
    * @throws FileUploadException throw exception when FileUPload error occur.
+   * @throws OXException 
    */
-  public UploadProcessor make(HttpServletRequest req) throws FileUploadException {
+  public UploadProcessor make(HttpServletRequest req) throws FileUploadException, OXException {
     LOGGER.debug("Create a upload processor");
     UploadProcessor manager = new UploadProcessor(req);
     String jobid = req.getSession().getId();

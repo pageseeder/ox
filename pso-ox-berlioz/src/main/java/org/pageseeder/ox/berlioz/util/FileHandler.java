@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.pageseeder.berlioz.GlobalSettings;
+import org.pageseeder.ox.OXErrorMessage;
 import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.core.Model;
@@ -42,13 +44,20 @@ import org.slf4j.LoggerFactory;
  */
 public final class FileHandler {
 
+  /** The logger. */
   private static Logger LOGGER = LoggerFactory.getLogger(FileHandler.class);
-
-  public static List<PipelineJob> toPipelineJobs(String model, List<PackageData> packs) {
+  
+  /**
+   * To pipeline jobs.
+   *
+   * @param packs the packs
+   * @return the list
+   */
+  public static List<PipelineJob> toPipelineJobs(String modelName, List<PackageData> packs) {
+    ensureConfigured(); 
     List<PipelineJob> jobs = new ArrayList<PipelineJob>();
-    ensureConfigured();
-    Model m = new Model(model);
-    LOGGER.debug("Model {} Found: {}", model, m != null);
+    Model model = new Model(modelName);
+    LOGGER.debug("Model {} ", model.name());
     long slowSize = GlobalSettings.get("ox2.slow-mode.size", -1);
     long maxInactiveTimeAllowed = Long.parseLong(GlobalSettings.get("ox2.max-inactive-time-ms", 
         String.valueOf(StepJob.DEFAULT_MAX_INACTIVE_TIME_MS)));
@@ -58,7 +67,7 @@ public final class FileHandler {
       LOGGER.debug("slow mode {}", isSlowMode);
       String p = pack.getParameter("pipeline");
       if (p != null) {
-        Pipeline pipeline = m.getPipeline(p);
+        Pipeline pipeline = model.getPipeline(p);
         if (pipeline != null) {
           PipelineJob job = new PipelineJob(pipeline, pack);
           job.setSlowMode(isSlowMode);
@@ -68,12 +77,10 @@ public final class FileHandler {
           LOGGER.warn("pipeline {} not found", p);
         }
       } else {
-        for (int i = 0; i < m.size(); i++) {
-          Pipeline pipeline = m.getPipelineDefault();
-          PipelineJob job = new PipelineJob(pipeline, pack);
-          job.setSlowMode(isSlowMode);
-          jobs.add(job);
-        }
+        Pipeline pipeline = model.getPipelineDefault();
+        PipelineJob job = new PipelineJob(pipeline, pack);
+        job.setSlowMode(isSlowMode);
+        jobs.add(job);
       }
     }
     LOGGER.debug("Ended creating the Pipeline Jobs");
@@ -82,11 +89,12 @@ public final class FileHandler {
   }
 
   /**
-   * @param model the model name
+   * Receive.
+   *
    * @param req the ContentRequest
    * @return the list of PackageData
    * @throws IOException when I/O error occur.
-   * @throws OXException
+   * @throws OXException the OX exception
    */
   public static List<PackageData> receive(String model, HttpServletRequest req) throws IOException, OXException {
     List<PackageData> packs = new ArrayList<PackageData>();
@@ -119,7 +127,7 @@ public final class FileHandler {
           String filename = getFilename(item);
           LOGGER.debug("item content type {}", item.getContentType());
           LOGGER.debug("item filename {}", filename);
-          PackageData pack = toPackageData(model, item, filename);
+          PackageData pack = toPackageData(item, filename, model);
           LOGGER.debug("pack {}", pack != null ? pack.id() : "null");
           if (pack != null) {
             pack.saveProperties();
@@ -145,6 +153,13 @@ public final class FileHandler {
     return packs;
   }
   
+  /**
+   * Mix parameters.
+   *
+   * @param formParameters the form parameters
+   * @param urlParameters the url parameters
+   * @return the map
+   */
   private static Map<String, String> mixParameters (Map<String, String> formParameters, Map<String, String[]> urlParameters) {
     Map<String, String> parameters = new HashMap<String, String>();
     
@@ -166,15 +181,19 @@ public final class FileHandler {
   
   
   /**
-   * @param stream
-   * @param file
-   * @return
-   * @throws IOException
+   * Copy to.
+   *
+   * @param stream the stream
+   * @param file the file
+   * @return the int
+   * @throws IOException Signals that an I/O exception has occurred.
+   * @throws OXException the OX exception
    */
-  private static final int copyTo(InputStream stream, File file) throws IOException {
-    LOGGER.debug("Writing file: {}", file.getAbsolutePath());
+  private static final int copyTo(InputStream stream, File file) throws IOException, OXException {
+    LOGGER.debug("Writing file: {}", file != null ? file.getAbsolutePath() : "null");
+    if (file == null || file.isDirectory()) throw new OXException(OXErrorMessage.FILE_NOT_SELECTED);
+    int copied = 0; 
     FileOutputStream os = null;
-    int copied = 0;
     try {
       os = new FileOutputStream(file);
       copied = IOUtils.copy(stream, os);
@@ -185,6 +204,8 @@ public final class FileHandler {
   }
 
   /**
+   * To type.
+   *
    * @param filename the specified file
    * @return the type of specified file.
    */
@@ -209,6 +230,9 @@ public final class FileHandler {
   }
 
   /**
+   * To name.
+   *
+   * @param filename the filename
    * @return the name of file without extension.
    */
   private static String toName(String filename) {
@@ -219,20 +243,24 @@ public final class FileHandler {
   /**
    * Create a new package data from the specified file item if possible.
    *
-   * @param item
-   * @return
-   * @throws IOException
+   * @param item the item
+   * @param filename the filename
+   * @return the package data
+   * @throws IOException Signals that an I/O exception has occurred.
+   * @throws OXException the OX exception
    */
-  private static PackageData toPackageData(String model, FileItem item, String filename) throws IOException {
+  private static PackageData toPackageData(FileItem item, String filename, String model) throws IOException, OXException {
+    if (StringUtils.isBlank(filename)) throw new OXException(OXErrorMessage.FILE_NOT_SELECTED);
     LOGGER.debug("Starts toPackageData {}/{}", model, filename);
     InputStream stream = item.getInputStream();
-    File dir = File.createTempFile("ox.allette.berlioz", ".tmp").getParentFile();
+
+    File dir = getTempUploadDirectory();   
     LOGGER.debug("Temp directory: {}", dir.getAbsolutePath());
     if (!dir.exists()) {
       dir.mkdirs();
     }
     LOGGER.debug("Is form field: {}", item.isFormField());
-    File file = new File(dir, item.isFormField() ? filename : getFilename(item));
+    File file = new File(dir, filename);
     LOGGER.debug("Temp file: {}", file.getAbsolutePath());
     int copied = copyTo(stream, file);
     PackageData pack = PackageData.newPackageData(model, file);
@@ -251,7 +279,7 @@ public final class FileHandler {
   }
 
   /**
-   * Ensure the configuration file is set
+   * Ensure the configuration file is set.
    */
   private static void ensureConfigured() {
     OXConfig config = OXConfig.get();
@@ -263,7 +291,14 @@ public final class FileHandler {
     }
   }
   
-  private static String getFilename(FileItem item) {
+  /**
+   * Gets the filename.
+   *
+   * @param item the item
+   * @return the filename
+   * @throws OXException the OX exception
+   */
+  private static String getFilename(FileItem item) throws OXException {
     String filename = item.getName();
     LOGGER.debug("Original filename {}", filename);
     if (!StringUtils.isBlank(filename)) {
@@ -271,8 +306,23 @@ public final class FileHandler {
       //the this method remove all unnecessary path and returns the file name.
       filename = FilenameUtils.getName(filename);
       LOGGER.debug("Cleaned filename {}", filename);
+    } else {
+      LOGGER.debug("The uploaded file name is empty it may be because any file has been selected.");
+      throw new OXException(OXErrorMessage.FILE_NOT_SELECTED);
     }
     return filename;
   }
 
+  /**
+   * Gets the temp upload directory.
+   *
+   * @return the temp upload directory
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  private static File getTempUploadDirectory() throws IOException {
+    File tempUploadOX = OXConfig.getOXTempUploadFolder();
+    File tempDirectory = Files.createTempDirectory(tempUploadOX.toPath(), "upload").toFile();
+    LOGGER.debug("Temporary upload directory {}", tempDirectory.getAbsolutePath());
+    return tempDirectory;
+  }
 }

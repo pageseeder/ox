@@ -9,6 +9,7 @@ import javax.xml.transform.TransformerException;
 
 import org.pageseeder.berlioz.content.ContentRequest;
 import org.pageseeder.berlioz.content.ContentStatus;
+import org.pageseeder.ox.OXException;
 import org.pageseeder.xmlwriter.XMLWriter;
 
 /**
@@ -24,6 +25,41 @@ public final class Errors {
    */
   private Errors() {}
 
+  /**
+   * Ox exception handler.
+   *
+   * @param xml the xml
+   * @param oxException the ox exception
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  public static void oxExceptionHandler(XMLWriter xml, OXException ex) throws IOException {
+    xml.openElement("error");
+    xml.attribute("code", ex.getErrorMessageCode());
+    xml.attribute("message", ex.getMessage());
+    xml.closeElement();
+  }
+  
+  /**
+   * Write the XML for when a required data cannot process.
+   * 
+   * <p>Also sets the status of the response to 'bad request'.
+   * 
+   * <p>Generator should generally terminate after invoking this method.
+   *
+   * @param req  The content request
+   * @param xml  The XML writer
+   * @param message the message
+   * @throws IOException If an error occurs writing XML.
+   */
+  public static void oxExceptionHandler(ContentRequest req, XMLWriter xml, OXException ex) throws IOException {
+    xml.openElement("error");
+    xml.attribute("type", "client");
+    xml.attribute("code", ex.getErrorMessageCode());
+    xml.attribute("message", ex.getMessage());
+    xml.closeElement();
+    req.setStatus(ContentStatus.BAD_REQUEST);
+  }
+  
   // Client errors
   // ----------------------------------------------------------------------------------------------
 

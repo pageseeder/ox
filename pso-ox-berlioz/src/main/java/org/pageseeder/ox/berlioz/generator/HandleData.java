@@ -42,7 +42,7 @@ public class HandleData implements ContentGenerator {
     try {
       packs = FileHandler.receive(model.name(), toHttpServletRequest(req));
     } catch (OXException ex) {
-      Errors.invalidData(req, xml, ex.getMessage());
+      Errors.oxExceptionHandler(req, xml, ex);
       return;
     }
 
