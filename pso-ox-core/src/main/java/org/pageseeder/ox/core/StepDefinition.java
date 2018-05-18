@@ -13,6 +13,7 @@ import org.pageseeder.ox.api.Measurable;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.step.NOPStep;
+import org.pageseeder.ox.tool.InvalidResult;
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
@@ -238,24 +239,32 @@ public final class StepDefinition implements XMLWritable, Serializable {
    * @return The result of this set
    */
   public Result exec(PackageData data) {
-    // TODO replace tokens in output and parameters
-    String input = getInput(data);
-    // use input as output if output is null
-    String output = this._output != null ? this._output : input;
-    Map<String, String> parameters = Collections.unmodifiableMap(this._parameters);
-    // step info
-    StepInfoImpl info = new StepInfoImpl(this._id, this._name, input, output, parameters);
-    // process the step
-    Result result = this._step.process(this._model, data, info);
-    // process the callback step
-    if (this._callbackStep != null) {
-      try {
-        // put the step result to callback step
-        this._callbackStep.process(data, result, info);
-      } catch (Exception ex) {
-        // if error occur, show the warning but doesn't effect the actual step.
-        LOGGER.warn("Execute callback step error.", ex);
+    Result result = null;
+    try {
+      // TODO replace tokens in output and parameters
+      String input = getInput(data);
+      // use input as output if output is null
+      String output = this._output != null ? this._output : input;
+      Map<String, String> parameters = Collections.unmodifiableMap(this._parameters);
+      // step info
+      StepInfoImpl info = new StepInfoImpl(this._id, this._name, input, output, parameters);
+      // process the step
+      result = this._step.process(this._model, data, info);
+      // process the callback step
+      if (this._callbackStep != null) {
+        try {
+          // put the step result to callback step
+          this._callbackStep.process(data, result, info);
+        } catch (Exception ex) {
+          // if error occur, show the warning but doesn't effect the actual step.
+          LOGGER.warn("Execute callback step error.", ex);
+        }
       }
+    } catch (Exception ex) {
+      InvalidResult invalidResult = new InvalidResult(this._model, data);
+      invalidResult.error(ex);
+      invalidResult.setStatus(ResultStatus.ERROR);
+      result = invalidResult;
     }
 
     return result;
