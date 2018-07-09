@@ -5,11 +5,17 @@
 
   <pipeline id="sample-pipeline" name="Sample Pipeline" 
             description="The sample pipeline will decompress the file uploaded" 
-            accepts="application/zip" default="false">
+            accepts="application/zip" default="false"
+            wait="true">
+    <input name="file">text</input>
+    <input name="config" default-value="config.txt">text2</input>
   
     <!-- decompress uploaded file  -->
-    <step id="decompress-file" name="decompresss file"  class="org.pageseeder.ox.step.Decompression">
+    <step id="decompress-file" name="decompress file"  class="org.pageseeder.ox.step.Decompression"
+        async="true" downloadable="true" viewable="true" fail-on-error="false" wait="true">
       <parameter name="output" value="myoutput"/>
+      <input name="file">text</input>
+      <input name="config" default-value="config.txt">text2</input>
     </step>
     
      <!-- produce nothing  -->

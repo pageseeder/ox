@@ -4,7 +4,10 @@ package org.pageseeder.ox.core;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.util.StringUtils;
@@ -65,6 +68,12 @@ public final class Pipeline implements XMLWritable, Serializable {
    */
   private final List<StepDefinition> _steps = new ArrayList<StepDefinition>();
 
+  /** If there are any other attributes that are not expected. */
+  private final Map<String, String> _extraAttributes = new HashMap<>();
+  
+  /** If there are any other elements that are not expected. */
+  private final List<GenericInfo> _extraElements = new ArrayList<>();
+  
   /**
    * Instantiates a new pipeline.
    *
@@ -130,6 +139,45 @@ public final class Pipeline implements XMLWritable, Serializable {
   public boolean isDefault() {
     return this._default;
   }  
+
+  /**
+   * Adds the extra attributes.
+   *
+   * @param name the name
+   * @param value the value
+   */
+  public void addExtraAttributes (String name, String value) {
+    if (StringUtils.isBlank(name)) throw new IllegalArgumentException("The attribute cannot have empty name.");
+    if (this._extraAttributes.containsKey(name)) {
+      //Check the uniqueness of the step
+      throw new IllegalArgumentException("The attribute " + name + " already exist in this pipeline " + this.name());
+    }
+    this._extraAttributes.put(name, value==null ? "" : value);
+  }
+  
+  /**
+   * Adds the extra attributes.
+   *
+   * @param extraAttributes the extra attributes
+   */
+  public void addExtraAttributes (Map<String, String> extraAttributes) {
+    if (extraAttributes != null) {
+      for (Entry<String, String> attribute: extraAttributes.entrySet()) {
+        addExtraAttributes(attribute.getKey(), attribute.getValue());
+      }
+    }
+  }  
+  
+
+  /**
+   * Adds the extra attributes.
+   *
+   * @param name the name
+   * @param value the value
+   */
+  public void addExtraElements (GenericInfo extraElement) {
+    if (extraElement != null) this._extraElements.add(extraElement);
+  }
   
   /**
    * Add the step to this pipeline and check the uniqueness
@@ -179,10 +227,22 @@ public final class Pipeline implements XMLWritable, Serializable {
     xml.attribute("description", this._description);
     xml.attribute("accepts", this._accepts);
     xml.attribute("default", String.valueOf(this._default));
+    
+    //Extra attributes
+    for (Entry<String, String> attribute : this._extraAttributes.entrySet()) {
+      xml.attribute(attribute.getKey(), attribute.getValue());
+    }
+    
+    //Steps elements
     if (this._steps != null) {
       for (StepDefinition s : this._steps) {
         s.toXML(xml);
       }
+    }
+    
+    //Extra Elements
+    for (GenericInfo element:this._extraElements) {
+      element.toXML(xml);
     }
     xml.closeElement(); // pipeline
   }
@@ -194,6 +254,8 @@ public final class Pipeline implements XMLWritable, Serializable {
     private final StepDefinition.Builder builder;
 
     private boolean inStep = false;
+    
+    private GenericInfo extraElement;
 
     private String stepId = null;
 
@@ -208,12 +270,36 @@ public final class Pipeline implements XMLWritable, Serializable {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 
       // pipeline (@name, @accept, step)
-      if (localName.equals("pipeline")) {
-        String id = attributes.getValue("id");
-        String name = attributes.getValue("name");
-        String accepts = attributes.getValue("accepts");
-        String description = attributes.getValue("description");
-        String defaultValue = attributes.getValue("default");
+      if (localName.equals("pipeline")) {        
+        String id = "";
+        String name = "";
+        String accepts = "";
+        String description = "";
+        String defaultValue = "";
+        Map<String, String> extraAttributes = new HashMap<>();
+            
+        for (int index=0; index < attributes.getLength(); index++) {
+          String attributeName = attributes.getQName(index) != null ? attributes.getQName(index) : attributes.getLocalName(index);
+          switch (attributeName) {
+          case "id":
+            id = attributes.getValue(index);
+            break;
+          case "name":
+            name = attributes.getValue(index);
+            break;
+          case "accepts":
+            accepts = attributes.getValue(index);
+            break;
+          case "description":
+            description = attributes.getValue(index);
+            break;
+          case "default":
+            defaultValue = attributes.getValue(index);
+            break;
+          default:
+            extraAttributes.put(attributeName, attributes.getValue(index));            
+          }
+        }
         
         if (StringUtils.isBlank(id)) {
           LOGGER.warn("The id is empty, remember that this version is using the id to identify the pipeline instead of name.");
@@ -225,31 +311,66 @@ public final class Pipeline implements XMLWritable, Serializable {
         }
         
         this.pipeline = new Pipeline(id, name, accepts, description, "true".equalsIgnoreCase(defaultValue));
+        this.pipeline.addExtraAttributes(extraAttributes);
         this.builder.setPipeline(this.pipeline);
       }
 
       // step (@id, @name, @async, @class, @callback)
       else if (localName.equals("step")) {
-        this.stepId = attributes.getValue("id");
-        String classname = attributes.getValue("class");
-        String callback = attributes.getValue("callback");
-        String name = attributes.getValue("name");     
-        String viewable = attributes.getValue("viewable");
-        String failOnError = attributes.getValue("fail-on-error");
-
+        String classname = "";
+        String callback = "";
+        String name = "";     
+        String downloadable = ""; 
+        String viewable = "";
+        String async = "";
+        String failOnError = "";
+        
+        for (int index=0; index < attributes.getLength(); index++) {
+          String attributeName = attributes.getQName(index) != null ? attributes.getQName(index) : attributes.getLocalName(index);
+          String attributeValue = attributes.getValue(index);
+          switch (attributeName) {
+          case "id":
+            this.stepId = attributeValue;
+            break;
+          case "name":
+            name = attributeValue;
+            break;
+          case "class":
+            classname = attributeValue;
+            break;
+          case "downloadable":
+            downloadable = attributeValue;
+            break;            
+          case "viewable":
+            viewable = attributeValue;
+            break;
+          case "fail-on-error":
+            failOnError = attributeValue;
+            break;
+          case "callback":
+            callback = attributeValue;
+            break;
+          case "async":
+            async = attributeValue;
+            break;
+          default:
+            this.builder.addExtraAttributes(attributeName, attributeValue);
+          }
+        }
+        
         this.builder.setStepId(this.stepId);
         this.builder.setStepName(name != null ? name : this.stepId);
-        this.builder.setAsync("true".equalsIgnoreCase(attributes.getValue("async")));
+        this.builder.setAsync("true".equalsIgnoreCase(async));// default is false
         this.builder.setStepClass(classname);
         this.builder.setCallback(callback);
-        this.builder.setViewable("true".equalsIgnoreCase(viewable));
+        this.builder.setDownloadable("true".equalsIgnoreCase(downloadable)); // default is false
+        this.builder.setViewable("true".equalsIgnoreCase(viewable)); // default is false
         this.builder.setFailOnerror(!"false".equalsIgnoreCase(failOnError)); // default is true
         this.inStep = true;
       }
 
       // output (@file, @folder)
-      else if (this.inStep && localName.equals("output")) {
-        // XXX: a little but dodgy...
+      else if (this.inStep && localName.equals("output")) {        
         String output = attributes.getValue("file");
         if (output == null) {
           output = attributes.getValue("folder");
@@ -262,6 +383,22 @@ public final class Pipeline implements XMLWritable, Serializable {
         String name = attributes.getValue("name");
         String value = attributes.getValue("value");
         this.builder.addParameter(name, value);
+      }
+      // Is in step and unknown element.
+      else if (this.inStep) {
+        this.extraElement = new GenericInfo(localName);
+        for (int index=0; index < attributes.getLength(); index++) {
+          String attributeName = attributes.getQName(index) != null ? attributes.getQName(index) : attributes.getLocalName(index);
+          extraElement.addAttributes(attributeName, attributes.getValue(index));
+        }
+      }
+      // Is not in step and pipeline is not null and unknown element.
+      else if (!this.inStep && this.pipeline != null) {
+        this.extraElement = new GenericInfo(localName);
+        for (int index=0; index < attributes.getLength(); index++) {
+          String attributeName = attributes.getQName(index) != null ? attributes.getQName(index) : attributes.getLocalName(index);
+          extraElement.addAttributes(attributeName, attributes.getValue(index));
+        }
       }
     }
 
@@ -277,9 +414,22 @@ public final class Pipeline implements XMLWritable, Serializable {
           // TODO: Or we could send a warning and ignore the step
           throw new SAXException(ex);
         }
+      } else if (this.inStep && this.extraElement != null) {//Pipeline extra element
+        this.builder.addExtraElements(extraElement);
+        this.extraElement = null;
+      } else if (!this.inStep && this.extraElement != null) {//Pipeline extra element
+        this.pipeline.addExtraElements(extraElement);
+        this.extraElement = null;
       }
     }
 
+    @Override
+    public void characters(char[] ch, int start, int length) throws SAXException {
+      if (this.extraElement != null) {
+        this.extraElement.addText(new String (ch, start, length));
+      }
+    }
+    
     /**
      * @return the pipeline
      */

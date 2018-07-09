@@ -3,9 +3,12 @@ package org.pageseeder.ox.core;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.api.CallbackStep;
@@ -14,6 +17,7 @@ import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.step.NOPStep;
 import org.pageseeder.ox.tool.InvalidResult;
+import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
@@ -76,13 +80,20 @@ public final class StepDefinition implements XMLWritable, Serializable {
   /** Parameters to supply to the underlying step. */
   private final Map<String, String> _parameters;
 
+  /** If there are any other attributes that are not expected. */
+  private final Map<String, String> _extraAttributes;
+  
+  /** If there are any other elements that are not expected. */
+  private final List<GenericInfo> _extraElements;
+  
   /** Position of step in pipeline lazily initialized */
   private transient int _position = -1;
+  
   /**
    * Creates a new abstract step.
-   *
+   * 
    * <p>This constructor is <i>protected</i> so that only implementations use it.
-   *
+   * 
    * <p>To create step instance, use the {@link Builder}.
    *
    * @param model         The model this step is part of
@@ -93,16 +104,18 @@ public final class StepDefinition implements XMLWritable, Serializable {
    * @param output        The output of step
    * @param async         The async
    * @param viewable      The viewable
-   * @param failOnError  If the process stops on the first error
    * @param downloadable  The downloadable
+   * @param failOnError   If the process stops on the first error
    * @param step          The step
-   *
+   * @param extraAttributes The extra attributes
+   * @param extraElements The extra elements
    * @throws NullPointerException if any of the argument is <code>null</code>
    * @throws IllegalArgumentException If the ID is not valid.
    */
   private StepDefinition(Model model, Pipeline pipeline, String id, String name, Map<String, String> parameters, String output,
-                         boolean async, boolean viewable, boolean downloadable, boolean failOnError, Step step) {
-    this(model, pipeline, id, name, parameters, output, async, viewable, downloadable, failOnError, step, null);
+                         boolean async, boolean viewable, boolean downloadable, boolean failOnError, Step step,
+                         Map<String, String> extraAttributes,  List<GenericInfo> extraElements) {
+    this(model, pipeline, id, name, parameters, output, async, viewable, downloadable, failOnError, step, extraAttributes, extraElements, null);
   }
 
   /**
@@ -128,7 +141,8 @@ public final class StepDefinition implements XMLWritable, Serializable {
    * @throws IllegalArgumentException If the ID is not valid.
    */
   private StepDefinition(Model model, Pipeline pipeline, String id, String name, Map<String, String> parameters, String output,
-                         boolean async, boolean viewable, boolean downloadable, boolean failOnError, Step step, CallbackStep callbackStep) {
+                         boolean async, boolean viewable, boolean downloadable, boolean failOnError, Step step, 
+                         Map<String, String> extraAttributes, List<GenericInfo> extraElements, CallbackStep callbackStep) {
     if (model == null) { throw new NullPointerException("model is null."); }
     if (pipeline == null) { throw new NullPointerException("pipeline is null."); }
     if (id == null) { throw new NullPointerException("id is null."); }
@@ -145,6 +159,8 @@ public final class StepDefinition implements XMLWritable, Serializable {
     this._callbackStep = callbackStep;
     this._parameters = parameters;
     this._output = output;
+    this._extraAttributes = extraAttributes;
+    this._extraElements = extraElements;
   }
 
   /**
@@ -316,10 +332,16 @@ public final class StepDefinition implements XMLWritable, Serializable {
     xml.attribute("fail-on-error", String.valueOf(this.failOnError()));
   
     xml.attribute("downloadable", String.valueOf(this.downloadable()));     
-
+       
     if (this._step != null) {
-      xml.attribute("step", this._step.getClass().getName());
+      xml.attribute("class", this._step.getClass().getName());
     }   
+
+    if (this._extraAttributes != null) {
+      for (Entry<String, String> extraAttribute: this._extraAttributes.entrySet()) {        
+        xml.attribute(extraAttribute.getKey(), extraAttribute.getValue());
+      }
+    }
     
     if (this._callbackStep != null) {
       xml.attribute("callback", this._callbackStep.getClass().getName());
@@ -343,7 +365,14 @@ public final class StepDefinition implements XMLWritable, Serializable {
         xml.closeElement();// parameter
       }
     }
-
+    
+    if (this._extraElements != null) {
+      for (GenericInfo element : this._extraElements) {
+        element.toXML(xml);
+      }
+    }
+    
+    
     if (result != null) {
       result.toXML(xml);
     }
@@ -428,6 +457,13 @@ public final class StepDefinition implements XMLWritable, Serializable {
     
     private Map<String, String> parameters = new HashMap<String, String>();
 
+    /** If there are any other attributes that are not expected. */
+    private final Map<String, String> extraAttributes = new HashMap<>();
+    
+    /** extra element inside the step definition. */
+    private final List<GenericInfo> extraElements = new ArrayList<>();
+    
+    /** TODO it is not in use any more. */
     private String output = null;
 
     /**
@@ -533,6 +569,34 @@ public final class StepDefinition implements XMLWritable, Serializable {
       return this;
     }
 
+
+    /**
+     * Adds the extra attributes.
+     *
+     * @param name the name
+     * @param value the value
+     */
+    public Builder addExtraAttributes (String name, String value) {
+      if (StringUtils.isBlank(name)) throw new IllegalArgumentException("The attribute cannot have empty name.");
+      if (this.extraAttributes.containsKey(name)) {
+        //Check the uniqueness of the step
+        throw new IllegalArgumentException("The attribute " + name + " already exist in this step " + this.name);
+      }
+      this.extraAttributes.put(name, value==null ? "" : value);
+      return this;
+    }
+    
+    /**
+     * Adds the extra attributes.
+     *
+     * @param name the name
+     * @param value the value
+     */
+    public Builder addExtraElements (GenericInfo extraElement) {
+      if (extraElement != null) this.extraElements.add(extraElement);
+      return this;
+    }
+    
     /**
      * @param output the output to set
      * return the {@link Builder}
@@ -582,7 +646,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
         // Instantiate the callback step
         CallbackStep callback = null;
         try {
-          if (this.callbackClassname != null) {
+          if (!StringUtils.isBlank(this.callbackClassname)) {
             Class<CallbackStep> c = (Class<CallbackStep>) Class.forName(this.callbackClassname);
             callback = c.newInstance();
           }
@@ -596,10 +660,10 @@ public final class StepDefinition implements XMLWritable, Serializable {
 
         if (callback != null) {
           definition = new StepDefinition(this._model, this.pipeline, this.id, this.name, this.parameters, this.output,
-              this.async, this.viewable, this.downloadable, this.failOnError, step, callback);
+              this.async, this.viewable, this.downloadable, this.failOnError, step, this.extraAttributes, this.extraElements, callback);
         } else {
           definition = new StepDefinition(this._model, this.pipeline, this.id, this.name, this.parameters, this.output,
-              this.async, this.viewable, this.downloadable, this.failOnError, step);
+              this.async, this.viewable, this.downloadable, this.failOnError, step, this.extraAttributes, this.extraElements);
         }
       } catch (Exception ex) {
         throw new OXException("Unable to build step.", ex);

@@ -33,6 +33,12 @@ public class TestPipeline {
   @Test
   public void toXML() throws IOException, XpathException, SAXException {
     Pipeline pipeline1 = new Pipeline("id","name", "type");
+    pipeline1.addExtraAttributes("extra-attribute","extra-attribute-value");
+    GenericInfo extraElement = new GenericInfo("input");
+    extraElement.addAttributes("extra-attribute","extra-attribute-value");
+    extraElement.addText("extra-attribute-text");
+    pipeline1.addExtraElements(extraElement);
+    
     Assert.assertEquals("id", pipeline1.id());
     Assert.assertEquals("name", pipeline1.name());
     Assert.assertEquals("type", pipeline1.accepts());
@@ -48,6 +54,9 @@ public class TestPipeline {
     XMLAssert.assertXpathEvaluatesTo("name", "pipeline/@description", xml1.toString());
     XMLAssert.assertXpathEvaluatesTo("type", "pipeline/@accepts", xml1.toString());
     XMLAssert.assertXpathEvaluatesTo("false", "pipeline/@default", xml1.toString());
+    XMLAssert.assertXpathEvaluatesTo("extra-attribute-value", "pipeline/@extra-attribute", xml1.toString());
+    XMLAssert.assertXpathEvaluatesTo("extra-attribute-value", "pipeline/input/@extra-attribute", xml1.toString());
+    XMLAssert.assertXpathEvaluatesTo("extra-attribute-text", "pipeline/input/text()", xml1.toString());
 
     Pipeline pipeline2 = new Pipeline("id", "name", "type", "description", true);
     XMLAssert.assertXpathEvaluatesTo("id", "pipeline/@id", xml1.toString());
@@ -71,7 +80,7 @@ public class TestPipeline {
   }
 
   @Test
-  public void pipelineHanlerSpecific() throws Exception {
+  public void pipelineHandlerSpecific() throws Exception {
     Model model = new Model("m1");
     Assert.assertNotNull(model);
     boolean loaded = model.load();
@@ -95,10 +104,16 @@ public class TestPipeline {
     XMLAssert.assertXpathEvaluatesTo("The sample pipeline will decompress the file uploaded", "pipeline/@description", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("application/zip", "pipeline/@accepts", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("false", "pipeline/@default", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("true", "pipeline/@wait", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("file", "pipeline/input[1]/@name", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("text", "pipeline/input[1]/text()", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("config", "pipeline/input[2]/@name", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("config.txt", "pipeline/input[2]/@default-value", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("text2", "pipeline/input[2]/text()", xml.toString());
   }
 
   @Test
-  public void pipelineHanlerDefault() throws Exception {
+  public void pipelineHandlerDefault() throws Exception {
     Model model = new Model("m1");
     Assert.assertNotNull(model);
     boolean loaded = model.load();
