@@ -54,8 +54,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
   private final CallbackStep _callbackStep;
 
   /**
-   * Indicate if this step should be executed as asynchronous when the pipeline 
-   * is synchronous.
+   * Indicate if this step should be executed as asynchronous. The default false.
    */
   private final boolean _async;
   
@@ -458,10 +457,10 @@ public final class StepDefinition implements XMLWritable, Serializable {
     private Map<String, String> parameters = new HashMap<String, String>();
 
     /** If there are any other attributes that are not expected. */
-    private final Map<String, String> extraAttributes = new HashMap<>();
+    private Map<String, String> extraAttributes = new HashMap<>();
     
     /** extra element inside the step definition. */
-    private final List<GenericInfo> extraElements = new ArrayList<>();
+    private List<GenericInfo> extraElements = new ArrayList<>();
     
     /** TODO it is not in use any more. */
     private String output = null;
@@ -610,7 +609,18 @@ public final class StepDefinition implements XMLWritable, Serializable {
      * Reset the parameters and output
      */
     public void reset() {
+      this.pipeline = null;
+      this.classname = null;
+      this.callbackClassname = null;
+      this.id = null;
+      this.name = null;
+      this.async = false;
+      this.viewable = false;
+      this.downloadable = false;
+      this.failOnError = true;
       this.parameters = new HashMap<>();
+      this.extraAttributes = new HashMap<>();
+      this.extraElements = new ArrayList<>();
       this.output = null;
     }
 

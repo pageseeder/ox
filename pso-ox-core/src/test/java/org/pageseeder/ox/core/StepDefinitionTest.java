@@ -42,7 +42,7 @@ public class StepDefinitionTest {
     pipeline.toXML(xml);
     xml.flush();
     xml.close();
-    
+    System.out.println(xml.toString());
     XMLAssert.assertXpathEvaluatesTo("sample-pipeline", "pipeline/@id", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("decompress-file", "pipeline/step[1]/@id", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("decompress file", "pipeline/step[1]/@name", xml.toString());
@@ -52,11 +52,22 @@ public class StepDefinitionTest {
     XMLAssert.assertXpathEvaluatesTo("true", "pipeline/step[1]/@viewable", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("false", "pipeline/step[1]/@fail-on-error", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("true", "pipeline/step[1]/@wait", xml.toString());
-    XMLAssert.assertXpathEvaluatesTo("file", "pipeline/step[1]/input[1]/@name", xml.toString());
-    XMLAssert.assertXpathEvaluatesTo("text", "pipeline/step[1]/input[1]/text()", xml.toString());
-    XMLAssert.assertXpathEvaluatesTo("config", "pipeline/step[1]/input[2]/@name", xml.toString());
-    XMLAssert.assertXpathEvaluatesTo("config.txt", "pipeline/step[1]/input[2]/@default-value", xml.toString());
-    XMLAssert.assertXpathEvaluatesTo("text2", "pipeline/step[1]/input[2]/text()", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("file-step1", "pipeline/step[1]/input[1]/@name", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("text-step1", "pipeline/step[1]/input[1]/text()", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("config-step1", "pipeline/step[1]/input[2]/@name", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("config-step1.txt", "pipeline/step[1]/input[2]/@default-value", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("text2-step1", "pipeline/step[1]/input[2]/text()", xml.toString());
+    
+    XMLAssert.assertXpathEvaluatesTo("false", "pipeline/step[2]/@async", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("false", "pipeline/step[2]/@downloadable", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("false", "pipeline/step[2]/@viewable", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("true", "pipeline/step[2]/@fail-on-error", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("false", "pipeline/step[2]/@wait", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("file-step2", "pipeline/step[2]/input[1]/@name", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("text-step2", "pipeline/step[2]/input[1]/text()", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("config-step2", "pipeline/step[2]/input[2]/@name", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("config-step2.txt", "pipeline/step[2]/input[2]/@default-value", xml.toString());
+    XMLAssert.assertXpathEvaluatesTo("text2-step2", "pipeline/step[2]/input[2]/text()", xml.toString());
   }
   
 

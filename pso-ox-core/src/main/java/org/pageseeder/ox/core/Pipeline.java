@@ -312,7 +312,6 @@ public final class Pipeline implements XMLWritable, Serializable {
         
         this.pipeline = new Pipeline(id, name, accepts, description, "true".equalsIgnoreCase(defaultValue));
         this.pipeline.addExtraAttributes(extraAttributes);
-        this.builder.setPipeline(this.pipeline);
       }
 
       // step (@id, @name, @async, @class, @callback)
@@ -358,8 +357,10 @@ public final class Pipeline implements XMLWritable, Serializable {
           }
         }
         
+
+        this.builder.setPipeline(this.pipeline);
         this.builder.setStepId(this.stepId);
-        this.builder.setStepName(name != null ? name : this.stepId);
+        this.builder.setStepName(StringUtils.isBlank(name) ? this.stepId:name);
         this.builder.setAsync("true".equalsIgnoreCase(async));// default is false
         this.builder.setStepClass(classname);
         this.builder.setCallback(callback);

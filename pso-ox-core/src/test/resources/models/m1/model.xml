@@ -14,12 +14,15 @@
     <step id="decompress-file" name="decompress file"  class="org.pageseeder.ox.step.Decompression"
         async="true" downloadable="true" viewable="true" fail-on-error="false" wait="true">
       <parameter name="output" value="myoutput"/>
-      <input name="file">text</input>
-      <input name="config" default-value="config.txt">text2</input>
+      <input name="file-step1">text-step1</input>
+      <input name="config-step1" default-value="config-step1.txt">text2-step1</input>
     </step>
     
      <!-- produce nothing  -->
-    <step id="produce-nothing" class="org.pageseeder.ox.step.NOPStep"/>
+    <step id="produce-nothing" class="org.pageseeder.ox.step.NOPStep" wait="false">
+      <input name="file-step2">text-step2</input>
+      <input name="config-step2" default-value="config-step2.txt">text2-step2</input>
+    </step>
     
   </pipeline>
 
