@@ -20,6 +20,7 @@ import org.pageseeder.ox.core.StepDefinition;
 import org.pageseeder.ox.core.StepJob;
 import org.pageseeder.ox.process.StepJobManager;
 import org.pageseeder.ox.process.StepJobQueue;
+import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,13 +57,16 @@ public class ExecuteStep implements ContentGenerator {
 
     //Add extra step parameters
     Enumeration<String> extraParameters = req.getParameterNames();
+    String parameterValue = null;
     while(extraParameters.hasMoreElements()) {
       String extraParameter = extraParameters.nextElement();
       if (!extraParameter.equals("id")
           &&!extraParameter.equals("pipeline")
           &&!extraParameter.equals("model")
           &&!extraParameter.equals("step")) {
-        data.setParameter(extraParameter, req.getParameter(extraParameter));
+        parameterValue = req.getParameter(extraParameter);
+        if (StringUtils.isBlank(parameterValue)) parameterValue = "";
+        data.setParameter(extraParameter, parameterValue);
       }
     }
     
