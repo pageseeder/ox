@@ -157,7 +157,7 @@ public final class PackageData implements XMLWritable, Serializable {
   @NonNull
   public List<File> getFiles(String path) {
     List<File> files = new ArrayList<>();
-    if (path != null) {
+    if (!StringUtils.isBlank(path)) {
       // check if single file first (as some filenames can have ',' or '*' in them
       if (new File(this._dir, path).exists()) {
         files.add(new File(this._dir, path));

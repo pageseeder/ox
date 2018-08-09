@@ -29,7 +29,6 @@ public class OXConfigTest {
 
   @Test
   public void test_model_directory() {
-    Assert.assertNull(OXConfig.get().getModelsDirectory());
     File modelDir = new File("test/model");
     OXConfig.get().setModelsDirectory(modelDir);
     Assert.assertNotNull(OXConfig.get().getModelsDirectory());

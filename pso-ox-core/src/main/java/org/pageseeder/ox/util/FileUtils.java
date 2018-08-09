@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.pageseeder.ox.core.PackageData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,10 @@ import org.slf4j.LoggerFactory;
  * @since 01/05/2017
  */
 public class FileUtils {
+  
+  /** The Constant LOGGER. */
   private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class);
+    
   /**
    * Copy.
    *
@@ -254,7 +258,14 @@ public class FileUtils {
   // find files methods
   // ------------------------------------------------------------------
 
-  public static List<File> findFiles(File root, FileFilter filter) {
+  /**
+   * Find files.
+   *
+   * @param root the root
+   * @param filter the filter
+   * @return the list
+   */
+  public static @NonNull List<File> findFiles(File root, FileFilter filter) {
     if (!root.exists()) return Collections.emptyList();
     if (root.isFile()) return Collections.singletonList(root);
     List<File> all = new ArrayList<>();
@@ -265,13 +276,102 @@ public class FileUtils {
     return all;
   }
 
+  /**
+   * Find files.
+   *
+   * @param root the root
+   * @param extension the extension
+   * @return the list
+   */
   public static List<File> findFiles(File root, String extension) {
     return findFiles(root, filter(extension));
   }
 
+  /**
+   * Filter.
+   *
+   * @param ext the ext
+   * @return the file filter
+   */
   private static FileFilter filter(String ext) {
     if (ext == null) return null;
     final String extension = ext.charAt(0) == '.' ? ext.toLowerCase() : '.' + ext.toLowerCase();
     return f -> f.isDirectory() || f.getName().toLowerCase().endsWith(extension);
+  }
+  
+  /**
+   * Filter.
+   *
+   * @param extensionsAllowed the extensions allowed
+   * @param isDirectoryAllowed the is directory allowed
+   * @return the file filter
+   */
+  public static FileFilter filter(@NonNull List<String> extensionsAllowed, boolean isDirectoryAllowed) {
+    if (extensionsAllowed.isEmpty()) return null;
+    return f -> {
+      boolean isAllowed = false;
+      if (f.isDirectory() && isDirectoryAllowed) {
+        isAllowed = true;
+      } else {
+        for (String extension:extensionsAllowed) {
+          if (!StringUtils.isBlank(extension) && f.getName().toLowerCase().endsWith(extension.toLowerCase())) {
+            isAllowed = true;
+            break;
+          }
+        }
+      }
+      return isAllowed;
+    };
+  }
+  
+  /**
+   * Checks if is zip (extension == zip).
+   *
+   * @param candidate the candidate
+   * @return true, if is zip
+   */
+  public static boolean isZip(File candidate) {
+    return candidate.getName().toLowerCase().endsWith(".zip");
+  }
+  
+  /**
+   * Gets the XML extensions.
+   *
+   * @return the XML extensions
+   */
+  public static List<String> getXMLExtensions() {
+    List<String> extensions = new ArrayList<>();
+    extensions.add("xml");
+    extensions.add("html");
+    extensions.add("psml");
+    return extensions;
+  }
+  
+
+  /**
+   * Gets the name without extension.
+   *
+   * @param file the file
+   * @return the name without extension
+   */
+  public static  String getNameWithoutExtension(File file){
+    String fileName = file.getName();
+    return getNameWithoutExtension(fileName);
+  }
+
+  /**
+   * Gets the name without extension.
+   *
+   * @param fileNameAndExtension the file name and extension
+   * @return the name without extension
+   */
+  public static String getNameWithoutExtension(String fileNameAndExtension ){
+    String fileName = "";
+
+    if(fileNameAndExtension.lastIndexOf(".") != -1 && fileNameAndExtension.lastIndexOf(".") != 0){
+        fileName = fileNameAndExtension.substring(0, fileNameAndExtension.lastIndexOf("."));
+    }
+
+    return fileName;
   }
 }

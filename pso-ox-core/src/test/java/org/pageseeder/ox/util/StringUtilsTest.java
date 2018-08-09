@@ -3,6 +3,10 @@
  */
 package org.pageseeder.ox.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,5 +31,19 @@ public class StringUtilsTest {
     Assert.assertFalse(StringUtils.isCommaSeparateFileList(",file.java"));
     Assert.assertFalse(StringUtils.isCommaSeparateFileList("file.java")); 
     Assert.assertFalse(StringUtils.isCommaSeparateFileList("file.java,,file.java"));    
+  }
+  
+  @Test
+  public void testConvertToStringList(){
+    String [] stringValuesTest = {"xml,html,psml", "", null, "docx", "html,", "xml,,html"};
+    for (String stringValues: stringValuesTest) {
+      System.out.println(stringValues);
+      List<String> expectedValues = !StringUtils.isBlank(stringValues)? Arrays.asList(stringValues.replaceAll(",,", ",").split(",")) : new ArrayList<>();      
+      List<String> values = StringUtils.convertToStringList(stringValues);
+      Assert.assertEquals(expectedValues.size(), values.size());
+      for(int i = 0 ; i < expectedValues.size() ; i ++) {
+        Assert.assertEquals(expectedValues.get(i), values.get(i));
+      }
+    }
   }
 }

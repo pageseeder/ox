@@ -3,6 +3,7 @@
  */
 package org.pageseeder.ox.util;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -27,8 +28,9 @@ public class StringUtils {
   /**
    * Will just validate if there is at least a comma between 2 files path.
    * If it starts or ends with comma, it will return false
-   * @param path
-   * @return
+   *
+   * @param path the path
+   * @return true, if is comma separate file list
    */
   public static boolean isCommaSeparateFileList(String path) {
     final String FILE_NAME_PATTERN = "[\\d\\w\\\\/:_\\-\\.\\s]";
@@ -36,10 +38,11 @@ public class StringUtils {
   }
   
   /**
-   * 
-   * @param values
-   * @param separator
-   * @return
+   * Convert to string.
+   *
+   * @param values the values
+   * @param separator the separator
+   * @return the string
    */
   public static String convertToString(String [] values, String separator) {
     StringBuilder converted = new StringBuilder();
@@ -54,6 +57,13 @@ public class StringUtils {
     return converted.toString();
   }
   
+  /**
+   * Convert to string.
+   *
+   * @param values the values
+   * @param separator the separator
+   * @return the string
+   */
   public static String convertToString(List<String> values, String separator) {
     StringBuilder converted = new StringBuilder();
     if (values != null) {
@@ -65,5 +75,23 @@ public class StringUtils {
       }
     }
     return converted.toString();
+  }
+  
+  /**
+   * Convert a String List.
+   *
+   * @param valuesCommaSeparated the values comma separated
+   * @return the string
+   */
+  public static List<String> convertToStringList(String valuesCommaSeparated) {
+    List<String> stringValues = new ArrayList<>();
+    if (valuesCommaSeparated != null) {
+      for(String value:valuesCommaSeparated.split(",")) {
+        if (!isBlank(value)) {
+          stringValues.add(value);
+        }
+      }
+    }
+    return stringValues;
   }
 }

@@ -14,7 +14,7 @@ import org.junit.Test;
  * @author Carlos Cabral
  * @since 05 Feb. 2018
  */
-public class ZipUtilsTest {
+public class TestZipUtils {
 
   public final static File _BASE_DIR = new File("src/test/resources/org/pageseeder/ox/util/filefinder");
   
