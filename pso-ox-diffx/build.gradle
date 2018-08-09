@@ -41,6 +41,6 @@ javadoc {
 
 test {
   testLogging {events 'passed'}
-  include '**Test'
+  //include '**Test'
 }
 
