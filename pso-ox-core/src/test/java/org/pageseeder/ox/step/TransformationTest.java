@@ -108,7 +108,7 @@ public class TransformationTest {
     PackageData data = PackageData.newPackageData("Transformation", file);
     Map<String, String> params = new HashMap<>();
     params.put("input", "multiple-xmls-with-xsl.zip");
-    StepInfoImpl info = new StepInfoImpl("step-id", "step name", "myinput.xml", "multiple-xmls-result.zip", params);
+    StepInfoImpl info = new StepInfoImpl("step-id", "step name", "myinput.xml", "", params);
 
     Transformation step = new Transformation();
     Result result = step.process(model, data, info);
