@@ -108,7 +108,7 @@ public final class Transformation implements Step {
         output = data.getFile(data.id() + System.nanoTime());
       } else if (isInputAZip) {
         //Ouput is not a zip but the input is, then we have to have an output zip      
-        zipOutput = data.getFile("transformed-" + System.nanoTime() + "-" + input.getName());
+        zipOutput = data.getFile(getNewNameBaseOnOther(zipInput.getName(), true));
       }
       if (output.getName().indexOf(".") > -1) {
         //It is a file, therefore only creates the parent folder if necessary
@@ -170,7 +170,7 @@ public final class Transformation implements Step {
     //Output cannot be a folder
     File finalOutput = output;
     if (output.isDirectory()) {
-      finalOutput = new File(output, "transformed-" + input.getName());
+      finalOutput = new File(output, getNewNameBaseOnOther(input.getName(), false));
     }
 
     try {
@@ -284,7 +284,7 @@ public final class Transformation implements Step {
    */
   private File getOutputFile(PackageData data, StepInfo info) {
     String outputParemeter = info.getParameter("output", info.output());
-    if (StringUtils.isBlank(outputParemeter)) {
+    if (StringUtils.isBlank(outputParemeter) || outputParemeter.equals(info.input())) {
       outputParemeter = data.id() + System.nanoTime();
     } 
     return data.getFile(outputParemeter);
@@ -331,6 +331,23 @@ public final class Transformation implements Step {
     newInput.mkdirs();
     ZipUtils.unzip(file, newInput);
     return newInput;
+  }
+  
+  /**
+   * Gets the new name base on other.
+   *
+   * @param otherName the other name
+   * @param shouldUseMilliseconds the should use milliseconds
+   * @return the new name base on other
+   */
+  private String getNewNameBaseOnOther (String otherName, boolean shouldUseMilliseconds) {
+    String addition = shouldUseMilliseconds ? "-transformed-" + System.nanoTime() :"-transformed";
+    int lastDotPosition = otherName.lastIndexOf(".");
+    if (lastDotPosition > -1) {
+      return otherName.substring(0, lastDotPosition) + addition + otherName.substring(lastDotPosition);
+    } else {
+      return otherName + addition;
+    } 
   }
   
   /**
@@ -405,7 +422,6 @@ public final class Transformation implements Step {
         xml.attribute("path", data().getPath(this._template));
         xml.closeElement();
       }
-      writeFileResultInfos(xml);
     }
 
     /**
@@ -431,5 +447,5 @@ public final class Transformation implements Step {
         LOGGER.error("Unable to generate file result info for {}-{}-{}", fileResultInfo.getInput(), fileResultInfo.getOutput(), fileResultInfo.getStatus());
       }
     }
-  }
+  }  
 }
