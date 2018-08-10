@@ -77,4 +77,48 @@ public class TransformationTest {
     System.out.println(xml.toString());
     Assert.assertEquals(ResultStatus.OK, result.status());
   }
+  
+  @Test
+  public void test_processInputZipWithoutXSL() throws IOException {
+    File file = new File("src/test/resources/models/m1/multiple-xmls.zip");
+    Model model = new Model("m1");
+    PackageData data = PackageData.newPackageData("Transformation", file);
+    Map<String, String> params = new HashMap<>();
+    params.put("input", "multiple-xmls.zip");
+    params.put("xsl", "xslt-sample.xsl");
+    params.put("_xslt-indent", "yes");
+    StepInfoImpl info = new StepInfoImpl("step-id", "step name", "myinput.xml", "multiple-xmls-result.zip", params);
+
+    Transformation step = new Transformation();
+    Result result = step.process(model, data, info);
+    XMLStringWriter xml = new XMLStringWriter(NamespaceAware.No);
+    result.toXML(xml);
+
+    xml.flush();
+    xml.close();
+
+    System.out.println(xml.toString());
+    Assert.assertEquals(ResultStatus.OK, result.status());
+  }
+  
+  @Test
+  public void test_processInputZipWithXSL() throws IOException {
+    File file = new File("src/test/resources/models/m1/multiple-xmls-with-xsl.zip");
+    Model model = new Model("m1");
+    PackageData data = PackageData.newPackageData("Transformation", file);
+    Map<String, String> params = new HashMap<>();
+    params.put("input", "multiple-xmls-with-xsl.zip");
+    StepInfoImpl info = new StepInfoImpl("step-id", "step name", "myinput.xml", "multiple-xmls-result.zip", params);
+
+    Transformation step = new Transformation();
+    Result result = step.process(model, data, info);
+    XMLStringWriter xml = new XMLStringWriter(NamespaceAware.No);
+    result.toXML(xml);
+
+    xml.flush();
+    xml.close();
+
+    System.out.println(xml.toString());
+    Assert.assertEquals(ResultStatus.OK, result.status());
+  }
 }

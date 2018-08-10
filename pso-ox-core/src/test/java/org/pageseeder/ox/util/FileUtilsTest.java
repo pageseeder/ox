@@ -4,7 +4,11 @@
 package org.pageseeder.ox.util;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -70,7 +74,7 @@ public class FileUtilsTest {
       dataFolder.mkdirs();
       FileUtils.copy(toCopy, new File(dataFolder,  "config.xml"));
       String fileFound = FileUtils.getFileByExtension(data, "xml", ".xml");
-      Assert.assertEquals("folder/config.xml",fileFound);
+      Assert.assertEquals("xml/config.xml",fileFound);
     } catch (IOException e) {
       Assert.fail(e.getMessage());
     }
@@ -85,8 +89,8 @@ public class FileUtilsTest {
       File dataFolder = new File(data.directory(), "docx");
       dataFolder.mkdirs();
       FileUtils.copy(toCopy, new File(dataFolder,  "file.docx"));
-      String fileFound = FileUtils.getFileByExtension(data, "dotx", ".dotx",".docx");
-      Assert.assertEquals("folder/file.docx",fileFound);
+      String fileFound = FileUtils.getFileByExtension(data, "docx", ".dotx",".docx");
+      Assert.assertEquals("docx/file.docx",fileFound);
     } catch (IOException e) {
       Assert.fail(e.getMessage());
     }
@@ -102,11 +106,52 @@ public class FileUtilsTest {
       dataFolder.mkdirs();
       FileUtils.copy(toCopy, new File(dataFolder,  "file.psml"));
       String fileFound = FileUtils.getFileByExtension(data, "psml", ".psml");
-      Assert.assertEquals("folder/file.psml",fileFound);
+      Assert.assertEquals("psml/file.psml",fileFound);
     } catch (IOException e) {
       Assert.fail(e.getMessage());
      }
   }
 
+  @Test
+  public void findFileByExtensions() {
+    File root = new File("src/test/resources/org/pageseeder/ox/util/filefinder");    
+    List<String> extensionsAllowed = new ArrayList<>();
+    extensionsAllowed.add("java");
+    extensionsAllowed.add("html");    
+    FileFilter filter = FileUtils.filter(extensionsAllowed, true);
+    List<File> files = FileUtils.findFiles(root, filter);
+    Assert.assertEquals(files.size(), 12);
+    Assert.assertTrue(hasThisFile(files, "c.java"));
+    Assert.assertTrue(hasThisFile(files, "a.java"));
+    Assert.assertTrue(hasThisFile(files, "b.java"));
+    Assert.assertTrue(hasThisFile(files, "c.html"));
+    Assert.assertTrue(hasThisFile(files, "a.html"));
+    Assert.assertTrue(hasThisFile(files, "b.html"));
+  }
 
+  @Test
+  public void testGetNameWithoutExtension() {
+    String filename = "fileV1.docx";
+    Assert.assertEquals("fileV1", FileUtils.getNameWithoutExtension(filename));
+    File file = new File (filename);
+    Assert.assertEquals("fileV1", FileUtils.getNameWithoutExtension(file));
+
+  }
+  
+  @Test
+  public void findFileByExtensionsNoDirectory() {
+    File root = new File("src/test/resources/org/pageseeder/ox/util/filefinder");    
+    List<String> extensionsAllowed = new ArrayList<>();
+    extensionsAllowed.add("java");
+    extensionsAllowed.add("html");    
+    FileFilter filter = FileUtils.filter(extensionsAllowed, false);
+    List<File> files = FileUtils.findFiles(root, filter);
+    Assert.assertEquals(files.size(), 4);
+    Assert.assertTrue(hasThisFile(files, "c.java"));
+    Assert.assertTrue(hasThisFile(files, "c.html"));
+  }
+  
+  private boolean hasThisFile(List<File> files, String filename) {
+    return files.stream().filter(file -> file.getName().equals(filename)).collect(Collectors.toList()).size() > 0;
+  }
 }
