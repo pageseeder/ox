@@ -343,7 +343,8 @@ public class FileUtils {
     List<String> extensions = new ArrayList<>();
     extensions.add("xml");
     extensions.add("html");
-    extensions.add("psml");
+    extensions.add("htm");
+    extensions.add("psml");    
     return extensions;
   }
   
