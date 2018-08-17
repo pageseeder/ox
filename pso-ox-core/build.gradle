@@ -12,6 +12,7 @@ dependencies {
   compile (
     'org.pageseeder.xmlwriter:pso-xmlwriter:1.0.+',
     'org.slf4j:slf4j-api:1.7.+',
+    'w3c:jtidy:r938',
   )
 
   compileOnly (

@@ -23,13 +23,13 @@ import org.slf4j.LoggerFactory;
  * @author Carlos Cabral
  * @since 08th March 2018
  */
-public class MultipleFilesResult extends DefaultResult implements Result {
+public class MultipleFilesResult<T extends FileResultInfo> extends DefaultResult implements Result {
   
   /** The Constant LOGGER. */
   private static final Logger LOGGER = LoggerFactory.getLogger(MultipleFilesResult.class);
 
   /** The file result infos. */
-  private final List<FileResultInfo> _fileResultInfos;
+  private final List<T> _fileResultInfos;
    
   /**
    * Instantiates a new multiple files result.
@@ -42,7 +42,7 @@ public class MultipleFilesResult extends DefaultResult implements Result {
    * @param fileResultInfos the file result infos
    */
   public MultipleFilesResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info,
-      @NonNull File input, @Nullable File output, @NonNull List<FileResultInfo> fileResultInfos) {
+      @NonNull File input, @Nullable File output, @NonNull List<T> fileResultInfos) {
     super(model, data, info, input, output);
     this._fileResultInfos = fileResultInfos;
   }
@@ -77,7 +77,7 @@ public class MultipleFilesResult extends DefaultResult implements Result {
    * @param xml the xml
    * @throws IOException Signals that an I/O exception has occurred.
    */
-  protected void writeFileResultInfo(XMLWriter xml, FileResultInfo fileResultInfo) {
+  protected void writeFileResultInfo(XMLWriter xml, T fileResultInfo) {
     try {
       xml.openElement("result-file");
       xml.attribute("input", data().getPath(fileResultInfo.getInput()));
@@ -94,7 +94,7 @@ public class MultipleFilesResult extends DefaultResult implements Result {
    *
    * @return the file result infos
    */
-  public List<FileResultInfo> getFileResultInfos() {
+  public List<? extends FileResultInfo> getFileResultInfos() {
     return _fileResultInfos;
   }
 }
