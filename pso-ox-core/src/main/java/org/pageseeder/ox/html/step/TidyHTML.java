@@ -72,17 +72,10 @@ public final class TidyHTML implements Step {
   public Result process(Model model, PackageData data, StepInfo info) {
     Result result = null;
     try {
-      //## Handle input file
-      File input = getInputFile(model, data, info);
-      if (input == null || !input.exists()) { 
+      //## Handle input files
+      List<File> inputs = getInputFiles(model, data, info);
+      if (inputs.isEmpty()) { 
         return new InvalidResult(model, data).error(new FileNotFoundException("Cannot find the input file.")); 
-      }
-      input.mkdirs();
-      final boolean isInputAZip =  FileUtils.isZip(input); 
-      File zipInput = null;
-      if (isInputAZip) {
-        zipInput = input;
-        input = unzipFile(input);      
       }
       
       //## Handle Output file 
@@ -93,10 +86,11 @@ public final class TidyHTML implements Step {
         zipOutput = output;
         //The the output need to be a folder
         output = data.getFile(data.id() + System.nanoTime());
-      } else if (isInputAZip) {
-        //Ouput is not a zip but the input is, then we have to have an output zip      
-        zipOutput = data.getFile(getNewNameBaseOnOther(zipInput.getName(), true));
+      } else if (inputs.size() > 1) {
+        //If there is more than one input, than the output must be a zip      
+        zipOutput = data.getFile(getNewNameBaseOnOther("output.zip", true));
       }
+      
       if (output.getName().indexOf(".") > -1) {
         //It is a file, therefore only creates the parent folder if necessary
         output.getParentFile().mkdir();
@@ -107,16 +101,14 @@ public final class TidyHTML implements Step {
           
       // transform the result
       List <TidyFileResultInfo> fileResultInfos = new ArrayList<>();
-      File originalInput = zipInput != null? zipInput : input;
       File downloadableOuput = zipOutput != null ? zipOutput : output;
-      result = new TidyHTMLResult(model, data, info, originalInput, downloadableOuput, fileResultInfos);
+      result = new TidyHTMLResult(model, data, info, downloadableOuput, fileResultInfos);
       
       try {
-        //Load all the possible inputs (if there are)
-        List<File> inputs = getInputFiles(input, data, info);      
+   
         Tidy tidy = newTidy(model);   
-        for(File extraInput:inputs) {
-          fileResultInfos.add(processFile(extraInput, output, tidy, data, info));
+        for(File input:inputs) {
+          fileResultInfos.add(processFile(input, output, tidy, data, info));
         }
         
         //If zip output is not null, then zip
@@ -168,7 +160,7 @@ public final class TidyHTML implements Step {
       StringWriter buffer = new StringWriter();
       tidy.parse(new StringReader(html), buffer);      
       String xhtml = buffer.toString();
-      //TODO try to udenrstand it
+      //TODO try to understand it
       // We must remove the XHTML DOCTYPE declaration since W3 has shutdown its servers for XHTML DTDs
       xhtml = xhtml.replaceAll("<\\!DOCTYPE(.*?)\\>\n?", "");
       
@@ -222,7 +214,7 @@ public final class TidyHTML implements Step {
    */
   private Properties getTidyProperties (Model model) throws IOException {
     Properties properties = model.getProperties("tidy.properties");
-    if (properties == null) {
+    if (properties == null || properties.isEmpty()) {
       try (InputStream input = TidyHTML.class.getClassLoader().getResourceAsStream(DEFAULT_TIDY_PROPERTIES)) {
         if (input != null ) {
           properties = new Properties();
@@ -234,7 +226,7 @@ public final class TidyHTML implements Step {
   }
   
   /**
-   * Gets the input files.
+   * If the input is a folder or zip, it gets the input files inside the folder or zip.
    *
    * @param model the model
    * @param data the data
@@ -242,44 +234,47 @@ public final class TidyHTML implements Step {
    * @return the input files
    * @throws IOException Signals that an I/O exception has occurred.
    */
-  private File getInputFile(Model model, PackageData data, StepInfo info) throws IOException {
+  private @NonNull List<File> getInputFiles(Model model, PackageData data, StepInfo info) throws IOException {
+    
+    //Original inputs
     String inputParemeter = info.getParameter("input", info.input());
-    File input = data.getFile(inputParemeter);
+    List<File> originalInputs = data.getFiles(inputParemeter);
 
-    if (input == null || !input.exists()) {
-      input = model.getFile(inputParemeter);
+    if (originalInputs == null || originalInputs.isEmpty()) {
+      originalInputs = new ArrayList<>();
+      File tempInput = model.getFile(inputParemeter); 
+      if (tempInput != null) originalInputs.add(tempInput);
     }
-    return input; 
-  }  
+
+    //Load the extesion Allowed
+    String extensionParameters = data.getParameter("input-extensions");
+    if (StringUtils.isBlank(extensionParameters)) {
+      extensionParameters = info.getParameter("input-extensions");
+    }
+    List<String> extensions = StringUtils.isBlank(extensionParameters) ? FileUtils.getXMLExtensions():StringUtils.convertToStringList(extensionParameters);
+        
+    List<File> finalInputs = new ArrayList<>();
+    
+    //Handle each input
+    for (File input : originalInputs) {
+      input.mkdirs();      
+      if (input.exists()) {
+        //handle zip file
+        final boolean isInputAZip =  FileUtils.isZip(input); 
+        if (isInputAZip) {
+          input = unzipFile(input);      
+        }
   
-  /**
-   * If the input is a folder or zip, it gets the input files inside the folder or zip.
-   *
-   * @param input the input
-   * @param data the data
-   * @param info the info
-   * @return the input files
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  private List<File> getInputFiles(File input, PackageData data, StepInfo info) throws IOException {
-    List<File> inputFiles = new ArrayList<>();
-    if (input.isDirectory()) {
-      String extensionParameters = data.getParameter("input-extensions");
-      if (StringUtils.isBlank(extensionParameters)) {
-        extensionParameters = info.getParameter("input-extensions");
-      }
-      List<String> extensions = StringUtils.isBlank(extensionParameters) ? FileUtils.getXMLExtensions():StringUtils.convertToStringList(extensionParameters);
-      FileFilter filter = FileUtils.filter(extensions, true);
-      inputFiles.addAll(FileUtils.findFiles(input, filter));
-    } else {
-      if (FileUtils.isZip(input)) {
-        File newInput = unzipFile(input);
-        inputFiles.addAll(getInputFiles(newInput, data, info));
-      } else {
-        inputFiles.add(input);
+        //Load candidate inputs
+        if (input.isDirectory()) {
+          FileFilter filter = FileUtils.filter(extensions, true);
+          finalInputs.addAll(FileUtils.findFiles(input, filter));
+        } else {
+          finalInputs.add(input);
+        }
       }
     }
-    return inputFiles;
+    return finalInputs;
   } 
   
   /**
@@ -347,9 +342,9 @@ public final class TidyHTML implements Step {
      * @param output the output
      * @param fileResultInfos the file result infos
      */
-    public TidyHTMLResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info, @NonNull File input,
+    public TidyHTMLResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info, 
         @Nullable File output, @NonNull List<TidyFileResultInfo> fileResultInfos) {
-      super(model, data, info, input, output, fileResultInfos);
+      super(model, data, info, output, fileResultInfos);
       this._displayOutputResult = "true".equals(super.info().getParameter("display-result")) ? true : false;
     }
     

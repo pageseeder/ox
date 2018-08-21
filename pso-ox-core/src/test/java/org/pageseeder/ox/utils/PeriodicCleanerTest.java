@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 1999-2016 Allette systems pty. ltd.
  */
-package org.pageseeder.ox.util;
+package org.pageseeder.ox.utils;
 
 import java.io.File;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.pageseeder.ox.util.PeriodicCleaner;
 
 /**
  * @author Ciber Cai

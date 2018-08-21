@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><!----><document id="3">
+	<documentinfo>
+		<uri id="3" title="Test">
+			<displaytitle>Test</displaytitle>
+		</uri>
+	</documentinfo>
+	<fragmentinfo/>
+	<metadata/>
+	<section id="1">
+		<fragment id="1">
+			<para>Test Text</para>
+		</fragment>
+	</section>
+</document>

@@ -1,10 +1,11 @@
 /*
  * Copyright (c) 2018 Allette systems pty. ltd.
  */
-package org.pageseeder.ox.util;
+package org.pageseeder.ox.utils;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.pageseeder.ox.util.GlobPatternUtils;
 
 /**
  * @author Carlos Cabral

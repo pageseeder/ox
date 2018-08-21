@@ -18,14 +18,14 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class MultipleFilesResult.
  * 
- * It is be used when the input can be a folder and many files will be generated 
+ * It for steps when they receive multiple files as input (by using a folder, Glob pattern or zip) and for file there
+ * is a separate process.
  * 
  * @author Carlos Cabral
- * @since 08th March 2018
+ * @since 08th August 2018
  */
 public class MultipleFilesResult<T extends FileResultInfo> extends DefaultResult implements Result {
   
-  /** The Constant LOGGER. */
   private static final Logger LOGGER = LoggerFactory.getLogger(MultipleFilesResult.class);
 
   /** The file result infos. */
@@ -37,13 +37,12 @@ public class MultipleFilesResult<T extends FileResultInfo> extends DefaultResult
    * @param model the model
    * @param data the data
    * @param info the info
-   * @param input the input
-   * @param output the output
+   * @param output the output (it can only be a zip or a file or null)
    * @param fileResultInfos the file result infos
    */
-  public MultipleFilesResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info,
-      @NonNull File input, @Nullable File output, @NonNull List<T> fileResultInfos) {
-    super(model, data, info, input, output);
+  public MultipleFilesResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info, 
+      @Nullable File output, @NonNull List<T> fileResultInfos) {
+    super(model, data, info, output);
     this._fileResultInfos = fileResultInfos;
   }
 
@@ -66,7 +65,7 @@ public class MultipleFilesResult<T extends FileResultInfo> extends DefaultResult
    * @throws IOException Signals that an I/O exception has occurred.
    */
   protected void writeFileResultInfos(XMLWriter xml) throws IOException {
-    xml.openElement("result-file");
+    xml.openElement("result-files");
     this._fileResultInfos.forEach(fileResultInfo -> writeFileResultInfo (xml, fileResultInfo));
     xml.closeElement();//parameters
   }

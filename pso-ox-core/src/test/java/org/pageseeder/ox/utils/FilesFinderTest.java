@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 2018 Allette systems pty. ltd.
  */
-package org.pageseeder.ox.util;
+package org.pageseeder.ox.utils;
 
 import java.io.File;
 import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.pageseeder.ox.util.FilesFinder;
 
 /**
  * @author Carlos Cabral

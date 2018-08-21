@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE pipelines PUBLIC "-//PageSeeder//DTD::OX model 1.0//EN"
+                            "http://www.pageseeder.org/schema/ox/model-1.0.dtd">
+<pipelines>
+  <pipeline id="default-pipeline" name="Default Pipeline" default="true">
+    <step id="transform" name="Transform"  class="org.pageseeder.ox.step.Transformation">
+      <parameter name="output" value="myoutput"/>
+    </step>
+  </pipeline>
+</pipelines>

@@ -84,20 +84,13 @@ public final class Transformation implements Step {
   public Result process(Model model, PackageData data, StepInfo info) {
     Result result = null;
     try {
-      //## Handle input file
-      File input = getInputFile(model, data, info);
-      if (input == null || !input.exists()) { 
+      //## Handle input files
+      List<File> inputs = getInputFiles(model, data, info);
+      if (inputs.isEmpty()) { 
         return new InvalidResult(model, data).error(new FileNotFoundException("Cannot find the input file.")); 
       }
-      input.mkdirs();
-      final boolean isInputAZip =  FileUtils.isZip(input); 
-      File zipInput = null;
-      if (isInputAZip) {
-        zipInput = input;
-        input = unzipFile(input);      
-      }
       
-      //## Handle Output file 
+    //## Handle Output file 
       File output = getOutputFile(data, info);
       final boolean isOutputAZip =  FileUtils.isZip(output);
       File zipOutput = null;
@@ -105,10 +98,11 @@ public final class Transformation implements Step {
         zipOutput = output;
         //The the output need to be a folder
         output = data.getFile(data.id() + System.nanoTime());
-      } else if (isInputAZip) {
-        //Ouput is not a zip but the input is, then we have to have an output zip      
-        zipOutput = data.getFile(getNewNameBaseOnOther(zipInput.getName(), true));
+      } else if (inputs.size() > 1) {
+        //If there is more than one input, than the output must be a zip      
+        zipOutput = data.getFile(getNewNameBaseOnOther("output.zip", true));
       }
+      
       if (output.getName().indexOf(".") > -1) {
         //It is a file, therefore only creates the parent folder if necessary
         output.getParentFile().mkdir();
@@ -118,7 +112,7 @@ public final class Transformation implements Step {
       }
       
       //## Handle the transformation file
-      File xsl = getXSLFile(input, model, data, info);
+      File xsl = getXSLFile(inputs.get(0).getParentFile(), model, data, info);
   
       // throw the error
       if (xsl == null || !xsl.exists()) { 
@@ -127,13 +121,10 @@ public final class Transformation implements Step {
      
       // transform the result
       List <FileResultInfo> fileResultInfos = new ArrayList<>();
-      File originalInput = zipInput != null? zipInput : input;
       File downloadableOuput = zipOutput != null ? zipOutput : output;
-      result = new TransformResult(model, data, info, originalInput, downloadableOuput, fileResultInfos, xsl);
+      result = new TransformResult(model, data, info, downloadableOuput, fileResultInfos, xsl);
       
-      try {
-        //Load all the possible inputs (if there are)
-        List<File> inputs = getInputFiles(input, data, info);      
+      try {   
         Transformer transformer = buildXSLTTransformer(xsl, data, info);      
         for(File extraInput:inputs) {
           fileResultInfos.add(processFile(extraInput, output, transformer));
@@ -226,7 +217,7 @@ public final class Transformation implements Step {
   }
 
   /**
-   * Gets the input files.
+   * If the input is a folder or zip, it gets the input files inside the folder or zip.
    *
    * @param model the model
    * @param data the data
@@ -234,44 +225,47 @@ public final class Transformation implements Step {
    * @return the input files
    * @throws IOException Signals that an I/O exception has occurred.
    */
-  private File getInputFile(Model model, PackageData data, StepInfo info) throws IOException {
+  private @NonNull List<File> getInputFiles(Model model, PackageData data, StepInfo info) throws IOException {
+    
+    //Original inputs
     String inputParemeter = info.getParameter("input", info.input());
-    File input = data.getFile(inputParemeter);
+    List<File> originalInputs = data.getFiles(inputParemeter);
 
-    if (input == null || !input.exists()) {
-      input = model.getFile(inputParemeter);
+    if (originalInputs == null || originalInputs.isEmpty()) {
+      originalInputs = new ArrayList<>();
+      File tempInput = model.getFile(inputParemeter); 
+      if (tempInput != null) originalInputs.add(tempInput);
     }
-    return input; 
-  }  
+
+    //Load the extesion Allowed
+    String extensionParameters = data.getParameter("input-extensions");
+    if (StringUtils.isBlank(extensionParameters)) {
+      extensionParameters = info.getParameter("input-extensions");
+    }
+    List<String> extensions = StringUtils.isBlank(extensionParameters) ? FileUtils.getXMLExtensions():StringUtils.convertToStringList(extensionParameters);
+        
+    List<File> finalInputs = new ArrayList<>();
+    
+    //Handle each input
+    for (File input : originalInputs) {
+      input.mkdirs();      
+      if (input.exists()) {
+        //handle zip file
+        final boolean isInputAZip =  FileUtils.isZip(input); 
+        if (isInputAZip) {
+          input = unzipFile(input);      
+        }
   
-  /**
-   * If the input is a folder or zip, it gets the input files inside the folder or zip.
-   *
-   * @param input the input
-   * @param data the data
-   * @param info the info
-   * @return the input files
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  private List<File> getInputFiles(File input, PackageData data, StepInfo info) throws IOException {
-    List<File> inputFiles = new ArrayList<>();
-    if (input.isDirectory()) {
-      String extensionParameters = data.getParameter("input-extensions");
-      if (StringUtils.isBlank(extensionParameters)) {
-        extensionParameters = info.getParameter("input-extensions");
-      }
-      List<String> extensions = StringUtils.isBlank(extensionParameters) ? FileUtils.getXMLExtensions():StringUtils.convertToStringList(extensionParameters);
-      FileFilter filter = FileUtils.filter(extensions, true);
-      inputFiles.addAll(FileUtils.findFiles(input, filter));
-    } else {
-      if (FileUtils.isZip(input)) {
-        File newInput = unzipFile(input);
-        inputFiles.addAll(getInputFiles(newInput, data, info));
-      } else {
-        inputFiles.add(input);
+        //Load candidate inputs
+        if (input.isDirectory()) {
+          FileFilter filter = FileUtils.filter(extensions, true);
+          finalInputs.addAll(FileUtils.findFiles(input, filter));
+        } else {
+          finalInputs.add(input);
+        }
       }
     }
-    return inputFiles;
+    return finalInputs;
   } 
   
   /**
@@ -389,7 +383,7 @@ public final class Transformation implements Step {
   /**
    * The Class TransformResult.
    */
-  private class TransformResult extends MultipleFilesResult implements Result {
+  private class TransformResult extends MultipleFilesResult<FileResultInfo> implements Result {
 
     /** The template. */
     private final File _template;
@@ -401,14 +395,13 @@ public final class Transformation implements Step {
      * @param model the model
      * @param data the data
      * @param info the info
-     * @param input the input
      * @param output the output
      * @param fileResultInfos the file result infos
      * @param _template the template
      */
-    public TransformResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info, @NonNull File input,
+    public TransformResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info,
         @Nullable File output, @NonNull List<FileResultInfo> fileResultInfos, @NonNull File template) {
-      super(model, data, info, input, output, fileResultInfos);
+      super(model, data, info, output, fileResultInfos);
       this._template = template;
       this._displayOutputResult = "false".equals(super.info().getParameter("display-result")) ? false : true;
     }
@@ -418,7 +411,9 @@ public final class Transformation implements Step {
       super.writeResultElements(xml);
       if (this._template != null) {
         xml.openElement("template");
-        xml.attribute("path", data().getPath(this._template));
+        String path = data().getPath(this._template);
+        //The template can come from data package or model. If its from model it only shows file name.
+        xml.attribute("path", StringUtils.isBlank(path)? this._template.getName():path);
         xml.closeElement();
       }
     }
