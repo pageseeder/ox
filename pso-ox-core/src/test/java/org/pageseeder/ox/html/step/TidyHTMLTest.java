@@ -141,7 +141,7 @@ public class TidyHTMLTest {
   
   private void validateResult(File targetExpected, File resultExpected, File targetCreated, String resultXML, List<String> attributesToIgnore) throws IOException {
     String resultXMLExpected = FileUtils.read(resultExpected);
-    //System.out.println(resultXML);
+    System.out.println(resultXML);
     
     final boolean isOutputZip = FileUtils.isZip(targetCreated); 
     //Validate Output

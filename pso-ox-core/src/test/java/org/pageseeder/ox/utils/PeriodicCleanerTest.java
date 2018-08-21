@@ -4,10 +4,11 @@
 package org.pageseeder.ox.utils;
 
 import java.io.File;
+import java.nio.file.Files;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.util.PeriodicCleaner;
 
 /**
@@ -16,15 +17,13 @@ import org.pageseeder.ox.util.PeriodicCleaner;
  */
 public class PeriodicCleanerTest {
 
-  private final File file = new File("test/folder");
 
-  @Before
-  public void init() throws Exception {
-    this.file.mkdirs();
-
-    File subFolder1 = new File(this.file, "1");
+  @Test
+  public void test_clean() throws Exception {
+    File file = Files.createTempDirectory(OXConfig.getOXTempUploadFolder().toPath(), "clean-test").toFile();
+    file.mkdirs();
+    File subFolder1 = new File(file, "1");
     subFolder1.mkdirs();
-    subFolder1.setLastModified(0);
     File subFolder1File1 = new File(subFolder1, "1.txt");
     subFolder1File1.createNewFile();
     subFolder1File1.setLastModified(0);
@@ -32,9 +31,8 @@ public class PeriodicCleanerTest {
     subFolder1File2.createNewFile();
     subFolder1File2.setLastModified(0);
 
-    File subFolder2 = new File(this.file, "2");
+    File subFolder2 = new File(file, "2");
     subFolder2.mkdirs();
-    subFolder2.setLastModified(0);
     File subFolder2File1 = new File(subFolder2, "1.txt");
     subFolder2File1.createNewFile();
     subFolder2File1.setLastModified(0);
@@ -45,18 +43,16 @@ public class PeriodicCleanerTest {
 
     File subFolder11 = new File(subFolder1, "1.1");
     subFolder11.mkdirs();
-    subFolder11.setLastModified(0);
 
     File subFolder11File1 = new File(subFolder11, "1.txt");
     subFolder11File1.createNewFile();
     subFolder11File1.setLastModified(0);
 
-    this.file.setLastModified(0);
-  }
-
-  @Test
-  public void test_clean() throws Exception {
-    PeriodicCleaner.clean(this.file);
-    Assert.assertFalse(this.file.exists());
+    file.setLastModified(0);
+    subFolder1.setLastModified(0);
+    subFolder2.setLastModified(0);
+    subFolder11.setLastModified(0);
+    PeriodicCleaner.clean(file);
+    Assert.assertFalse(file.exists());
   }
 }

@@ -214,10 +214,9 @@ public final class TidyHTML implements Step {
    */
   private Properties getTidyProperties (Model model) throws IOException {
     Properties properties = model.getProperties("tidy.properties");
-    if (properties == null || properties.isEmpty()) {
+    if (properties.isEmpty()) {
       try (InputStream input = TidyHTML.class.getClassLoader().getResourceAsStream(DEFAULT_TIDY_PROPERTIES)) {
         if (input != null ) {
-          properties = new Properties();
           properties.load(input);
         }
       }
