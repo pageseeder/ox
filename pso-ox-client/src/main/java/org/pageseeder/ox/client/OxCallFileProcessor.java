@@ -41,7 +41,7 @@ public final class OxCallFileProcessor {
    * Instantiates a new ox call file processor.
    *
    * @param source the source (normally a zip file)
-   * @param format the format
+   * @param pipeline the pipeline
    */
   public OxCallFileProcessor(File source, String pipeline) {
     if (source == null) { throw new NullPointerException("Source is null"); }
@@ -68,6 +68,8 @@ public final class OxCallFileProcessor {
   /**
    * Dry process.
    *
+   * @param xml the xml
+   * @param oxProperties the ox properties
    * @throws IOException Signals that an I/O exception has occurred.
    * @throws BerliozException the berlioz exception
    */

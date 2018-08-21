@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.pageseeder.ox.OXConfig;
+import org.pageseeder.ox.berlioz.servlet.OXGetFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -29,7 +29,7 @@ public final class Errors {
    * Ox exception handler.
    *
    * @param xml the xml
-   * @param oxException the ox exception
+   * @param ex the ex
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public static void oxExceptionHandler(XMLWriter xml, OXException ex) throws IOException {
@@ -48,7 +48,7 @@ public final class Errors {
    *
    * @param req  The content request
    * @param xml  The XML writer
-   * @param message the message
+   * @param ex the ex
    * @throws IOException If an error occurs writing XML.
    */
   public static void oxExceptionHandler(ContentRequest req, XMLWriter xml, OXException ex) throws IOException {

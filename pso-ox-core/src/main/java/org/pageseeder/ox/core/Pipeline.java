@@ -28,16 +28,18 @@ import org.xml.sax.helpers.DefaultHandler;
  *  &gt;pipeline id="" name="" accepts="" description="" default="false" &lt;
  *    &gt;step&lt;
  *    &gt;/step&lt;
- *  &gt;/pipeline&lt;
- *
+ *  &gt;/pipeline&lt;.
  *
  * @author Christophe Lauret
  * @author Ciber Cai
  * @since  16 December 2013
  */
 public final class Pipeline implements XMLWritable, Serializable {
+  
+  /** The Constant LOGGER. */
   private static final Logger LOGGER = LoggerFactory.getLogger(Pipeline.class);
   
+  /** The Constant serialVersionUID. */
   private static final long serialVersionUID = 3462658965942218380L;
 
   /**
@@ -61,6 +63,7 @@ public final class Pipeline implements XMLWritable, Serializable {
    */
   private final String _accepts;
   
+  /** The default. */
   private final boolean _default;
 
   /**
@@ -88,6 +91,7 @@ public final class Pipeline implements XMLWritable, Serializable {
   /**
    * Instantiates a new pipeline.
    *
+   * @param id the id
    * @param name The name of pipeline
    * @param accepts the accept mine-type
    * @param description the description of pipeline
@@ -105,6 +109,8 @@ public final class Pipeline implements XMLWritable, Serializable {
   }
 
   /**
+   * Id.
+   *
    * @return The id of this pipeline.
    */
   public String id() {
@@ -113,6 +119,8 @@ public final class Pipeline implements XMLWritable, Serializable {
 
   
   /**
+   * Name.
+   *
    * @return The name of this pipeline.
    */
   public String name() {
@@ -120,6 +128,8 @@ public final class Pipeline implements XMLWritable, Serializable {
   }
 
   /**
+   * Accepts.
+   *
    * @return The media type that this pipeline accepts.
    */
   public String accepts() {
@@ -127,6 +137,8 @@ public final class Pipeline implements XMLWritable, Serializable {
   }
 
   /**
+   * Description.
+   *
    * @return the description of this pipeline.
    */
   public String description() {
@@ -134,6 +146,8 @@ public final class Pipeline implements XMLWritable, Serializable {
   }
 
   /**
+   * Checks if is default.
+   *
    * @return the description of this pipeline.
    */
   public boolean isDefault() {
@@ -172,16 +186,16 @@ public final class Pipeline implements XMLWritable, Serializable {
   /**
    * Adds the extra attributes.
    *
-   * @param name the name
-   * @param value the value
+   * @param extraElement the extra element
    */
   public void addExtraElements (GenericInfo extraElement) {
     if (extraElement != null) this._extraElements.add(extraElement);
   }
   
   /**
-   * Add the step to this pipeline and check the uniqueness
-   * @param step
+   * Add the step to this pipeline and check the uniqueness.
+   *
+   * @param step the step
    */
   private void addStep (StepDefinition step) {
     for (StepDefinition s : this._steps) {
@@ -196,6 +210,7 @@ public final class Pipeline implements XMLWritable, Serializable {
   /**
    * Returns the step with the specified id.
    *
+   * @param id the id
    * @return the corresponding step or <code>null</code>.
    */
   public StepDefinition getStep(String id) {
@@ -206,6 +221,9 @@ public final class Pipeline implements XMLWritable, Serializable {
   }
 
   /**
+   * Gets the step.
+   *
+   * @param index the index
    * @return Returns the step for the specified index.
    */
   public StepDefinition getStep(int index) {
@@ -213,12 +231,17 @@ public final class Pipeline implements XMLWritable, Serializable {
   }
 
   /**
+   * Size.
+   *
    * @return the number of steps in the pipeline.
    */
   public int size() {
     return this._steps.size();
   }
 
+  /* (non-Javadoc)
+   * @see org.pageseeder.xmlwriter.XMLWritable#toXML(org.pageseeder.xmlwriter.XMLWriter)
+   */
   @Override
   public void toXML(XMLWriter xml) throws IOException {
     xml.openElement("pipeline", true);
@@ -247,25 +270,38 @@ public final class Pipeline implements XMLWritable, Serializable {
     xml.closeElement(); // pipeline
   }
 
+  /**
+   * The Class PipelineHandler.
+   */
   static class PipelineHandler extends DefaultHandler implements ContentHandler {
 
+    /** The pipeline. */
     private Pipeline pipeline = null;
 
+    /** The builder. */
     private final StepDefinition.Builder builder;
 
+    /** The in step. */
     private boolean inStep = false;
     
+    /** The extra element. */
     private GenericInfo extraElement;
 
+    /** The step id. */
     private String stepId = null;
 
     /**
+     * Instantiates a new pipeline handler.
      *
+     * @param model the model
      */
     public PipelineHandler(Model model) {
       this.builder = new StepDefinition.Builder(model);
     }
 
+    /* (non-Javadoc)
+     * @see org.xml.sax.helpers.DefaultHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+     */
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 
@@ -403,6 +439,9 @@ public final class Pipeline implements XMLWritable, Serializable {
       }
     }
 
+    /* (non-Javadoc)
+     * @see org.xml.sax.helpers.DefaultHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+     */
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
       if (localName.equals("step")) {
@@ -424,6 +463,9 @@ public final class Pipeline implements XMLWritable, Serializable {
       }
     }
 
+    /* (non-Javadoc)
+     * @see org.xml.sax.helpers.DefaultHandler#characters(char[], int, int)
+     */
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
       if (this.extraElement != null) {
@@ -432,6 +474,8 @@ public final class Pipeline implements XMLWritable, Serializable {
     }
     
     /**
+     * Gets the pipeline.
+     *
      * @return the pipeline
      */
     public Pipeline getPipeline() {

@@ -12,7 +12,7 @@ import org.pageseeder.berlioz.GlobalSettings;
  *
  * <pre>{@code
  *   <ox-server url="http://[ox server]" process="/process" status="/status.xml" model="model-name"
- *              username="berlioz" password="OB1:[obfuscated password]" />
+ *              username="berlioz" password="OB1:[obfuscated password]" />}
  * </pre>
  *
  *

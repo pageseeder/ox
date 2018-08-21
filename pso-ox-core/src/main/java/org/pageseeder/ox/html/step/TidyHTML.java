@@ -134,6 +134,8 @@ public final class TidyHTML implements Step {
    * @param input the input
    * @param output the output
    * @param tidy the tidy
+   * @param data the data
+   * @param info the info
    * @return the file result info
    */
   private TidyFileResultInfo processFile(File input, File output, Tidy tidy, PackageData data, StepInfo info) {
@@ -179,7 +181,7 @@ public final class TidyHTML implements Step {
    *
    * @param model the model
    * @return the Tidy
-   * @throws IOException 
+   * @throws IOException Signals that an I/O exception has occurred.
    */
   private Tidy newTidy(Model model) throws IOException {
     /** To completely ignore print messages (captured via callback messages anyway) */
@@ -337,7 +339,6 @@ public final class TidyHTML implements Step {
      * @param model the model
      * @param data the data
      * @param info the info
-     * @param input the input
      * @param output the output
      * @param fileResultInfos the file result infos
      */
