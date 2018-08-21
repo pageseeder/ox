@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE pipelines PUBLIC "-//PageSeeder//DTD::OX model 1.0//EN"
+                            "http://www.pageseeder.org/schema/ox/model-1.0.dtd">
+<pipelines>
+  <pipeline id="default-pipeline" name="Default Pipeline" default="true">
+    <step id="tidy" name="tidy"  class="oorg.pageseeder.ox.html.step.HTMLTidy">
+      <parameter name="output" value="myoutput"/>
+    </step>
+  </pipeline>
+</pipelines>

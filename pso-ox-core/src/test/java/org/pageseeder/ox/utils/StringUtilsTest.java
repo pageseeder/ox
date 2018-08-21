@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Allette systems pty. ltd.
  */
-package org.pageseeder.ox.util;
+package org.pageseeder.ox.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.pageseeder.ox.util.StringUtils;
 
 /**
  * @author Carlos Cabral

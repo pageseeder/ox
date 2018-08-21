@@ -1,0 +1,38 @@
+<result model="common" id="TRANSFORMATION-ECF0BE-9D09" status="ok" time="789" downloadable="true" path="/output-transformed-23705776796200.zip" input="multiple-xmls-with-xsl.zip" inputs-number="3"><parameters><parameter name="input" value="multiple-xmls-with-xsl.zip"/></parameters><result-files><result-file input="/multiple-xmls-with-xsl/sample.html" output="/TRANSFORMATION-ECF0BE-9D0923705775708700/sample-transformed.html" status="OK"><content><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!----><html xmlns="http://www.w3.org/1999/xhtml">
+   
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      
+      <meta charset="UTF-8" />
+      
+      <link rel="stylesheet" type="text/css" href="file1.css" />
+      
+      <title>Insert title1 here</title>
+      
+   </head>
+   
+   <body>
+      
+      <!--Missing or mismatched end tags are detected and corrected -->
+      
+      <h1>heading1</h1>
+      
+      <h2>subheading1</h2>
+      
+   </body>
+   
+</html>]]></content></result-file><result-file input="/multiple-xmls-with-xsl/sample.psml" output="/TRANSFORMATION-ECF0BE-9D0923705775708700/sample-transformed.psml" status="OK"><content><![CDATA[<?xml version="1.0" encoding="UTF-8"?><!----><document id="3">
+	<documentinfo>
+		<uri id="3" title="Test">
+			<displaytitle>Test</displaytitle>
+		</uri>
+	</documentinfo>
+	<fragmentinfo/>
+	<metadata/>
+	<section id="1">
+		<fragment id="1">
+			<para>Test Text</para>
+		</fragment>
+	</section>
+</document>]]></content></result-file><result-file input="/multiple-xmls-with-xsl/sample.xml" output="/TRANSFORMATION-ECF0BE-9D0923705775708700/sample-transformed.xml" status="OK"><content><![CDATA[<?xml version="1.0" encoding="UTF-8"?><!----><note><to>Receiver</to><from>Sender</from><heading>Reminder</heading><body>We are testing!</body></note>]]></content></result-file></result-files><template path="/multiple-xmls-with-xsl/xslt-sample.xsl"/></result>

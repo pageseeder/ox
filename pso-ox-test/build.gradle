@@ -10,11 +10,10 @@ apply from: "$rootDir/gradle/publishing.gradle"
 // Dependencies of the project
 dependencies {
 
-  // module dependencies
-  compile project(':pso-ox-core')
-  compile project(':pso-ox-berlioz')
-
   compile (
+    // module dependencies
+    project(':pso-ox-core'),
+    project(':pso-ox-berlioz'),
     'org.pageseeder.berlioz:pso-berlioz:0.11.+',
     'org.pageseeder.xmlwriter:pso-xmlwriter:1.0.2',
     'org.slf4j:slf4j-api:1.7.+',
@@ -29,6 +28,7 @@ dependencies {
   )
 
   compileOnly (
+    'org.eclipse.jdt:org.eclipse.jdt.annotation:2.0.0',
     'javax.servlet:javax.servlet-api:3.1.0'
   )
 
@@ -41,7 +41,8 @@ dependencies {
 
   testCompile (
     project(':pso-ox-psml'),
-    project(':pso-ox-schematron'),    
+    project(':pso-ox-schematron'),
+    'org.eclipse.jdt:org.eclipse.jdt.annotation:2.0.0'    
   )
 }
 

@@ -12,7 +12,7 @@ import org.pageseeder.ox.berlioz.model.JobResponse;
 import org.pageseeder.ox.core.PipelineJob;
 import org.pageseeder.ox.process.PipelineJobManager;
 import org.pageseeder.ox.util.FileUtils;
-import org.xmlunit.matchers.CompareMatcher;
+import org.pageseeder.ox.xml.utils.XMLComparator;
 
 /**
  * The Class BatchProcessingFilesComparator.
@@ -99,7 +99,7 @@ public class BatchProcessingFilesComparator {
       Assert.assertTrue("Job Target File does not exist: " + jobTarget.getAbsolutePath(), jobTarget.exists());
       String filename = jobTarget.getName();
       
-      if (filename.endsWith("xml") || filename.endsWith("psml") || filename.endsWith("html")) {
+      if (filename.endsWith("xml") || filename.endsWith("psml") || filename.endsWith("html") || filename.endsWith("xhtml") || filename.endsWith("htm")) {
         compareXMLFile(expected, jobTarget);
       } else {
         compareGenericFile(expected, jobTarget);
@@ -114,9 +114,7 @@ public class BatchProcessingFilesComparator {
    * @param target the target
    */
   private void compareXMLFile(File expected, File target) {
-    System.out.println("Expected: " + expected.getAbsolutePath());
-    System.out.println("Target: " + target.getAbsolutePath());
-    Assert.assertThat(target, CompareMatcher.isIdenticalTo(expected));
+    XMLComparator.compareXMLFile(expected, target);
   }
   
   /**

@@ -207,9 +207,21 @@ public class FileUtils {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public static void write(String fileContent, File target) throws IOException {
+    write(fileContent, target, "UTF-8");
+  }
+  
+
+  /**
+   * write the file content into the target.
+   *
+   * @param fileContent the file content
+   * @param target the target
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  public static void write(String fileContent, File target, String charset) throws IOException {
     Writer writer = null;
     try {
-      writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(target), "UTF-8"));
+      writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(target), charset));
       writer.write(fileContent);
     } finally {
       if (writer != null) {
@@ -226,7 +238,18 @@ public class FileUtils {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public static String read(File source) throws IOException {
-    Charset encoding = Charset.forName("UTF-8");
+    return read(source, "UTF-8");
+  }
+  
+  /**
+   * Returns the content of the source file. 
+   *
+   * @param source the source
+   * @return the string
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  public static String read(File source, String charset) throws IOException {
+    Charset encoding = Charset.forName(charset);
     byte[] encoded = Files.readAllBytes(source.toPath());
     return new String(encoded, encoding);
   }
@@ -343,7 +366,8 @@ public class FileUtils {
     List<String> extensions = new ArrayList<>();
     extensions.add("xml");
     extensions.add("html");
-    extensions.add("psml");
+    extensions.add("htm");
+    extensions.add("psml");    
     return extensions;
   }
   

@@ -1,26 +1,18 @@
-/* Copyright (c) 2014 Allette Systems pty. ltd. */
-package org.pageseeder.ox.step;
+/* Copyright (c) 2018 Allette Systems pty. ltd. */
+package org.pageseeder.ox.html.step;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map.Entry;
-
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Templates;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.URIResolver;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
+import java.util.Properties;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
@@ -30,53 +22,49 @@ import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.core.ResultStatus;
-import org.pageseeder.ox.tool.FileResultInfo;
+import org.pageseeder.ox.html.tidy.TidyFileResultInfo;
+import org.pageseeder.ox.html.tidy.TidyOXMessageListener;
+import org.pageseeder.ox.html.tidy.TidyVoidWriter;
 import org.pageseeder.ox.tool.InvalidResult;
 import org.pageseeder.ox.tool.MultipleFilesResult;
 import org.pageseeder.ox.util.FileUtils;
 import org.pageseeder.ox.util.StringUtils;
-import org.pageseeder.ox.util.XSLT;
 import org.pageseeder.ox.util.ZipUtils;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.tidy.Tidy;
+import org.w3c.tidy.TidyMessage;
 
 /**
- * <p>A step to transform the specified input by using provided stylesheet.</p>
+ * <p>A step to tidy an html.</p>
  *
  * <h3>Step Parameters</h3>
  * <ul>
- *  <li><var>input</var> the xml file needs to be transformed, where is a relative path of package data.
- *  (if not specified, use upper step output as input.)</li>
+ *  <li><var>input</var> the html file(s) that needs to be tidy up.</li>
  *  <li><var>output</var> the output file, where is a relative path of package data (optional)</li>
- *  <li><var>xsl</var> the stylesheet file to transform, which is a relative path of model folder.
- *  (This parameter will override the property <var>parameter-xsl</var>)</li>
- *  <li><var>display-result</var> whether to display the result xml into Result XML (default: true)</li>
- *  <li><var>_xslt-</var>Every parameter with the preffix "_xslt-" will be send to the xslt (without the preffix "_xslt-").</li>
  *  <li><var>input-extensions</var> If the input is a zip, the caller can specify which files it want to be transformed.</li>
- * </ul>
- *
- * <h3>Data Properties</h3>
- * <ul>
- *  <li><var>xsl</var> the stylesheet filename, which is a relative path to model folder. (required).
- *   It will be overridden by the parameter <var>xsl</var> if that has set as well.
- *  </li>
+ *  <li><var>display-result</var> whether to display the result xml into Result XML (default: false)</li>
+ *  <li><var>charset</var> default utf-8</li>
  * </ul>
  *
  * <h3>Return</h3>
  * <p>If <var>input</var> does not exist, it returns {@link InvalidResult}.</p>
- * <p>If <var>xsl</var> does not exist, it returns {@link InvalidResult}.</p>
- * <p>Otherwise return {@link TransformResult}
+ * <p>Otherwise return {@link TidyHTMLResult}
  *
  *
- * @author Ciber Cai
- * @since  17 June 2014
+ * @author Carlos cabral
  */
-public final class Transformation implements Step {
+public final class TidyHTML implements Step {
 
   /** The Constant LOGGER. */
-  private static final Logger LOGGER = LoggerFactory.getLogger(Transformation.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(TidyHTML.class);
 
+  /**
+   * The resource path to the builtin templates.
+   */
+  private static final String DEFAULT_TIDY_PROPERTIES = "org/pageseeder/ox/html/builtin/tidy.properties";
+  
   /* (non-Javadoc)
    * @see org.pageseeder.ox.api.Step#process(org.pageseeder.ox.core.Model, org.pageseeder.ox.core.PackageData, org.pageseeder.ox.api.StepInfo)
    */
@@ -90,7 +78,7 @@ public final class Transformation implements Step {
         return new InvalidResult(model, data).error(new FileNotFoundException("Cannot find the input file.")); 
       }
       
-    //## Handle Output file 
+      //## Handle Output file 
       File output = getOutputFile(data, info);
       final boolean isOutputAZip =  FileUtils.isZip(output);
       File zipOutput = null;
@@ -110,24 +98,17 @@ public final class Transformation implements Step {
         //It is a folder
         output.mkdirs();
       }
-      
-      //## Handle the transformation file
-      File xsl = getXSLFile(inputs.get(0).getParentFile(), model, data, info);
-  
-      // throw the error
-      if (xsl == null || !xsl.exists()) { 
-        return new InvalidResult(model, data).error(new FileNotFoundException("Cannot find the stylesheet file.")); 
-      }
-     
+          
       // transform the result
-      List <FileResultInfo> fileResultInfos = new ArrayList<>();
+      List <TidyFileResultInfo> fileResultInfos = new ArrayList<>();
       File downloadableOuput = zipOutput != null ? zipOutput : output;
-      result = new TransformResult(model, data, info, downloadableOuput, fileResultInfos, xsl);
+      result = new TidyHTMLResult(model, data, info, downloadableOuput, fileResultInfos);
       
-      try {   
-        Transformer transformer = buildXSLTTransformer(xsl, data, info);      
-        for(File extraInput:inputs) {
-          fileResultInfos.add(processFile(extraInput, output, transformer));
+      try {
+   
+        Tidy tidy = newTidy(model);   
+        for(File input:inputs) {
+          fileResultInfos.add(processFile(input, output, tidy, data, info));
         }
         
         //If zip output is not null, then zip
@@ -135,10 +116,10 @@ public final class Transformation implements Step {
           ZipUtils.zip(output, zipOutput);
         }
         
-        ((TransformResult)result).done();
-      } catch (TransformerException | IOException ex) {
+        ((TidyHTMLResult)result).done();
+      } catch (IOException ex) {
         LOGGER.error("Transform configuration exception: {}", ex.getMessage(), ex);
-        ((TransformResult)result).setError(ex);
+        ((TidyHTMLResult)result).setError(ex);
       }
     } catch (IOException ex) {
       LOGGER.error("Unexpected transformtion exception happened: {}", ex.getMessage(), ex);
@@ -152,70 +133,97 @@ public final class Transformation implements Step {
    *
    * @param input the input
    * @param output the output
-   * @param transformer the transformer
+   * @param tidy the tidy
    * @return the file result info
    */
-  private FileResultInfo processFile(File input, File output, Transformer transformer) {
+  private TidyFileResultInfo processFile(File input, File output, Tidy tidy, PackageData data, StepInfo info) {
     ResultStatus status = ResultStatus.OK;
     //Output cannot be a folder
     File finalOutput = output;
     if (output.isDirectory()) {
       finalOutput = new File(output, getNewNameBaseOnOther(input.getName(), false));
     }
+    
+    //Defining the message listener
+    TidyOXMessageListener messageListener = new TidyOXMessageListener();
+    tidy.setMessageListener(messageListener);
 
+    // so we strip it out as the transformer doesn't recognise it
+    String charset = data.getParameter("charset");
+    if (StringUtils.isBlank(charset)) charset = info.getParameter("charset", "utf-8");
     try {
-      transformer.transform(new StreamSource(input), new StreamResult(finalOutput));
-    } catch (TransformerException ex) {
+      String html = FileUtils.read(input, charset);
+      //TODO why we need it
+      html = html.replaceAll("<\\?xml(.*?)\\>", "");
+  
+      //TIDY HTML
+      StringWriter buffer = new StringWriter();
+      tidy.parse(new StringReader(html), buffer);      
+      String xhtml = buffer.toString();
+      //TODO try to understand it
+      // We must remove the XHTML DOCTYPE declaration since W3 has shutdown its servers for XHTML DTDs
+      xhtml = xhtml.replaceAll("<\\!DOCTYPE(.*?)\\>\n?", "");
+      
+      // Save the file
+      FileUtils.write(xhtml, finalOutput, charset);
+    } catch (IOException ex) {
       LOGGER.error("Failed to trasnform the file {} because of '{}'", input.getAbsolutePath(), ex.getMessage());
       status = ResultStatus.ERROR;
     }
-    return new FileResultInfo(input, finalOutput, status);
+    
+    return new TidyFileResultInfo(input, finalOutput, status, messageListener.getMessages());
   }
   
   /**
-   * Builds the XSLT transformer.
+   * Return a new tidy configuration for the model.
    *
-   * @param xsl the xsl
-   * @param data the data
-   * @param info the info
-   * @return the transformer
-   * @throws TransformerConfigurationException the transformer configuration exception
-   * @throws IOException Signals that an I/O exception has occurred.
+   * @param model the model
+   * @return the Tidy
+   * @throws IOException 
    */
-  private Transformer buildXSLTTransformer (File xsl, PackageData data, StepInfo info) throws TransformerConfigurationException, IOException {
-    URIResolver resolver = new CustomURIResolver(xsl.getParentFile());
-    Templates templates = XSLT.getTemplates(xsl);
-    Transformer transformer = templates.newTransformer();
-    transformer.setURIResolver(resolver);
-    
-    // Add the parameters from post request
-    for (Entry<String, String> p : data.getParameters().entrySet()) {
-      transformer.setParameter(p.getKey(), p.getValue());
-    }
-    
-    String originalFileName = data.getProperty(PackageData.ORIGINAL_PROPERTY);
-    if (originalFileName != null) {
-      transformer.setParameter("original_file", originalFileName);
-    }
-    transformer.setParameter("data-id", data.id());
-    transformer.setParameter("data-repository", data.directory().getAbsolutePath().replace('\\', '/'));
+  private Tidy newTidy(Model model) throws IOException {
+    /** To completely ignore print messages (captured via callback messages anyway) */
+    final PrintWriter VOID_PRINTER = new PrintWriter(new TidyVoidWriter());
+    Tidy tidy = new Tidy();
+    tidy.setXHTML(true);
+    tidy.setQuiet(true);
+    tidy.setShowWarnings(false);
+    tidy.setWraplen(0);
+    tidy.setNumEntities(true);
+    tidy.setXmlOut(true);
+    tidy.setOutputEncoding("utf-8");
+    tidy.setDocType(null);
+    tidy.setTidyMark(false);
+    tidy.setErrout(VOID_PRINTER);
 
-    // Add the parameters from step definition in model.xml
-    // these parameters should use the prefix _xslt-
-    for (Entry<String, String> p :info.parameters().entrySet()) {
-      if (p.getKey().startsWith("_xslt-")) {
-        transformer.setParameter(p.getKey().replaceAll("_xslt-", ""), p.getValue());
-      }
+    // Try to load config from model or from classpath
+    Properties p = getTidyProperties(model);
+    if (p != null) {
+      tidy.setConfigurationFromProps(p);
     }
     
-    String indent = !StringUtils.isBlank(info.parameters().get("_xslt-indent")) ? info.parameters().get("_xslt-indent") : data.getParameter("_xslt-indent");
-    if (!StringUtils.isBlank(indent)) {
-      transformer.setOutputProperty(OutputKeys.INDENT, indent.equalsIgnoreCase("yes")?"yes":"no");
-    }
-    
-    return transformer;
+    return tidy;
   }
 
+  /**
+   * Gets the tidy properties.
+   *
+   * @param model the model
+   * @return the tidy properties
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  private Properties getTidyProperties (Model model) throws IOException {
+    Properties properties = model.getProperties("tidy.properties");
+    if (properties.isEmpty()) {
+      try (InputStream input = TidyHTML.class.getClassLoader().getResourceAsStream(DEFAULT_TIDY_PROPERTIES)) {
+        if (input != null ) {
+          properties.load(input);
+        }
+      }
+    }
+    return properties;
+  }
+  
   /**
    * If the input is a folder or zip, it gets the input files inside the folder or zip.
    *
@@ -283,40 +291,12 @@ public final class Transformation implements Step {
     return data.getFile(outputParemeter);
   }
   
-  
-  /**
-   * Gets the XSL file.
-   *
-   * @param unzipedFolder the unziped folder
-   * @param data the data
-   * @param info the info
-   * @return the XSL file
-   */
-  private File getXSLFile(File unzipedFolder, Model model, PackageData data, StepInfo info) {
-    String xslParameter = info.getParameter("xsl", data.getParameter("xsl"));
-    File xsl = null;
-    if (!StringUtils.isBlank(xslParameter)) {
-      xsl = model.getFile(xslParameter);
-      if (xsl == null || !xsl.exists()) {
-        xsl = data.getFile(xslParameter);
-      }
-    } else if (unzipedFolder.isDirectory()) {
-      List<String> extensions = Arrays.asList("xsl");
-      FileFilter filter = FileUtils.filter(extensions, true);
-      List<File> filesFound = FileUtils.findFiles(unzipedFolder, filter);
-      if (!filesFound.isEmpty()) {
-        xsl = filesFound.get(0);
-      }   
-    }
-    return xsl;
-  }
-  
   /**
    * Unzip in a folder with the same of the zip.
    *
    * @param file the file
    * @return the file
-   * @throws IOException 
+   * @throws IOException Signals that an I/O exception has occurred.
    */
   private File unzipFile(File file) throws IOException {
     //It is a zip, then unzip in a folderwith the same of the zip
@@ -342,51 +322,13 @@ public final class Transformation implements Step {
       return otherName + addition;
     } 
   }
-  
-  /**
-   * A custom URI resolver to get the stylesheet file.
-   * @author Ciber Cai
-   * @since  17 June 2014
-   */
-  private static class CustomURIResolver implements URIResolver {
-
-    /**  the root of stylesheet *. */
-    private final File _root;
-
-    /**
-     * Instantiates a new custom URI resolver.
-     *
-     * @param r the folder of the stylesheet
-     */
-    public CustomURIResolver(File r) {
-      this._root = r;
-    }
-
-    /* (non-Javadoc)
-     * @see javax.xml.transform.URIResolver#resolve(java.lang.String, java.lang.String)
-     */
-    @Override
-    public Source resolve(String href, String base) throws TransformerException {
-      File xsl = new File(this._root, href);
-      Source source = null;
-      try {
-        if (xsl != null && xsl.exists()) {
-          source = new StreamSource(new FileInputStream(xsl));
-        }
-      } catch (FileNotFoundException e) {
-        LOGGER.warn("Cannot find the stylesheet file {}", href);
-      }
-      return source;
-    }
-  }
 
   /**
-   * The Class TransformResult.
+   * The Class TidyHTMLResult.
    */
-  private class TransformResult extends MultipleFilesResult<FileResultInfo> implements Result {
+  private class TidyHTMLResult extends MultipleFilesResult<TidyFileResultInfo> implements Result {
 
     /** The template. */
-    private final File _template;
     private final boolean _displayOutputResult;
     
     /**
@@ -395,36 +337,23 @@ public final class Transformation implements Step {
      * @param model the model
      * @param data the data
      * @param info the info
+     * @param input the input
      * @param output the output
      * @param fileResultInfos the file result infos
-     * @param _template the template
      */
-    public TransformResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info,
-        @Nullable File output, @NonNull List<FileResultInfo> fileResultInfos, @NonNull File template) {
+    public TidyHTMLResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info, 
+        @Nullable File output, @NonNull List<TidyFileResultInfo> fileResultInfos) {
       super(model, data, info, output, fileResultInfos);
-      this._template = template;
-      this._displayOutputResult = "false".equals(super.info().getParameter("display-result")) ? false : true;
+      this._displayOutputResult = "true".equals(super.info().getParameter("display-result")) ? true : false;
     }
     
-    @Override
-    protected void writeResultElements(XMLWriter xml) throws IOException {
-      super.writeResultElements(xml);
-      if (this._template != null) {
-        xml.openElement("template");
-        String path = data().getPath(this._template);
-        //The template can come from data package or model. If its from model it only shows file name.
-        xml.attribute("path", StringUtils.isBlank(path)? this._template.getName():path);
-        xml.closeElement();
-      }
-    }
-
     /**
      * Parameters XML.
      *
      * @param xml the xml
-     * @throws IOException Signals that an I/O exception has occurred.
+     * @param fileResultInfo the file result info
      */
-    protected void writeFileResultInfo(XMLWriter xml, FileResultInfo fileResultInfo) {
+    protected void writeFileResultInfo(XMLWriter xml, TidyFileResultInfo fileResultInfo) {
       try {
         xml.openElement("result-file");
         xml.attribute("input", data().getPath(fileResultInfo.getInput()));
@@ -436,10 +365,22 @@ public final class Transformation implements Step {
           xml.writeCDATA(new String(Files.readAllBytes(fileResultInfo.getOutput().toPath()), "UTF-8"));
           xml.closeElement();
         }
+        xml.openElement("messages");
+        for (TidyMessage message:fileResultInfo.getMessages()) {
+          xml.openElement("message");
+          xml.attribute("text", message.getMessage());
+          xml.attribute("line", message.getLine());
+          xml.attribute("column", message.getColumn());
+          xml.attribute("error-code", message.getErrorCode());
+          xml.attribute("level", message.getLevel().toString());
+          xml.closeElement();
+        }
+        xml.closeElement();//messages
+        
         xml.closeElement();//parameters
       } catch (IOException io) {
         LOGGER.error("Unable to generate file result info for {}-{}-{}", fileResultInfo.getInput(), fileResultInfo.getOutput(), fileResultInfo.getStatus());
       }
     }
-  }  
+  }
 }

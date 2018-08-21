@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999-2016 Allette systems pty. ltd.
  */
-package org.pageseeder.ox.util;
+package org.pageseeder.ox.utils;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.core.PackageData;
+import org.pageseeder.ox.util.FileUtils;
 
 
 /**

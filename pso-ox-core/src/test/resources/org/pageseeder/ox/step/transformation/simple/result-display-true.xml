@@ -1,0 +1,9 @@
+<result model="common" id="TRANSFORMATION-C14DFC-57C9" status="ok" time="712" downloadable="true" path="/sample-transformed.xml" input="sample.xml" inputs-number="1"><parameters><parameter name="xsl" value="xslt-sample.xsl"/><parameter name="_xslt-indent" value="yes"/><parameter name="input" value="sample.xml"/></parameters><result-files><result-file input="/sample.xml" output="/sample-transformed.xml" status="OK"><content><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!---->
+<note>
+   <to>Receiver</to>
+   <from>Sender</from>
+   <heading>Reminder</heading>
+   <body>We are testing!</body>
+</note>
+]]></content></result-file></result-files><template path="xslt-sample.xsl"/></result>

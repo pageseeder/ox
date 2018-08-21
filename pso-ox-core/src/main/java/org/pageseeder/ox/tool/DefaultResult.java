@@ -18,33 +18,28 @@ import org.pageseeder.xmlwriter.XMLWriter;
  * The Class DefaultResult.
  * 
  * @author Carlos Cabral
- * @since 08th March 2018
+ * @since 08th August 2018
  */
 public class DefaultResult extends ResultBase implements Result {
-
+  
   /** The info. */
   private final StepInfo _info;
   
-  /** The input. */
-  private final File _input;
-  
-  /** The output. */
+  /** The downloadable output, it can only be a zip or a file or null */
   private final File _output;
-  
   
   /**
    * Instantiates a new Default Base.
-   *
+   * The input information is get from step parameter 
+   *  
    * @param model the model
    * @param data the data
    * @param info the info
-   * @param input the input
-   * @param output the output
+   * @param output the output (it can only be a zip or a file or null)
    */
-  public DefaultResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info, @NonNull File input, @Nullable File output) {
+  public DefaultResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info, @Nullable File output) {
     super(model, data);
     this._info = info;
-    this._input = input;
     this._output = output;
   }
 
@@ -76,7 +71,7 @@ public class DefaultResult extends ResultBase implements Result {
     xml.attribute("time", Long.toString(time()));
     xml.attribute("downloadable", String.valueOf(isDownloadable()));
     xml.attribute("path", downloadPath());
-    xml.attribute("input", data().getPath(this._input));
+    xml.attribute("input", input());
   }
   
   /**
@@ -171,8 +166,8 @@ public class DefaultResult extends ResultBase implements Result {
    *
    * @return the file
    */
-  public File input() {
-    return this._input;
+  public String input() {
+    return this._info.getParameter("input", this._info.input());
   }
 
 

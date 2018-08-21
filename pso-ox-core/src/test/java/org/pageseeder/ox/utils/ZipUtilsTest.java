@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Allette systems pty. ltd.
  */
-package org.pageseeder.ox.util;
+package org.pageseeder.ox.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import java.nio.file.Files;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.pageseeder.ox.util.ZipUtils;
 
 /**
  * @author Carlos Cabral

@@ -12,6 +12,7 @@ dependencies {
   compile (
     'org.pageseeder.xmlwriter:pso-xmlwriter:1.0.+',
     'org.slf4j:slf4j-api:1.7.+',
+    'w3c:jtidy:r938',
   )
 
   compileOnly (
@@ -28,9 +29,11 @@ dependencies {
     'junit:junit:4.12',
     'xmlunit:xmlunit:1.6',
     'org.powermock:powermock-api-mockito:1.6.4',
-    'org.powermock:powermock-module-junit4:1.6.4'
+    'org.powermock:powermock-module-junit4:1.6.4',
+    'org.xmlunit:xmlunit-core:2.3.0',
+    'org.xmlunit:xmlunit-matchers:2.3.0',
+    'org.eclipse.jdt:org.eclipse.jdt.annotation:2.0.0'
   )
-
 }
 
 javadoc {

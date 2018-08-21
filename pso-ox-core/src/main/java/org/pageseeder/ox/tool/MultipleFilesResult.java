@@ -18,18 +18,18 @@ import org.slf4j.LoggerFactory;
 /**
  * The Class MultipleFilesResult.
  * 
- * It is be used when the input can be a folder and many files will be generated 
+ * It for steps when they receive multiple files as input (by using a folder, Glob pattern or zip) and for file there
+ * is a separate process.
  * 
  * @author Carlos Cabral
- * @since 08th March 2018
+ * @since 08th August 2018
  */
-public class MultipleFilesResult extends DefaultResult implements Result {
+public class MultipleFilesResult<T extends FileResultInfo> extends DefaultResult implements Result {
   
-  /** The Constant LOGGER. */
   private static final Logger LOGGER = LoggerFactory.getLogger(MultipleFilesResult.class);
 
   /** The file result infos. */
-  private final List<FileResultInfo> _fileResultInfos;
+  private final List<T> _fileResultInfos;
    
   /**
    * Instantiates a new multiple files result.
@@ -37,13 +37,12 @@ public class MultipleFilesResult extends DefaultResult implements Result {
    * @param model the model
    * @param data the data
    * @param info the info
-   * @param input the input
-   * @param output the output
+   * @param output the output (it can only be a zip or a file or null)
    * @param fileResultInfos the file result infos
    */
-  public MultipleFilesResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info,
-      @NonNull File input, @Nullable File output, @NonNull List<FileResultInfo> fileResultInfos) {
-    super(model, data, info, input, output);
+  public MultipleFilesResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info, 
+      @Nullable File output, @NonNull List<T> fileResultInfos) {
+    super(model, data, info, output);
     this._fileResultInfos = fileResultInfos;
   }
 
@@ -66,7 +65,7 @@ public class MultipleFilesResult extends DefaultResult implements Result {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   protected void writeFileResultInfos(XMLWriter xml) throws IOException {
-    xml.openElement("result-file");
+    xml.openElement("result-files");
     this._fileResultInfos.forEach(fileResultInfo -> writeFileResultInfo (xml, fileResultInfo));
     xml.closeElement();//parameters
   }
@@ -77,7 +76,7 @@ public class MultipleFilesResult extends DefaultResult implements Result {
    * @param xml the xml
    * @throws IOException Signals that an I/O exception has occurred.
    */
-  protected void writeFileResultInfo(XMLWriter xml, FileResultInfo fileResultInfo) {
+  protected void writeFileResultInfo(XMLWriter xml, T fileResultInfo) {
     try {
       xml.openElement("result-file");
       xml.attribute("input", data().getPath(fileResultInfo.getInput()));
@@ -94,7 +93,7 @@ public class MultipleFilesResult extends DefaultResult implements Result {
    *
    * @return the file result infos
    */
-  public List<FileResultInfo> getFileResultInfos() {
+  public List<? extends FileResultInfo> getFileResultInfos() {
     return _fileResultInfos;
   }
 }
