@@ -38,6 +38,31 @@ public class TransformationTest {
     OXConfig.get().setModelsDirectory(modelDir);
   }
 
+//  @Test
+//  public void test() throws IOException {
+//      File root = new File("C:\\Users\\ccabral\\Downloads\\2018-09-01");
+//      File outputFolder = new File("C:\\Users\\ccabral\\Downloads\\2018-09-01\\output");
+//      FileFilter filter = FileUtils.filter(Arrays.asList("psml"), true);
+//      List<File> inputs = FileUtils.findFiles(root, filter);
+//      File xsl = new File("C:\\Users\\ccabral\\Downloads\\2018-08-01\\xslt-sample.xsl");
+//      
+//      inputs.forEach(input -> {
+////        File source = new File("C:\\Users\\ccabral\\Downloads\\2018-08-01\\down-mps-2018-08-01-r1-b1.xml_add-bioeq_GE_9311C_83314011000036106_FK.psml");
+////        File output = new File("C:\\Users\\ccabral\\Downloads\\oxford\\results-transformed.xml");
+//        File output = new File(outputFolder, input.getName());
+//        try {
+//          Templates templates = XSLT.getTemplates(xsl);
+//          Transformer transformer = templates.newTransformer();
+//          transformer.transform(new StreamSource(input), new StreamResult(output));
+//        } catch (TransformerException|IOException ex) {
+//          // TODO Auto-generated catch block
+//          ex.printStackTrace();
+//        }
+//     
+//      });
+//  }
+//  
+  
   @Test
   public void test_process() throws IOException {
     File source = new File("src/test/resources/org/pageseeder/ox/step/transformation/common/sample.xml");
@@ -153,6 +178,34 @@ public class TransformationTest {
     Map<String, String> params = new HashMap<>();
     params.put("input", "multiple-xmls-with-xsl.zip");
     StepInfoImpl info = new StepInfoImpl("step-id", "step name", "", "", params);
+
+    Transformation step = new Transformation();
+    Result result = step.process(model, data, info);
+
+    XMLStringWriter xmlWriter = new XMLStringWriter(NamespaceAware.No);
+    result.toXML(xmlWriter);
+    xmlWriter.flush();
+    xmlWriter.close();
+
+    Assert.assertEquals(ResultStatus.OK, result.status());
+    File targetCreated = data.getFile("output*.zip");    
+    String resultXML = xmlWriter.toString();
+
+    List<String> attributesToIgnore = Arrays.asList("output","id", "time","path");
+    validateResult(targetExpected, resultExpected, targetCreated, resultXML, attributesToIgnore);
+  }
+  
+  @Test
+  public void test_processInputZipWithXSLOneFile() throws IOException {
+    File source = new File("src/test/resources/org/pageseeder/ox/step/transformation/zip_with_xsl_one_file/input.zip");
+    File targetExpected = new File("src/test/resources/org/pageseeder/ox/step/transformation/common/");  
+    File resultExpected = new File("src/test/resources/org/pageseeder/ox/step/transformation/zip_with_xsl_one_file/result.xml");
+
+    Model model = new Model("common");
+    PackageData data = PackageData.newPackageData("Transformation", source);
+    Map<String, String> params = new HashMap<>();
+    params.put("display-result", "false");
+    StepInfoImpl info = new StepInfoImpl("step-id", "step name", "input.zip", "", params);
 
     Transformation step = new Transformation();
     Result result = step.process(model, data, info);

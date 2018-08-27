@@ -58,8 +58,7 @@ public class TidyHTMLTest {
     File targetExpected = new File("src/test/resources/org/pageseeder/ox/html/step/tidy/common/source-1-transformed.html");  
     File resultExpected = new File("src/test/resources/org/pageseeder/ox/html/step/tidy/simple/result-display-true.xml");
     process(source, outputFileName, targetExpected, resultExpected, params);
-  }  
-  
+  } 
 
   @Test
   public void test_processInputZip() throws IOException {
@@ -71,8 +70,17 @@ public class TidyHTMLTest {
     File resultExpected = new File("src/test/resources/org/pageseeder/ox/html/step/tidy/zip/result-display-false.xml");
     process(source, outputFileName, targetExpected, resultExpected, params);
   } 
-  
-  
+
+  @Test
+  public void test_processInputZipWitOneFile() throws IOException {
+    String outputFileName = "outcome.zip";
+    File source = new File("src/test/resources/org/pageseeder/ox/html/step/tidy/zip_one_file/source.zip");
+    Map<String, String> params = new HashMap<>();
+    params.put("display-result", "false");
+    File targetExpected = new File("src/test/resources/org/pageseeder/ox/html/step/tidy/common");  
+    File resultExpected = new File("src/test/resources/org/pageseeder/ox/html/step/tidy/zip_one_file/result-display-false.xml");
+    process(source, outputFileName, targetExpected, resultExpected, params);
+  } 
 
   @Test
   public void test_processInputGlobPattern() throws IOException {    
