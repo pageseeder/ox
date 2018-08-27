@@ -86,7 +86,7 @@ public final class TidyHTML implements Step {
         zipOutput = output;
         //The the output need to be a folder
         output = data.getFile(data.id() + System.nanoTime());
-      } else if (inputs.size() > 1) {
+      } else if (inputs.size() > 1 || output.isDirectory()) {
         //If there is more than one input, than the output must be a zip      
         zipOutput = data.getFile(getNewNameBaseOnOther("output.zip", true));
       }
@@ -134,6 +134,8 @@ public final class TidyHTML implements Step {
    * @param input the input
    * @param output the output
    * @param tidy the tidy
+   * @param data the data
+   * @param info the info
    * @return the file result info
    */
   private TidyFileResultInfo processFile(File input, File output, Tidy tidy, PackageData data, StepInfo info) {
@@ -179,7 +181,7 @@ public final class TidyHTML implements Step {
    *
    * @param model the model
    * @return the Tidy
-   * @throws IOException 
+   * @throws IOException Signals that an I/O exception has occurred.
    */
   private Tidy newTidy(Model model) throws IOException {
     /** To completely ignore print messages (captured via callback messages anyway) */
@@ -284,10 +286,15 @@ public final class TidyHTML implements Step {
    * @return the output file
    */
   private File getOutputFile(PackageData data, StepInfo info) {
+    File output = null;
     String outputParemeter = info.getParameter("output", info.output());
     if (StringUtils.isBlank(outputParemeter) || outputParemeter.equals(info.input())) {
       outputParemeter = data.id() + System.nanoTime();
-    } 
+      output = data.getFile(outputParemeter);
+      output.mkdirs();
+    } else {
+      output = data.getFile(outputParemeter);
+    }
     return data.getFile(outputParemeter);
   }
   
@@ -337,7 +344,6 @@ public final class TidyHTML implements Step {
      * @param model the model
      * @param data the data
      * @param info the info
-     * @param input the input
      * @param output the output
      * @param fileResultInfos the file result infos
      */

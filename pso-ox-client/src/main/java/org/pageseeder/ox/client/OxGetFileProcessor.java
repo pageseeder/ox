@@ -42,7 +42,6 @@ public final class OxGetFileProcessor {
    *
    * @param destination  the destination is a {@link File} where the downloaded file will be saved.
    * @param jobId        the job id is a {@link String}, it should be the id of the job that is generating the file.
-   * @param isRaw        the is raw is a {@link boolean}.
    */
   public OxGetFileProcessor(File destination, String jobId) {
     if (jobId == null) { throw new NullPointerException("Job Id is null"); }
@@ -54,6 +53,7 @@ public final class OxGetFileProcessor {
   /**
    * Process.
    *
+   * @param xml the xml
    * @throws IOException Signals that an I/O exception has occurred.
    * @throws BerliozException the berlioz exception
    */
@@ -67,6 +67,8 @@ public final class OxGetFileProcessor {
   /**
    * Dry process.
    *
+   * @param xml the xml
+   * @param oxProperties the ox properties
    * @throws IOException Signals that an I/O exception has occurred.
    * @throws BerliozException the berlioz exception
    */
@@ -124,6 +126,9 @@ public final class OxGetFileProcessor {
    * Return the result in xml format.
    *
    * @param xml the xml
+   * @param status the status
+   * @param message the message
+   * @param percentage the percentage
    * @throws IOException Signals that an I/O exception has occurred.
    */
   private void errorToXML(XMLWriter xml, String status, String message, String percentage) throws IOException {

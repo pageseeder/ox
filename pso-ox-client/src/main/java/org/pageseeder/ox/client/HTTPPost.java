@@ -21,13 +21,15 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Class HTTPPost.
+ */
 public class HTTPPost {
 
+  /** The Constant LOGGER. */
   private static final Logger LOGGER = LoggerFactory.getLogger(HTTPPost.class);
 
-  /**
-   * The HTTP connection to the Pageseeder Servlet
-   */
+  /** The HTTP connection to the Pageseeder Servlet. */
   private HttpURLConnection connection;
 
   /**
@@ -35,9 +37,7 @@ public class HTTPPost {
    */
   private DataOutputStream out = null;
 
-  /**
-   * The boundary String, used when uploading as multipart
-   */
+  /** The boundary String, used when uploading as multipart. */
   private static final String BOUNDARY = "-----------7d32a512502e0";
 
   /**
@@ -56,6 +56,7 @@ public class HTTPPost {
    */
   private final Map<String, String> parameters = new HashMap<String, String>();
 
+  /** The url. */
   private final String url;
 
 
@@ -82,6 +83,8 @@ public class HTTPPost {
   }
 
   /**
+   * Gets the basic authorization.
+   *
    * @return The basic authorization string
    */
   public String getBasicAuthorization() {
@@ -149,8 +152,9 @@ public class HTTPPost {
    * Add a part to the request (write the contents directly to the stream).
    *
    * @param content     the contents of the Part
-   * @param encoding    the encoding to specify in the Part's header
    * @param contentType the content-type to specify in the Part's header
+   * @param name the name
+   * @param filename the filename
    * @throws IOException if anything goes wrong
    */
   public void addPart(byte[] content, String contentType, String name, String filename) throws IOException {
@@ -218,6 +222,13 @@ public class HTTPPost {
     return response.toString();
   }
 
+  /**
+   * Write bytes.
+   *
+   * @param s the s
+   * @throws UnsupportedEncodingException the unsupported encoding exception
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
   /*
    * write Bytes using UTF-8 encoding
    */

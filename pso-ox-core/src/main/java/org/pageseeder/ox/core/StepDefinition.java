@@ -588,8 +588,8 @@ public final class StepDefinition implements XMLWritable, Serializable {
     /**
      * Adds the extra attributes.
      *
-     * @param name the name
-     * @param value the value
+     * @param extraElement the extra element
+     * @return the builder
      */
     public Builder addExtraElements (GenericInfo extraElement) {
       if (extraElement != null) this.extraElements.add(extraElement);
