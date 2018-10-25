@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999-2016 Allette systems pty. ltd.
  */
-package org.pageseeder.ox.utils;
+package org.pageseeder.ox.util;
 
 import java.io.File;
 import java.nio.file.Files;
