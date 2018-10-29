@@ -18,16 +18,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.api.PackageInspector;
+import org.pageseeder.ox.util.CleanUpManager;
 import org.pageseeder.ox.util.FileUtils;
 import org.pageseeder.ox.util.FilesFinder;
 import org.pageseeder.ox.util.GlobPatternUtils;
 import org.pageseeder.ox.util.ISO8601;
-import org.pageseeder.ox.util.PeriodicCleaner;
 import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.ox.util.ZipUtils;
 import org.pageseeder.xmlwriter.XMLWritable;
@@ -62,12 +63,12 @@ public final class PackageData implements XMLWritable, Serializable {
   /**
    * Indicates whether the cleaner thread was started.
    */
-  private static volatile boolean cleanerStarted = false;
+  private static volatile AtomicBoolean cleanerStarted = new AtomicBoolean(false);
 
   /**
    * Indicates whether the cleaner thread was configured for the download.
    */
-  private static volatile boolean cleanerDownloadReady = false;
+  //private static volatile boolean cleanerDownloadReady = false;
 
   /**
    * When the package was created
@@ -405,9 +406,6 @@ public final class PackageData implements XMLWritable, Serializable {
   public File getDownloadDir(File download) {
     File dir = new File(download, this.id());
     dir.mkdirs();
-    if (!cleanerDownloadReady) {
-      PeriodicCleaner.setDownload(download);
-    }
     return dir;
   }
 
@@ -451,10 +449,11 @@ public final class PackageData implements XMLWritable, Serializable {
     LOGGER.debug("Generating a new package data: {}", id);
     PackageData data = new PackageData(System.currentTimeMillis(), id, file);
     synchronized (PackageData.class) {
-      if (!cleanerStarted) {
-        cleanerStarted = true;
-        PeriodicCleaner.setDirectory(OXConfig.getOXTempFolder());
-        PeriodicCleaner.start(2);
+      if (!cleanerStarted.getAndSet(true)) {
+        CleanUpManager manager = CleanUpManager.getInstance(StepJob.DEFAULT_MAX_INACTIVE_TIME_MS, CleanUpManager.DEFAULT_DELAY, OXConfig.getOXTempFolder());
+        manager.start();
+//        PeriodicCleaner.setDirectory(OXConfig.getOXTempFolder());
+//        PeriodicCleaner.start(2);
       }
     }
     data.saveProperties();

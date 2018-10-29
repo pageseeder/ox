@@ -6,6 +6,7 @@ package org.pageseeder.ox.process;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.pageseeder.ox.core.JobStatus;
@@ -19,7 +20,7 @@ import org.pageseeder.xmlwriter.XMLWriter;
  * @author Ciber Cai
  * @since 4 April 2016
  */
-class PipelineJobQueue implements XMLWritable {
+public class PipelineJobQueue implements XMLWritable {
 
   /**  the total number of completed jobs to store in memory. */
 
@@ -39,6 +40,9 @@ class PipelineJobQueue implements XMLWritable {
 
   /**  The current running import job *. */
   private final BlockingQueue<PipelineJob> _running;
+  
+  /** The key will be the package and the value the job id. */
+  private final ConcurrentHashMap<String, String> _packageAndJobMap;
 
   /**
    * the private constructor.
@@ -49,6 +53,7 @@ class PipelineJobQueue implements XMLWritable {
     this._completed = new LinkedBlockingQueue<PipelineJob>();
     this._running = new LinkedBlockingQueue<PipelineJob>();
     this._maxStoredCompletedJob = maxStoredCompletedJob;
+    this._packageAndJobMap = new ConcurrentHashMap<>();
 
   }
   
@@ -58,7 +63,7 @@ class PipelineJobQueue implements XMLWritable {
    * @param maxStoredCompletedJob the max stored completed job
    * @return the instance of ImportProcessor
    */
-  protected static PipelineJobQueue getInstance(int maxStoredCompletedJob) {
+  public static PipelineJobQueue getInstance(int maxStoredCompletedJob) {
     if (INSTANCE == null) {
       INSTANCE = new PipelineJobQueue(maxStoredCompletedJob);
     }
@@ -77,6 +82,7 @@ class PipelineJobQueue implements XMLWritable {
       this._waiting.add(job);
     }
 
+    this._packageAndJobMap.put(job.getPackageData().id(), job.getId());
     //clear completed job when new job comes in.
     clearCompletedJob();
   }
@@ -151,6 +157,20 @@ class PipelineJobQueue implements XMLWritable {
   }
 
   /**
+   * TODO The design of PipelineJob Classes are not good. It needs to be rethought.
+   *  
+   * @param packageId
+   * @return
+   */
+  public static String getJobId(String packageId) {
+    String jobId = null;
+    if (INSTANCE != null) {
+      jobId = INSTANCE._packageAndJobMap.get(packageId);
+    }
+    return jobId;
+  }
+  
+  /**
    * Completed.
    *
    * @param job set the job to completed queue
@@ -167,6 +187,7 @@ class PipelineJobQueue implements XMLWritable {
     for (PipelineJob job : this._completed) {
       if (this._completed.size() >= this._maxStoredCompletedJob && job.isInactive()) {
         this._completed.remove(job);
+        this._packageAndJobMap.remove(job.getPackageData().id());
       }
     }
   }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Allette systems pty. ltd.
  */
-package org.pageseeder.ox.utils;
+package org.pageseeder.ox.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import org.pageseeder.ox.util.ZipUtils;
  * @author Carlos Cabral
  * @since 05 Feb. 2018
  */
-public class ZipUtilsTest {
+public class TestZipUtils {
 
   public final static File _BASE_DIR = new File("src/test/resources/org/pageseeder/ox/util/filefinder");
   
