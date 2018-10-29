@@ -5,5 +5,5 @@
 -->
 <configuration debug="false">
   <contextName>pso-ox-core</contextName>
-  <root level="DEBUG" />
+  <root level="INFO" />
 </configuration>

@@ -69,7 +69,7 @@ public class CleanUpJob implements Runnable {
    @Override
    public void run() {
      
-     LOGGER_JOB.debug("Start clean up JOB at {}", format(LocalDateTime.now()));
+     LOGGER_JOB.info("Start clean up JOB at {}", format(LocalDateTime.now()));
      while (!this.getStop().get()) {
        
        LOGGER_JOB.debug("Running another clean up at {}", format(LocalDateTime.now()));
@@ -90,7 +90,7 @@ public class CleanUpJob implements Runnable {
        }
      }
      this.setStatus(CleanUpStatus.STOPPED);
-     LOGGER_JOB.debug("Stop clean up JOB at {}", format(LocalDateTime.now()));
+     LOGGER_JOB.info("Stop clean up JOB at {}", format(LocalDateTime.now()));
    }
    
    /**
@@ -130,7 +130,8 @@ public class CleanUpJob implements Runnable {
            
            // If the folder is empyt and it is not the base folder (depth != 0)
            final boolean isBaseFolder = depth == 0;
-           if (!isBaseFolder) {
+           final boolean isEmpyt = file.listFiles().length == 0;
+           if (isEmpyt && !isBaseFolder) {
              //Delete directory
              delete(file);
            }
@@ -151,7 +152,7 @@ public class CleanUpJob implements Runnable {
      long threshold = System.currentTimeMillis() - this._maxInactiveTime;
      if (candidate.lastModified() < threshold) {
        if (candidate.delete()) {
-         LOGGER_JOB.info("Deleted file {}.", candidate.getAbsolutePath());
+         LOGGER_JOB.trace("Deleted file {}.", candidate.getAbsolutePath());
        } else {
          LOGGER_JOB.error("Failed to delete file {}.", candidate.getAbsolutePath());
        }
