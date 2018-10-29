@@ -130,8 +130,7 @@ public class CleanUpJob implements Runnable {
            
            // If the folder is empyt and it is not the base folder (depth != 0)
            final boolean isBaseFolder = depth == 0;
-           final boolean isEmpyt = file.listFiles().length == 0;
-           if (isEmpyt && !isBaseFolder) {
+           if (!isBaseFolder) {
              //Delete directory
              delete(file);
            }
