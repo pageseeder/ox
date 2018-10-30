@@ -6,8 +6,8 @@ import java.io.File;
 import org.pageseeder.berlioz.GlobalSettings;
 import org.pageseeder.berlioz.LifecycleListener;
 import org.pageseeder.ox.OXConfig;
+import org.pageseeder.ox.cleanup.CleanUpManager;
 import org.pageseeder.ox.core.StepJob;
-import org.pageseeder.ox.util.CleanUpManager;
 
 /**
  * The life cycle listener for OX.

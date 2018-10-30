@@ -12,6 +12,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.pageseeder.ox.OXConfig;
+import org.pageseeder.ox.cleanup.CleanUpManager;
+import org.pageseeder.ox.cleanup.CleanUpStatus;
 import org.pageseeder.ox.process.PipelineJobQueue;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;

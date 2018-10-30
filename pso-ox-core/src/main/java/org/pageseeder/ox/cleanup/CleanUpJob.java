@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Allette systems pty. ltd.
  */
-package org.pageseeder.ox.util;
+package org.pageseeder.ox.cleanup;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +10,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.pageseeder.ox.cleanup.CleanUpStatus;
 import org.pageseeder.ox.process.PipelineJobQueue;
-import org.pageseeder.ox.util.CleanUpStatus;
+import org.pageseeder.ox.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

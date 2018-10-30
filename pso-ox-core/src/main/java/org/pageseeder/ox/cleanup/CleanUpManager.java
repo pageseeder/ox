@@ -1,7 +1,7 @@
 /*
  *  Copyright (c) 2018 Allette Systems pty. ltd.
  */
-package org.pageseeder.ox.util;
+package org.pageseeder.ox.cleanup;
 
 import java.io.File;
 import java.util.concurrent.ExecutorService;

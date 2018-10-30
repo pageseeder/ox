@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Allette systems pty. ltd.
  */
-package org.pageseeder.ox.util;
+package org.pageseeder.ox.cleanup;
 
 /**
  * @author Carlos Cabral
