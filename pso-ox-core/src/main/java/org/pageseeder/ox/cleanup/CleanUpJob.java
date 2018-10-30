@@ -8,9 +8,10 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.pageseeder.ox.cleanup.CleanUpStatus;
 import org.pageseeder.ox.process.PipelineJobQueue;
 import org.pageseeder.ox.util.StringUtils;
 import org.slf4j.Logger;
@@ -40,6 +41,12 @@ public class CleanUpJob implements Runnable {
    /** check up Delay in milliseconds. */
    private final long _checkUpDelay;
    
+   /** 
+    * Store a list of files that must be ignored and not deleted.
+    * However if the file is a folder, if the subfiles are not in this list then they will be deleted.
+    */
+   private final List<File> filesToIgnore = new ArrayList<>();
+   
    /**
     * Instantiates a new clean up job.
     *
@@ -64,34 +71,54 @@ public class CleanUpJob implements Runnable {
      this.setStatus(CleanUpStatus.NOT_STARTED);
    }
   
+   /**
+    * Add file to be ignored and then they will not be deleted.
+    * @param toIgnore
+    */
+   public void addFileToIgnore(File toIgnore){
+     this.filesToIgnore.add(toIgnore);
+   }
+   
+   /**
+    * remove file that is supposed to be ignored.
+    * @param toIgnore
+    */
+   public void removeFileToIgnore(File toIgnore) {
+     this.filesToIgnore.remove(toIgnore);
+   }
+   
    /* (non-Javadoc)
     * @see java.lang.Runnable#run()
     */
    @Override
    public void run() {
-     
-     LOGGER_JOB.info("Start clean up JOB at {}", format(LocalDateTime.now()));
-     while (!this.getStop().get()) {
-       
-       LOGGER_JOB.debug("Running another clean up at {}", format(LocalDateTime.now()));
-       try {
-         this.setStatus(CleanUpStatus.RUNNING);
-         this.clean();
-       } catch (IOException ex) {
-         LOGGER_JOB.error("Catched the following error '{}' while performing the clean up. ", ex.getMessage());
-       }        
-       LOGGER_JOB.debug("Finished another clean up at {}", format(LocalDateTime.now()));
-       
-       //Waiting for next iteraction  
-       this.setStatus(CleanUpStatus.WAITING_NEXT_ITERACTION);
-       try {
-         Thread.sleep(this.getCheckUpDelay());
-       } catch (InterruptedException ex) {
-         break;
+     try {
+       LOGGER_JOB.info("Start clean up JOB at {}", format(LocalDateTime.now()));
+       while (!this.getStop().get()) {
+         
+         LOGGER_JOB.debug("Running another clean up at {}", format(LocalDateTime.now()));
+         try {
+           this.setStatus(CleanUpStatus.RUNNING);
+           this.clean();
+         } catch (IOException ex) {
+           LOGGER_JOB.error("Catched the following error '{}' while performing the clean up. ", ex.getMessage());
+         }        
+         LOGGER_JOB.debug("Finished another clean up at {}", format(LocalDateTime.now()));
+         
+         //Waiting for next iteraction  
+         this.setStatus(CleanUpStatus.WAITING_NEXT_ITERACTION);
+         try {
+           Thread.sleep(this.getCheckUpDelay());
+         } catch (InterruptedException ex) {
+           break;
+         }
        }
+       this.setStatus(CleanUpStatus.STOPPED);
+       LOGGER_JOB.info("Stop clean up JOB at {}", format(LocalDateTime.now()));
+     } catch (Exception ex) {
+       LOGGER_JOB.error("Clean up JOB failed at {} due to {}", format(LocalDateTime.now()), ex.getMessage());
+       this.setStatus(CleanUpStatus.FAILED);
      }
-     this.setStatus(CleanUpStatus.STOPPED);
-     LOGGER_JOB.info("Stop clean up JOB at {}", format(LocalDateTime.now()));
    }
    
    /**
@@ -124,22 +151,26 @@ public class CleanUpJob implements Runnable {
          final boolean isInJobList = depth == 1 && !StringUtils.isBlank(PipelineJobQueue.getJobId(file.getName()));
 
          if (!isInJobList) {
+           //The orignal last modified date before deleting its children files. because when one is deleted, the parent
+           // folder last modified date is updated.
+           long originalLastModifiedDate = file.lastModified();
+           
            //Go through the files and sub directories
            for (File f : file.listFiles()) {
              clean(f, depth+1);
            }
            
-           // If the folder is empyt and it is not the base folder (depth != 0)
+           // If the folder is empyt and it is not the base folder (depth != 0).
            final boolean isBaseFolder = depth == 0;
            final boolean isEmpyt = file.listFiles().length == 0;
            if (isEmpyt && !isBaseFolder) {
              //Delete directory
-             delete(file);
+             delete(file, originalLastModifiedDate);
            }
          }
        } else if (isExpired) {
          //Delete file
-         delete(file);
+         delete(file, file.lastModified());
        }
      }
    }
@@ -147,19 +178,29 @@ public class CleanUpJob implements Runnable {
    /**
     * Delete file if the time allowed to stored in the drive is over.
     *
-    * @param candidate the candidate
+    * @param toDelete The file to be deleted.
+    * @param lastModifiedDate The 'toDelete' last modified date. 
     */
-   private void delete (File candidate) {
+   private void delete (File toDelete, long lastModifiedDate) {
      long threshold = System.currentTimeMillis() - this._maxInactiveTime;
-     if (candidate.lastModified() < threshold) {
-       if (candidate.delete()) {
-         LOGGER_JOB.trace("Deleted file {}.", candidate.getAbsolutePath());
+     if (lastModifiedDate < threshold && !shouldBeIgnored(toDelete)) {
+       if (toDelete.delete()) {
+         LOGGER_JOB.trace("Deleted file {}.", toDelete.getAbsolutePath());
        } else {
-         LOGGER_JOB.error("Failed to delete file {}.", candidate.getAbsolutePath());
+         LOGGER_JOB.error("Failed to delete file {}.", toDelete.getAbsolutePath());
        }
      }
    }
   
+   /**
+    * Returns true if this file should be ignored and not deleted. Otherwise true.
+    * 
+    * @param toDelete
+    * @return
+    */
+   private boolean shouldBeIgnored(File toDelete) {
+     return this.filesToIgnore.contains(toDelete);
+   }
    
    /**
     * Format.

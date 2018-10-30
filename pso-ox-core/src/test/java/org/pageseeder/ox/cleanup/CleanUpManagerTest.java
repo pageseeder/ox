@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1999-2016 Allette systems pty. ltd.
  */
-package org.pageseeder.ox.util;
+package org.pageseeder.ox.cleanup;
 
 import static org.mockito.Matchers.any;
 
@@ -15,6 +15,7 @@ import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.cleanup.CleanUpManager;
 import org.pageseeder.ox.cleanup.CleanUpStatus;
 import org.pageseeder.ox.process.PipelineJobQueue;
+import org.pageseeder.ox.util.FileUtils;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -24,17 +25,18 @@ import org.powermock.modules.junit4.PowerMockRunner;
  * @since 26 October 2018
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({PipelineJobQueue.class})
+@PrepareForTest({OXConfig.class, PipelineJobQueue.class})
 public class CleanUpManagerTest {
 
   @Test
   public void testSimpleFiles() {
     try {
+      final long delay = 100l;
       File base = new File (OXConfig.getOXTempFolder(), "test");
       //Clean folder if already exist
       if (base.exists()) FileUtils.delete(base);
       Assert.assertTrue("Attempt to Create base directory", base.mkdirs());
-      CleanUpManager manager = CleanUpManager.getInstance(1, CleanUpManager.DEFAULT_DELAY, base);    
+      CleanUpManager manager = CleanUpManager.getInstance(1, delay, base);    
 
 
       File temp1 = new File(base, "test1.txt");
@@ -47,7 +49,7 @@ public class CleanUpManagerTest {
       manager.start();
             
       //Waiting the job to perform its first iteraction
-      while (manager.status() != CleanUpStatus.WAITING_NEXT_ITERACTION) Thread.sleep(500);
+      while (manager.status() != CleanUpStatus.WAITING_NEXT_ITERACTION) Thread.sleep(delay);
       
       Assert.assertEquals(0, base.list().length);
       manager.stop();
@@ -96,11 +98,11 @@ public class CleanUpManagerTest {
       //Remove Package folder from job List
       PowerMockito.when(PipelineJobQueue.getJobId(any())).thenReturn("");
 
-      //Allow the the thread to run 2 time
-      if (manager.status() == CleanUpStatus.WAITING_NEXT_ITERACTION) Thread.sleep(300l);
+      //Allow the the thread to run one more time
+      if (manager.status() == CleanUpStatus.WAITING_NEXT_ITERACTION) Thread.sleep(delay);
       
       //Wait to finish the last running
-      while (manager.status() != CleanUpStatus.WAITING_NEXT_ITERACTION) Thread.sleep(45l);
+      while (manager.status() != CleanUpStatus.WAITING_NEXT_ITERACTION) Thread.sleep(delay/2);
      
       //Should not have nay file there
       Assert.assertEquals(0, base.list().length);
@@ -115,6 +117,7 @@ public class CleanUpManagerTest {
   @Test
   public void testSingleton() {
     try {
+
       File base = new File (OXConfig.getOXTempFolder(), "test");
       //Clean folder if already exist
       if (base.exists()) FileUtils.delete(base);
@@ -132,6 +135,59 @@ public class CleanUpManagerTest {
       //Try to start again
       manager1.start();
       Assert.assertEquals(CleanUpStatus.STOPPED, manager2.status());
+      
+    } catch (IOException | InterruptedException ex) {
+      Assert.fail(ex.getMessage());
+    }
+  }
+  
+  @Test
+  public void testFilesToBeIgnored() {
+    try {
+      final long delay = 100l;
+      File base = new File (OXConfig.getOXTempFolder(), "test");
+      //Clean folder if already exist
+      if (base.exists()) FileUtils.delete(base);
+      Assert.assertTrue("Attempt to Create base directory", base.mkdirs());
+
+      //To Be Ignored Folder 
+      File toBeIgnored = new File (base, OXConfig.TEMP_UPLOAD_FOLDER_NAME);
+      //create folder if does not exist
+      if (!toBeIgnored.exists()) Assert.assertTrue("Attempt to create directory", toBeIgnored.mkdirs());
+      
+      
+      //Instantiate CleanUpManager
+      CleanUpManager manager = CleanUpManager.getInstance(1, delay, base);    
+      
+      //add the file to be ignored
+      manager.addFileToIgnore(toBeIgnored);
+      
+      File temp1 = new File(base, "test1.txt");
+      Assert.assertTrue(temp1.createNewFile());
+      File temp2 = new File(base, "test2.txt");
+      Assert.assertTrue(temp2.createNewFile());
+      
+      //Test if file are there
+      Assert.assertEquals(3, base.list().length);
+      manager.start();
+            
+      //Waiting the job to perform its first iteraction
+      while (manager.status() != CleanUpStatus.WAITING_NEXT_ITERACTION) Thread.sleep(delay/2);
+      Assert.assertEquals(1, base.list().length);
+  
+      //removed the file to be ignored
+      manager.removeFileToIgnore(toBeIgnored);
+      
+      //Allow the the thread to run one more time
+      if (manager.status() == CleanUpStatus.WAITING_NEXT_ITERACTION) Thread.sleep(delay);
+      
+      //Wait to finish the last running
+      while (manager.status() != CleanUpStatus.WAITING_NEXT_ITERACTION) Thread.sleep(delay/2);
+            
+      //Should have 0 files      
+      Assert.assertEquals(0, base.list().length);
+      
+      manager.stop();
       
     } catch (IOException | InterruptedException ex) {
       Assert.fail(ex.getMessage());

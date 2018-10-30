@@ -60,7 +60,7 @@ public class CleanUpManager {
     long tempDelay = delay > 0 ? delay : DEFAULT_DELAY;
     
     //Instantiate job class
-    this.cleanUpJob = new CleanUpJob(maxInactiveTime, tempDelay, base);
+    this.cleanUpJob = new CleanUpJob(maxInactiveTime, tempDelay, base);    
   }
 
   /**
@@ -123,6 +123,22 @@ public class CleanUpManager {
     }
   }
 
+  /**
+   * Add file to be ignored and then they will not be deleted.
+   * @param toIgnore
+   */
+  public void addFileToIgnore(File toIgnore){
+    this.cleanUpJob.addFileToIgnore(toIgnore);
+  }
+  
+  /**
+   * remove file that is supposed to be ignored.
+   * @param toIgnore
+   */
+  public void removeFileToIgnore(File toIgnore) {
+    this.cleanUpJob.removeFileToIgnore(toIgnore);
+  }
+  
   /**
    * Return job status.
    *

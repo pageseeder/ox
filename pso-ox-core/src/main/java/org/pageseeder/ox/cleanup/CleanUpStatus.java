@@ -22,6 +22,8 @@ public enum CleanUpStatus {
   STOPPING,
   
   /** The stopped. */
-  STOPPED;
+  STOPPED,
+  /** If the job failed. */
+  FAILED;
 
 }
