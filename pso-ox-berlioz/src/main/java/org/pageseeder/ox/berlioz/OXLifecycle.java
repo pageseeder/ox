@@ -6,8 +6,8 @@ import java.io.File;
 import org.pageseeder.berlioz.GlobalSettings;
 import org.pageseeder.berlioz.LifecycleListener;
 import org.pageseeder.ox.OXConfig;
+import org.pageseeder.ox.cleanup.CleanUpManager;
 import org.pageseeder.ox.core.StepJob;
-import org.pageseeder.ox.util.CleanUpManager;
 
 /**
  * The life cycle listener for OX.
@@ -24,6 +24,7 @@ public final class OXLifecycle implements LifecycleListener {
     File packagesRootFolder = OXConfig.getOXTempFolder();
     long maxInactiveTimeAllowed = Long.parseLong(GlobalSettings.get("ox2.max-inactive-time-ms", String.valueOf(StepJob.DEFAULT_MAX_INACTIVE_TIME_MS)));
     CleanUpManager cleanUpManager = CleanUpManager.getInstance(maxInactiveTimeAllowed, CleanUpManager.DEFAULT_DELAY, packagesRootFolder);
+    cleanUpManager.addFileToIgnore(OXConfig.getOXTempUploadFolder());
     cleanUpManager.start();
     
     // clearCache();

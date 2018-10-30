@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018 Allette systems pty. ltd.
  */
-package org.pageseeder.ox.util;
+package org.pageseeder.ox.cleanup;
 
 /**
  * @author Carlos Cabral
@@ -22,6 +22,8 @@ public enum CleanUpStatus {
   STOPPING,
   
   /** The stopped. */
-  STOPPED;
+  STOPPED,
+  /** If the job failed. */
+  FAILED;
 
 }

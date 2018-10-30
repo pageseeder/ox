@@ -10,7 +10,9 @@ import java.io.File;
  * @since  8 November 2013
  */
 public class OXConfig {
-
+  
+  /** The folder name where the files will be uploaded. */
+  public final static String TEMP_UPLOAD_FOLDER_NAME = "upload";
   /**
    * Singleton instance.
    */
@@ -65,7 +67,7 @@ public class OXConfig {
    */
   public static File getOXTempUploadFolder() {
     File tempDir = getOXTempFolder();
-    File temp = new File(tempDir, "upload");
+    File temp = new File(tempDir, TEMP_UPLOAD_FOLDER_NAME);
     if (!temp.exists()) {
       temp.mkdirs();
     }
