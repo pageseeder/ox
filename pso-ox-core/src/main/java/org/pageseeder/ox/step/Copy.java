@@ -90,6 +90,8 @@ public class Copy implements Step {
     /** The output. */
     private final String _output;
 
+    private final File _outputFile;
+    
     /**
      * Instantiates a new copy result.
      *
@@ -102,6 +104,7 @@ public class Copy implements Step {
       super(model, data);
       this._input = input;
       this._output = output;
+      this._outputFile = data().getFile(this._output);
     }
 
     /**
@@ -142,8 +145,7 @@ public class Copy implements Step {
      */
     @Override
     public File downloadPath() {
-      File outputFile = data().getFile(this._output);
-      return outputFile;
+      return this._outputFile;
     }
 
     /**
@@ -156,7 +158,7 @@ public class Copy implements Step {
      */
     @Override
     public boolean isDownloadable() {
-      return true;
+      return this._outputFile.isFile();
     }
   }
 
