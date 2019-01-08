@@ -1,0 +1,2 @@
+- Show the last proccessed files for by user or by IP. In case they close the page then they can retrieve the download without processing again.
+- step to call AWS Lambda or external API

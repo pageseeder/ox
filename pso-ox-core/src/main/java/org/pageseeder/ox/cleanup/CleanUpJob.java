@@ -127,11 +127,20 @@ public class CleanUpJob implements Runnable {
     * @throws IOException Signals that an I/O exception has occurred.
     */
    private void clean() throws IOException {
+     LOGGER_JOB.trace("Cleaning Starter Folder: {}", this.getBase().getAbsolutePath());
      clean(this.getBase(), 0);
    }
   
    /**
     * Clean.
+    * 
+    * &gt;p&lt;Depth:&gt;/p&lt;
+    * &gt;ul&lt;
+    *   &gt;li&lt;- depth == 0 means base folder &gt;/li&lt;
+    *   &gt;li&lt;- depth == 1 means package or upload folder &gt;/li&lt;
+    *   &gt;li&lt;- depth > 1  means inside packages or uploads folder &gt;/li&lt;
+    * &gt;/ul&lt;
+    *
     *
     * @param file the file/folder needs to delete
     * @param depth the depth
@@ -139,6 +148,7 @@ public class CleanUpJob implements Runnable {
     */
    private void clean(final File file, int depth) throws IOException {
      //keep deleting while it is false
+     LOGGER_JOB.trace("Current File {} and depth {}", file.getAbsolutePath(), depth);
      if (!this.getStop().get()) {
        if (file == null || !file.exists()) { throw new IllegalArgumentException("The file is null or it doesn't exist."); }
   
@@ -146,11 +156,22 @@ public class CleanUpJob implements Runnable {
        boolean isExpired =  file.lastModified() < threshold;
        
        if (file.isDirectory()) {         
-         //If depth equal 1 this file is the package folder which its name is the package id. If this package is in the job list then
-         //should not be removed. Otherwise yes
+         // Depth equal 1 t means package folder which its name is the package id. 
+         // If this package is in the job list then should not be removed.
+         // If it is not in the package and neither expired, then it should be kept.
+         // If it is upload folder it should go forward and delete inside files if expired 
+         // (Normally upload folder is file that should be ignored).
          final boolean isInJobList = depth == 1 && !StringUtils.isBlank(PipelineJobQueue.getJobId(file.getName()));
+         final boolean isUploadFolder = depth == 1 && shouldBeIgnored(file);
+         final boolean keepFolder =  (isInJobList) || (depth == 1 && !isInJobList && !isExpired);
+         
 
-         if (!isInJobList) {
+         LOGGER_JOB.trace("Current File {} and is in job list {}", file.getAbsolutePath(), isInJobList);
+         LOGGER_JOB.trace("Current File {} and is Expired {}", file.getAbsolutePath(), isExpired);
+         LOGGER_JOB.trace("Current File {} and is upload {}", file.getAbsolutePath(), isUploadFolder);
+         LOGGER_JOB.trace("Current File {} and keep folder {}", file.getAbsolutePath(), keepFolder);
+         
+         if (!keepFolder || isUploadFolder) {
            //The orignal last modified date before deleting its children files. because when one is deleted, the parent
            // folder last modified date is updated.
            long originalLastModifiedDate = file.lastModified();
