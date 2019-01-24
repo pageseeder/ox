@@ -186,14 +186,20 @@ public class FileUtils {
     if (extensions != null && extensions.length > 0) {
       File folder = data.getFile(fromFolder);      
       if (folder.isDirectory()) {
-        for (String filenane:folder.list()){
+        String currentExtension = "";
+        String lowerCaseFileName = "";
+        for (String filenane : folder.list()){
+          lowerCaseFileName = filenane.toLowerCase();
           for (int i = 0; i < extensions.length; i++) {
-            if(filenane.endsWith(extensions[i])) {
+            currentExtension = extensions[i];
+            if(!StringUtils.isBlank(currentExtension) && lowerCaseFileName.endsWith(currentExtension.toLowerCase())) {
               fromFolder += "/" + filenane;
               break;
             }
           }
         }
+        currentExtension = null;
+        lowerCaseFileName = null;
       }
     }
     return fromFolder;

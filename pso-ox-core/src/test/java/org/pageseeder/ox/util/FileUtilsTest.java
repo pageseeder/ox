@@ -98,6 +98,42 @@ public class FileUtilsTest {
   }
 
   @Test
+  public void getDOCXFileByExtensionUppercase() {
+    File sampleFile = new File("src/test/resources/models/m1/Sample.docx");
+    File toCopy = new File("src/test/resources/org/pageseeder/ox/util/fileutils/file.docx");
+    PackageData data = PackageData.newPackageData("m1", sampleFile);
+    try {
+      File dataFolder = new File(data.directory(), "docx");
+      dataFolder.mkdirs();
+      FileUtils.copy(toCopy, new File(dataFolder,  "file.DOCX"));
+      String fileFound = FileUtils.getFileByExtension(data, "docx", ".dotx",".docx");
+      Assert.assertEquals("docx/file.DOCX",fileFound);
+      
+//      //Extension parameter uppercase
+//      fileFound = FileUtils.getFileByExtension(data, "DOCX");
+//      Assert.assertEquals("docx/file.docx",fileFound);
+    } catch (IOException e) {
+      Assert.fail(e.getMessage());
+    }
+  }
+  
+  @Test
+  public void getDOCXFileByExtensionParameterUppercase() {
+    File sampleFile = new File("src/test/resources/models/m1/Sample.docx");
+    File toCopy = new File("src/test/resources/org/pageseeder/ox/util/fileutils/file.docx");
+    PackageData data = PackageData.newPackageData("m1", sampleFile);
+    try {
+      File dataFolder = new File(data.directory(), "docx");
+      dataFolder.mkdirs();
+      FileUtils.copy(toCopy, new File(dataFolder,  "file.docx"));
+      String fileFound = FileUtils.getFileByExtension(data, "docx", ".DOCX");
+      Assert.assertEquals("docx/file.docx",fileFound);
+    } catch (IOException e) {
+      Assert.fail(e.getMessage());
+    }
+  }
+  
+  @Test
   public void getPSMLFileByExtension() {
     File sampleFile = new File("src/test/resources/models/m1/sample.psml");
     File toCopy = new File("src/test/resources/org/pageseeder/ox/util/fileutils/file.psml");
