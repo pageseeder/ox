@@ -21,6 +21,7 @@ import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.OXEntityResolver;
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.core.Pipeline.PipelineHandler;
+import org.pageseeder.ox.util.FileUtils;
 import org.pageseeder.ox.util.XSLT;
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
@@ -93,7 +94,7 @@ public final class Model implements XMLWritable {
    */
   public boolean load() {
     boolean ok = false;
-    File definition = getFile("model.xml");
+    File definition = getModelXML();
     if (definition != null && definition.exists() && !this.hasLoaded) {
       try {
         parse(this, definition);
@@ -118,6 +119,13 @@ public final class Model implements XMLWritable {
   public boolean reload() {
     this.hasLoaded = false;
     return load();
+  }
+
+  /**
+   * Returns model xml file.
+   */
+  public File getModelXML() {
+    return getFile("model.xml");
   }
 
   /**
@@ -243,8 +251,18 @@ public final class Model implements XMLWritable {
     System.out.println("Model Directory: " + getModelsDirectory().getAbsoluteFile());
     String[] names = getModelsDirectory().list(new FilenameFilter() {
       @Override
-      public boolean accept(File dir, String name) {
-        return dir != null && dir.isDirectory();
+      public boolean accept(File modelsRootDirectoy, String name) {
+        //Model wrapper directory
+        boolean isModelDirectory = modelsRootDirectoy != null && modelsRootDirectoy.isDirectory();
+        if (isModelDirectory) {
+          File modelDirectory = new File(modelsRootDirectoy, name);
+          isModelDirectory = modelDirectory != null && modelDirectory.isDirectory();
+          if (isModelDirectory) {
+            File modelXML = new File(modelDirectory, "model.xml");
+            isModelDirectory = modelXML != null && modelXML.exists() && modelXML.isFile();
+          }
+        }
+        return isModelDirectory;
       }
     });
 
