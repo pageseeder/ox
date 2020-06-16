@@ -5,6 +5,7 @@ package org.pageseeder.ox.core;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -71,7 +72,7 @@ public class TestModel {
   }
 
   @Test
-  public void test_load() {
+  public void test_listModels() {
     List<Model> models = Model.listModels();
     Assert.assertNotNull(models);
     boolean hasExpectedModels = models.stream()
@@ -82,5 +83,34 @@ public class TestModel {
     Assert.assertTrue(hasExpectedModels);
     Assert.assertTrue("Fake model directory should not be listed as it is not a valid model directory.", hasNotFakeModelDirectory);
 
+  }
+
+  @Test
+  public void test_extraAttributes(){
+    try {
+      Model model = new Model("m1");
+      model.load();
+      Map<String, String> extraAttributes = model.extraAttributes();
+      Assert.assertNotNull(extraAttributes);
+      Assert.assertTrue(extraAttributes.size() >= 2);
+      Assert.assertEquals("word", extraAttributes.get("icon"));
+      Assert.assertEquals("another extra", extraAttributes.get("extra-01"));
+    } catch (IllegalArgumentException ex) {
+      Assert.assertTrue(ex.getMessage(), true);
+    }
+  }
+  @Test
+  public void test_extraAttributes_empty(){
+    try {
+      Model model = new Model("duplicatedstep");
+      model.load();
+      Map<String, String> extraAttributes = model.extraAttributes();
+      Assert.assertNotNull(extraAttributes);
+      Assert.assertTrue(extraAttributes.size() == 1);
+      //XML Version
+      Assert.assertEquals("version", extraAttributes.get("1.0"));
+    } catch (IllegalArgumentException ex) {
+      Assert.assertTrue(ex.getMessage(), true);
+    }
   }
 }

@@ -7,9 +7,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -22,6 +20,7 @@ import org.pageseeder.ox.OXEntityResolver;
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.core.Pipeline.PipelineHandler;
 import org.pageseeder.ox.util.FileUtils;
+import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.ox.util.XSLT;
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
@@ -49,6 +48,13 @@ public final class Model implements XMLWritable {
   private final String _name;
 
   /**
+   * A map with extra attributes. It may use for any purpose, however the backend will not take care of it.
+   * Example:
+   * Key icon and value 'word' may indicate that for this model the icon is the an word document.
+   */
+  private final Map<String, String> extraAttributes = new HashMap <>();
+
+  /**
    * The list of pipelines defined for this model.
    */
   private final List<Pipeline> _pipelines = new ArrayList<Pipeline>();
@@ -71,6 +77,26 @@ public final class Model implements XMLWritable {
    */
   public String name() {
     return this._name;
+  }
+
+  /**
+   *
+   * @return
+   */
+  public Map<String, String> extraAttributes(){
+    return Collections.unmodifiableMap(this.extraAttributes);
+  }
+
+  /**
+   * Key cannot be null or empty and value cannot be null.
+   *
+   * @param key
+   * @param value
+   */
+  private void addExtraAttributes(String key, String value) {
+    if (!StringUtils.isBlank(key) && value != null) {
+      this.extraAttributes.put(key, value);
+    }
   }
 
   /**
@@ -195,6 +221,11 @@ public final class Model implements XMLWritable {
   public void toXML(XMLWriter xml) throws IOException {
     xml.openElement("model", true);
     xml.attribute("name", this._name);
+
+    for (Map.Entry<String,String> attribute: this.extraAttributes.entrySet()){
+      xml.attribute(attribute.getKey(), attribute.getValue());
+    }
+
     for (Pipeline p : this._pipelines) {
       p.toXML(xml);
     }
@@ -389,6 +420,7 @@ public final class Model implements XMLWritable {
 
           if (this._model == null) {
             this._model = new Model(name);
+            addExtraAttributes(attributes);
           } else {
             if (name != null && !name.equals(this._model.name())) {
               LOGGER.warn("The name of this model '{}' does not match '{}' (line {})", name, this._model.name(), this._locator.getLineNumber());
@@ -399,10 +431,10 @@ public final class Model implements XMLWritable {
           // A new pipeline
           this.handler = new PipelineHandler(this._model);
           this.handler.startElement(uri, localName, qName, attributes);
+        } else if (localName.equals("pipelines")) {
+          addExtraAttributes(attributes);
         }
-
       }
-
     }
 
     @Override
@@ -433,6 +465,15 @@ public final class Model implements XMLWritable {
       return this._model;
     }
 
+    private void addExtraAttributes(Attributes attributes) {
+      for(int index = 0; index < attributes.getLength(); index++) {
+        String attributeName = attributes.getLocalName(index);
+        if (!StringUtils.isBlank(attributeName)) {
+          attributeName = attributes.getQName(index);
+        }
+        this._model.addExtraAttributes(attributeName, attributes.getValue(index));
+      }
+    }
   }
 
 }
