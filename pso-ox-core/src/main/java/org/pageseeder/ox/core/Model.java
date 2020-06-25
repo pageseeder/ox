@@ -219,6 +219,10 @@ public final class Model implements XMLWritable {
 
   @Override
   public void toXML(XMLWriter xml) throws IOException {
+    this.toXML(xml, null);
+  }
+
+  public void toXML(XMLWriter xml, String pipelineId) throws IOException {
     xml.openElement("model", true);
     xml.attribute("name", this._name);
 
@@ -227,10 +231,14 @@ public final class Model implements XMLWritable {
     }
 
     for (Pipeline p : this._pipelines) {
-      p.toXML(xml);
+      //If there is an specified pipeline, then only generate the xml for this pipeline.
+      if (StringUtils.isBlank(pipelineId) |p.id().equals(pipelineId)) {
+        p.toXML(xml);
+      }
     }
     xml.closeElement();
   }
+
 
   // Static methods
   // ----------------------------------------------------------------------------------------------
