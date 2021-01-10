@@ -74,12 +74,21 @@ public class StepSimulator {
     }
 
     if (parameters == null) {
-      parameters = new HashMap<String, String>();
+      parameters = new HashMap<>();
     }
 
     // step info
     StepInfoImpl info = new StepInfoImpl(this.data.id(), stepName, input, output, parameters);
+
     // process the step
     return step.process(this.model, this.data, info);
+  }
+
+  /**
+   *
+   * @return The directory containing the package
+   */
+  public File getDataDirectory() {
+    return this.data.directory();
   }
 }
