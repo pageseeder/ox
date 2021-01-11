@@ -65,7 +65,7 @@ public class StepSimulator {
     }
 
     if (input == null) {
-      input = this.data.getPath(this.data.getOriginal());
+      input = this.getData().getPath(this.getData().getOriginal());
     }
 
     // use input as output if output is null
@@ -78,17 +78,17 @@ public class StepSimulator {
     }
 
     // step info
-    StepInfoImpl info = new StepInfoImpl(this.data.id(), stepName, input, output, parameters);
+    StepInfoImpl info = new StepInfoImpl(this.getData().id(), stepName, input, output, parameters);
 
     // process the step
-    return step.process(this.model, this.data, info);
+    return step.process(this.model, this.getData(), info);
   }
 
   /**
    *
-   * @return The directory containing the package
+   * @return
    */
-  public File getDataDirectory() {
-    return this.data.directory();
+  public PackageData getData() {
+    return this.data;
   }
 }
