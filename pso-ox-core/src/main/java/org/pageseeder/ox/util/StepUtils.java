@@ -67,8 +67,27 @@ public class StepUtils {
    * @return
    */
   public static String getParameter(PackageData data, StepInfo info, String parameterName, String fallback) {
-    String parameter = info.getParameter("naming-pattern", data.getParameter("naming-pattern"));
+    String parameter = info.getParameter(parameterName, data.getParameter(parameterName));
 
     return !StringUtils.isBlank(parameter) ? parameter : fallback;
+  }
+
+  /**
+   * Get the parameter from step definition, if it is not found then gets from the request parameter.
+   * Otherwise returns the fallback.
+   *
+   * @param data PackageData
+   * @param info StepInfo
+   * @param parameterName The name of the parameter to get from step info or package data
+   * @param fallback default value.
+   * @return
+   */
+  public static int getParameterInt(PackageData data, StepInfo info, String parameterName, int fallback) {
+    String parameter = getParameter(data, info, parameterName, String.valueOf(fallback));
+    try {
+      return Integer.parseInt(parameter);
+    } catch (NumberFormatException ex) {
+      return fallback;
+    }
   }
 }
