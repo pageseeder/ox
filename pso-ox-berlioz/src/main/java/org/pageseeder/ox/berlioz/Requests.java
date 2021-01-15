@@ -110,7 +110,7 @@ public final class Requests {
     OXConfig config = OXConfig.get();
     File dir = config.getModelsDirectory();
     if (dir == null) {
-      config.setModelsDirectory(new File(GlobalSettings.getRepository(), "model"));
+      config.setModelsDirectory(new File(GlobalSettings.getAppData(), "model"));
     }
   }
 

@@ -86,7 +86,7 @@ public class StepSimulator {
 
   /**
    *
-   * @return
+   * @return PackageData
    */
   public PackageData getData() {
     return this.data;
