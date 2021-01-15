@@ -55,4 +55,19 @@ public class StepUtils {
     }
     return foutput;
   }
+
+  /**
+   * Get the parameter from step definition, if it is not found then gets from the request parameter.
+   * Otherwise returns the fallback.
+   *
+   * @param data
+   * @param info
+   * @param fallback
+   * @return
+   */
+  public static String getParameter(PackageData data, StepInfo info, String fallback) {
+    String parameter = info.getParameter("naming-pattern", data.getParameter("naming-pattern"));
+
+    return !StringUtils.isBlank(parameter) ? parameter : fallback;
+  }
 }
