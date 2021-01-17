@@ -116,7 +116,9 @@ public class DefaultResult extends ResultBase implements Result {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   protected void writeExtraInfo(XMLWriter xml) throws IOException {
-    this.getExtraResultInfo().toXML(xml);
+    if (this.getExtraResultInfo() != null) {
+      this.getExtraResultInfo().toXML(xml);
+    }
   }
 
   /**
