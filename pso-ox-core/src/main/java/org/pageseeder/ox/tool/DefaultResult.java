@@ -16,25 +16,28 @@ import org.pageseeder.xmlwriter.XMLWriter;
 
 /**
  * The Class DefaultResult.
- * 
+ *
  * @author Carlos Cabral
  * @since 08th August 2018
  */
 public class DefaultResult extends ResultBase implements Result {
-  
+
   /** The info. */
   private final StepInfo _info;
-  
+
   /** The downloadable output, it can only be a zip or a file or null */
   private final File _output;
-  
+
+  /** Extra Information for this result. */
+  private ExtraResultInfo extraResultInfo;
+
   /**
    * Instantiates a new Default Base.
-   * The input information is get from step parameter 
-   *  
-   * @param model the model
-   * @param data the data
-   * @param info the info
+   * The input information is get from step parameter
+   *
+   * @param model  the model
+   * @param data   the data
+   * @param info   the info
    * @param output the output (it can only be a zip or a file or null)
    */
   public DefaultResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info, @Nullable File output) {
@@ -51,10 +54,10 @@ public class DefaultResult extends ResultBase implements Result {
   public void toXML(XMLWriter xml) throws IOException {
     xml.openElement("result");
     writeResultAttributes(xml);
-    
+
     //Children Elements
     writeResultElements(xml);
-    
+
     xml.closeElement();
   }
 
@@ -73,7 +76,7 @@ public class DefaultResult extends ResultBase implements Result {
     xml.attribute("path", downloadPath());
     xml.attribute("input", input());
   }
-  
+
   /**
    * Write result elements.
    *
@@ -83,11 +86,14 @@ public class DefaultResult extends ResultBase implements Result {
   protected void writeResultElements(XMLWriter xml) throws IOException {
     //Step Info Perameters
     writeParameters(xml);
-     
+
+    //Extra Info
+    writeExtraInfo(xml);
+
     // The details of any error
     writeError(xml);
   }
-  
+
   /**
    * Parameters XML.
    *
@@ -101,14 +107,27 @@ public class DefaultResult extends ResultBase implements Result {
     }
     xml.closeElement();//parameters
   }
-  
+
+
+  /**
+   * Parameters XML.
+   *
+   * @param xml the xml
+   * @throws IOException Signals that an I/O exception has occurred.
+   */
+  protected void writeExtraInfo(XMLWriter xml) throws IOException {
+    if (this.getExtraResultInfo() != null) {
+      this.getExtraResultInfo().toXML(xml);
+    }
+  }
+
   /**
    * Value XML.
    *
-   * @param xml the xml
+   * @param xml         the xml
    * @param elementName the element name
-   * @param name the name
-   * @param value the value
+   * @param name        the name
+   * @param value       the value
    * @throws IOException Signals that an I/O exception has occurred.
    */
   protected void valueXML(XMLWriter xml, String elementName, String name, String value) throws IOException {
@@ -117,7 +136,7 @@ public class DefaultResult extends ResultBase implements Result {
     xml.attribute("value", value);
     xml.closeElement();
   }
-  
+
   /**
    * Write error.
    *
@@ -129,7 +148,7 @@ public class DefaultResult extends ResultBase implements Result {
       OXErrors.toXML(error(), xml, true);
     }
   }
-  
+
   /**
    * Download path.
    *
@@ -179,6 +198,22 @@ public class DefaultResult extends ResultBase implements Result {
   public File output() {
     return this._output;
   }
-  
-  
+
+  /**
+   * Gets extra result info.
+   *
+   * @return the extra result info
+   */
+  public ExtraResultInfo getExtraResultInfo() {
+    return extraResultInfo;
+  }
+
+  /**
+   * Sets extra result info.
+   *
+   * @param extraResultInfo the extra result info
+   */
+  public void setExtraResultInfo(ExtraResultInfo extraResultInfo) {
+    this.extraResultInfo = extraResultInfo;
+  }
 }

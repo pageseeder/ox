@@ -27,7 +27,7 @@ public class StepSimulator {
    *                           configuration.
    * @param uploadedFile       This does not necessary need to be the uploaded file, it can be the file/folder that will
    *                           be used as input for the step. This file is used to create the PackageData.
-   * @oaram requestParameters  These are the parameters sent in the HTTP request. They are also used to create the
+   * @param requestParameters  These are the parameters sent in the HTTP request. They are also used to create the
    *                           PackageData.
    */
   public StepSimulator(String modelName, File uploadedFile, Map<String, String> requestParameters) {
@@ -57,7 +57,7 @@ public class StepSimulator {
    * @param output       The output file/folder for this step. It can be null.
    * @param stepName     The step name cannot be null or empty.
    * @param parameters   The parameters that exclusively belongs to this step.
-   * @return
+   * @return result
    */
   public Result process (Step step, String input, String output, String stepName, Map<String, String> parameters) {
     if (StringUtils.isBlank(stepName)) {
