@@ -102,6 +102,11 @@ public class DefaultResult extends ResultBase implements Result {
    */
   protected void writeParameters(XMLWriter xml) throws IOException {
     xml.openElement("parameters");
+
+    for (Entry<String, String> entry : this.data().getParameters().entrySet() ) {
+      valueXML(xml, "parameter", entry.getKey(), entry.getValue());
+    }
+
     for (Entry<String, String> entry : this._info.parameters().entrySet() ) {
       valueXML(xml, "parameter", entry.getKey(), entry.getValue());
     }
