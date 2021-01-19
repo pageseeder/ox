@@ -27,7 +27,7 @@ public class StepUtils {
 
     File finput = null;
     if (!StringUtils.isBlank(input)) {
-      finput = data.getFile(input);
+      finput = data.getFile(applyDynamicParameterLogic(data, info, input));
     }
     return finput;
   }
@@ -53,7 +53,7 @@ public class StepUtils {
         foutput = data.directory();
       }
     } else {
-      foutput = data.getFile(output);
+      foutput = data.getFile(applyDynamicParameterLogic(data, info, output));
     }
     return foutput;
   }
@@ -80,17 +80,7 @@ public class StepUtils {
     if (StringUtils.isBlank(parameterValue)) {
       parameterValue = fallback;
     }
-
-    //Add request parameters
-    Map<String, String> parameters = data.getParameters();
-    //Add step parameters
-    parameters.putAll(info.parameters());
-
-    ParameterTemplate parameterTemplate = ParameterTemplate.parse(parameterValue);
-    parameterValue = parameterTemplate.toString(parameters);
-
-
-    return parameterValue;
+    return applyDynamicParameterLogic(data, info, parameterValue);
   }
 
   /**
@@ -110,5 +100,29 @@ public class StepUtils {
     } catch (NumberFormatException ex) {
       return fallback;
     }
+  }
+
+  /**
+   * The a request or step parameter can have a dynamic value base in another one.
+   *
+   * Example:
+   * Package data has parameter "root-folder"  with value "data"
+   * parameterValue = /{root-folder}/file.xml  =>
+   * this method returns /data/file.xml
+   *
+   *
+   * @param data
+   * @param info
+   * @param parameterValue
+   * @return
+   */
+  private static String applyDynamicParameterLogic(PackageData data, StepInfo info, String parameterValue) {
+    //Add request parameters
+    Map<String, String> parameters = data.getParameters();
+    //Add step parameters
+    parameters.putAll(info.parameters());
+
+    ParameterTemplate parameterTemplate = ParameterTemplate.parse(parameterValue);
+    return parameterTemplate.toString(parameters);
   }
 }
