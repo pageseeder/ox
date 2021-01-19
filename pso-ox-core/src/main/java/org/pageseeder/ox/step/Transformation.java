@@ -158,7 +158,14 @@ public final class Transformation implements Step {
     //Output cannot be a folder
     File finalOutput = output;
     if (output.isDirectory()) {
-      finalOutput = new File(output, getNewNameBaseOnOther(input.getName(), false));
+
+      if (output.getAbsolutePath().equals(input.getParentFile().getAbsolutePath())) {
+        //If the output is same folder of the input parent folder, then it changes the name.
+        finalOutput = new File(output, getNewNameBaseOnOther(input.getName(), false));
+      } else {
+        //If the output is different folder of the input parent, then we keep the same name.
+        finalOutput = new File(output, input.getName());
+      }
     }
 
     try {
