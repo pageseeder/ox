@@ -33,10 +33,7 @@ import org.pageseeder.ox.core.ResultStatus;
 import org.pageseeder.ox.tool.FileResultInfo;
 import org.pageseeder.ox.tool.InvalidResult;
 import org.pageseeder.ox.tool.MultipleFilesResult;
-import org.pageseeder.ox.util.FileUtils;
-import org.pageseeder.ox.util.StringUtils;
-import org.pageseeder.ox.util.XSLT;
-import org.pageseeder.ox.util.ZipUtils;
+import org.pageseeder.ox.util.*;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +44,9 @@ import org.slf4j.LoggerFactory;
  * <h3>Step Parameters</h3>
  * <ul>
  *  <li><var>input</var> the xml file needs to be transformed, where is a relative path of package data.
- *  (if not specified, use upper step output as input.)</li>
- *  <li><var>output</var> the output file, where is a relative path of package data (optional)</li>
+ *  (if not specified, use upper step output as input.) It accepts dynamic value.</li>
+ *  <li><var>output</var> the output file, where is a relative path of package data (optional).
+ *  It accepts dynamic value.</li>
  *  <li><var>xsl</var> the stylesheet file to transform, which is a relative path of model folder.
  *  (This parameter will override the property <var>parameter-xsl</var>)</li>
  *  <li><var>display-result</var> whether to display the result xml into Result XML (default: true)</li>
@@ -86,23 +84,23 @@ public final class Transformation implements Step {
     try {
       //## Handle input files
       List<File> inputs = getInputFiles(model, data, info);
-      if (inputs.isEmpty()) { 
-        return new InvalidResult(model, data).error(new FileNotFoundException("Cannot find the input file.")); 
+      if (inputs.isEmpty()) {
+        return new InvalidResult(model, data).error(new FileNotFoundException("Cannot find the input file."));
       }
-      
-    //## Handle Output file 
+
+    //## Handle Output file
       File output = getOutputFile(data, info);
       final boolean isOutputAZip =  FileUtils.isZip(output);
       File zipOutput = null;
-      if (isOutputAZip) {      
+      if (isOutputAZip) {
         zipOutput = output;
         //The the output need to be a folder
         output = data.getFile(data.id() + System.nanoTime());
       } else if (inputs.size() > 1 || output.isDirectory()) {
-        //If there is more than one input, than the output must be a zip      
+        //If there is more than one input, than the output must be a zip
         zipOutput = data.getFile(getNewNameBaseOnOther("output.zip", true));
       }
-      
+
       if (output.getName().indexOf(".") > -1) {
         //It is a file, therefore only creates the parent folder if necessary
         output.getParentFile().mkdir();
@@ -110,31 +108,31 @@ public final class Transformation implements Step {
         //It is a folder
         output.mkdirs();
       }
-      
+
       //## Handle the transformation file
       File xsl = getXSLFile(inputs.get(0).getParentFile(), model, data, info);
-  
+
       // throw the error
-      if (xsl == null || !xsl.exists()) { 
-        return new InvalidResult(model, data).error(new FileNotFoundException("Cannot find the stylesheet file.")); 
+      if (xsl == null || !xsl.exists()) {
+        return new InvalidResult(model, data).error(new FileNotFoundException("Cannot find the stylesheet file."));
       }
-     
+
       // transform the result
       List <FileResultInfo> fileResultInfos = new ArrayList<>();
       File downloadableOuput = zipOutput != null ? zipOutput : output;
       result = new TransformResult(model, data, info, downloadableOuput, fileResultInfos, xsl);
-      
-      try {   
-        Transformer transformer = buildXSLTTransformer(xsl, data, info);      
+
+      try {
+        Transformer transformer = buildXSLTTransformer(xsl, data, info);
         for(File extraInput:inputs) {
           fileResultInfos.add(processFile(extraInput, output, transformer));
         }
-        
+
         //If zip output is not null, then zip
         if (zipOutput != null) {
           ZipUtils.zip(output, zipOutput);
         }
-        
+
         ((TransformResult)result).done();
       } catch (TransformerException | IOException ex) {
         LOGGER.error("Transform configuration exception: {}", ex.getMessage(), ex);
@@ -146,7 +144,7 @@ public final class Transformation implements Step {
     }
     return result;
   }
-  
+
   /**
    * Process file.
    *
@@ -171,7 +169,7 @@ public final class Transformation implements Step {
     }
     return new FileResultInfo(input, finalOutput, status);
   }
-  
+
   /**
    * Builds the XSLT transformer.
    *
@@ -187,12 +185,12 @@ public final class Transformation implements Step {
     Templates templates = XSLT.getTemplates(xsl);
     Transformer transformer = templates.newTransformer();
     transformer.setURIResolver(resolver);
-    
+
     // Add the parameters from post request
     for (Entry<String, String> p : data.getParameters().entrySet()) {
       transformer.setParameter(p.getKey(), p.getValue());
     }
-    
+
     String originalFileName = data.getProperty(PackageData.ORIGINAL_PROPERTY);
     if (originalFileName != null) {
       transformer.setParameter("original_file", originalFileName);
@@ -207,12 +205,12 @@ public final class Transformation implements Step {
         transformer.setParameter(p.getKey().replaceAll("_xslt-", ""), p.getValue());
       }
     }
-    
+
     String indent = !StringUtils.isBlank(info.parameters().get("_xslt-indent")) ? info.parameters().get("_xslt-indent") : data.getParameter("_xslt-indent");
     if (!StringUtils.isBlank(indent)) {
       transformer.setOutputProperty(OutputKeys.INDENT, indent.equalsIgnoreCase("yes")?"yes":"no");
     }
-    
+
     return transformer;
   }
 
@@ -226,14 +224,14 @@ public final class Transformation implements Step {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   private @NonNull List<File> getInputFiles(Model model, PackageData data, StepInfo info) throws IOException {
-    
+
     //Original inputs
-    String inputParemeter = info.getParameter("input", info.input());
+    String inputParemeter = StepUtils.getParameter(data, info, "input", info.input());
     List<File> originalInputs = data.getFiles(inputParemeter);
 
     if (originalInputs == null || originalInputs.isEmpty()) {
       originalInputs = new ArrayList<>();
-      File tempInput = model.getFile(inputParemeter); 
+      File tempInput = model.getFile(inputParemeter);
       if (tempInput != null) originalInputs.add(tempInput);
     }
 
@@ -243,19 +241,19 @@ public final class Transformation implements Step {
       extensionParameters = info.getParameter("input-extensions");
     }
     List<String> extensions = StringUtils.isBlank(extensionParameters) ? FileUtils.getXMLExtensions():StringUtils.convertToStringList(extensionParameters);
-        
+
     List<File> finalInputs = new ArrayList<>();
-    
+
     //Handle each input
     for (File input : originalInputs) {
-      input.mkdirs();      
+      input.mkdirs();
       if (input.exists()) {
         //handle zip file
-        final boolean isInputAZip =  FileUtils.isZip(input); 
+        final boolean isInputAZip =  FileUtils.isZip(input);
         if (isInputAZip) {
-          input = unzipFile(input);      
+          input = unzipFile(input);
         }
-  
+
         //Load candidate inputs
         if (input.isDirectory()) {
           FileFilter filter = FileUtils.filter(extensions, true);
@@ -266,8 +264,8 @@ public final class Transformation implements Step {
       }
     }
     return finalInputs;
-  } 
-  
+  }
+
   /**
    * Gets the output file.
    *
@@ -277,7 +275,7 @@ public final class Transformation implements Step {
    */
   private File getOutputFile(PackageData data, StepInfo info) {
     File output = null;
-    String outputParemeter = info.getParameter("output", info.output());
+    String outputParemeter = StepUtils.getParameter(data, info, "output", info.output());
     if (StringUtils.isBlank(outputParemeter) || outputParemeter.equals(info.input())) {
       outputParemeter = data.id() + System.nanoTime();
       output = data.getFile(outputParemeter);
@@ -287,8 +285,8 @@ public final class Transformation implements Step {
     }
     return data.getFile(outputParemeter);
   }
-  
-  
+
+
   /**
    * Gets the XSL file.
    *
@@ -311,17 +309,17 @@ public final class Transformation implements Step {
       List<File> filesFound = FileUtils.findFiles(unzipedFolder, filter);
       if (!filesFound.isEmpty()) {
         xsl = filesFound.get(0);
-      }   
+      }
     }
     return xsl;
   }
-  
+
   /**
    * Unzip in a folder with the same of the zip.
    *
    * @param file the file
    * @return the file
-   * @throws IOException 
+   * @throws IOException
    */
   private File unzipFile(File file) throws IOException {
     //It is a zip, then unzip in a folderwith the same of the zip
@@ -330,7 +328,7 @@ public final class Transformation implements Step {
     ZipUtils.unzip(file, newInput);
     return newInput;
   }
-  
+
   /**
    * Gets the new name base on other.
    *
@@ -345,9 +343,9 @@ public final class Transformation implements Step {
       return otherName.substring(0, lastDotPosition) + addition + otherName.substring(lastDotPosition);
     } else {
       return otherName + addition;
-    } 
+    }
   }
-  
+
   /**
    * A custom URI resolver to get the stylesheet file.
    * @author Ciber Cai
@@ -393,7 +391,7 @@ public final class Transformation implements Step {
     /** The template. */
     private final File _template;
     private final boolean _displayOutputResult;
-    
+
     /**
      * Instantiates a new transform result.
      *
@@ -402,7 +400,7 @@ public final class Transformation implements Step {
      * @param info the info
      * @param output the output
      * @param fileResultInfos the file result infos
-     * @param _template the template
+     * @param template the template
      */
     public TransformResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info,
         @Nullable File output, @NonNull List<FileResultInfo> fileResultInfos, @NonNull File template) {
@@ -410,7 +408,7 @@ public final class Transformation implements Step {
       this._template = template;
       this._displayOutputResult = "false".equals(super.info().getParameter("display-result")) ? false : true;
     }
-    
+
     @Override
     protected void writeResultElements(XMLWriter xml) throws IOException {
       super.writeResultElements(xml);
@@ -446,5 +444,5 @@ public final class Transformation implements Step {
         LOGGER.error("Unable to generate file result info for {}-{}-{}", fileResultInfo.getInput(), fileResultInfo.getOutput(), fileResultInfo.getStatus());
       }
     }
-  }  
+  }
 }

@@ -20,6 +20,8 @@ An XML processing pipeline doing that hard work
       <parameter name="schema" value="schema.sch"/>
       <parameter name="input" value="first-validation.xml"/>
       <parameter name="output" value="second-validation.xml"/>
+      <parameter name="dynamic-parameter-example" 
+                 value="optional text before {extra-text-parameter-name=optional default value} optional text after"/>
     </step>    
     <!-- Comma separated list example for input parameter -->
     <step id="Zip" name="Zipping." class="org.pageseeder.ox.step.Compression">
@@ -110,6 +112,20 @@ __`*folder1/**`__ - Matches all files into sub directory folder1
 __`?.java`__ - Matches all files that has any single character as name and extension as java into base directory.
 __`[abc].java`__ - Matches all files that has a or b or c as name and extension as java into base directory.
 __`[!a].java`__ -  Matches all files that has any single character different of 'a' as name and extension as java into base directory.
+
+
+## Dynamic Parameters
+
+The request and step parameters can have its value connected to other parameter. 
+
+Example:
+
+There is parameter called "ps-group-name" with value "test".
+And there is another "input"="/{ps-group-name}/documents". 
+The final value for "input" will be "/test/documents".
+This logic is in StepUtils class.
+
+**Note: ** Each step needs to be updated to use this logic. Till this moment only Transformation is using for input and output.
 
 ## Clean UP Files
 
