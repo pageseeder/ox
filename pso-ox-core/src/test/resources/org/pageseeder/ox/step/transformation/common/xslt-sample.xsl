@@ -7,12 +7,10 @@
                 exclude-result-prefixes="#all">
 
 <xsl:template match="/">
-<xsl:comment select="ran."/>
 
-<xsl:copy-of select="."/> 
+<xsl:copy-of select="."/>
 
 </xsl:template>
 
 
 </xsl:stylesheet>
-                
