@@ -44,8 +44,9 @@ import org.slf4j.LoggerFactory;
  * <h3>Step Parameters</h3>
  * <ul>
  *  <li><var>input</var> the xml file needs to be transformed, where is a relative path of package data.
- *  (if not specified, use upper step output as input.)</li>
- *  <li><var>output</var> the output file, where is a relative path of package data (optional)</li>
+ *  (if not specified, use upper step output as input.) It accepts dynamic value.</li>
+ *  <li><var>output</var> the output file, where is a relative path of package data (optional).
+ *  It accepts dynamic value.</li>
  *  <li><var>xsl</var> the stylesheet file to transform, which is a relative path of model folder.
  *  (This parameter will override the property <var>parameter-xsl</var>)</li>
  *  <li><var>display-result</var> whether to display the result xml into Result XML (default: true)</li>
