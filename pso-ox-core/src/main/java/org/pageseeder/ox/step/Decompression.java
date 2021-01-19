@@ -15,6 +15,7 @@ import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.tool.InvalidResult;
 import org.pageseeder.ox.tool.ResultBase;
 import org.pageseeder.ox.util.FileUtils;
+import org.pageseeder.ox.util.StepUtils;
 import org.pageseeder.ox.util.ZipUtils;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
@@ -33,6 +34,8 @@ import org.slf4j.LoggerFactory;
  * <p>If <var>input</var> does not exist, it returns {@link InvalidResult }.</p>
  * <p>Otherwise return {@link DecompressionResult}
  *
+ * <p><b>Note: </b> Input and output allows dynamic/variable value.</p>
+ *
  * @author Ciber Cai
  * @since  23 June 2014
  */
@@ -48,11 +51,13 @@ public class Decompression implements Step {
   public Result process(Model model, PackageData data, StepInfo info) {
 
     // input file
-    String input = info.getParameter("input", info.input());
+    String input = StepUtils.getParameter(data, info, "input", info.input());
+
     // output file
-    String output = info.getParameter("output") != null
-        ? info.getParameter("output")
-        : (info.output().equals(info.input())) ? (info.output() + "-decompress") : info.output();
+    String output = StepUtils.getParameter(data, info, "output", info.output());
+    if (output.equals(input)) {
+      output += "-decompress";
+    }
 
     File inputFile = data.getFile(input);
     File outputFile = data.getFile(output);

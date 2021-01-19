@@ -17,6 +17,7 @@ import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.tool.InvalidResult;
 import org.pageseeder.ox.tool.ResultBase;
+import org.pageseeder.ox.util.StepUtils;
 import org.pageseeder.ox.util.ZipUtils;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
@@ -35,6 +36,7 @@ import org.slf4j.LoggerFactory;
  * <p>If <var>input</var> does not exist, it returns {@link InvalidResult }.</p>
  * <p>Otherwise return {@link CompressionResult}
  *
+ * <p><b>Note: </b> Input and output allows dynamic/variable value.</p>
  *
  * @author Ciber Cai
  * @since  23 June 2014
@@ -51,18 +53,20 @@ public class Compression implements Step {
   public Result process(Model model, PackageData data, StepInfo info) {
 
     // input file
-    String input = info.getParameter("input", info.input());
+    String input = StepUtils.getParameter(data, info, "input", info.input());
+
     // output file
-    String output = info.getParameter("output") != null
-        ? info.getParameter("output")
-        : (info.output().equals(info.input())) ? (info.output() + ".zip") : info.output();
+    String output = StepUtils.getParameter(data, info, "output", info.output());
+    if (output.equals(input)) {
+      output += ".zip";
+    }
     LOGGER.debug("input {}, output {}", input, output);
 
     List<File> inputs = data.getFiles(input);
     File outputFile = data.getFile(output);
 
     // if the input file is not exist
-    
+
     CompressionResult result = new CompressionResult(model, data, input, output);
     String errorMessage = validateInputFiles(inputs);
     if (errorMessage.length()==0) {
@@ -158,7 +162,7 @@ public class Compression implements Step {
       errorMessage = "Input cannot be empty.";
     } else {
       for (File input:inputs) {
-        if (!input.exists()) 
+        if (!input.exists())
           errorMessage= "The input file ( " + input.getName() + " ) does not exist.";
       }
     }
