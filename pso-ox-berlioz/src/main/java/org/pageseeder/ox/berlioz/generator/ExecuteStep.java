@@ -60,6 +60,7 @@ public class ExecuteStep implements ContentGenerator {
     String parameterValue = null;
     while(extraParameters.hasMoreElements()) {
       String extraParameter = extraParameters.nextElement();
+      boolean foundExtraParameter = false;
       if (!extraParameter.equals("id")
           &&!extraParameter.equals("pipeline")
           &&!extraParameter.equals("model")
@@ -67,10 +68,15 @@ public class ExecuteStep implements ContentGenerator {
         parameterValue = req.getParameter(extraParameter);
         if (StringUtils.isBlank(parameterValue)) parameterValue = "";
         data.setParameter(extraParameter, parameterValue);
+        foundExtraParameter = true;
+      }
+      if (foundExtraParameter) {
+        data.saveProperties();
+        LOGGER.debug("New request parameters added to package {}", data.id());
       }
     }
-    
-    
+
+
     if (data == null) {
       req.setStatus(ContentStatus.NOT_FOUND);
       LOGGER.error("No package data found.");
@@ -116,15 +122,15 @@ public class ExecuteStep implements ContentGenerator {
     } else {
       long startTime = System.currentTimeMillis();
       //Asynchronous
-      int noThreads = GlobalSettings.get("ox2.step.threads-number", 
+      int noThreads = GlobalSettings.get("ox2.step.threads-number",
           StepJobManager.DEAULT_NUMBER_OF_THREAD);
-      int maxStoredCompletedJob = GlobalSettings.get("ox2.max-stored-completed-job", 
+      int maxStoredCompletedJob = GlobalSettings.get("ox2.max-stored-completed-job",
           StepJobQueue.DEFAULT_MAX_STORED_COMPLETED_JOB);
-      long maxInactiveTimeAllowed = Long.parseLong(GlobalSettings.get("ox2.max-inactive-time-ms", String.valueOf(StepJob.DEFAULT_MAX_INACTIVE_TIME_MS)));     
+      long maxInactiveTimeAllowed = Long.parseLong(GlobalSettings.get("ox2.max-inactive-time-ms", String.valueOf(StepJob.DEFAULT_MAX_INACTIVE_TIME_MS)));
       StepJobManager manager = new StepJobManager(noThreads, maxStoredCompletedJob);
-      StepJob job = new StepJob(stepDef, data, maxInactiveTimeAllowed);      
+      StepJob job = new StepJob(stepDef, data, maxInactiveTimeAllowed);
       manager.addJob(job);
-      
+
       //Sametimes the execution of this will be very quickly, then before to return let's give some time and check the new status.
       long maxTimeToCheck = 30000;// thirty seconds (Because the maxInactiveTimeAllowed could 1 hour, then it limits to 30 seconds
       long currentTime = 0;
@@ -132,13 +138,13 @@ public class ExecuteStep implements ContentGenerator {
         try {
           Thread.sleep(5000);
         } catch (InterruptedException ex) {
-          LOGGER.warn("An interruption exception happened in {}", ex.getMessage()); 
+          LOGGER.warn("An interruption exception happened in {}", ex.getMessage());
         }
         currentTime = System.currentTimeMillis();
       } while (!job.getStatus().hasCompleted() //While not completed
-          && (currentTime-startTime) <= maxInactiveTimeAllowed // The current time spent to check is less than or equal the time allowed in the config 
+          && (currentTime-startTime) <= maxInactiveTimeAllowed // The current time spent to check is less than or equal the time allowed in the config
           && (currentTime-startTime) <= maxTimeToCheck);//The current time spent to check is less than or equal the time allowed by default
-      
+
       job.toXML(xml);
       //If the job was not completed yet.
       if (!job.getStatus().hasCompleted()) {
