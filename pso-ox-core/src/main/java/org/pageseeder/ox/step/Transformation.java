@@ -209,7 +209,8 @@ public final class Transformation implements Step {
     // these parameters should use the prefix _xslt-
     for (Entry<String, String> p :info.parameters().entrySet()) {
       if (p.getKey().startsWith("_xslt-")) {
-        transformer.setParameter(p.getKey().replaceAll("_xslt-", ""), p.getValue());
+        String newValue = StepUtils.applyDynamicParameterLogic(data, info, p.getValue());
+        transformer.setParameter(p.getKey().replaceAll("_xslt-", ""), newValue);
       }
     }
 
