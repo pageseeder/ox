@@ -117,12 +117,16 @@ public class StepUtils {
    * @return
    */
   public static String applyDynamicParameterLogic(PackageData data, StepInfo info, String parameterValue) {
-    //Add request parameters
-    Map<String, String> parameters = data.getParameters();
-    //Add step parameters
-    parameters.putAll(info.parameters());
+    String newValue = null;
+    if (!StringUtils.isBlank(parameterValue)) {
+      //Add request parameters
+      Map<String, String> parameters = data.getParameters();
+      //Add step parameters
+      parameters.putAll(info.parameters());
 
-    ParameterTemplate parameterTemplate = ParameterTemplate.parse(parameterValue);
-    return parameterTemplate.toString(parameters);
+      ParameterTemplate parameterTemplate = ParameterTemplate.parse(parameterValue);
+      newValue = parameterTemplate.toString(parameters);
+    }
+    return newValue;
   }
 }

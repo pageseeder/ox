@@ -5,9 +5,7 @@ import org.junit.Test;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.core.StepInfoImpl;
-import org.pageseeder.ox.parameters.ParameterTemplate;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
