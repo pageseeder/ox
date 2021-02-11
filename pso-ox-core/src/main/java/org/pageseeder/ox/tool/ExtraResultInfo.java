@@ -1,5 +1,7 @@
 package org.pageseeder.ox.tool;
 
+import org.pageseeder.ox.util.StringUtils;
+import org.pageseeder.xmlwriter.XMLStringWriter;
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
 
@@ -30,7 +32,14 @@ public class ExtraResultInfo implements XMLWritable {
    * extraInformation.get("properties").put("number-of-pages", "15")
    * extraInformation.get("parameters").put("number-of-pages", "15")
    */
-  Map<String, Map<String, String>> extraInformation;
+  private Map<String, Map<String, String>> extraInformation;
+
+
+  /**
+   * It is an extra xml that will be written to the result xml.
+   * It must be valid.
+   */
+  private String extraXML;
 
   /**
    * Instantiates a new Extra result info.
@@ -38,7 +47,17 @@ public class ExtraResultInfo implements XMLWritable {
    * @param extraInformation the extra information
    */
   public ExtraResultInfo(Map<String, Map<String, String>> extraInformation) {
+    this(extraInformation, null);
+  }
+
+  /**
+   * Instantiates a new Extra result info.
+   *
+   * @param extraInformation the extra information
+   */
+  public ExtraResultInfo(Map<String, Map<String, String>> extraInformation, String extraXML) {
     this.extraInformation = extraInformation;
+    this.extraXML = extraXML;
   }
 
 
@@ -54,6 +73,9 @@ public class ExtraResultInfo implements XMLWritable {
           xml.closeElement();//InfoName
         }
       }
+    }
+    if (!StringUtils.isBlank(this.extraXML)) {
+      xml.writeXML(this.extraXML);
     }
     xml.closeElement();//info
   }
