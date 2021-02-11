@@ -117,7 +117,7 @@ public class StepUtils {
    * @return
    */
   public static String applyDynamicParameterLogic(PackageData data, StepInfo info, String parameterValue) {
-    String newValue = null;
+    String newValue = parameterValue;
     if (!StringUtils.isBlank(parameterValue)) {
       //Add request parameters
       Map<String, String> parameters = data.getParameters();
