@@ -46,7 +46,7 @@ public final class FileHandler {
 
   /** The logger. */
   private static Logger LOGGER = LoggerFactory.getLogger(FileHandler.class);
-  
+
   /**
    * To pipeline jobs.
    *
@@ -54,12 +54,12 @@ public final class FileHandler {
    * @return the list
    */
   public static List<PipelineJob> toPipelineJobs(String modelName, List<PackageData> packs) {
-    ensureConfigured(); 
+    ensureConfigured();
     List<PipelineJob> jobs = new ArrayList<PipelineJob>();
     Model model = new Model(modelName);
     LOGGER.debug("Model {} ", model.name());
     long slowSize = GlobalSettings.get("ox2.slow-mode.size", -1);
-    long maxInactiveTimeAllowed = Long.parseLong(GlobalSettings.get("ox2.max-inactive-time-ms", 
+    long maxInactiveTimeAllowed = Long.parseLong(GlobalSettings.get("ox2.max-inactive-time-ms",
         String.valueOf(StepJob.DEFAULT_MAX_INACTIVE_TIME_MS)));
     LOGGER.debug("Started creating the Pipeline Jobs");
     for (PackageData pack : packs) {
@@ -123,10 +123,11 @@ public final class FileHandler {
     if (isMultipart) {
       List<FileItem> items = processor.getFileItemList();
       for (FileItem item : items) {
-        if (!item.isFormField()) {          
+        if (!item.isFormField()) {
           String filename = getFilename(item);
           LOGGER.debug("item content type {}", item.getContentType());
           LOGGER.debug("item filename {}", filename);
+          //TODO add user logged to the package
           PackageData pack = toPackageData(item, filename, model);
           LOGGER.debug("pack {}", pack != null ? pack.id() : "null");
           if (pack != null) {
@@ -152,7 +153,7 @@ public final class FileHandler {
     // Return package data
     return packs;
   }
-  
+
   /**
    * Mix parameters.
    *
@@ -162,11 +163,11 @@ public final class FileHandler {
    */
   private static Map<String, String> mixParameters (Map<String, String> formParameters, Map<String, String[]> urlParameters) {
     Map<String, String> parameters = new HashMap<String, String>();
-    
+
     if (formParameters != null) {
       parameters.putAll(formParameters);
     }
-    
+
     if (urlParameters != null) {
       for(Entry<String, String[]> param:urlParameters.entrySet()) {
         if (!parameters.containsKey(param.getKey())) {
@@ -174,12 +175,12 @@ public final class FileHandler {
         }
       }
     }
-    
+
     return parameters;
   }
 
-  
-  
+
+
   /**
    * Copy to.
    *
@@ -192,7 +193,7 @@ public final class FileHandler {
   private static final int copyTo(InputStream stream, File file) throws IOException, OXException {
     LOGGER.debug("Writing file: {}", file != null ? file.getAbsolutePath() : "null");
     if (file == null || file.isDirectory()) throw new OXException(OXErrorMessage.FILE_NOT_SELECTED);
-    int copied = 0; 
+    int copied = 0;
     FileOutputStream os = null;
     try {
       os = new FileOutputStream(file);
@@ -254,7 +255,7 @@ public final class FileHandler {
     LOGGER.debug("Starts toPackageData {}/{}", model, filename);
     InputStream stream = item.getInputStream();
 
-    File dir = getTempUploadDirectory();   
+    File dir = getTempUploadDirectory();
     LOGGER.debug("Temp directory: {}", dir.getAbsolutePath());
     if (!dir.exists()) {
       dir.mkdirs();
@@ -263,6 +264,7 @@ public final class FileHandler {
     File file = new File(dir, filename);
     LOGGER.debug("Temp file: {}", file.getAbsolutePath());
     int copied = copyTo(stream, file);
+    //TODO Add session
     PackageData pack = PackageData.newPackageData(model, file);
     //TODO This property is used to create the package data (change this logic).
     pack.setProperty("contenttype", item.getContentType());
@@ -290,7 +292,7 @@ public final class FileHandler {
       config.setModelsDirectory(new File(GlobalSettings.getAppData(), "model"));
     }
   }
-  
+
   /**
    * Gets the filename.
    *

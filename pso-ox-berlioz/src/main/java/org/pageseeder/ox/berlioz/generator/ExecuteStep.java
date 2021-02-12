@@ -117,6 +117,7 @@ public class ExecuteStep implements ContentGenerator {
     // execute the step
     if (!stepDef.async()) {
       //Synchronous
+      //TODO HTTPS Session
       Result result = stepDef.exec(data);
       stepDef.toXML(result, xml);
     } else {

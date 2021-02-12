@@ -57,7 +57,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
    * Indicate if this step should be executed as asynchronous. The default false.
    */
   private final boolean _async;
-  
+
   /**
    * If the output of the step is viewable.
    */
@@ -69,7 +69,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
   private final boolean _failOnError;
 
   /**
-   * Send of parameter when the pipeline is synchronous. 
+   * Send of parameter when the pipeline is synchronous.
    */
   private final boolean _downloadable;
 
@@ -81,18 +81,18 @@ public final class StepDefinition implements XMLWritable, Serializable {
 
   /** If there are any other attributes that are not expected. */
   private final Map<String, String> _extraAttributes;
-  
+
   /** If there are any other elements that are not expected. */
   private final List<GenericInfo> _extraElements;
-  
+
   /** Position of step in pipeline lazily initialized */
   private transient int _position = -1;
-  
+
   /**
    * Creates a new abstract step.
-   * 
+   *
    * <p>This constructor is <i>protected</i> so that only implementations use it.
-   * 
+   *
    * <p>To create step instance, use the {@link Builder}.
    *
    * @param model         The model this step is part of
@@ -119,9 +119,9 @@ public final class StepDefinition implements XMLWritable, Serializable {
 
   /**
    * Creates a new abstract step.
-   * 
+   *
    * <p>This constructor is <i>protected</i> so that only implementations use it.
-   * 
+   *
    * <p>To create step instance, use the {@link Builder}.
    *
    * @param model        The model this step is part of
@@ -140,7 +140,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
    * @throws IllegalArgumentException If the ID is not valid.
    */
   private StepDefinition(Model model, Pipeline pipeline, String id, String name, Map<String, String> parameters, String output,
-                         boolean async, boolean viewable, boolean downloadable, boolean failOnError, Step step, 
+                         boolean async, boolean viewable, boolean downloadable, boolean failOnError, Step step,
                          Map<String, String> extraAttributes, List<GenericInfo> extraElements, CallbackStep callbackStep) {
     if (model == null) { throw new NullPointerException("model is null."); }
     if (pipeline == null) { throw new NullPointerException("pipeline is null."); }
@@ -189,7 +189,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
   public final Pipeline pipeline() {
     return this._pipeline;
   }
-  
+
   /**
    * @return is async.
    */
@@ -210,7 +210,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
   public final boolean viewable() {
     return this._viewable;
   }
-  
+
   /**
    * @return is downloadable.
    */
@@ -218,7 +218,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
     return this._downloadable;
   }
 
-  
+
   /**
    * @return The previous step if any
    */
@@ -254,6 +254,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
    * @return The result of this set
    */
   public Result exec(PackageData data) {
+    //TODO Maybe it will need to receive the session in order to allow the steps to get user logged
     Result result = null;
     try {
       // TODO replace tokens in output and parameters
@@ -287,7 +288,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
 
   /**
    * Return the percentage of the process.
-   * 
+   *
    * @return the pecerntage in %.
    */
   public int percentage () {
@@ -297,7 +298,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
     }
     return percentage;
   }
-  
+
   /**
    * @return current Step
    */
@@ -329,19 +330,19 @@ public final class StepDefinition implements XMLWritable, Serializable {
     xml.attribute("viewable", String.valueOf(this.viewable()));
 
     xml.attribute("fail-on-error", String.valueOf(this.failOnError()));
-  
-    xml.attribute("downloadable", String.valueOf(this.downloadable()));     
-       
+
+    xml.attribute("downloadable", String.valueOf(this.downloadable()));
+
     if (this._step != null) {
       xml.attribute("class", this._step.getClass().getName());
-    }   
+    }
 
     if (this._extraAttributes != null) {
-      for (Entry<String, String> extraAttribute: this._extraAttributes.entrySet()) {        
+      for (Entry<String, String> extraAttribute: this._extraAttributes.entrySet()) {
         xml.attribute(extraAttribute.getKey(), extraAttribute.getValue());
       }
     }
-    
+
     if (this._callbackStep != null) {
       xml.attribute("callback", this._callbackStep.getClass().getName());
     }
@@ -364,14 +365,14 @@ public final class StepDefinition implements XMLWritable, Serializable {
         xml.closeElement();// parameter
       }
     }
-    
+
     if (this._extraElements != null) {
       for (GenericInfo element : this._extraElements) {
         element.toXML(xml);
       }
     }
-    
-    
+
+
     if (result != null) {
       result.toXML(xml);
     }
@@ -453,15 +454,15 @@ public final class StepDefinition implements XMLWritable, Serializable {
     private boolean viewable = false;
     private boolean downloadable = false;
     private boolean failOnError = true;
-    
+
     private Map<String, String> parameters = new HashMap<String, String>();
 
     /** If there are any other attributes that are not expected. */
     private Map<String, String> extraAttributes = new HashMap<>();
-    
+
     /** extra element inside the step definition. */
     private List<GenericInfo> extraElements = new ArrayList<>();
-    
+
     /** TODO it is not in use any more. */
     private String output = null;
 
@@ -548,7 +549,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
      this.viewable = viewable;
      return this;
    }
-   
+
    /**
    *
    * @param downloadable the downloadable
@@ -558,7 +559,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
     this.downloadable = downloadable;
     return this;
    }
-    
+
     /**
      * @param name the name of parameter
      * @param value the value of parameter
@@ -584,7 +585,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
       this.extraAttributes.put(name, value==null ? "" : value);
       return this;
     }
-    
+
     /**
      * Adds the extra attributes.
      *
@@ -595,7 +596,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
       if (extraElement != null) this.extraElements.add(extraElement);
       return this;
     }
-    
+
     /**
      * @param output the output to set
      * return the {@link Builder}

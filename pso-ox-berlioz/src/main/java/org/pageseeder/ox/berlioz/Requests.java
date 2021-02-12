@@ -41,6 +41,7 @@ public final class Requests {
    */
   public static PackageData getPackageData(ContentRequest req, XMLWriter xml) throws IOException {
     String id = req.getParameter("id");
+    //TODO add user Logged
     PackageData data = PackageData.getPackageData(id);
     if (data == null) {
       Errors.invalidParameter(req, xml, "id");
