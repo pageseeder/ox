@@ -63,7 +63,7 @@ public class ExtraResultInfo implements XMLWritable {
 
   @Override
   public void toXML(XMLWriter xml) throws IOException {
-    xml.openElement("infos");
+    xml.openElement("extra");
     if (this.extraInformation != null) {
       for (Map.Entry<String, Map<String, String>> infos: this.extraInformation.entrySet()) {
         String infoName = infos.getKey();
@@ -77,6 +77,6 @@ public class ExtraResultInfo implements XMLWritable {
     if (!StringUtils.isBlank(this.extraXML)) {
       xml.writeXML(this.extraXML);
     }
-    xml.closeElement();//info
+    xml.closeElement();//extra
   }
 }

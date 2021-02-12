@@ -2,6 +2,7 @@ group = 'org.pageseeder.ox'
 
 ext {
   globalVersion = file('version.txt').text
+  simpleVersion = '2021.2-5'
 }
 
 subprojects {

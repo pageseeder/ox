@@ -68,8 +68,9 @@ class StepJobProcessor implements Runnable {
     //Change the status from stopped to processing.
     job.started();
     LOGGER.debug("processing the step {}", step.name());
-    
+
     // execute the step
+    //TODO HTTPSession
     Result result = step.exec(data);
 
     LOGGER.debug("result {}", result.status());
@@ -83,6 +84,6 @@ class StepJobProcessor implements Runnable {
       //Set to failed
       job.failed(result);
       break;
-    }    
+    }
   }
 }
