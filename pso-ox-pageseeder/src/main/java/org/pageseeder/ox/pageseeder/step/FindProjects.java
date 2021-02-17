@@ -1,7 +1,7 @@
 /* Copyright (c) 2021 Allette Systems pty. ltd. */
 package org.pageseeder.ox.pageseeder.step;
 
-import net.pageseeder.app.simple.pageseeder.model.ProjectsFindParameters;
+import net.pageseeder.app.simple.pageseeder.model.ProjectsFindParameter;
 import net.pageseeder.app.simple.pageseeder.service.GroupService;
 import net.pageseeder.app.simple.vault.PSOAuthConfigManager;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
@@ -52,7 +52,7 @@ public class FindProjects implements Step {
     Integer pageSize = StepUtils.getParameterInt(data, info, "pageSize", 1000);
 
     //Create find projects parameters
-    ProjectsFindParameters parameters = new ProjectsFindParameters(archived, forParameter, namePrefix, titlePrefix, page, pageSize);
+    ProjectsFindParameter parameters = new ProjectsFindParameter(archived, forParameter, namePrefix, titlePrefix, page, pageSize);
 
     DefaultResult result = new DefaultResult(model, data, info, null);
 
