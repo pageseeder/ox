@@ -71,7 +71,7 @@ public final class ListFiles implements Step {
           for (File inputFile:files) {
             writer.openElement("file");
             writer.attribute("path", inputFile.getAbsolutePath());
-            writer.attribute("sort-path", data.getPath(inputFile));
+            writer.attribute("short-path", data.getPath(inputFile));
             writer.closeElement();//file
           }
 
