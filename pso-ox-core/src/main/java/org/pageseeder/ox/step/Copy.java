@@ -15,6 +15,7 @@ import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.tool.InvalidResult;
 import org.pageseeder.ox.tool.ResultBase;
 import org.pageseeder.ox.util.FileUtils;
+import org.pageseeder.ox.util.StepUtils;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,18 +52,20 @@ public class Copy implements Step {
   public Result process(Model model, PackageData data, StepInfo info) {
 
     // input file
-    String source = info.getParameter("input", info.input());
-    
+    String source = StepUtils.applyDynamicParameterLogic(data, info, info.getParameter("input", info.input()));
+
     String destination = info.getParameter("output") != null
         ? info.getParameter("output")
         : (info.input().equals(info.output()) ? (info.output() + ".copy") : info.output());
-    
+
+    destination = StepUtils.applyDynamicParameterLogic(data, info, destination);
+
     File sourceFile = data.getFile(source);
-    
+
     if (sourceFile == null || !sourceFile.exists()) {
       sourceFile = model.getFile(source);
     }
-    
+
     File destinationFile = data.getFile(destination);
 
     // if the source file (directory) doesn't exist
@@ -83,15 +86,15 @@ public class Copy implements Step {
    * The Class CopyResult.
    */
   private static class CopyResult extends ResultBase implements Result, Downloadable {
-    
+
     /** The input. */
     private final String _input;
-    
+
     /** The output. */
     private final String _output;
 
     private final File _outputFile;
-    
+
     /**
      * Instantiates a new copy result.
      *
