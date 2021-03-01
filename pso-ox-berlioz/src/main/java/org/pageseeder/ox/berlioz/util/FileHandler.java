@@ -53,11 +53,9 @@ public final class FileHandler {
    * @param packs the packs
    * @return the list
    */
-  public static List<PipelineJob> toPipelineJobs(String modelName, List<PackageData> packs) {
+  public static List<PipelineJob> toPipelineJobs(List<PackageData> packs) {
     ensureConfigured();
     List<PipelineJob> jobs = new ArrayList<PipelineJob>();
-    Model model = new Model(modelName);
-    LOGGER.debug("Model {} ", model.name());
     long slowSize = GlobalSettings.get("ox2.slow-mode.size", -1);
     long maxInactiveTimeAllowed = Long.parseLong(GlobalSettings.get("ox2.max-inactive-time-ms",
         String.valueOf(StepJob.DEFAULT_MAX_INACTIVE_TIME_MS)));
@@ -66,6 +64,9 @@ public final class FileHandler {
       boolean isSlowMode = slowSize > 0 && pack.getOriginal().exists() && (pack.getOriginal().length() - slowSize * 1024 > 0);
       LOGGER.debug("slow mode {}", isSlowMode);
       String p = pack.getParameter("pipeline");
+      String modelName = pack.getParameter("model");
+      Model model = new Model(modelName);
+      LOGGER.debug("Model {} ", modelName);
       if (p != null) {
         Pipeline pipeline = model.getPipeline(p);
         if (pipeline != null) {
@@ -96,7 +97,7 @@ public final class FileHandler {
    * @throws IOException when I/O error occur.
    * @throws OXException the OX exception
    */
-  public static List<PackageData> receive(String model, HttpServletRequest req) throws IOException, OXException {
+  public static List<PackageData> receive(HttpServletRequest req) throws IOException, OXException {
     List<PackageData> packs = new ArrayList<PackageData>();
     // parse the upload request
     UploadProcessor processor = null;
@@ -120,6 +121,13 @@ public final class FileHandler {
     boolean isMultipart = processor.isMultipart();
 
     LOGGER.debug("Is it multipart? {}", isMultipart);
+
+    String model = processor.getParameter("model", req.getParameter("model"));
+    if (StringUtils.isBlank(model)) {
+//      model = Model.getDefault().name();
+      throw new OXException("Model cannot be null or empty");
+    }
+
     if (isMultipart) {
       List<FileItem> items = processor.getFileItemList();
       for (FileItem item : items) {

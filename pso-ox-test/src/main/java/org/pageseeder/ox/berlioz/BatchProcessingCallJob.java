@@ -85,15 +85,15 @@ public class BatchProcessingCallJob {
     
     List<PackageData> packs = mockedPackageList();
     System.out.println(packs.get(0).directory());
-    List<PipelineJob> jobs = FileHandler.toPipelineJobs(this._model, packs);
+    List<PipelineJob> jobs = FileHandler.toPipelineJobs(packs);
     when(response.getWriter()).thenReturn(new PrintWriter(writer));
     when(request.getMethod()).thenReturn("POST");
     when(request.getParameter("model")).thenReturn(this._model);
     when(request.getContentType()).thenReturn("multipart/form-data; boundary=----WebKitFormBoundary8REQtuY1QyQrEfzh");
     
     PowerMockito.mockStatic(FileHandler.class);    
-    PowerMockito.when(FileHandler.receive(this._model, request)).thenReturn(packs);
-    PowerMockito.when(FileHandler.toPipelineJobs(this._model, packs)).thenReturn(jobs);      
+    PowerMockito.when(FileHandler.receive(request)).thenReturn(packs);
+    PowerMockito.when(FileHandler.toPipelineJobs(packs)).thenReturn(jobs);
     
     // Call pipeline
     OXHandleData handler = new OXHandleData();
@@ -122,11 +122,12 @@ public class BatchProcessingCallJob {
 //      pack.setProperty("contenttype", item.getContentType());
       pack.setProperty("type", toType(this._input.getName()));
       pack.setProperty("name", toName(this._input.getName()));
-      pack.saveProperties();
+      pack.setParameter("model", this._model);
+      pack.setParameter("pipeline", this._pipeline);
       for (Entry<String, String> parameter : parameters.entrySet()) {
         pack.setParameter(parameter.getKey(), parameter.getValue());
-        pack.saveProperties();
       }
+      pack.saveProperties();
       packs.add(pack);
     }
     return packs;

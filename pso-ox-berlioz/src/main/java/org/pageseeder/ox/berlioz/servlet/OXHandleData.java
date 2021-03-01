@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileUploadBase;
 import org.pageseeder.berlioz.GlobalSettings;
+import org.pageseeder.berlioz.content.ContentStatus;
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.berlioz.Errors;
 import org.pageseeder.ox.berlioz.OXBerliozErrorMessage;
@@ -77,40 +78,23 @@ public final class OXHandleData extends HttpServlet {
     XMLWriter xml = new XMLWriterImpl(resp.getWriter());
     xml.xmlDecl();
     
-    try {      
-      // get the model
-      String modelName = req.getParameter("model");
-      LOGGER.debug("Model: {}.", modelName);
-      if (modelName == null || modelName.isEmpty()) {
-        // get default model
-        Requests.ensureConfigured();
-        Model model = Model.getDefault();
-        if (model == null) {
-          xml.emptyElement("no-model");
-          resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-          return;
-        }
-        modelName = model.name();
-      }
-      
+    try {
+      LOGGER.debug("Model: {}", req.getParameter("model"));
       String contentType = req.getContentType();
       if (StringUtils.isBlank(contentType) || !contentType.startsWith(FileUploadBase.MULTIPART)) 
         throw new OXException(OXBerliozErrorMessage.REQUEST_IS_NOT_MULTIPART);
       
       // get packdata
-      List<PackageData> packs = null;
-      packs = FileHandler.receive(modelName, req);
+      List<PackageData> packs = FileHandler.receive(req);
       LOGGER.debug("Number os packs found: {}.", packs.size());
-
   
       if (packs == null || packs.isEmpty()) {
         xml.emptyElement("no-package-data");
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         return;
       }
-  
       // get the list of pipelineJob
-      List<PipelineJob> jobs = FileHandler.toPipelineJobs(modelName, packs);
+      List<PipelineJob> jobs = FileHandler.toPipelineJobs(packs);
       LOGGER.debug("Number of pipelines jobs: {}.", jobs.size());
       
       // get the pipeline manager

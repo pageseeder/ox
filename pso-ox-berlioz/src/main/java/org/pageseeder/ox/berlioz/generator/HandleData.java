@@ -35,32 +35,30 @@ public class HandleData implements ContentGenerator {
   public void process(ContentRequest req, XMLWriter xml) throws BerliozException, IOException {
 
     LOGGER.debug("receive package");
-    // get the model
-    Model model = Requests.getModel(req, xml);
-    if (model == null) return;
-    List<PackageData> packs = null;
+
+    LOGGER.debug("Model: {}", req.getParameter("model"));
+
     try {
-      packs = FileHandler.receive(model.name(), toHttpServletRequest(req));
+      List<PackageData> packs = FileHandler.receive(toHttpServletRequest(req));
+
+      // if it's empty packagedata
+      if (packs == null || packs.isEmpty()) {
+        xml.emptyElement("no-package-data");
+        req.setStatus(ContentStatus.BAD_REQUEST);
+        return;
+      }
+
+      // serialize the packages
+      xml.openElement("packages", true);
+      for (PackageData pack : packs) {
+        pack.inspect();
+        pack.toXML(xml);
+      }
+      xml.closeElement();
+
     } catch (OXException ex) {
       Errors.oxExceptionHandler(req, xml, ex);
-      return;
     }
-
-    // if it's empty packagedata
-    if (packs == null || packs.isEmpty()) {
-      xml.emptyElement("no-package-data");
-      req.setStatus(ContentStatus.BAD_REQUEST);
-      return;
-    }
-
-    // serialize the packages
-    xml.openElement("packages", true);
-    for (PackageData pack : packs) {
-      pack.inspect();
-      pack.toXML(xml);
-    }
-    xml.closeElement();
-
   }
 
   private static HttpServletRequest toHttpServletRequest(ContentRequest req) {
