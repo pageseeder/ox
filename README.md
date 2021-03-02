@@ -10,6 +10,60 @@ An XML processing pipeline doing that hard work
 <?xml version="1.0" encoding="utf-8"?>
 <pipelines>
   <pipeline id="xml-validation" name="Validate XML" accepts="application/xml" default="true">
+
+    <!-- 
+      The pipeline can have the fields that need to be displayed in the front the end. 
+      All option can be found here https://ps.pageseeder.com/ps/ui/g/dev-ox/d/207649.html?publicationid=oxv3
+    -->
+    <fields>
+
+      <!-- If it is necessary to have a hidden input field -->
+      <field
+          type="hidden"
+          id="config"
+          name="config"
+          value="custom.properties"
+      />
+      <!-- Text input field -->
+      <field
+          type="text"
+          id="page-offset"
+          name="page-offset"
+          label="Offset"
+          value="0"
+          hint="The pages will increase with a value defined."
+      />
+
+      <!-- Switch input field [false or true]  -->
+      <field
+          type="switch"
+          id="bookmarks"
+          name="bookmarks"
+          label="Bookmarks"
+          active="false"
+          hint="If active the system will try to create the pages according the bookmarks (SLOWER)."
+      />
+
+
+      <!-- Skip Steps -->
+      <field
+          type="string"
+          label="Skip Steps"
+          class="body-1"
+      />
+      <field
+          type="skip"
+          id="skip-first-two-steps"
+          label="Skipping first two steps"
+          values="step-id-1,step-id-2"
+      />
+      <field
+          type="skip"
+          id="s3-upload"
+          label="S3 Upload"
+          values="prepare-s3-upload,upload-pdfs-to-s3"
+      />
+    </fields>
     <step id="schematron-validation-asynchronous" async="true" name="XML Validation Asynchronous" class="org.pageseeder.ox.schematron.step.SchematronValidation">
       <parameter name="schema" value="schema.sch"/>
       <!-- Glob pattern for input -->
@@ -69,7 +123,7 @@ An XML processing pipeline doing that hard work
     </properties>
     
     <!-- In case the step wants to return an extra information. This is how it can be done -->
-    <infos name="PDF Test">
+    <infos name="This PDF Metadata">
       <!-- 
         The headers will be used as table headers.
         The text is what will be displayed in the front end.
@@ -80,9 +134,10 @@ An XML processing pipeline doing that hard work
         <!--
         The default text when the value is name and value are Name and Value.
         -->
-        <header text="Page" value="name"/>
+        <header text="Page"        value="name"/>
         <header text="Description" value="value"/>
-        <header text="Source" value="source"/>
+       <!--<header text="Type"     value="type"/>-->
+        <header text="Source"      value="source"/>
       </headers>
       <!-- 
         Element info needs at least three mandatory attributes:
@@ -146,12 +201,14 @@ The request and step parameters can have its value connected to other parameter.
 
 Example:
 
-There is parameter called "ps-group-name" with value "test".
+There is a parameter called "ps-group-name" with value "test".
 And there is another "input"="/{ps-group-name}/documents". 
 The final value for "input" will be "/test/documents".
 This logic is in StepUtils class.
 
-**Note: ** Each step needs to be updated to use this logic. Till this moment only Transformation is using for input and output.
+**Note: ** Each step needs to be updated to use this logic.
+Steps that are using it
+- Transformation
 
 ## Clean UP Files
 
