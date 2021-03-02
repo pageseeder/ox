@@ -15,6 +15,7 @@ import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.tool.DefaultResult;
 import org.pageseeder.ox.tool.ExtraResultInfo;
+import org.pageseeder.ox.tool.ExtraResultStringXML;
 import org.pageseeder.ox.util.StepUtils;
 import org.pageseeder.xmlwriter.XML;
 import org.pageseeder.xmlwriter.XMLStringWriter;
@@ -84,7 +85,7 @@ public class FindProjects implements Step {
     }
     writer.closeElement();//projects
 
-    result.setExtraResultInfo(new ExtraResultInfo(new HashMap<>(), writer.toString()));
+    result.addExtraXML(new ExtraResultStringXML(writer.toString()));
 
     LOGGER.debug("End Find Pageseeder Projects or Group");
     return result;
