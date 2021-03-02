@@ -47,40 +47,66 @@ An XML processing pipeline doing that hard work
   <parameter name="page-template" value="resources/custom-template-page.psml"/>
   <parameter name="config" value="resources/custom.properties"/>
   <result name="PDF Conversion" id="Process-ID" model="pdf" status="ok" time="14596" downloadable="false" path="converted" input="/pdf-file.pdf">
-    <!-- It is optional in the step result -->
-    <setup>
+    <!-- 
+      Following is the standard way to return the parameters/properties/infos.
+      These information are optional, but if they are presented, then the front end will show them.       
+    -->       
     
-      <!-- Custom parameters defined in the model.xml for this step (they are just examples)-->
-      <parameters>
-        <parameter name="output" value="converted"/>
-        <parameter name="page-template" value="resources/custom-template-page.psml"/>
-        <parameter name="config" value="resources/custom.properties"/>
-        <parameter name="input" value="/1716-2012.pdf"/>
-      </parameters>
-      
-      <!-- Some properties values that were used to process the file (they are just examples) -->
-      <properties>
-        <property name="bookmarks" value="false"/>
-        <property name="bookmarks.guess.end.page" value="false"/>     
-        <property name="image.creation" value="true"/>
-        <property name="pages" value="1-9"/>
-      </properties>
-    </setup>
-    <!-- It is optional in the step result and is mainly used to return information of the file -->
+    <!-- This is one way to show the steps parameters and/or package data parameters (they are just examples) -->
+    <parameters>
+      <parameter name="output" value="converted"/>
+      <parameter name="page-template" value="resources/custom-template-page.psml"/>
+      <parameter name="config" value="resources/custom.properties"/>
+      <parameter name="input" value="/1716-2012.pdf"/>
+    </parameters>
+    
+    <!-- If the step uses any properties file which are used to process the file (they are just examples) -->
+    <properties>
+      <property name="bookmarks" value="false"/>
+      <property name="bookmarks.guess.end.page" value="false"/>     
+      <property name="image.creation" value="true"/>
+      <property name="pages" value="1-9"/>
+    </properties>
+    
+    <!-- In case the step wants to return an extra information. This is how it can be done -->
     <infos name="PDF Test">
-      <info name="author" value="Standards Word" type="string"/>
-      <info name="bookmarks" value="true" type="string"/>
+      <!-- 
+        The headers will be used as table headers.
+        The text is what will be displayed in the front end.
+        The value will be use to match the information with the attribute name in the element info. 
+        Only the attributes name from info that matches the value attribute text that will be displayed.
+      -->
+      <headers>        
+        <!--
+        The default text when the value is name and value are Name and Value.
+        -->
+        <header text="Page" value="name"/>
+        <header text="Description" value="value"/>
+        <header text="Source" value="source"/>
+      </headers>
+      <!-- 
+        Element info needs at least three mandatory attributes:
+        - name
+        - value
+        - type: has three possible values string, list and map. This will indicate how the attribute value should be
+        displayed in the front end. The default option is string.  
+        
+        It is possible to have extra attributes and if they are specified in the header element, they will also be 
+        displayed. As example we add the source attribute which contains information about how it has been retrieved.        
+      -->
+      <info name="author" value="Standards Word" type="string" source="file metadata"/>
+      <info name="bookmarks" value="true" type="string" source="Application checks if the file has outlines."/>
       <!-- info type list. The value has semicolon (';') separated list-->
-      <info name="bookmarks_missing_destination" value="1.1 DEFINITIONS;1.1.1 Sub title" type="list"/>
-      <info name="bookmarks_valid" value="false" type="string"/>
-      <info name="creation_date" value="" type="string"/>
-      <info name="creator" value="" type="string"/>
+      <info name="bookmarks_missing_destination" value="1.1 DEFINITIONS;1.1.1 Sub title" type="list" source="Application has an logic to find this information."/>
+      <info name="bookmarks_valid" value="false" type="string" source="Application has a logic to find this information."/>
+      <info name="creation_date" value="" type="string" source="file metadata"/>
+      <info name="creator" value="" type="string" source="file metadata"/>
       <!-- 
       Info type map. The value contains a map, each item of this map is separated by semicolon (';'), the key and the value is separated by two points (':') and value also can contains a comma separated list.
       The label 'I' is in the page 1, 2 and 3.
       The label 'II' is in the page 4, 5 and 6.
       -->
-      <info name="page_labels_repeated_map" value="I:1,2,3;II:4,5,6" type="map"/>
+      <info name="page_labels_repeated_map" value="I:1,2,3;II:4,5,6" type="map" source="Application has a logic to find this information."/>
     </infos>
   </result>
 </step>
