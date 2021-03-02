@@ -12,47 +12,47 @@ import java.util.Map;
  * @author vku
  * @since 02 March 2021
  */
-public class Info implements XMLWritable {
+public abstract class Info implements XMLWritable {
+
+
 
   private String name;
-  private String value;
-  private String type;
+  private InfoType type;
   private Map<String, String> extraAttributes;
 
   /**
    * Instantiates a new Info parameter
    *
    * @param name
-   * @param value
    * @param type has three possible values string, list and map. This will indicate how the attribute value should be
    *             displayed in the front end. The default option is string.
    * @param extraAttributes extra attributes that can be shown if specified in header element
    */
-  public Info(String name, String value, String type, Map<String, String> extraAttributes) {
+  public Info(String name, InfoType type, Map<String, String> extraAttributes) {
     this.name = name;
-    this.value = value;
     this.type = type;
     this.extraAttributes = extraAttributes;
   }
+
+  public abstract String getValue();
 
   /**
    * Instantiates a new Info parameter
    *
    * @param name
-   * @param value
    * @param type has three possible values string, list and map. This will indicate how the attribute value should be
    *         displayed in the front end. The default option is string.
    */
-  public Info(String name, String value, String type) {
-    this(name, value, type, null);
+  public Info(String name, InfoType type) {
+    this(name, type, null);
   }
 
   @Override
   public void toXML(XMLWriter xml) throws IOException {
     xml.openElement("info");
     xml.attribute("name", this.name);
-    xml.attribute("value", this.value);
-    xml.attribute("type", this.type);
+    xml.attribute("value", this.getValue());
+    xml.attribute("type", this.type.name());
 
     if (this.extraAttributes != null) {
       for (Map.Entry<String, String> attribute : this.extraAttributes.entrySet()) {
