@@ -13,6 +13,7 @@ import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.tool.DefaultResult;
+import org.pageseeder.ox.tool.ExtraResultStringXML;
 import org.pageseeder.ox.util.StepUtils;
 import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.xmlwriter.XML;
@@ -46,6 +47,7 @@ public class UnzipLoadingZoneContent implements Step {
       //Unzip
       UnzipParameter unzipParameter = getUnzipParameters(data, info);
       service.unzip(item.getMember(), group, unzipParameter, item.getToken(), PSOAuthConfigManager.get().getConfig(), writer);
+      result.addExtraXML(new ExtraResultStringXML(writer.toString()));
     } catch (Exception e){
       LOGGER.error("Exception: {}", e);
       result.setError(e);
