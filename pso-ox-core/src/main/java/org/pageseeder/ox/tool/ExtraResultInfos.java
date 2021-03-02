@@ -58,7 +58,7 @@ public class ExtraResultInfos implements XMLWritable {
     xml.closeElement(); //headers
 
     for (Info info : infos) {
-      infos.toXML();
+      info.toXML(xml);
     }
     xml.closeElement(); //infos
   }
