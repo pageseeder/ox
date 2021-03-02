@@ -5,6 +5,7 @@ import org.pageseeder.xmlwriter.XMLWriter;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Extra information for a step
@@ -14,11 +15,9 @@ import java.util.Map;
  */
 public abstract class Info implements XMLWritable {
 
-
-
-  private String name;
-  private InfoType type;
-  private Map<String, String> extraAttributes;
+  private final String _name;
+  private final InfoType _type;
+  private final Map<String, String> _extraAttributes;
 
   /**
    * Instantiates a new Info parameter
@@ -29,9 +28,23 @@ public abstract class Info implements XMLWritable {
    * @param extraAttributes extra attributes that can be shown if specified in header element
    */
   public Info(String name, InfoType type, Map<String, String> extraAttributes) {
-    this.name = name;
-    this.type = type;
-    this.extraAttributes = extraAttributes;
+    Objects.requireNonNull(name, "Info name cannot be null");
+    Objects.requireNonNull(type, "Info type cannot be null");
+    this._name = name;
+    this._type = type;
+    this._extraAttributes = extraAttributes;
+  }
+
+  public String getName() {
+    return _name;
+  }
+
+  public InfoType getType() {
+    return _type;
+  }
+
+  public Map<String, String> getExtraAttributes() {
+    return _extraAttributes;
   }
 
   public abstract String getValue();
@@ -50,12 +63,12 @@ public abstract class Info implements XMLWritable {
   @Override
   public void toXML(XMLWriter xml) throws IOException {
     xml.openElement("info");
-    xml.attribute("name", this.name);
+    xml.attribute("name", this._name);
     xml.attribute("value", this.getValue());
-    xml.attribute("type", this.type.name());
+    xml.attribute("type", this._type.name());
 
-    if (this.extraAttributes != null) {
-      for (Map.Entry<String, String> attribute : this.extraAttributes.entrySet()) {
+    if (this._extraAttributes != null) {
+      for (Map.Entry<String, String> attribute : this._extraAttributes.entrySet()) {
         xml.attribute(attribute.getKey(), attribute.getValue());
       }
     }

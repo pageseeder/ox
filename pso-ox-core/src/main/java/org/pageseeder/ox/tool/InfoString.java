@@ -1,6 +1,7 @@
 package org.pageseeder.ox.tool;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author ccabral
@@ -8,15 +9,16 @@ import java.util.Map;
  */
 public class InfoString extends Info {
 
-  private String value;
+  private final String _value;
 
   public InfoString(String name,  Map<String, String> extraAttributes, String value) {
     super(name, InfoType.string, extraAttributes);
-    this.value = value;
+    Objects.requireNonNull(value);
+    this._value = value;
   }
 
   @Override
   public String getValue() {
-    return this.value;
+    return this._value;
   }
 }
