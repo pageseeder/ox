@@ -194,6 +194,7 @@ public class DefaultResult extends ResultBase implements Result {
    * @return the file
    */
   public String input() {
+    //The input is get in this way because it may be glob pattern to multiple inputs.
     return this._info.getParameter("input", this._info.input());
   }
 
