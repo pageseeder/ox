@@ -3,6 +3,9 @@ package org.pageseeder.ox.tool;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.eclipse.jdt.annotation.NonNull;
@@ -12,6 +15,7 @@ import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
+import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
 
 /**
@@ -28,8 +32,8 @@ public class DefaultResult extends ResultBase implements Result {
   /** The downloadable output, it can only be a zip or a file or null */
   private final File _output;
 
-  /** Extra Information for this result. */
-  private ExtraResultInfo extraResultInfo;
+  /** Extra XMLs for this result. */
+  private List<XMLWritable> extraXMLs = new ArrayList<>();
 
   /**
    * Instantiates a new Default Base.
@@ -88,7 +92,7 @@ public class DefaultResult extends ResultBase implements Result {
     writeParameters(xml);
 
     //Extra Info
-    writeExtraInfo(xml);
+    writeExtraXML(xml);
 
     // The details of any error
     writeError(xml);
@@ -113,16 +117,15 @@ public class DefaultResult extends ResultBase implements Result {
     xml.closeElement();//parameters
   }
 
-
   /**
-   * Parameters XML.
+   * Writes extra xml.
    *
    * @param xml the xml
    * @throws IOException Signals that an I/O exception has occurred.
    */
-  protected void writeExtraInfo(XMLWriter xml) throws IOException {
-    if (this.getExtraResultInfo() != null) {
-      this.getExtraResultInfo().toXML(xml);
+  protected void writeExtraXML(XMLWriter xml) throws IOException {
+    for (XMLWritable extraXML:this.extraXMLs) {
+      extraXML.toXML(xml);
     }
   }
 
@@ -209,16 +212,16 @@ public class DefaultResult extends ResultBase implements Result {
    *
    * @return the extra result info
    */
-  public ExtraResultInfo getExtraResultInfo() {
-    return extraResultInfo;
+  public List<XMLWritable> getExtraXMLs() {
+    return Collections.unmodifiableList(this.extraXMLs);
   }
 
   /**
-   * Sets extra result info.
+   * add Extra xml to the result xml.
    *
-   * @param extraResultInfo the extra result info
+   * @param extraXML the extra result info
    */
-  public void setExtraResultInfo(ExtraResultInfo extraResultInfo) {
-    this.extraResultInfo = extraResultInfo;
+  public void addExtraXML(XMLWritable extraXML) {
+    this.extraXMLs.add(extraXML);
   }
 }

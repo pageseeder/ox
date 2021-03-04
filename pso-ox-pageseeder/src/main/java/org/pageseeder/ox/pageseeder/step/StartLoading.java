@@ -13,6 +13,7 @@ import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.tool.DefaultResult;
+import org.pageseeder.ox.tool.ExtraResultStringXML;
 import org.pageseeder.ox.util.StepUtils;
 import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.xmlwriter.XML;
@@ -45,7 +46,7 @@ public class StartLoading implements Step {
       LOGGER.debug("Start Loading");
       StartLoadingParameter startLoadingParameters = getStartLoadingParameters(data, info);
       service.startLoading(item.getMember(), group, startLoadingParameters, item.getToken(), PSOAuthConfigManager.get().getConfig(), writer);
-
+      result.addExtraXML(new ExtraResultStringXML(writer.toString()));
     } catch (MalformedURLException e) {
       LOGGER.warn("String could not be transformed into URL");
       result.setError(e);
