@@ -22,6 +22,12 @@ public class InfoMap extends Info {
     this._mapValues = valuesMap;
   }
 
+  public InfoMap(String name, Map<String, List<String>> valuesMap) {
+    super(name, InfoType.map);
+    Objects.requireNonNull(valuesMap);
+    this._mapValues = valuesMap;
+  }
+
   @Override
   public String getValue() {
     return this._mapValues.entrySet()

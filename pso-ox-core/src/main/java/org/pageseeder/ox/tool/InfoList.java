@@ -20,6 +20,12 @@ public class InfoList extends Info {
     this._values = values;
   }
 
+  public InfoList(String name, List<String> values) {
+    super(name, InfoType.list);
+    Objects.requireNonNull(values);
+    this._values = values;
+  }
+
   @Override
   public String getValue() {
     return String.join(";", this._values);

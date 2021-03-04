@@ -35,6 +35,17 @@ public abstract class Info implements XMLWritable {
     this._extraAttributes = extraAttributes;
   }
 
+  /**
+   * Instantiates a new Info parameter
+   *
+   * @param name
+   * @param type has three possible values string, list and map. This will indicate how the attribute value should be
+   *         displayed in the front end. The default option is string.
+   */
+  public Info(String name, InfoType type) {
+    this(name, type, null);
+  }
+
   public String getName() {
     return _name;
   }
@@ -49,16 +60,7 @@ public abstract class Info implements XMLWritable {
 
   public abstract String getValue();
 
-  /**
-   * Instantiates a new Info parameter
-   *
-   * @param name
-   * @param type has three possible values string, list and map. This will indicate how the attribute value should be
-   *         displayed in the front end. The default option is string.
-   */
-  public Info(String name, InfoType type) {
-    this(name, type, null);
-  }
+
 
   @Override
   public void toXML(XMLWriter xml) throws IOException {

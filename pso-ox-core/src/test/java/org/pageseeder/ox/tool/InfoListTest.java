@@ -6,7 +6,10 @@ import org.pageseeder.xmlwriter.XML;
 import org.pageseeder.xmlwriter.XMLStringWriter;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -43,6 +46,29 @@ public class InfoListTest {
   }
 
   @Test
+  public void testWithoutAttributes_Valid() {
+    List<String> infos = new ArrayList<>();
+
+    infos.add("1.1 DEFINITIONS");
+    infos.add("1.1.1 Sub title");
+
+    InfoList infoList = new InfoList("Info List", infos);
+    assertEquals(InfoType.list, infoList.getType());
+    assertEquals("Info List", infoList.getName());
+    assertEquals("1.1 DEFINITIONS;1.1.1 Sub title", infoList.getValue());
+    assertEquals(null, infoList.getExtraAttributes());
+
+    XMLStringWriter writer = new XMLStringWriter(XML.NamespaceAware.No);
+    try {
+      infoList.toXML(writer);
+      assertEquals("<info name=\"Info List\" value=\"1.1 DEFINITIONS;1.1.1 Sub title\" type=\"list\"/>",
+          writer.toString());
+    } catch (IOException ex) {
+      Assert.fail(ex.getMessage());
+    }
+  }
+
+  @Test
   public void testNullAttributes_Valid() {
     List<String> infos = new ArrayList<>();
 
@@ -53,6 +79,7 @@ public class InfoListTest {
     assertEquals(InfoType.list, infoList.getType());
     assertEquals("Info List", infoList.getName());
     assertEquals("1.1 DEFINITIONS;1.1.1 Sub title", infoList.getValue());
+    assertEquals(null, infoList.getExtraAttributes());
 
     XMLStringWriter writer = new XMLStringWriter(XML.NamespaceAware.No);
     try {
@@ -73,7 +100,7 @@ public class InfoListTest {
   }
 
   @Test (expected = NullPointerException.class)
-  public void testNameNull_Exception() {
+  public void testNullName_Exception() {
     List<String> infos = new ArrayList<>();
 
     infos.add("1.1 DEFINITIONS");

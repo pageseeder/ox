@@ -17,6 +17,12 @@ public class InfoString extends Info {
     this._value = value;
   }
 
+  public InfoString(String name,  String value) {
+    super(name, InfoType.string);
+    Objects.requireNonNull(value);
+    this._value = value;
+  }
+
   @Override
   public String getValue() {
     return this._value;

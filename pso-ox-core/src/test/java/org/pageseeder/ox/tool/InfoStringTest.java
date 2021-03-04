@@ -26,7 +26,7 @@ public class InfoStringTest {
     Map<String, String> extraAttr = new HashMap<>();
     extraAttr.put("source", "Attribute Source.");
 
-    InfoString infoString = new InfoString("Info String", extraAttr, value);
+    Info infoString = new InfoString("Info String", extraAttr, value);
     assertEquals(InfoType.string, infoString.getType());
     assertEquals("Info String", infoString.getName());
     assertEquals("test", infoString.getValue());
@@ -43,6 +43,26 @@ public class InfoStringTest {
   }
 
   @Test
+  public void testWithoutAttributes_Valid() {
+    String value = "test";
+
+    InfoString infoString = new InfoString("Info String", value);
+    assertEquals(InfoType.string, infoString.getType());
+    assertEquals("Info String", infoString.getName());
+    assertEquals("test", infoString.getValue());
+    assertEquals(null, infoString.getExtraAttributes());
+
+    XMLStringWriter writer = new XMLStringWriter(XML.NamespaceAware.No);
+    try {
+      infoString.toXML(writer);
+      assertEquals("<info name=\"Info String\" value=\"test\" type=\"string\"/>",
+          writer.toString());
+    } catch (IOException ex) {
+      Assert.fail(ex.getMessage());
+    }
+  }
+
+  @Test
   public void testNullAttributes_Valid() {
     String value = "test";
 
@@ -50,6 +70,7 @@ public class InfoStringTest {
     assertEquals(InfoType.string, infoString.getType());
     assertEquals("Info String", infoString.getName());
     assertEquals("test", infoString.getValue());
+    assertEquals(null, infoString.getExtraAttributes());
 
     XMLStringWriter writer = new XMLStringWriter(XML.NamespaceAware.No);
     try {
@@ -70,7 +91,7 @@ public class InfoStringTest {
   }
 
   @Test (expected = NullPointerException.class)
-  public void testNameNull_Exception() {
+  public void testNullName_Exception() {
     String value = "test";
 
     Map<String, String> extraAttr = new HashMap<>();
