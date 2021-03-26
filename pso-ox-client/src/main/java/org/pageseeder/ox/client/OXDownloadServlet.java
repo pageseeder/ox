@@ -3,14 +3,12 @@
  */
 package org.pageseeder.ox.client;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
+import org.pageseeder.berlioz.BerliozException;
+import org.pageseeder.ox.OXConfig;
+import org.pageseeder.ox.util.FileUtils;
+import org.pageseeder.ox.util.StringUtils;
+import org.pageseeder.xmlwriter.XML.NamespaceAware;
+import org.pageseeder.xmlwriter.XMLStringWriter;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -19,13 +17,9 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.pageseeder.berlioz.BerliozException;
-import org.pageseeder.ox.OXConfig;
-import org.pageseeder.ox.util.FileUtils;
-import org.pageseeder.ox.util.StringUtils;
-import org.pageseeder.xmlwriter.XML.NamespaceAware;
-import org.pageseeder.xmlwriter.XMLStringWriter;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *

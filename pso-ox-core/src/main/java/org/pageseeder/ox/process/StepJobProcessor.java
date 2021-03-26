@@ -3,14 +3,14 @@
  */
 package org.pageseeder.ox.process;
 
-import java.io.IOException;
-
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.core.StepDefinition;
 import org.pageseeder.ox.core.StepJob;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * <p>A thread for processing step jobs.</p>

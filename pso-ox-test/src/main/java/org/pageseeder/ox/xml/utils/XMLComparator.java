@@ -3,17 +3,15 @@
  */
 package org.pageseeder.ox.xml.utils;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
-import java.io.File;
-import java.util.List;
-
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.Diff;
 import org.xmlunit.diff.DifferenceEvaluator;
 import org.xmlunit.matchers.CompareMatcher;
+
+import java.io.File;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * The Class XMLComparator.
@@ -33,7 +31,7 @@ public class XMLComparator {
     assertNotNull("Target File cannot be null.", target);
     assertThat(target, CompareMatcher.isIdenticalTo(expected));
   }
-  
+
   /**
    * Compare XML file.
    *
@@ -45,7 +43,7 @@ public class XMLComparator {
     assertNotNull("Target File cannot be null.", target);
     assertThat(target, CompareMatcher.isIdenticalTo(expected));
   }
-  
+
   /**
    * Checks if is similar.
    *

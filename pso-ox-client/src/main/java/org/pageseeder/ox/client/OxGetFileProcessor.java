@@ -3,17 +3,17 @@
  */
 package org.pageseeder.ox.client;
 
+import org.pageseeder.berlioz.BerliozException;
+import org.pageseeder.xmlwriter.XMLWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-
-import org.pageseeder.berlioz.BerliozException;
-import org.pageseeder.xmlwriter.XMLWriter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * It check the job status and when complete it download the file and save it in the destination.

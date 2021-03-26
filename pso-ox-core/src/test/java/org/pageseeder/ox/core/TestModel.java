@@ -3,14 +3,14 @@
  */
 package org.pageseeder.ox.core;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.pageseeder.ox.OXConfig;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 
 public class TestModel {
 
@@ -59,7 +59,7 @@ public class TestModel {
       Assert.assertTrue(ex.getMessage(), true);
     }
   }
- 
+
   @Test
   public void test_duplicated_step() throws Exception {
     try {

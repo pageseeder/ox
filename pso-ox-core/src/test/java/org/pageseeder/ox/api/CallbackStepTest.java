@@ -3,15 +3,12 @@
  */
 package org.pageseeder.ox.api;
 
-import java.lang.reflect.Method;
-
 import org.junit.Assert;
 import org.junit.Test;
-import org.pageseeder.ox.api.CallbackStep;
-import org.pageseeder.ox.api.Result;
-import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.PackageData;
 import org.powermock.reflect.Whitebox;
+
+import java.lang.reflect.Method;
 
 /**
  * @author Ciber Cai

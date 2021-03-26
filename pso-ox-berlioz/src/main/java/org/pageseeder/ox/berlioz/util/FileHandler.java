@@ -3,6 +3,23 @@
  */
 package org.pageseeder.ox.berlioz.util;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadBase.InvalidContentTypeException;
+import org.apache.commons.fileupload.FileUploadBase.SizeLimitExceededException;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+import org.pageseeder.berlioz.GlobalSettings;
+import org.pageseeder.ox.OXConfig;
+import org.pageseeder.ox.OXErrorMessage;
+import org.pageseeder.ox.OXException;
+import org.pageseeder.ox.core.*;
+import org.pageseeder.ox.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,28 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadBase.InvalidContentTypeException;
-import org.apache.commons.fileupload.FileUploadBase.SizeLimitExceededException;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.pageseeder.berlioz.GlobalSettings;
-import org.pageseeder.ox.OXErrorMessage;
-import org.pageseeder.ox.OXConfig;
-import org.pageseeder.ox.OXException;
-import org.pageseeder.ox.core.Model;
-import org.pageseeder.ox.core.PackageData;
-import org.pageseeder.ox.core.Pipeline;
-import org.pageseeder.ox.core.PipelineJob;
-import org.pageseeder.ox.core.StepJob;
-import org.pageseeder.ox.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A file file handler to receive the data from user upload.

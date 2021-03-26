@@ -1,16 +1,6 @@
 /* Copyright (c) 2014 Allette Systems pty. ltd. */
 package org.pageseeder.ox.step;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.pageseeder.ox.OXErrors;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
@@ -24,6 +14,11 @@ import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
 
 /**
  * <p>A step to validate the original input XML file is wellformedness </p>.

@@ -3,17 +3,17 @@
  */
 package org.pageseeder.ox.process;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-
 import org.pageseeder.ox.core.JobStatus;
 import org.pageseeder.ox.core.PipelineJob;
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * A manager class for dealing with {@link PipelineJob}.
@@ -141,6 +141,6 @@ public class PipelineJobManager implements XMLWritable{
    */
   @Override
   public void toXML(XMLWriter xml) throws IOException {
-    this._queue.toXML(xml);    
+    this._queue.toXML(xml);
   }
 }

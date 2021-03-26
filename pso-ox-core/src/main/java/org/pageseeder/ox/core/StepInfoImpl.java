@@ -1,13 +1,13 @@
 /* Copyright (c) 2014 Allette Systems pty. ltd. */
 package org.pageseeder.ox.core;
 
-import java.util.Map;
-
 import org.pageseeder.ox.api.StepInfo;
+
+import java.util.Map;
 
 /**
  * A implementation of StepInfo.
- * 
+ *
  * @author Christophe Lauret
  * @since  8 May 2014
  */

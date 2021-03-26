@@ -3,22 +3,18 @@
  */
 package org.pageseeder.ox.util;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.eclipse.jdt.annotation.NonNull;
 import org.pageseeder.ox.core.PackageData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The Class FileUtils.
@@ -27,10 +23,10 @@ import org.slf4j.LoggerFactory;
  * @since 01/05/2017
  */
 public class FileUtils {
-  
+
   /** The Constant LOGGER. */
   private static final Logger LOGGER = LoggerFactory.getLogger(FileUtils.class);
-    
+
   /**
    * Copy.
    *
@@ -41,12 +37,12 @@ public class FileUtils {
   public static void copy(final File source, final File target) throws IOException {
     if (source == null) throw new NullPointerException("source directory is null.");
     if (target == null) throw new NullPointerException("target directory is null.");
-   
+
     if (source.isFile()) {
       File parentFolder = target.getParentFile();
       if (parentFolder != null) {
         parentFolder.mkdirs();
-      }   
+      }
       Files.copy(source.toPath(), target.toPath(), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
     } else if (source.isDirectory()) {
       Files.walkFileTree(source.toPath(), new SimpleFileVisitor<Path>() {
@@ -95,7 +91,7 @@ public class FileUtils {
       });
     }
   }
-  
+
   /**
    * Returns the file extension.
    *
@@ -112,7 +108,7 @@ public class FileUtils {
     }
     return extension;
   }
-  
+
   /**
    * Returns the MIME type according file extension.
    *
@@ -173,7 +169,7 @@ public class FileUtils {
     }
     return mimeType;
   }
-  
+
   /**
    * Gets the file by extension.
    *
@@ -184,7 +180,7 @@ public class FileUtils {
    */
   public static String getFileByExtension(PackageData data, String fromFolder, String ... extensions){
     if (extensions != null && extensions.length > 0) {
-      File folder = data.getFile(fromFolder);      
+      File folder = data.getFile(fromFolder);
       if (folder.isDirectory()) {
         String currentExtension = "";
         String lowerCaseFileName = "";
@@ -215,7 +211,7 @@ public class FileUtils {
   public static void write(String fileContent, File target) throws IOException {
     write(fileContent, target, "UTF-8");
   }
-  
+
 
   /**
    * write the file content into the target.
@@ -235,9 +231,9 @@ public class FileUtils {
       }
     }
   }
-  
+
   /**
-   * Returns the content of the source file. 
+   * Returns the content of the source file.
    *
    * @param source the source
    * @return the string
@@ -246,9 +242,9 @@ public class FileUtils {
   public static String read(File source) throws IOException {
     return read(source, "UTF-8");
   }
-  
+
   /**
-   * Returns the content of the source file. 
+   * Returns the content of the source file.
    *
    * @param source the source
    * @return the string
@@ -327,7 +323,7 @@ public class FileUtils {
     final String extension = ext.charAt(0) == '.' ? ext.toLowerCase() : '.' + ext.toLowerCase();
     return f -> f.isDirectory() || f.getName().toLowerCase().endsWith(extension);
   }
-  
+
   /**
    * Filter.
    *
@@ -352,7 +348,7 @@ public class FileUtils {
       return isAllowed;
     };
   }
-  
+
   /**
    * Checks if is zip (extension == zip).
    *
@@ -362,7 +358,7 @@ public class FileUtils {
   public static boolean isZip(File candidate) {
     return candidate.getName().toLowerCase().endsWith(".zip");
   }
-  
+
   /**
    * Gets the XML extensions.
    *
@@ -373,10 +369,10 @@ public class FileUtils {
     extensions.add("xml");
     extensions.add("html");
     extensions.add("htm");
-    extensions.add("psml");    
+    extensions.add("psml");
     return extensions;
   }
-  
+
 
   /**
    * Gets the name without extension.

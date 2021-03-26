@@ -3,16 +3,16 @@
  */
 package org.pageseeder.ox.berlioz;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 import org.pageseeder.berlioz.GlobalSettings;
 import org.pageseeder.berlioz.content.ContentRequest;
 import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.xmlwriter.XMLWriter;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * A utility class to ensure that requests are handled uniformly.

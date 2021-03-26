@@ -3,12 +3,12 @@
  */
 package org.pageseeder.ox.inspector;
 
-import java.io.File;
-
 import org.pageseeder.ox.api.PackageInspector;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.util.FileSizeFormat;
 import org.pageseeder.ox.util.ISO8601;
+
+import java.io.File;
 
 /**
  * @author Ciber Cai

@@ -1,9 +1,6 @@
 package org.pageseeder.ox.psml.validation;
 
-import org.pageseeder.ox.core.ResultStatus;
-import org.pageseeder.ox.psml.util.Validators;
 import org.pageseeder.xmlwriter.XMLWriter;
-import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.FileInputStream;

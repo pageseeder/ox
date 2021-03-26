@@ -3,16 +3,11 @@
  */
 package org.pageseeder.ox.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ServiceConfigurationError;
-import java.util.ServiceLoader;
-
 import org.pageseeder.ox.api.PackageInspector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 /**
  * The SPI for {@link PackageInspector}.

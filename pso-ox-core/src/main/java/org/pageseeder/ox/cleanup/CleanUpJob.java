@@ -3,6 +3,11 @@
  */
 package org.pageseeder.ox.cleanup;
 
+import org.pageseeder.ox.process.PipelineJobQueue;
+import org.pageseeder.ox.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -12,41 +17,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.pageseeder.ox.process.PipelineJobQueue;
-import org.pageseeder.ox.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @author Carlos Cabral
  * @since 29 Oct. 2018
  */
 public class CleanUpJob implements Runnable {
-  
+
    /** The logger job. */
    private final Logger LOGGER_JOB = LoggerFactory.getLogger(CleanUpJob.class);
-   
+
    /** Indicates if the thread should stop (true) or not (false). */
-   private AtomicBoolean stop = new AtomicBoolean(false); 
-   
+   private AtomicBoolean stop = new AtomicBoolean(false);
+
    /** how long a file can be inactive in the drive. */
    private final long _maxInactiveTime;
-   
+
    /** The packages root directory. */
    private final File _base;
-   
+
    /** Indicate job status. */
    private volatile CleanUpStatus status;
-   
+
    /** check up Delay in milliseconds. */
    private final long _checkUpDelay;
-   
-   /** 
+
+   /**
     * Store a list of files that must be ignored and not deleted.
     * However if the file is a folder, if the subfiles are not in this list then they will be deleted.
     */
    private final List<File> filesToIgnore = new ArrayList<>();
-   
+
    /**
     * Instantiates a new clean up job.
     *
@@ -58,19 +58,19 @@ public class CleanUpJob implements Runnable {
      super();
      LOGGER_JOB.debug("Max Inactive Time: {}", maxInactiveTime);
      LOGGER_JOB.debug("Base Directory: {}", base);
-     
+
      //Validate inputs
      if (maxInactiveTime < 1) throw new IllegalArgumentException("Max Inactive Time must be positive.");
      if (checkUpDelay < 1) throw new IllegalArgumentException("Delay must be positive.");
      if (base == null || !base.exists() || !base.isDirectory()) throw new IllegalArgumentException("Base Directory is invalid.");
-     
+
      //Set class atttributes
      this._maxInactiveTime = maxInactiveTime;
      this._checkUpDelay = checkUpDelay;
      this._base = base;
      this.setStatus(CleanUpStatus.NOT_STARTED);
    }
-  
+
    /**
     * Add file to be ignored and then they will not be deleted.
     * @param toIgnore
@@ -78,7 +78,7 @@ public class CleanUpJob implements Runnable {
    public void addFileToIgnore(File toIgnore){
      this.filesToIgnore.add(toIgnore);
    }
-   
+
    /**
     * remove file that is supposed to be ignored.
     * @param toIgnore
@@ -86,7 +86,7 @@ public class CleanUpJob implements Runnable {
    public void removeFileToIgnore(File toIgnore) {
      this.filesToIgnore.remove(toIgnore);
    }
-   
+
    /* (non-Javadoc)
     * @see java.lang.Runnable#run()
     */
@@ -95,17 +95,17 @@ public class CleanUpJob implements Runnable {
      try {
        LOGGER_JOB.info("Start clean up JOB at {}", format(LocalDateTime.now()));
        while (!this.getStop().get()) {
-         
+
          LOGGER_JOB.debug("Running another clean up at {}", format(LocalDateTime.now()));
          try {
            this.setStatus(CleanUpStatus.RUNNING);
            this.clean();
          } catch (IOException ex) {
            LOGGER_JOB.error("Catched the following error '{}' while performing the clean up. ", ex.getMessage());
-         }        
+         }
          LOGGER_JOB.debug("Finished another clean up at {}", format(LocalDateTime.now()));
-         
-         //Waiting for next iteraction  
+
+         //Waiting for next iteraction
          this.setStatus(CleanUpStatus.WAITING_NEXT_ITERACTION);
          try {
            Thread.sleep(this.getCheckUpDelay());
@@ -120,7 +120,7 @@ public class CleanUpJob implements Runnable {
        this.setStatus(CleanUpStatus.FAILED);
      }
    }
-   
+
    /**
     * Delete temporary files created by this application which are at least an hour old.
     *
@@ -130,10 +130,10 @@ public class CleanUpJob implements Runnable {
      LOGGER_JOB.trace("Cleaning Starter Folder: {}", this.getBase().getAbsolutePath());
      clean(this.getBase(), 0);
    }
-  
+
    /**
     * Clean.
-    * 
+    *
     * &gt;p&lt;Depth:&gt;/p&lt;
     * &gt;ul&lt;
     *   &gt;li&lt;- depth == 0 means base folder &gt;/li&lt;
@@ -151,36 +151,36 @@ public class CleanUpJob implements Runnable {
      LOGGER_JOB.trace("Current File {} and depth {}", file.getAbsolutePath(), depth);
      if (!this.getStop().get()) {
        if (file == null || !file.exists()) { throw new IllegalArgumentException("The file is null or it doesn't exist."); }
-  
+
        long threshold = System.currentTimeMillis() - this.getMaxInactiveTime();
        boolean isExpired =  file.lastModified() < threshold;
-       
-       if (file.isDirectory()) {         
-         // Depth equal 1 t means package folder which its name is the package id. 
+
+       if (file.isDirectory()) {
+         // Depth equal 1 t means package folder which its name is the package id.
          // If this package is in the job list then should not be removed.
          // If it is not in the package and neither expired, then it should be kept.
-         // If it is upload folder it should go forward and delete inside files if expired 
+         // If it is upload folder it should go forward and delete inside files if expired
          // (Normally upload folder is file that should be ignored).
          final boolean isInJobList = depth == 1 && !StringUtils.isBlank(PipelineJobQueue.getJobId(file.getName()));
          final boolean isUploadFolder = depth == 1 && shouldBeIgnored(file);
          final boolean keepFolder =  (isInJobList) || (depth == 1 && !isInJobList && !isExpired);
-         
+
 
          LOGGER_JOB.trace("Current File {} and is in job list {}", file.getAbsolutePath(), isInJobList);
          LOGGER_JOB.trace("Current File {} and is Expired {}", file.getAbsolutePath(), isExpired);
          LOGGER_JOB.trace("Current File {} and is upload {}", file.getAbsolutePath(), isUploadFolder);
          LOGGER_JOB.trace("Current File {} and keep folder {}", file.getAbsolutePath(), keepFolder);
-         
+
          if (!keepFolder || isUploadFolder) {
            //The orignal last modified date before deleting its children files. because when one is deleted, the parent
            // folder last modified date is updated.
            long originalLastModifiedDate = file.lastModified();
-           
+
            //Go through the files and sub directories
            for (File f : file.listFiles()) {
              clean(f, depth+1);
            }
-           
+
            // If the folder is empyt and it is not the base folder (depth != 0).
            final boolean isBaseFolder = depth == 0;
            final boolean isEmpyt = file.listFiles().length == 0;
@@ -195,12 +195,12 @@ public class CleanUpJob implements Runnable {
        }
      }
    }
-   
+
    /**
     * Delete file if the time allowed to stored in the drive is over.
     *
     * @param toDelete The file to be deleted.
-    * @param lastModifiedDate The 'toDelete' last modified date. 
+    * @param lastModifiedDate The 'toDelete' last modified date.
     */
    private void delete (File toDelete, long lastModifiedDate) {
      long threshold = System.currentTimeMillis() - this._maxInactiveTime;
@@ -212,17 +212,17 @@ public class CleanUpJob implements Runnable {
        }
      }
    }
-  
+
    /**
     * Returns true if this file should be ignored and not deleted. Otherwise true.
-    * 
+    *
     * @param toDelete
     * @return
     */
    private boolean shouldBeIgnored(File toDelete) {
      return this.filesToIgnore.contains(toDelete);
    }
-   
+
    /**
     * Format.
     *
@@ -232,15 +232,15 @@ public class CleanUpJob implements Runnable {
    private String format(LocalDateTime time) {
      return time.truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
    }
-   
+
    /**
     * Stop.
     */
-   public void stop() {      
+   public void stop() {
      this.setStop(true);
      this.setStatus(CleanUpStatus.STOPPING);
    }
-  
+
    /**
     * Gets the status.
     *
@@ -249,7 +249,7 @@ public class CleanUpJob implements Runnable {
    public CleanUpStatus getStatus() {
      return this.status;
    }
-  
+
    /**
     * Sets the status.
     *
@@ -258,7 +258,7 @@ public class CleanUpJob implements Runnable {
    private void setStatus(CleanUpStatus status) {
      this.status = status;
    }
-  
+
    /**
     * Gets the max inactive time.
     *
@@ -267,7 +267,7 @@ public class CleanUpJob implements Runnable {
    public long getMaxInactiveTime() {
      return _maxInactiveTime;
    }
-  
+
    /**
     * Gets the base.
     *
@@ -276,7 +276,7 @@ public class CleanUpJob implements Runnable {
    public File getBase() {
      return _base;
    }
-  
+
    /**
     * Gets the check up delay.
     *
@@ -285,7 +285,7 @@ public class CleanUpJob implements Runnable {
    public long getCheckUpDelay() {
      return _checkUpDelay;
    }
-  
+
    /**
     * Gets the stop.
     *
@@ -294,7 +294,7 @@ public class CleanUpJob implements Runnable {
    public AtomicBoolean getStop() {
      return stop;
    }
-  
+
    /**
     * Sets the stop.
     *

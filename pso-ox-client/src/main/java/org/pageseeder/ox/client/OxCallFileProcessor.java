@@ -3,11 +3,6 @@
  */
 package org.pageseeder.ox.client;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.nio.file.Files;
-
 import org.pageseeder.bastille.security.Obfuscator;
 import org.pageseeder.berlioz.BerliozException;
 import org.pageseeder.berlioz.xml.XMLUtils;
@@ -15,6 +10,11 @@ import org.pageseeder.ox.client.handler.JobIDLoader;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.nio.file.Files;
 
 /**
  * Call the OX server to convert or to transform the source and get the job id of this transformation.

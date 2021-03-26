@@ -3,11 +3,11 @@
  */
 package org.pageseeder.ox.process;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import org.pageseeder.ox.core.JobStatus;
 import org.pageseeder.ox.core.StepJob;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * A job queue to store the jobs.
@@ -34,7 +34,7 @@ public class StepJobQueue {
 
   /** Max number of completed job stored in memory. */
   private final int _maxStoredCompletedJob;
-  
+
   /**
    * the private constructor.
    *
@@ -50,7 +50,7 @@ public class StepJobQueue {
       this._maxStoredCompletedJob = DEFAULT_MAX_STORED_COMPLETED_JOB;
     }
   }
-  
+
   /**
    * @return the instance of ImportProcessor
    */
@@ -67,8 +67,8 @@ public class StepJobQueue {
     }
     return INSTANCE;
   }
-  
-  
+
+
   /**
    * @param job the job
    */

@@ -1,19 +1,6 @@
 /* Copyright (c) 2018 Allette Systems pty. ltd. */
 package org.pageseeder.ox.html.step;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.pageseeder.ox.api.Result;
@@ -35,6 +22,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.tidy.Tidy;
 import org.w3c.tidy.TidyMessage;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * <p>A step to tidy an html.</p>
@@ -64,7 +57,7 @@ public final class TidyHTML implements Step {
    * The resource path to the builtin templates.
    */
   private static final String DEFAULT_TIDY_PROPERTIES = "org/pageseeder/ox/html/builtin/tidy.properties";
-  
+
   /* (non-Javadoc)
    * @see org.pageseeder.ox.api.Step#process(org.pageseeder.ox.core.Model, org.pageseeder.ox.core.PackageData, org.pageseeder.ox.api.StepInfo)
    */
@@ -74,23 +67,23 @@ public final class TidyHTML implements Step {
     try {
       //## Handle input files
       List<File> inputs = getInputFiles(model, data, info);
-      if (inputs.isEmpty()) { 
-        return new InvalidResult(model, data).error(new FileNotFoundException("Cannot find the input file.")); 
+      if (inputs.isEmpty()) {
+        return new InvalidResult(model, data).error(new FileNotFoundException("Cannot find the input file."));
       }
-      
-      //## Handle Output file 
+
+      //## Handle Output file
       File output = getOutputFile(data, info);
       final boolean isOutputAZip =  FileUtils.isZip(output);
       File zipOutput = null;
-      if (isOutputAZip) {      
+      if (isOutputAZip) {
         zipOutput = output;
         //The the output need to be a folder
         output = data.getFile(data.id() + System.nanoTime());
       } else if (inputs.size() > 1 || output.isDirectory()) {
-        //If there is more than one input, than the output must be a zip      
+        //If there is more than one input, than the output must be a zip
         zipOutput = data.getFile(getNewNameBaseOnOther("output.zip", true));
       }
-      
+
       if (output.getName().indexOf(".") > -1) {
         //It is a file, therefore only creates the parent folder if necessary
         output.getParentFile().mkdir();
@@ -98,24 +91,24 @@ public final class TidyHTML implements Step {
         //It is a folder
         output.mkdirs();
       }
-          
+
       // transform the result
       List <TidyFileResultInfo> fileResultInfos = new ArrayList<>();
       File downloadableOuput = zipOutput != null ? zipOutput : output;
       result = new TidyHTMLResult(model, data, info, downloadableOuput, fileResultInfos);
-      
+
       try {
-   
-        Tidy tidy = newTidy(model);   
+
+        Tidy tidy = newTidy(model);
         for(File input:inputs) {
           fileResultInfos.add(processFile(input, output, tidy, data, info));
         }
-        
+
         //If zip output is not null, then zip
         if (zipOutput != null) {
           ZipUtils.zip(output, zipOutput);
         }
-        
+
         ((TidyHTMLResult)result).done();
       } catch (IOException ex) {
         LOGGER.error("Transform configuration exception: {}", ex.getMessage(), ex);
@@ -127,7 +120,7 @@ public final class TidyHTML implements Step {
     }
     return result;
   }
-  
+
   /**
    * Process file.
    *
@@ -145,7 +138,7 @@ public final class TidyHTML implements Step {
     if (output.isDirectory()) {
       finalOutput = new File(output, getNewNameBaseOnOther(input.getName(), false));
     }
-    
+
     //Defining the message listener
     TidyOXMessageListener messageListener = new TidyOXMessageListener();
     tidy.setMessageListener(messageListener);
@@ -157,25 +150,25 @@ public final class TidyHTML implements Step {
       String html = FileUtils.read(input, charset);
       //TODO why we need it
       html = html.replaceAll("<\\?xml(.*?)\\>", "");
-  
+
       //TIDY HTML
       StringWriter buffer = new StringWriter();
-      tidy.parse(new StringReader(html), buffer);      
+      tidy.parse(new StringReader(html), buffer);
       String xhtml = buffer.toString();
       //TODO try to understand it
       // We must remove the XHTML DOCTYPE declaration since W3 has shutdown its servers for XHTML DTDs
       xhtml = xhtml.replaceAll("<\\!DOCTYPE(.*?)\\>\n?", "");
-      
+
       // Save the file
       FileUtils.write(xhtml, finalOutput, charset);
     } catch (IOException ex) {
       LOGGER.error("Failed to trasnform the file {} because of '{}'", input.getAbsolutePath(), ex.getMessage());
       status = ResultStatus.ERROR;
     }
-    
+
     return new TidyFileResultInfo(input, finalOutput, status, messageListener.getMessages());
   }
-  
+
   /**
    * Return a new tidy configuration for the model.
    *
@@ -203,7 +196,7 @@ public final class TidyHTML implements Step {
     if (p != null) {
       tidy.setConfigurationFromProps(p);
     }
-    
+
     return tidy;
   }
 
@@ -225,7 +218,7 @@ public final class TidyHTML implements Step {
     }
     return properties;
   }
-  
+
   /**
    * If the input is a folder or zip, it gets the input files inside the folder or zip.
    *
@@ -236,14 +229,14 @@ public final class TidyHTML implements Step {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   private @NonNull List<File> getInputFiles(Model model, PackageData data, StepInfo info) throws IOException {
-    
+
     //Original inputs
     String inputParemeter = info.getParameter("input", info.input());
     List<File> originalInputs = data.getFiles(inputParemeter);
 
     if (originalInputs == null || originalInputs.isEmpty()) {
       originalInputs = new ArrayList<>();
-      File tempInput = model.getFile(inputParemeter); 
+      File tempInput = model.getFile(inputParemeter);
       if (tempInput != null) originalInputs.add(tempInput);
     }
 
@@ -253,19 +246,19 @@ public final class TidyHTML implements Step {
       extensionParameters = info.getParameter("input-extensions");
     }
     List<String> extensions = StringUtils.isBlank(extensionParameters) ? FileUtils.getXMLExtensions():StringUtils.convertToStringList(extensionParameters);
-        
+
     List<File> finalInputs = new ArrayList<>();
-    
+
     //Handle each input
     for (File input : originalInputs) {
-      input.mkdirs();      
+      input.mkdirs();
       if (input.exists()) {
         //handle zip file
-        final boolean isInputAZip =  FileUtils.isZip(input); 
+        final boolean isInputAZip =  FileUtils.isZip(input);
         if (isInputAZip) {
-          input = unzipFile(input);      
+          input = unzipFile(input);
         }
-  
+
         //Load candidate inputs
         if (input.isDirectory()) {
           FileFilter filter = FileUtils.filter(extensions, true);
@@ -276,8 +269,8 @@ public final class TidyHTML implements Step {
       }
     }
     return finalInputs;
-  } 
-  
+  }
+
   /**
    * Gets the output file.
    *
@@ -297,7 +290,7 @@ public final class TidyHTML implements Step {
     }
     return data.getFile(outputParemeter);
   }
-  
+
   /**
    * Unzip in a folder with the same of the zip.
    *
@@ -312,7 +305,7 @@ public final class TidyHTML implements Step {
     ZipUtils.unzip(file, newInput);
     return newInput;
   }
-  
+
   /**
    * Gets the new name base on other.
    *
@@ -327,7 +320,7 @@ public final class TidyHTML implements Step {
       return otherName.substring(0, lastDotPosition) + addition + otherName.substring(lastDotPosition);
     } else {
       return otherName + addition;
-    } 
+    }
   }
 
   /**
@@ -337,7 +330,7 @@ public final class TidyHTML implements Step {
 
     /** The template. */
     private final boolean _displayOutputResult;
-    
+
     /**
      * Instantiates a new transform result.
      *
@@ -347,12 +340,12 @@ public final class TidyHTML implements Step {
      * @param output the output
      * @param fileResultInfos the file result infos
      */
-    public TidyHTMLResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info, 
+    public TidyHTMLResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info,
         @Nullable File output, @NonNull List<TidyFileResultInfo> fileResultInfos) {
       super(model, data, info, output, fileResultInfos);
       this._displayOutputResult = "true".equals(super.info().getParameter("display-result")) ? true : false;
     }
-    
+
     /**
      * Parameters XML.
      *
@@ -382,7 +375,7 @@ public final class TidyHTML implements Step {
           xml.closeElement();
         }
         xml.closeElement();//messages
-        
+
         xml.closeElement();//parameters
       } catch (IOException io) {
         LOGGER.error("Unable to generate file result info for {}-{}-{}", fileResultInfo.getInput(), fileResultInfo.getOutput(), fileResultInfo.getStatus());

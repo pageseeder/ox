@@ -3,12 +3,12 @@
  */
 package org.pageseeder.ox.tool;
 
-import java.io.IOException;
-
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.xmlwriter.XMLWriter;
+
+import java.io.IOException;
 
 /**
  * A Result to indicate it's invalid.

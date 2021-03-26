@@ -3,13 +3,6 @@
  */
 package org.pageseeder.ox.berlioz.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.pageseeder.ox.core.JobStatus;
 import org.pageseeder.ox.core.PipelineJob;
 import org.pageseeder.ox.process.PipelineJobManager;
@@ -17,6 +10,12 @@ import org.pageseeder.xmlwriter.XMLWriter;
 import org.pageseeder.xmlwriter.XMLWriterImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * <p>A servlet to check the job status.</p>
@@ -31,7 +30,7 @@ import org.slf4j.LoggerFactory;
 public final class OXCheckStatus extends HttpServlet {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(OXCheckStatus.class);
-  
+
   /* UploadServlet.java */
   private static final long serialVersionUID = 6721151562078543731L;
 
@@ -41,7 +40,7 @@ public final class OXCheckStatus extends HttpServlet {
     resp.setContentType("application/xml");
     XMLWriter xml = new XMLWriterImpl(resp.getWriter());
     xml.xmlDecl();
-    
+
     PipelineJobManager manager = new PipelineJobManager();
 
     String id = req.getParameter("id");

@@ -7,17 +7,13 @@
  */
 package org.pageseeder.ox.diffx.util;
 
-import java.io.IOException;
-
-import org.pageseeder.diffx.algorithm.DiffXAlgorithmBase;
-import org.pageseeder.diffx.algorithm.ElementState;
-import org.pageseeder.diffx.algorithm.Matrix;
-import org.pageseeder.diffx.algorithm.MatrixInt;
-import org.pageseeder.diffx.algorithm.MatrixShort;
+import org.pageseeder.diffx.algorithm.*;
 import org.pageseeder.diffx.event.AttributeEvent;
 import org.pageseeder.diffx.event.DiffXEvent;
 import org.pageseeder.diffx.format.DiffXFormatter;
 import org.pageseeder.diffx.sequence.EventSequence;
+
+import java.io.IOException;
 
 /**
  * Performs the diff comparison using the LCS algorithm.

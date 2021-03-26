@@ -3,23 +3,12 @@
  */
 package org.pageseeder.ox.berlioz.servlet;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.fileupload.FileUploadBase;
 import org.pageseeder.berlioz.GlobalSettings;
-import org.pageseeder.berlioz.content.ContentStatus;
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.berlioz.Errors;
 import org.pageseeder.ox.berlioz.OXBerliozErrorMessage;
-import org.pageseeder.ox.berlioz.Requests;
 import org.pageseeder.ox.berlioz.util.FileHandler;
-import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.core.PipelineJob;
 import org.pageseeder.ox.process.PipelineJobManager;
@@ -30,6 +19,13 @@ import org.pageseeder.xmlwriter.XMLWriter;
 import org.pageseeder.xmlwriter.XMLWriterImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * <p>A servlet to process the upload file by OX {@link PipelineJobManager}.</p>
@@ -54,8 +50,8 @@ import org.slf4j.LoggerFactory;
 public final class OXHandleData extends HttpServlet {
   /** Logger */
   private static final Logger LOGGER = LoggerFactory.getLogger(OXHandleData.class);
-  
-  
+
+
   /* UploadServlet.java */
   private static final long serialVersionUID = 6721151562078543731L;
 
@@ -77,17 +73,17 @@ public final class OXHandleData extends HttpServlet {
     resp.setContentType("application/xml");
     XMLWriter xml = new XMLWriterImpl(resp.getWriter());
     xml.xmlDecl();
-    
+
     try {
       LOGGER.debug("Model: {}", req.getParameter("model"));
       String contentType = req.getContentType();
-      if (StringUtils.isBlank(contentType) || !contentType.startsWith(FileUploadBase.MULTIPART)) 
+      if (StringUtils.isBlank(contentType) || !contentType.startsWith(FileUploadBase.MULTIPART))
         throw new OXException(OXBerliozErrorMessage.REQUEST_IS_NOT_MULTIPART);
-      
+
       // get packdata
       List<PackageData> packs = FileHandler.receive(req);
       LOGGER.debug("Number os packs found: {}.", packs.size());
-  
+
       if (packs == null || packs.isEmpty()) {
         xml.emptyElement("no-package-data");
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -96,21 +92,21 @@ public final class OXHandleData extends HttpServlet {
       // get the list of pipelineJob
       List<PipelineJob> jobs = FileHandler.toPipelineJobs(packs);
       LOGGER.debug("Number of pipelines jobs: {}.", jobs.size());
-      
+
       // get the pipeline manager
       PipelineJobManager manager = new PipelineJobManager(
           GlobalSettings.get("ox2.threads.number", StepJobManager.DEAULT_NUMBER_OF_THREAD),
           GlobalSettings.get("ox2.max-stored-completed-job", StepJobQueue.DEFAULT_MAX_STORED_COMPLETED_JOB));
-  
+
       // add the job to que
       xml.openElement("jobs", true);
       for (PipelineJob job : jobs) {
         job.toXML(xml);
         manager.addJob(job);
-        LOGGER.debug("Added Pipeline Job to Manager: {}.", job.getId());      
+        LOGGER.debug("Added Pipeline Job to Manager: {}.", job.getId());
       }
       xml.closeElement();
-  
+
       if (jobs.isEmpty()) {
         xml.emptyElement("no-package-data");
         resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

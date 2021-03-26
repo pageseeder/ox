@@ -3,9 +3,9 @@
  */
 package org.pageseeder.ox.client;
 
-import java.util.Properties;
-
 import org.pageseeder.berlioz.GlobalSettings;
+
+import java.util.Properties;
 
 /**
  * Provide all necessary information for OX Server.

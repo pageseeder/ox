@@ -3,9 +3,6 @@
  */
 package org.pageseeder.ox.berlioz.generator;
 
-import java.io.IOException;
-import java.util.Enumeration;
-
 import org.pageseeder.berlioz.BerliozException;
 import org.pageseeder.berlioz.GlobalSettings;
 import org.pageseeder.berlioz.content.ContentGenerator;
@@ -13,17 +10,16 @@ import org.pageseeder.berlioz.content.ContentRequest;
 import org.pageseeder.berlioz.content.ContentStatus;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.berlioz.Requests;
-import org.pageseeder.ox.core.Model;
-import org.pageseeder.ox.core.PackageData;
-import org.pageseeder.ox.core.Pipeline;
-import org.pageseeder.ox.core.StepDefinition;
-import org.pageseeder.ox.core.StepJob;
+import org.pageseeder.ox.core.*;
 import org.pageseeder.ox.process.StepJobManager;
 import org.pageseeder.ox.process.StepJobQueue;
 import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.Enumeration;
 
 /**
  * A generator to invoke OX Step.

@@ -3,11 +3,11 @@
  */
 package org.pageseeder.ox.core;
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
+
+import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * A simple java object to represent the job job status.

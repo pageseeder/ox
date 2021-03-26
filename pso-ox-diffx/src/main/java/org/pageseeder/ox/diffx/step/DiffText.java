@@ -3,21 +3,6 @@
  */
 package org.pageseeder.ox.diffx.step;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.List;
-
-import javax.xml.transform.Templates;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
 import org.apache.commons.io.FileUtils;
 import org.pageseeder.diffx.algorithm.DiffXAlgorithm;
 import org.pageseeder.diffx.config.DiffXConfig;
@@ -45,6 +30,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.tidy.Tidy;
 
+import javax.xml.transform.Templates;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.*;
+import java.util.List;
+
 
 /**
  * <p>A Text Comparison processing step</p>
@@ -61,7 +55,7 @@ import org.w3c.tidy.Tidy;
  *
  * <h3>How it works</h3>
  * <p>In order to identify what kind of file it is. It will use the extension.</p>
- * <p>However for docx, it needs this file simplified. Then before call this class, this step must be called {@link SimplifyDOCX}. 
+ * <p>However for docx, it needs this file simplified. Then before call this class, this step must be called {@link SimplifyDOCX}.
  * The {@link SimplifyDOCX} will generate the folder simplified, then this folder should be sent instead of the original docx.</p>
  *
  * @author Carlos Cabral
@@ -95,30 +89,30 @@ public class DiffText implements Step {
 
     // Then validate the target
     if (!valid(target)) return new InvalidResult(model, data).error(new IllegalArgumentException("The target is invalid"));
-    
-    
-    
-    
+
+
+
+
     //Getting the content(text)
 
     CheckTextResult result = new CheckTextResult(model, data, sourcePath, targetPath);
     try {
-      
+
       String charset = data.getProperty("charset", "utf-8");
       String sourceText = toText(model, info, source, charset);
       String targetText = toText(model, info, target, charset);
       result.sourceText = sourceText;
       result.targetText = targetText;
       processDiff(result);
-      
+
     } catch (IOException | TransformerException ex) {
       LOGGER.error("DIFF Text error: " + ex.getMessage());
       result.setError(ex);
     }
-    
-    
-    
-    
+
+
+
+
     return result;
   }
 
@@ -146,7 +140,7 @@ public class DiffText implements Step {
     return value == null || value.trim().isEmpty();
   }
 
-  
+
   /**
    * Gets the template.
    *
@@ -170,10 +164,10 @@ public class DiffText implements Step {
     }
     return template;
   }
-  
+
   /**
    * Returns the content as plain text.
-   * 
+   *
    * The docx must be sent simplified (The Simplified Folder).
    *
    * @param model the model
@@ -195,7 +189,7 @@ public class DiffText implements Step {
     }
     return text;
   }
-  
+
   /**
    * Returns the PSML as plain text.
    *
@@ -267,7 +261,7 @@ public class DiffText implements Step {
    */
   private String toDOCXText(Model model, StepInfo info, File simplified) throws IOException, TransformerException {
     LOGGER.debug("Getting text for DOCX.");
-    
+
     //The word file that has the content.
     File documentXML = new File(simplified, "/word/document.xml");
 
@@ -285,11 +279,11 @@ public class DiffText implements Step {
     transformer.transform(new StreamSource(documentXML), new StreamResult(text));
     return text.toString();
   }
-  
-  
-  
+
+
+
   /**
-   * Check the differences between result.sourceText and result.targetText and 
+   * Check the differences between result.sourceText and result.targetText and
    * then update the result.
    *
    * @param result the result
@@ -298,7 +292,7 @@ public class DiffText implements Step {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   private void processDiff(CheckTextResult result) throws IllegalStateException, IOException{
-    
+
     //Start the comparison logic
     TextTokenizer tokenizer = new TokenizerByWord(WhiteSpaceProcessing.IGNORE);
     List<TextEvent> htmlEvents = tokenizer.tokenize(result.sourceText);
@@ -315,7 +309,7 @@ public class DiffText implements Step {
     result.diffXML = diff.toString().replaceAll("<\\?xml(.*?)\\>", "");
     result.setStatus(formatter.hasDiff() ? ResultStatus.ERROR : ResultStatus.OK);
   }
-  
+
 
   /**
    * To sequence.
@@ -331,7 +325,7 @@ public class DiffText implements Step {
     }
     return sequence;
   }
-  
+
   /* **********************************************************************************************
    * INNER CLASSES
    * **********************************************************************************************/
@@ -352,7 +346,7 @@ public class DiffText implements Step {
 
     /** The diff xml. */
     private String diffXML = "";
-    
+
     /**
      * The path to the source file within the package.
      */
@@ -362,7 +356,7 @@ public class DiffText implements Step {
      * The path to the target(main) document file within the package.
      */
     private final String _targetPath;
-    
+
     /**
      * Instantiates a new check text result.
      *
@@ -371,7 +365,7 @@ public class DiffText implements Step {
      * @param sourcePath the source path
      * @param targetPath the target path
      */
-    public CheckTextResult(Model model, PackageData data, String sourcePath, String targetPath) {      
+    public CheckTextResult(Model model, PackageData data, String sourcePath, String targetPath) {
       super(model, data);
       this._targetPath = targetPath;
       this._sourcePath = sourcePath;

@@ -3,8 +3,6 @@
  */
 package org.pageseeder.ox.berlioz.generator;
 
-import java.io.IOException;
-
 import org.pageseeder.berlioz.BerliozException;
 import org.pageseeder.berlioz.content.ContentRequest;
 import org.pageseeder.ox.berlioz.Errors;
@@ -13,6 +11,8 @@ import org.pageseeder.ox.core.Model;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * <p>To list the pipeline from configuration</p>
@@ -40,7 +40,7 @@ public final class ListModelPipelines extends BasicGenerator {
     } else {
       model = Model.getDefault();
     }
-    
+
     if (model != null) {
       model.load();
       model.toXML(xml);

@@ -2,16 +2,6 @@ package org.pageseeder.ox.diffx.tool;
 
 /* Copyright (c) 1999-2014 weborganic systems pty. ltd. */
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
 import org.apache.commons.io.FileUtils;
 import org.pageseeder.ox.OXErrors;
 import org.pageseeder.ox.api.Result;
@@ -26,6 +16,11 @@ import org.w3c.tidy.Tidy;
 import org.w3c.tidy.TidyMessage;
 import org.w3c.tidy.TidyMessage.Level;
 import org.w3c.tidy.TidyMessageListener;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @author Christophe Lauret

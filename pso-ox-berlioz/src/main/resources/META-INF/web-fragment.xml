@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-fragment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xmlns="http://java.sun.com/xml/ns/javaee"
-              xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd" id="WebAppFragment_ID" version="3.0"
-     metadata-complete="true">
-     
+              xmlns="http://java.sun.com/xml/ns/javaee"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd"
+              id="WebAppFragment_ID" version="3.0"
+              metadata-complete="true">
+
   <servlet>
     <servlet-name>Initialiser</servlet-name>
     <servlet-class>org.pageseeder.berlioz.servlet.InitServlet</servlet-class>
@@ -13,8 +13,8 @@
       <param-value>org.pageseeder.ox.berlioz.OXLifecycle</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
-  </servlet>   
-     
+  </servlet>
+
   <!-- OX Download servlet (Returns any file for download) -->
   <servlet>
     <servlet-name>bzox-download</servlet-name>
@@ -28,8 +28,8 @@
       <param-value>/bzox/download/</param-value>
     </init-param>
   </servlet>
- 
- 
+
+
   <!-- OX View servlet (Return the CSS, JS, HTML etc...) -->
   <servlet>
     <servlet-name>bzox-view</servlet-name>
@@ -47,7 +47,7 @@
       <param-value>/bzox/view/</param-value>
     </init-param>
   </servlet>
-  
+
   <servlet>
     <servlet-name>bzox-handle</servlet-name>
     <servlet-class>org.pageseeder.ox.berlioz.servlet.OXHandleData</servlet-class>
@@ -63,12 +63,12 @@
     <servlet-name>bzox-list-jobs</servlet-name>
     <servlet-class>org.pageseeder.ox.berlioz.servlet.OXListJobs</servlet-class>
   </servlet>
-  
+
   <servlet-mapping>
     <servlet-name>bzox-download</servlet-name>
     <url-pattern>/bzox/download/*</url-pattern>
   </servlet-mapping>
-  
+
   <servlet-mapping>
     <servlet-name>bzox-view</servlet-name>
     <url-pattern>/bzox/view/*</url-pattern>
@@ -83,12 +83,12 @@
     <servlet-name>bzox-status-check</servlet-name>
     <url-pattern>/bzox/check/status</url-pattern>
   </servlet-mapping>
-  
+
 
   <servlet-mapping>
     <servlet-name>bzox-list-jobs</servlet-name>
     <url-pattern>/bzox/jobs</url-pattern>
   </servlet-mapping>
-  
-  
+
+
 </web-fragment>

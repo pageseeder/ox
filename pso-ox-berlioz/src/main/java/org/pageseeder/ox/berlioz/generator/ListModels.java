@@ -3,9 +3,6 @@
  */
 package org.pageseeder.ox.berlioz.generator;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.pageseeder.berlioz.BerliozException;
 import org.pageseeder.berlioz.content.ContentRequest;
 import org.pageseeder.ox.berlioz.Requests;
@@ -13,6 +10,9 @@ import org.pageseeder.ox.core.Model;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * <p>To list the models from configuration</p>

@@ -3,12 +3,12 @@
  */
 package org.pageseeder.ox.tool;
 
-import java.io.IOException;
-
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.xmlwriter.XMLWriter;
+
+import java.io.IOException;
 
 /**
  * A implementation of {@link Result} which is to indicate no operation of the result.

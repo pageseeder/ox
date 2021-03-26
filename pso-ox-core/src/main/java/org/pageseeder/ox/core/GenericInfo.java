@@ -3,15 +3,15 @@
  */
 package org.pageseeder.ox.core;
 
+import org.pageseeder.ox.util.StringUtils;
+import org.pageseeder.xmlwriter.XMLWritable;
+import org.pageseeder.xmlwriter.XMLWriter;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.pageseeder.ox.util.StringUtils;
-import org.pageseeder.xmlwriter.XMLWritable;
-import org.pageseeder.xmlwriter.XMLWriter;
 
 /**
  * The Class GenericInfo.
@@ -22,19 +22,19 @@ import org.pageseeder.xmlwriter.XMLWriter;
 public class GenericInfo implements XMLWritable, Serializable {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = -8725001735606291241L;
 
   /**  XML Element Name. */
   private final String _name;
-  
+
   /** Elements Attributes. */
   private final Map<String, String> _attributes = new HashMap<>();
 
   /** The text. */
   private final StringBuilder text = new StringBuilder();
-  
+
   /**
    * Instantiates a new generic info.
    *
@@ -62,7 +62,7 @@ public class GenericInfo implements XMLWritable, Serializable {
   public Map<String, String> getAttributes() {
     return this._attributes;
   }
-  
+
   /**
    * Adds the attributes.
    *
@@ -97,6 +97,6 @@ public class GenericInfo implements XMLWritable, Serializable {
       xml.attribute(attribute.getKey(), attribute.getValue());
     }
     xml.writeText(this.text.toString());
-    xml.closeElement();    
+    xml.closeElement();
   }
 }

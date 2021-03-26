@@ -1,22 +1,6 @@
 /* Copyright (c) 2014 Allette Systems pty. ltd. */
 package org.pageseeder.ox.step;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-
 import org.pageseeder.ox.OXErrors;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
@@ -31,6 +15,13 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.SAXException;
+
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.io.*;
 
 /**
  * <p>A step for validate the original file by schema. It can be internal (defined within XML file)
@@ -207,28 +198,28 @@ public final class SchemaValidation implements Step {
    * The Class LSInputImpl.
    */
   private static class LSInputImpl implements LSInput {
-    
+
     /** The character stream. */
     private Reader characterStream;
-    
+
     /** The byte stream. */
     private InputStream byteStream;
-    
+
     /** The string data. */
     private String stringData;
-    
+
     /** The system id. */
     private String systemId;
-    
+
     /** The public id. */
     private String publicId;
-    
+
     /** The base URI. */
     private String baseURI;
-    
+
     /** The encoding. */
     private String encoding;
-    
+
     /** The certified text. */
     private boolean certifiedText;
 

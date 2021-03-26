@@ -1,21 +1,20 @@
 package org.pageseeder.ox.berlioz.servlet;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import org.pageseeder.ox.OXConfig;
+import org.pageseeder.ox.util.FileUtils;
+import org.pageseeder.ox.util.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.pageseeder.ox.OXConfig;
-import org.pageseeder.ox.util.FileUtils;
-import org.pageseeder.ox.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * <p>Get a file inside in the ox structure (Packages). </p>
@@ -24,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * @version 15 May 2017
  */
 public final class OXGetFile extends HttpServlet {
-  
+
   /** The Constant serialVersionUID. */
   private static final long serialVersionUID = -7694484458213953462L;
 
@@ -33,13 +32,13 @@ public final class OXGetFile extends HttpServlet {
 
   /**  the buffer size. */
   private static final int BUFFER_SIZE = 2048;
-  
+
   /**  the matching prefix pattern. */
   private String pattern;
 
   /** Indicate which file s extensions are allowed. */
   private String extesionsAllowed = "";
-  
+
   /**  If true this file will be downloadable, otherwise no. */
   private String downloadable = "";
 
@@ -60,8 +59,8 @@ public final class OXGetFile extends HttpServlet {
      LOGGER.debug("Pattern {}", pattern);
      LOGGER.debug("request PATH {}", requestPath);
      LOGGER.debug("downloadable {}", downloadable);
-     
-     
+
+
      if (requestPath == null) {
        res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
        return;
@@ -74,11 +73,11 @@ public final class OXGetFile extends HttpServlet {
          String mediaType = getMediaType(file);
          LOGGER.debug("Content type {}.", mediaType);
          res.setContentType("unknown".equals(mediaType) ? "application/octet-stream" : mediaType);
-         
+
          String contentDisposition = "true".equals(this.downloadable) ? "attachment" : "inline";
          LOGGER.debug("Content Disposition {}.", contentDisposition);
          res.setHeader("Content-Disposition", contentDisposition + "; filename=\"" + file.getName() + '"');
-         
+
          try (InputStream ins = new FileInputStream(file)) {
            // get output stream for servlet
            ServletOutputStream outs = res.getOutputStream();
@@ -95,13 +94,13 @@ public final class OXGetFile extends HttpServlet {
            }
          }
        }
-  
+
        // cannot find the file
        else {
          res.setStatus(HttpServletResponse.SC_NOT_FOUND);
          return;
        }
-  
+
      }
      // File not allowed
      else {
@@ -110,7 +109,7 @@ public final class OXGetFile extends HttpServlet {
      }
    }
 
-   
+
    /**
     * Checks if is file allowed.
     *
@@ -130,11 +129,11 @@ public final class OXGetFile extends HttpServlet {
          }
        }
      }
-     
-     
+
+
      return isAllowed;
    }
-   
+
    /**
     * Gets the midia type.
     *

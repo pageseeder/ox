@@ -3,22 +3,17 @@
  */
 package org.pageseeder.ox.process;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.api.Downloadable;
 import org.pageseeder.ox.api.Result;
-import org.pageseeder.ox.core.JobStatus;
-import org.pageseeder.ox.core.PackageData;
-import org.pageseeder.ox.core.Pipeline;
-import org.pageseeder.ox.core.PipelineJob;
-import org.pageseeder.ox.core.ResultStatus;
-import org.pageseeder.ox.core.StepDefinition;
+import org.pageseeder.ox.core.*;
 import org.pageseeder.ox.util.FileUtils;
 import org.pageseeder.ox.util.ZipUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * <p>A thread for processing step jobs from pipeline.</p>
@@ -99,7 +94,7 @@ class PipelineProcessor implements Runnable {
       // execute the step
       Result result = stepDef.exec(data);
       job.addStepResult(result);
-      
+
       status.setPercentage(status.getPercentage() + perc - buffer);
 
       // set the download path if the result object is {@link Downloadable}

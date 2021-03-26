@@ -3,15 +3,6 @@
  */
 package org.pageseeder.ox.berlioz.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
@@ -24,6 +15,14 @@ import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>The upload manager for file upload.</p>
@@ -44,7 +43,7 @@ public final class UploadProcessor {
 
   /** The progress listener. */
   private final FileUploadListener progressListener;
-  
+
   /** The items. */
   private final List<FileItem> items;
 
@@ -55,21 +54,21 @@ public final class UploadProcessor {
    * A default constructor for UploadProcessor.
    * @param req the ContentRequest
    * @throws FileUploadException when FilUpload occurs
-   * @throws OXException 
+   * @throws OXException
    */
   protected UploadProcessor(HttpServletRequest req) throws FileUploadException, OXException {
     LOGGER.debug("Instantiate Upload Processor");
     String contentType = req.getContentType();
     LOGGER.debug("Request Content Type '{}'", contentType);
-    if (StringUtils.isBlank(contentType) || !contentType.startsWith(FileUploadBase.MULTIPART)) 
+    if (StringUtils.isBlank(contentType) || !contentType.startsWith(FileUploadBase.MULTIPART))
       throw new OXException(OXBerliozErrorMessage.REQUEST_IS_NOT_MULTIPART);
-    
+
     int thresholdSize = GlobalSettings.get("ox2.upload.max-size", 10) * ONE_MB;
     long maxFileSize = GlobalSettings.get("ox2.upload.max-size", 10) * ONE_MB; // Sets the maximum allowed size of a single uploaded file
     long requestSize = GlobalSettings.get("ox2.upload.max-size", 10) * ONE_MB; // Sets the maximum allowed size of a complete request
     this.acceptExtension = GlobalSettings.get("upload.file.accept-extension", "all");
     LOGGER.debug("Instantiate Upload Processor thresholdSize/maxFileSize/requestSize/acceptExtension: {}/{}/{}/{}", thresholdSize, maxFileSize, requestSize, this.acceptExtension);
-    
+
     // Create a factory for disk-based file items
     DiskFileItemFactory factory = new DiskFileItemFactory();
     factory.setSizeThreshold(thresholdSize);
@@ -86,7 +85,7 @@ public final class UploadProcessor {
     // parse the request to get the FileItem
     this.items = upload.parseRequest(req);
     LOGGER.debug("Number of items found {}", this.items != null? items.size():0);
-    
+
     // check whether is multipart content
     this.isMultipart = ServletFileUpload.isMultipartContent(req);
   }

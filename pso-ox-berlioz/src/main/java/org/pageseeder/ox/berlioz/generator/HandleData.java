@@ -1,10 +1,5 @@
 package org.pageseeder.ox.berlioz.generator;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.pageseeder.berlioz.BerliozException;
 import org.pageseeder.berlioz.content.ContentGenerator;
 import org.pageseeder.berlioz.content.ContentRequest;
@@ -12,13 +7,15 @@ import org.pageseeder.berlioz.content.ContentStatus;
 import org.pageseeder.berlioz.servlet.HttpRequestWrapper;
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.berlioz.Errors;
-import org.pageseeder.ox.berlioz.Requests;
 import org.pageseeder.ox.berlioz.util.FileHandler;
-import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Receives the document, assign ID, prepare for processing.

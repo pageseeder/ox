@@ -3,22 +3,11 @@
  */
 package org.pageseeder.ox.berlioz.util;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.channels.FileChannel;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardCopyOption;
-import java.nio.file.attribute.BasicFileAttributes;
-
 import javax.activation.MimetypesFileTypeMap;
+import java.io.*;
+import java.nio.channels.FileChannel;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * The Class FileUtils.
@@ -203,7 +192,7 @@ public class FileUtils {
       io.close();
     }
   }
-  
+
   /**
    * File name no extension.
    *
