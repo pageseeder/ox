@@ -1,14 +1,6 @@
 /* Copyright (c) 1999-2014 weborganic systems pty. ltd. */
 package org.pageseeder.ox.schematron.tool;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-
 import org.pageseeder.ox.OXErrors;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.core.Model;
@@ -24,6 +16,13 @@ import org.pageseeder.schematron.ValidatorFactory;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Runs schematron on the specified document.

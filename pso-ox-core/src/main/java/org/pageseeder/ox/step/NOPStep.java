@@ -3,8 +3,6 @@
  */
 package org.pageseeder.ox.step;
 
-import java.io.IOException;
-
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.api.StepInfo;
@@ -12,6 +10,8 @@ import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.tool.ResultBase;
 import org.pageseeder.xmlwriter.XMLWriter;
+
+import java.io.IOException;
 
 /**
  * A step does nothing.

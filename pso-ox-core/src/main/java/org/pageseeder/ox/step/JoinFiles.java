@@ -1,11 +1,6 @@
 /* Copyright (c) 2015 Allette Systems pty. ltd. */
 package org.pageseeder.ox.step;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
-
 import org.pageseeder.ox.OXErrors;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
@@ -20,6 +15,11 @@ import org.pageseeder.xmlwriter.XMLStringWriter;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
 
 /**
  *
@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  *
  *
  * @author Carlos Cabral
- * @version 
+ * @version
  */
 public class JoinFiles implements Step {
 
@@ -75,7 +75,7 @@ public class JoinFiles implements Step {
         if (!StringUtils.isBlank(output)) {
           foutput = data.getFile(output);
         }
-        
+
         XMLStringWriter writer = new XMLStringWriter(NamespaceAware.No);
         writer.openElement("root");
         List<File> files = data.getFiles(input);
@@ -88,7 +88,7 @@ public class JoinFiles implements Step {
         writer.closeElement();//root
         writer.close();
         FileUtils.write(writer.toString(), foutput);
-        
+
       } else {
         LOGGER.warn("Cannot find file {} or output {}.", input, output);
         result.setError(new FileNotFoundException("The input/output file is null or invalid."));
@@ -108,7 +108,7 @@ public class JoinFiles implements Step {
    * The Class PDFToImageResult.
    */
   private final class JoinFilesResult extends ResultBase {
-    
+
     /** The input. */
     private final String _input;
 
@@ -147,7 +147,7 @@ public class JoinFiles implements Step {
       if (this._input != null) {
         xml.attribute("input", this._input);
       }
-      
+
       // Print the details of any error
       if (error() != null) {
         OXErrors.toXML(error(), xml, true);

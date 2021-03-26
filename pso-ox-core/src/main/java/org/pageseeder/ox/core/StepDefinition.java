@@ -1,15 +1,6 @@
 /* Copyright (c) 1999-2014 weborganic systems pty. ltd. */
 package org.pageseeder.ox.core;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.api.CallbackStep;
 import org.pageseeder.ox.api.Measurable;
@@ -22,6 +13,11 @@ import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  *

@@ -3,17 +3,17 @@
  */
 package org.pageseeder.ox.core;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.core.JobStatus.STATUS;
 import org.pageseeder.ox.util.ISO8601;
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * A simple java object to represent a Job for each Pipeline.
@@ -27,8 +27,8 @@ public final class PipelineJob implements XMLWritable, Serializable {
   private static final long serialVersionUID = -3028660547170793478L;
 
   /** The max inactive time allowed. */
-  private long maxInactiveTimeAllowed = StepJob.DEFAULT_MAX_INACTIVE_TIME_MS; 
-  
+  private long maxInactiveTimeAllowed = StepJob.DEFAULT_MAX_INACTIVE_TIME_MS;
+
   /** The job id. */
   private final String _id;
 
@@ -115,8 +115,8 @@ public final class PipelineJob implements XMLWritable, Serializable {
   public JobStatus getStatus() {
     return this.status;
   }
-  
-  
+
+
 
   /**
    * Gets the max inactive time allowed.
@@ -166,7 +166,7 @@ public final class PipelineJob implements XMLWritable, Serializable {
     this.status.setJobStatus(STATUS.PROCESSING);
     this.status.setPercentage(1);
   }
-  
+
   /**
    * Set the job to complete status.
    */
@@ -208,7 +208,7 @@ public final class PipelineJob implements XMLWritable, Serializable {
   public void addStepResult (Result result) {
     if (result != null) this.results.add(result);
   }
-  
+
   /* (non-Javadoc)
    * @see org.pageseeder.xmlwriter.XMLWritable#toXML(org.pageseeder.xmlwriter.XMLWriter)
    */
@@ -223,13 +223,13 @@ public final class PipelineJob implements XMLWritable, Serializable {
     if (this.download != null) {
       xml.attribute("path", this.download);
     }
-    
+
     xml.openElement("results");
       for (Result result:results) {
         result.toXML(xml);
       }
     xml.closeElement();//results
-    
+
     xml.closeElement();
   }
 

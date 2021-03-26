@@ -1,12 +1,6 @@
 /* Copyright (c) 2014 Allette Systems pty. ltd. */
 package org.pageseeder.ox.step;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
-
 import org.eclipse.jdt.annotation.NonNull;
 import org.pageseeder.ox.OXErrors;
 import org.pageseeder.ox.api.Downloadable;
@@ -22,6 +16,12 @@ import org.pageseeder.ox.util.ZipUtils;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>A step to compress the file </p>.

@@ -1,15 +1,15 @@
 /* Copyright (c) 2014 Allette Systems pty. ltd. */
 package org.pageseeder.ox.inspector;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-
 import org.pageseeder.ox.api.PackageInspector;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.util.CharsetDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * A package inspector to check the zip data.

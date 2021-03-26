@@ -1,10 +1,6 @@
 /* Copyright (c) 2018 Allette Systems pty. ltd. */
 package org.pageseeder.ox.tool;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.pageseeder.ox.api.Result;
@@ -15,22 +11,26 @@ import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
 /**
  * The Class MultipleFilesResult.
- * 
+ *
  * It for steps when they receive multiple files as input (by using a folder, Glob pattern or zip) and for file there
  * is a separate process.
- * 
+ *
  * @author Carlos Cabral
  * @since 08th August 2018
  */
 public class MultipleFilesResult<T extends FileResultInfo> extends DefaultResult implements Result {
-  
+
   private static final Logger LOGGER = LoggerFactory.getLogger(MultipleFilesResult.class);
 
   /** The file result infos. */
   private final List<T> _fileResultInfos;
-   
+
   /**
    * Instantiates a new multiple files result.
    *
@@ -40,7 +40,7 @@ public class MultipleFilesResult<T extends FileResultInfo> extends DefaultResult
    * @param output the output (it can only be a zip or a file or null)
    * @param fileResultInfos the file result infos
    */
-  public MultipleFilesResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info, 
+  public MultipleFilesResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info,
       @Nullable File output, @NonNull List<T> fileResultInfos) {
     super(model, data, info, output);
     this._fileResultInfos = fileResultInfos;
@@ -48,16 +48,16 @@ public class MultipleFilesResult<T extends FileResultInfo> extends DefaultResult
 
   @Override
   protected void writeResultAttributes(XMLWriter xml) throws IOException {
-    super.writeResultAttributes(xml);    
+    super.writeResultAttributes(xml);
     xml.attribute("inputs-number", this._fileResultInfos.size());
   }
-  
+
   @Override
   protected void writeResultElements(XMLWriter xml) throws IOException {
     super.writeResultElements(xml);
     writeFileResultInfos(xml);
   }
-  
+
   /**
    * Parameters XML.
    *
@@ -69,7 +69,7 @@ public class MultipleFilesResult<T extends FileResultInfo> extends DefaultResult
     this._fileResultInfos.forEach(fileResultInfo -> writeFileResultInfo (xml, fileResultInfo));
     xml.closeElement();//parameters
   }
-  
+
   /**
    * Parameters XML.
    *

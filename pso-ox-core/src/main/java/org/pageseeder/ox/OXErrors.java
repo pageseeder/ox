@@ -7,18 +7,17 @@
  */
 package org.pageseeder.ox;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
-import javax.xml.transform.SourceLocator;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.LocatorImpl;
+
+import javax.xml.transform.SourceLocator;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * A utility class for the processing of errors.

@@ -3,15 +3,6 @@
  */
 package org.pageseeder.ox.berlioz.test;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,10 +19,18 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.Diff;
 
+import javax.servlet.ServletException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * Test all steps for the complete right.
- * 
+ *
  * @author Carlos Cabral
  * @since 28 Mar. 2018
  */
@@ -42,12 +41,12 @@ public class TestBasicExample {
   private final static File _input = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/source/source.zip");
   private final static File _expectedResultsBaseDirectory = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/target");
   private static JobResponse jobStatus;
-  
+
   @BeforeClass
   public static void setupServlet() throws IOException, OXException, ServletException, InterruptedException {
     File modelDir = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/model");
     OXConfig config = OXConfig.get();
-    config.setModelsDirectory(modelDir);   
+    config.setModelsDirectory(modelDir);
     Map<String, String> parameters = new HashMap<>();
     parameters.put("_xslt-indent", "yes");
     String pipeline = "basic";
@@ -56,7 +55,7 @@ public class TestBasicExample {
   }
 
   /**
-   * 
+   *
    */
   @Test
   public void testUnzip () {
@@ -67,25 +66,25 @@ public class TestBasicExample {
   }
 
   /**
-   * 
+   *
    */
   @Test
   public void testCopy () {
     File expected = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/target/source.xml");
     diff(expected);
   }
-  
+
   /**
-   * 
+   *
    */
   @Test
   public void testTransformation () {
     File expected = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/target/target.xml");
     diff(expected);
   }
-  
+
   /**
-   * 
+   *
    */
   @Test
   public void testZip () {
@@ -94,11 +93,11 @@ public class TestBasicExample {
     BatchProcessingFilesComparator compareFiles = new BatchProcessingFilesComparator(jobStatus, _expectedResultsBaseDirectory, filesToIgnore);
     compareFiles.compareFile(expected);
   }
-  
+
   private void diff(File expected) {
     List<File> filesToIgnore = new ArrayList<>();
     BatchProcessingFilesComparator compareFiles = new BatchProcessingFilesComparator(jobStatus, _expectedResultsBaseDirectory, filesToIgnore);
-    
+
     try {
       String xmlExpected = FileUtils.read(expected);
       String xmlResult = compareFiles.getXMLResult(expected);

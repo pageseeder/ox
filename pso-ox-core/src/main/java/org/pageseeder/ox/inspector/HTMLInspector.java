@@ -1,15 +1,15 @@
 package org.pageseeder.ox.inspector;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-
 import org.pageseeder.ox.api.PackageInspector;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.util.CharsetDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 
 /**
  * A inspector for html.

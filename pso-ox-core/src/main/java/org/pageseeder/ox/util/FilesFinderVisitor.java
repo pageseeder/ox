@@ -1,41 +1,36 @@
 /* Copyright (c) 2018 Allette Systems (Australia) Pty Ltd. */
 package org.pageseeder.ox.util;
 
-import static java.nio.file.FileVisitResult.CONTINUE;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static java.nio.file.FileVisitResult.CONTINUE;
 
 /**
  * Walk from the base directory and add to the list all files that match the pattern.
- * 
+ *
  * If you would like to know more about glob pattern, please have a look at
  * http://docs.oracle.com/javase/javatutorials/tutorial/essential/io/fileOps.html#glob
  */
 public class FilesFinderVisitor extends SimpleFileVisitor<Path> {
-  
+
   /** The Constant LOGGER. */
   private final static Logger LOGGER = LoggerFactory.getLogger(FilesFinderVisitor.class);
-  
+
   /** The files found. */
   private final List<File> filesFound = new ArrayList<>();
-  
+
   /** The matcher. */
   private final PathMatcher matcher;
-  
+
   /** The base dir. */
   private final String _baseDir;
 
@@ -65,7 +60,7 @@ public class FilesFinderVisitor extends SimpleFileVisitor<Path> {
       this.filesFound.add(path.toFile());
     }
   }
-  
+
   /**
    * Normalize path.
    *
@@ -75,7 +70,7 @@ public class FilesFinderVisitor extends SimpleFileVisitor<Path> {
   private String normalizePath (Path path) {
     return path.toString().replace('/', File.separatorChar).replace('\\', File.separatorChar);
   }
-  
+
   /**
    * Clean path.
    *
@@ -87,7 +82,7 @@ public class FilesFinderVisitor extends SimpleFileVisitor<Path> {
     String newPathString = normalizePath(path).replace(this._baseDir, "");
     return Paths.get(newPathString);
   }
-  
+
   /**
    * Gets the files found.
    *
@@ -104,14 +99,14 @@ public class FilesFinderVisitor extends SimpleFileVisitor<Path> {
   public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
     select(file);
     return CONTINUE;
-  }  
-  
+  }
+
   /* (non-Javadoc)
    * @see java.nio.file.SimpleFileVisitor#preVisitDirectory(java.lang.Object, java.nio.file.attribute.BasicFileAttributes)
    */
   @Override
   public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-    // Only files are selected 
+    // Only files are selected
     // select(dir);
     return CONTINUE;
   }

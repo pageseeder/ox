@@ -1,38 +1,20 @@
 package org.pageseeder.ox.core;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Serializable;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.api.PackageInspector;
-import org.pageseeder.ox.util.FileUtils;
-import org.pageseeder.ox.util.FilesFinder;
-import org.pageseeder.ox.util.GlobPatternUtils;
-import org.pageseeder.ox.util.ISO8601;
-import org.pageseeder.ox.util.StringUtils;
-import org.pageseeder.ox.util.ZipUtils;
+import org.pageseeder.ox.util.*;
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Represents an abstract data package
@@ -169,7 +151,7 @@ public final class PackageData implements XMLWritable, Serializable {
     return files;
   }
 
-  
+
   /**
    * @param file the file in {@link PackageData}
    * @return the path in {@link PackageData}
@@ -495,7 +477,7 @@ public final class PackageData implements XMLWritable, Serializable {
       Path path = file.toPath();
       try {
         LOGGER.debug("Path: {}", path);
-        String probeContentType = Files.probeContentType(path); 
+        String probeContentType = Files.probeContentType(path);
 
         LOGGER.debug("ProbeContentType: {}", probeContentType);
         if (StringUtils.isBlank(probeContentType)) {

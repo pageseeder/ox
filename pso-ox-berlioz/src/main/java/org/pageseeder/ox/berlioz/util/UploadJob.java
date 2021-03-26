@@ -3,10 +3,10 @@
  */
 package org.pageseeder.ox.berlioz.util;
 
-import java.io.IOException;
-
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
+
+import java.io.IOException;
 
 /**
  * A simple java object for represent the UploadJob .

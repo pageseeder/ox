@@ -1,14 +1,6 @@
 /* Copyright (c) 1999-2014 weborganic systems pty. ltd. */
 package org.pageseeder.ox.core;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.xmlwriter.XMLWritable;
@@ -20,11 +12,19 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 /**
  * Defines an pipeline (a concept borrowed from xproc)
- *  
+ *
  * XML Structure:
- *  
+ *
  *  &gt;pipeline id="" name="" accepts="" description="" default="false" &lt;
  *    &gt;step&lt;
  *    &gt;/step&lt;
@@ -35,18 +35,18 @@ import org.xml.sax.helpers.DefaultHandler;
  * @since  16 December 2013
  */
 public final class Pipeline implements XMLWritable, Serializable {
-  
+
   /** The Constant LOGGER. */
   private static final Logger LOGGER = LoggerFactory.getLogger(Pipeline.class);
-  
+
   /** The Constant serialVersionUID. */
   private static final long serialVersionUID = 3462658965942218380L;
 
   /**
-   * The unique id of pipeline, it will be uses the identify the pipeline. 
+   * The unique id of pipeline, it will be uses the identify the pipeline.
    */
   private final String _id;
-  
+
   /**
    * The name of pipeline, it will be used to show on the screen (friendly text).
    */
@@ -62,7 +62,7 @@ public final class Pipeline implements XMLWritable, Serializable {
    * The media type that this pipeline accepts.
    */
   private final String _accepts;
-  
+
   /** The default. */
   private final boolean _default;
 
@@ -73,10 +73,10 @@ public final class Pipeline implements XMLWritable, Serializable {
 
   /** If there are any other attributes that are not expected. */
   private final Map<String, String> _extraAttributes = new HashMap<>();
-  
+
   /** If there are any other elements that are not expected. */
   private final List<GenericInfo> _extraElements = new ArrayList<>();
-  
+
   /**
    * Instantiates a new pipeline.
    *
@@ -117,7 +117,7 @@ public final class Pipeline implements XMLWritable, Serializable {
     return this._id;
   }
 
-  
+
   /**
    * Name.
    *
@@ -152,7 +152,7 @@ public final class Pipeline implements XMLWritable, Serializable {
    */
   public boolean isDefault() {
     return this._default;
-  }  
+  }
 
   /**
    * Adds the extra attributes.
@@ -168,7 +168,7 @@ public final class Pipeline implements XMLWritable, Serializable {
     }
     this._extraAttributes.put(name, value==null ? "" : value);
   }
-  
+
   /**
    * Adds the extra attributes.
    *
@@ -180,8 +180,8 @@ public final class Pipeline implements XMLWritable, Serializable {
         addExtraAttributes(attribute.getKey(), attribute.getValue());
       }
     }
-  }  
-  
+  }
+
 
   /**
    * Adds the extra attributes.
@@ -191,7 +191,7 @@ public final class Pipeline implements XMLWritable, Serializable {
   public void addExtraElements (GenericInfo extraElement) {
     if (extraElement != null) this._extraElements.add(extraElement);
   }
-  
+
   /**
    * Add the step to this pipeline and check the uniqueness.
    *
@@ -200,13 +200,13 @@ public final class Pipeline implements XMLWritable, Serializable {
   private void addStep (StepDefinition step) {
     for (StepDefinition s : this._steps) {
       //Check the uniqueness of the step
-      if (s.id().equals(step.id())) { 
+      if (s.id().equals(step.id())) {
         throw new IllegalArgumentException("The pipeline " + this.id() + " already has the step " + step.id());
       }
     }
     this._steps.add(step);
   }
-  
+
   /**
    * Returns the step with the specified id.
    *
@@ -250,19 +250,19 @@ public final class Pipeline implements XMLWritable, Serializable {
     xml.attribute("description", this._description);
     xml.attribute("accepts", this._accepts);
     xml.attribute("default", String.valueOf(this._default));
-    
+
     //Extra attributes
     for (Entry<String, String> attribute : this._extraAttributes.entrySet()) {
       xml.attribute(attribute.getKey(), attribute.getValue());
     }
-    
+
     //Steps elements
     if (this._steps != null) {
       for (StepDefinition s : this._steps) {
         s.toXML(xml);
       }
     }
-    
+
     //Extra Elements
     for (GenericInfo element:this._extraElements) {
       element.toXML(xml);
@@ -283,7 +283,7 @@ public final class Pipeline implements XMLWritable, Serializable {
 
     /** The in step. */
     private boolean inStep = false;
-    
+
     /** The extra element. */
     private GenericInfo extraElement;
 
@@ -306,14 +306,14 @@ public final class Pipeline implements XMLWritable, Serializable {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 
       // pipeline (@name, @accept, step)
-      if (localName.equals("pipeline")) {        
+      if (localName.equals("pipeline")) {
         String id = "";
         String name = "";
         String accepts = "";
         String description = "";
         String defaultValue = "";
         Map<String, String> extraAttributes = new HashMap<>();
-            
+
         for (int index=0; index < attributes.getLength(); index++) {
           String attributeName = attributes.getQName(index) != null ? attributes.getQName(index) : attributes.getLocalName(index);
           switch (attributeName) {
@@ -333,19 +333,19 @@ public final class Pipeline implements XMLWritable, Serializable {
             defaultValue = attributes.getValue(index);
             break;
           default:
-            extraAttributes.put(attributeName, attributes.getValue(index));            
+            extraAttributes.put(attributeName, attributes.getValue(index));
           }
         }
-        
+
         if (StringUtils.isBlank(id)) {
           LOGGER.warn("The id is empty, remember that this version is using the id to identify the pipeline instead of name.");
           id = name;
         }
-        
+
         if (accepts == null) {
           accepts = "application/xml";
         }
-        
+
         this.pipeline = new Pipeline(id, name, accepts, description, "true".equalsIgnoreCase(defaultValue));
         this.pipeline.addExtraAttributes(extraAttributes);
       }
@@ -354,12 +354,12 @@ public final class Pipeline implements XMLWritable, Serializable {
       else if (localName.equals("step")) {
         String classname = "";
         String callback = "";
-        String name = "";     
-        String downloadable = ""; 
+        String name = "";
+        String downloadable = "";
         String viewable = "";
         String async = "";
         String failOnError = "";
-        
+
         for (int index=0; index < attributes.getLength(); index++) {
           String attributeName = attributes.getQName(index) != null ? attributes.getQName(index) : attributes.getLocalName(index);
           String attributeValue = attributes.getValue(index);
@@ -375,7 +375,7 @@ public final class Pipeline implements XMLWritable, Serializable {
             break;
           case "downloadable":
             downloadable = attributeValue;
-            break;            
+            break;
           case "viewable":
             viewable = attributeValue;
             break;
@@ -392,7 +392,7 @@ public final class Pipeline implements XMLWritable, Serializable {
             this.builder.addExtraAttributes(attributeName, attributeValue);
           }
         }
-        
+
 
         this.builder.setPipeline(this.pipeline);
         this.builder.setStepId(this.stepId);
@@ -407,7 +407,7 @@ public final class Pipeline implements XMLWritable, Serializable {
       }
 
       // output (@file, @folder)
-      else if (this.inStep && localName.equals("output")) {        
+      else if (this.inStep && localName.equals("output")) {
         String output = attributes.getValue("file");
         if (output == null) {
           output = attributes.getValue("folder");
@@ -472,7 +472,7 @@ public final class Pipeline implements XMLWritable, Serializable {
         this.extraElement.addText(new String (ch, start, length));
       }
     }
-    
+
     /**
      * Gets the pipeline.
      *

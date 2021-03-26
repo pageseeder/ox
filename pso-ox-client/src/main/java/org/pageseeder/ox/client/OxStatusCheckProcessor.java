@@ -3,9 +3,6 @@
  */
 package org.pageseeder.ox.client;
 
-import java.io.IOException;
-import java.io.StringReader;
-
 import org.pageseeder.bastille.security.Obfuscator;
 import org.pageseeder.berlioz.BerliozException;
 import org.pageseeder.berlioz.xml.XMLUtils;
@@ -13,6 +10,9 @@ import org.pageseeder.ox.client.handler.JobStatusLoader;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.StringReader;
 
 /**
  * Check the status of a job in the ox server.

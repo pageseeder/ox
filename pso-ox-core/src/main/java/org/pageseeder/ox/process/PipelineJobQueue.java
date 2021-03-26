@@ -3,16 +3,16 @@
  */
 package org.pageseeder.ox.process;
 
+import org.pageseeder.ox.core.JobStatus;
+import org.pageseeder.ox.core.PipelineJob;
+import org.pageseeder.xmlwriter.XMLWritable;
+import org.pageseeder.xmlwriter.XMLWriter;
+
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import org.pageseeder.ox.core.JobStatus;
-import org.pageseeder.ox.core.PipelineJob;
-import org.pageseeder.xmlwriter.XMLWritable;
-import org.pageseeder.xmlwriter.XMLWriter;
 
 /**
  * A job queue to store the jobs.
@@ -24,8 +24,8 @@ public class PipelineJobQueue implements XMLWritable {
 
   /**  the total number of completed jobs to store in memory. */
 
-  private final int _maxStoredCompletedJob;  
-  
+  private final int _maxStoredCompletedJob;
+
   /**  Singleton instance (Lazy init). */
   private static volatile PipelineJobQueue INSTANCE;
 
@@ -40,7 +40,7 @@ public class PipelineJobQueue implements XMLWritable {
 
   /**  The current running import job *. */
   private final BlockingQueue<PipelineJob> _running;
-  
+
   /** The key will be the package and the value the job id. */
   private final ConcurrentHashMap<String, String> _packageAndJobMap;
 
@@ -56,7 +56,7 @@ public class PipelineJobQueue implements XMLWritable {
     this._packageAndJobMap = new ConcurrentHashMap<>();
 
   }
-  
+
   /**
    * Gets the single instance of PipelineJobQueue.
    *
@@ -158,7 +158,7 @@ public class PipelineJobQueue implements XMLWritable {
 
   /**
    * TODO The design of PipelineJob Classes are not good. It needs to be rethought.
-   *  
+   *
    * @param packageId
    * @return
    */
@@ -169,7 +169,7 @@ public class PipelineJobQueue implements XMLWritable {
     }
     return jobId;
   }
-  
+
   /**
    * Completed.
    *
@@ -204,7 +204,7 @@ public class PipelineJobQueue implements XMLWritable {
     toXML(xml, this._waiting, "waiting");
     xml.closeElement();
   }
-  
+
   private void toXML(XMLWriter xml, BlockingQueue<PipelineJob> queue, String name) throws IOException {
     xml.openElement(name);
     Iterator<PipelineJob> it = queue.iterator();

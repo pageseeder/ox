@@ -3,9 +3,6 @@
  */
 package org.pageseeder.ox.core;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.exceptions.XpathException;
 import org.junit.Assert;
@@ -16,6 +13,9 @@ import org.pageseeder.xmlwriter.XML.NamespaceAware;
 import org.pageseeder.xmlwriter.XMLStringWriter;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.xml.sax.SAXException;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Ciber Cai
@@ -38,7 +38,7 @@ public class TestPipeline {
     extraElement.addAttributes("extra-attribute","extra-attribute-value");
     extraElement.addText("extra-attribute-text");
     pipeline1.addExtraElements(extraElement);
-    
+
     Assert.assertEquals("id", pipeline1.id());
     Assert.assertEquals("name", pipeline1.name());
     Assert.assertEquals("type", pipeline1.accepts());
@@ -98,7 +98,7 @@ public class TestPipeline {
     pipeline.toXML(xml);
     xml.flush();
     xml.close();
-    
+
     XMLAssert.assertXpathEvaluatesTo("sample-pipeline", "pipeline/@id", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("Sample Pipeline", "pipeline/@name", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("The sample pipeline will decompress the file uploaded", "pipeline/@description", xml.toString());
@@ -131,12 +131,12 @@ public class TestPipeline {
     pipeline.toXML(xml);
     xml.flush();
     xml.close();
-    
+
     XMLAssert.assertXpathEvaluatesTo("default-pipeline", "pipeline/@id", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("Default Pipeline", "pipeline/@name", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("The default pipeline will decompress the file uploaded", "pipeline/@description", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("application/zip", "pipeline/@accepts", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("true", "pipeline/@default", xml.toString());
   }
-  
+
 }

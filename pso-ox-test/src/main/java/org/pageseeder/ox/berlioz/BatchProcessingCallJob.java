@@ -3,22 +3,6 @@
  */
 package org.pageseeder.ox.berlioz;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.junit.runner.RunWith;
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.berlioz.servlet.OXHandleData;
@@ -30,6 +14,21 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 /**
  * The Class BatchProcessingCallJob.
  *
@@ -39,19 +38,19 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(FileHandler.class)
 public class BatchProcessingCallJob {
-  
+
   /** The model. */
   private final String _model;
-  
+
   /** The pipeline. */
   private final String _pipeline;
-  
+
   /** The parameters. */
   private Map<String, String> parameters;
-  
+
   /** The input. */
   private final File _input;
-  
+
   /**
    * Instantiates a new batch processing call job.
    *
@@ -80,9 +79,9 @@ public class BatchProcessingCallJob {
     StringWriter writer = new StringWriter();
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
-    
+
     this.parameters.put("pipeline",this._pipeline);
-    
+
     List<PackageData> packs = mockedPackageList();
     System.out.println(packs.get(0).directory());
     List<PipelineJob> jobs = FileHandler.toPipelineJobs(packs);
@@ -90,18 +89,18 @@ public class BatchProcessingCallJob {
     when(request.getMethod()).thenReturn("POST");
     when(request.getParameter("model")).thenReturn(this._model);
     when(request.getContentType()).thenReturn("multipart/form-data; boundary=----WebKitFormBoundary8REQtuY1QyQrEfzh");
-    
-    PowerMockito.mockStatic(FileHandler.class);    
+
+    PowerMockito.mockStatic(FileHandler.class);
     PowerMockito.when(FileHandler.receive(request)).thenReturn(packs);
     PowerMockito.when(FileHandler.toPipelineJobs(packs)).thenReturn(jobs);
-    
+
     // Call pipeline
     OXHandleData handler = new OXHandleData();
     handler.service(request, response);
-    
+
     return writer.toString();
   }
-  
+
   /**
    * Mocked package list.
    *
@@ -114,7 +113,7 @@ public class BatchProcessingCallJob {
     if (!dir.exists()) {
       dir.mkdirs();
     }
-    
+
     File file = new File(dir, this._input.getName());
     FileUtils.copy(this._input, file);
     PackageData pack = PackageData.newPackageData(this._model, file);
@@ -132,7 +131,7 @@ public class BatchProcessingCallJob {
     }
     return packs;
   }
-  
+
   /**
    * To type.
    *

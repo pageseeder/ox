@@ -3,15 +3,15 @@
  */
 package org.pageseeder.ox.core;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.util.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 public class PackageDataTest {
 
@@ -93,7 +93,7 @@ public class PackageDataTest {
     Assert.assertThat(data.getPath(inPackageDateFile), org.hamcrest.core.Is.is("/sample.docx"));
 
   }
-  
+
   @Test
   public void test_getFile() {
     File sampleFile = new File("src/test/resources/models/m1/sample.xml");
@@ -102,7 +102,7 @@ public class PackageDataTest {
     PackageData data = PackageData.newPackageData(String.valueOf(System.nanoTime()), sampleFile);
     try {
       File destinationFolder = new File(data.directory(),  "filefinder");
-      destinationFolder.mkdir();      
+      destinationFolder.mkdir();
       FileUtils.copy(toCopy1, new File(destinationFolder, "c.html"));
       FileUtils.copy(toCopy2, new File(destinationFolder, "folder1/a.html"));
       File test = data.getFile("sample.xml");
@@ -118,7 +118,7 @@ public class PackageDataTest {
       Assert.fail(e.getMessage());
     }
   }
-  
+
   @Test
   public void test_getFileByUsingGlobPattern() {
     File sampleFile = new File("src/test/resources/models/m1/sample.xml");
@@ -127,7 +127,7 @@ public class PackageDataTest {
     PackageData data = PackageData.newPackageData(String.valueOf(System.nanoTime()), sampleFile);
     try {
       File destinationFolder = new File(data.directory(),  "filefinder");
-      destinationFolder.mkdir();      
+      destinationFolder.mkdir();
       FileUtils.copy(toCopy1, new File(destinationFolder, "c.html"));
       FileUtils.copy(toCopy2, new File(destinationFolder, "folder1/a.html"));
       File test = data.getFile("*.xml");
@@ -157,7 +157,7 @@ public class PackageDataTest {
     PackageData data = PackageData.newPackageData(String.valueOf(System.nanoTime()), sampleFile);
     try {
       File destinationFolder = new File(data.directory(),  "filefinder");
-      destinationFolder.mkdir();      
+      destinationFolder.mkdir();
       FileUtils.copy(toCopy1, new File(destinationFolder, "c.html"));
       FileUtils.copy(toCopy2, new File(destinationFolder, "folder1/a.html"));
       List<File> files = data.getFiles("**.html");

@@ -3,16 +3,15 @@
  */
 package org.pageseeder.ox.berlioz.servlet;
 
-import java.io.IOException;
+import org.pageseeder.ox.process.PipelineJobManager;
+import org.pageseeder.xmlwriter.XMLWriter;
+import org.pageseeder.xmlwriter.XMLWriterImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.pageseeder.ox.process.PipelineJobManager;
-import org.pageseeder.xmlwriter.XMLWriter;
-import org.pageseeder.xmlwriter.XMLWriterImpl;
+import java.io.IOException;
 
 /**
  * <p>A servlet to check all jobs status.</p>
@@ -30,10 +29,10 @@ public final class OXListJobs extends HttpServlet {
     resp.setContentType("application/xml");
     XMLWriter xml = new XMLWriterImpl(resp.getWriter());
     xml.xmlDecl();
-    
+
     PipelineJobManager manager = new PipelineJobManager();
     manager.toXML(xml);
-    
+
     xml.flush();
     xml.close();
 

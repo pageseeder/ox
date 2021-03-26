@@ -3,16 +3,15 @@
  */
 package org.pageseeder.ox.berlioz.util;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.fileupload.FileUploadException;
 import org.pageseeder.berlioz.content.ContentRequest;
 import org.pageseeder.ox.OXException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * The factory class to produce UploadProcessor.
@@ -56,7 +55,7 @@ public class UploadFactory {
    * @param req the ContentRequest
    * @return the UploadProcessor.
    * @throws FileUploadException throw exception when FileUPload error occur.
-   * @throws OXException 
+   * @throws OXException
    */
   public UploadProcessor make(HttpServletRequest req) throws FileUploadException, OXException {
     LOGGER.debug("Create a upload processor");

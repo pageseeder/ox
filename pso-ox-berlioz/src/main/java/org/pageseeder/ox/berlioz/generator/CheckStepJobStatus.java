@@ -3,8 +3,6 @@
  */
 package org.pageseeder.ox.berlioz.generator;
 
-import java.io.IOException;
-
 import org.pageseeder.berlioz.BerliozException;
 import org.pageseeder.berlioz.content.ContentGenerator;
 import org.pageseeder.berlioz.content.ContentRequest;
@@ -13,6 +11,8 @@ import org.pageseeder.ox.core.JobStatus;
 import org.pageseeder.ox.core.StepJob;
 import org.pageseeder.ox.process.StepJobManager;
 import org.pageseeder.xmlwriter.XMLWriter;
+
+import java.io.IOException;
 
 /**
  * <p>A generator to check the step job status.</p>
@@ -48,7 +48,7 @@ public class CheckStepJobStatus implements ContentGenerator {
     // print the job xml.
     StepJob job = manager.getJobId(id);
     job.toXML(xml);
-    
+
     if (!status.hasCompleted()) {
       req.setStatus(ContentStatus.ACCEPTED);
     }

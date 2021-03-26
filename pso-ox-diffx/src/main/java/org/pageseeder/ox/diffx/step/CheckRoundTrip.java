@@ -1,8 +1,6 @@
 /* Copyright (c) 2016 Allette Systems pty. ltd. */
 package org.pageseeder.ox.diffx.step;
 
-import java.io.File;
-
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.api.StepInfo;
@@ -12,6 +10,8 @@ import org.pageseeder.ox.diffx.tool.CheckRoundTripCommand;
 import org.pageseeder.ox.tool.InvalidResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
 
 /**
  *

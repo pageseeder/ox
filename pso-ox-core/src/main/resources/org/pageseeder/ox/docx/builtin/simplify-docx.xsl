@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
-<!-- 
-  This XSLT simplifies the WordProcessingML by stripping the XML from markup 
+<!--
+  This XSLT simplifies the WordProcessingML by stripping the XML from markup
   that isn't usually useful for transformations.
-  
-  This is partly based on Eric White's Markup Simplifier that is part of the 
-  OpenXML powertools. 
+
+  This is partly based on Eric White's Markup Simplifier that is part of the
+  OpenXML powertools.
 
    - RemoveComments
    - RemoveContentControls
@@ -21,35 +21,11 @@
   The final step collates identical styles together.
 -->
 <xsl:stylesheet version="2.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-  xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
-  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-  xmlns:o="urn:schemas-microsoft-com:office:office" 
-  xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"
-  xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" 
-  xmlns:v="urn:schemas-microsoft-com:vml" 
-  xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" 
-  xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"
-  xmlns:w10="urn:schemas-microsoft-com:office:word" 
-  xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
-  xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" 
-  xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup"
-  xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" 
-  xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"
-  xmlns:ct="http://schemas.openxmlformats.org/package/2006/content-types" 
-  xmlns:ve="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml"
-  xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"
-  xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
-  xmlns:rs="http://schemas.openxmlformats.org/package/2006/relationships"
-  xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties"
-  xmlns:dc="http://purl.org/dc/elements/1.1/"
-  xmlns:dcterms="http://purl.org/dc/terms/"
-  xmlns:f="http://www.pageseeder.com/function"
-  xmlns:a14="http://schemas.microsoft.com/office/drawing/2010/main"
-  xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart"
-  exclude-result-prefixes="#all">
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+                xmlns:f="http://www.pageseeder.com/function"
+                exclude-result-prefixes="#all">
 
 
 <!-- Configuration options -->
@@ -103,7 +79,7 @@
 <!-- 1. Simplify by removing markup                                                            -->
 <!-- ========================================================================================= -->
 
-<!-- 
+<!--
    Purge the data from all the empty runs and run properties
 -->
 <xsl:function name="f:simplify">
@@ -221,17 +197,17 @@
 <xsl:template match="w:textAlignment [$remove-paragraph-properties = 'true']" mode="simplify"/>
 <xsl:template match="w:snapToGrid    [$remove-paragraph-properties = 'true']" mode="simplify"/>
 <xsl:template match="w:mirrorIndents [$remove-paragraph-properties = 'true']" mode="simplify"/>
- 
-   
-  
-  
-  
-  
+
+
+
+
+
+
 <!-- ========================================================================================= -->
 <!-- Remove empty runs and run properties                                                      -->
 <!-- ========================================================================================= -->
 
-<!-- 
+<!--
    Purge the data from all the empty runs and run properties
 -->
 <xsl:function name="f:purge">
@@ -248,7 +224,7 @@
 <!-- Templates to consolidate the runs that share the same properties                          -->
 <!-- ========================================================================================= -->
 
-<!-- 
+<!--
    Purge the data from all the empty runs and run properties
 -->
 <xsl:function name="f:consolidate">
@@ -271,7 +247,7 @@
 <xsl:template match="w:p|w:hyperlink|w:sdt|w:smartTag" mode="consolidate">
 <xsl:element name="{./name()}">
   <xsl:copy-of select="@*"/>
-  
+
   <xsl:variable name="paragraphTextRunProperties" as="element()">
       <w:rPr>
       <xsl:choose>
@@ -282,9 +258,9 @@
       </xsl:choose>
       </w:rPr>
     </xsl:variable>
-    
+
   <xsl:for-each-group select="*" group-adjacent="f:key-for-run(.)">
-    
+
     <xsl:choose>
 
       <!-- Not a Run -->
@@ -303,9 +279,9 @@
             </w:r>
           </xsl:when>
           <xsl:otherwise>
-            
+
           <xsl:for-each-group select="current-group()" group-starting-with="w:fldChar[@w:fldCharType='begin']">
-            <xsl:for-each-group select="current-group()" group-ending-with="w:fldChar[@w:fldCharType='end']">  
+            <xsl:for-each-group select="current-group()" group-ending-with="w:fldChar[@w:fldCharType='end']">
             <w:r>
               <!-- Include run properties (from the first match - they are identical)-->
               <w:rPr>
@@ -330,8 +306,8 @@
                       </xsl:otherwise>
                     </xsl:choose>
                    </xsl:for-each>
-                
-                
+
+
                 <xsl:variable name="runPropertyMatch">
                   <xsl:for-each select="$runs/w:rPr[1]/*">
                     <xsl:choose>
@@ -351,14 +327,14 @@
                     <xsl:copy-of select="."/>
                   </xsl:if>
                 </xsl:for-each>
-                 
-               
-                
-                
+
+
+
+
               </w:rPr>
 <!--               <xsl:apply-templates select="$runs/w:rPr" mode="consolidate"/> -->
-<!--                Collate other nodes --> 
-              
+<!--                Collate other nodes -->
+
               <xsl:for-each-group select="current-group()[not(self::w:rPr)]" group-adjacent="if (self::w:t) then 1 else if (self::w:instrText) then 2 else 3">
 				        <xsl:choose>
 				          <xsl:when test="current-grouping-key() = 1">
@@ -378,14 +354,14 @@
             </xsl:for-each-group>
           </xsl:otherwise>
         </xsl:choose>
-         
-	        
+
+
         </xsl:for-each-group>
-        
+
       </xsl:otherwise>
 
     </xsl:choose>
-  
+
   </xsl:for-each-group>
 </xsl:element>
 </xsl:template>
@@ -424,7 +400,7 @@
 <!--       </xsl:otherwise> -->
 
 <!--     </xsl:choose> -->
-  
+
 <!--   </xsl:for-each-group> -->
 <!-- </w:hyperlink> -->
 <!-- </xsl:template> -->
@@ -466,14 +442,14 @@
   <xsl:text>}</xsl:text>
 </xsl:template>
 
- <!-- 
+ <!--
   Templates to output a XML tree as text
   <a>
     <b c="1">
       text
     </b>
   </a>
-      
+
   To display the source XML simply use <xsl:apply-templates mode="xml"/>
 -->
   <xsl:template match="*" mode="encode">
@@ -524,5 +500,5 @@
     <xsl:value-of select="." />
     <xsl:text>"</xsl:text>
   </xsl:template>
-  
+
 </xsl:stylesheet>

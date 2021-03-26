@@ -3,16 +3,16 @@
  */
 package org.pageseeder.ox.berlioz;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
 import org.junit.Assert;
 import org.pageseeder.ox.berlioz.model.JobResponse;
 import org.pageseeder.ox.core.PipelineJob;
 import org.pageseeder.ox.process.PipelineJobManager;
 import org.pageseeder.ox.util.FileUtils;
 import org.pageseeder.ox.xml.utils.XMLComparator;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * The Class BatchProcessingFilesComparator.
@@ -21,16 +21,16 @@ import org.pageseeder.ox.xml.utils.XMLComparator;
  * @since 13 Apr. 2018
  */
 public class BatchProcessingFilesComparator {
-  
+
   /** The job. */
   private final JobResponse _job;
-  
+
   /** The expected results base directory. */
   private final File _expectedResultsBaseDirectory;
-  
+
   /** The job base directory. */
   private final File _jobBaseDirectory;
-  
+
   /** The files to ignore. */
   private final List<File> _filesToIgnore;
 
@@ -59,7 +59,7 @@ public class BatchProcessingFilesComparator {
   public JobResponse getJob() {
     return _job;
   }
-  
+
   /**
    * Compare.
    */
@@ -67,7 +67,7 @@ public class BatchProcessingFilesComparator {
 
     compareDirectory(this._expectedResultsBaseDirectory);
   }
-  
+
   /**
    * Compare directory.
    *
@@ -77,7 +77,7 @@ public class BatchProcessingFilesComparator {
     if (!shouldIgnore(expected)) {
       File jobTarget = getEquivalentFileResult(expected);
       Assert.assertTrue("Job Target Directory does not exist: " + jobTarget.getAbsolutePath(), jobTarget.exists());
-      
+
       for(File nextExpected:expected.listFiles()) {
         if (nextExpected.isDirectory()) {
           compareDirectory(nextExpected);
@@ -87,7 +87,7 @@ public class BatchProcessingFilesComparator {
       }
     }
   }
-  
+
   /**
    * Compare file.
    *
@@ -98,15 +98,15 @@ public class BatchProcessingFilesComparator {
       File jobTarget = getEquivalentFileResult(expected);
       Assert.assertTrue("Job Target File does not exist: " + jobTarget.getAbsolutePath(), jobTarget.exists());
       String filename = jobTarget.getName();
-      
+
       if (filename.endsWith("xml") || filename.endsWith("psml") || filename.endsWith("html") || filename.endsWith("xhtml") || filename.endsWith("htm")) {
         compareXMLFile(expected, jobTarget);
       } else {
         compareGenericFile(expected, jobTarget);
       }
     }
-  }  
-  
+  }
+
   /**
    * Compare XML file.
    *
@@ -116,7 +116,7 @@ public class BatchProcessingFilesComparator {
   private void compareXMLFile(File expected, File target) {
     XMLComparator.compareXMLFile(expected, target);
   }
-  
+
   /**
    * Compare generic file.
    *
@@ -130,7 +130,7 @@ public class BatchProcessingFilesComparator {
     System.out.println("Target: " + target.getAbsolutePath());
     Assert.assertEquals("The size are differents expected " + expectedSize + " target " + targetSize, expectedSize, targetSize);
   }
-  
+
   /**
    * Should ignore.
    *
@@ -149,12 +149,12 @@ public class BatchProcessingFilesComparator {
     }
     return shouldIgnore;
   }
-  
+
   /**
    * Compare file.
    *
    * @param expected the expected
-   * @throws IOException 
+   * @throws IOException
    */
   public File getEquivalentFileResult(File expected) {
     String expectedFileName = expected.getAbsolutePath().replace(this._expectedResultsBaseDirectory.getAbsolutePath(), "");
@@ -167,11 +167,11 @@ public class BatchProcessingFilesComparator {
       }
     } else {
       jobTarget = new File(this._jobBaseDirectory, expectedFileName);
-    } 
+    }
     return jobTarget;
-  }  
-  
-  
+  }
+
+
   /**
    * Compare file.
    *
@@ -182,13 +182,13 @@ public class BatchProcessingFilesComparator {
   public String getXMLResult(File expected) throws IOException {
     String xml = "";
     if (expected.isFile()) {
-      File jobTarget = getEquivalentFileResult(expected);      
+      File jobTarget = getEquivalentFileResult(expected);
       String filename = jobTarget.getName();
       if (filename.endsWith("xml") || filename.endsWith("psml") || filename.endsWith("html")) {
         xml = FileUtils.read(jobTarget);
       }
     }
     return xml;
-  }  
-  
+  }
+
 }

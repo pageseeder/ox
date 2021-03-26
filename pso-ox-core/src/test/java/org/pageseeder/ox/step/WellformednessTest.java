@@ -3,11 +3,6 @@
  */
 package org.pageseeder.ox.step;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +14,11 @@ import org.pageseeder.ox.core.ResultStatus;
 import org.pageseeder.ox.core.StepInfoImpl;
 import org.pageseeder.xmlwriter.XML.NamespaceAware;
 import org.pageseeder.xmlwriter.XMLStringWriter;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Ciber Cai

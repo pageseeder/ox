@@ -3,8 +3,6 @@
  */
 package org.pageseeder.ox.core;
 
-import java.io.File;
-
 import org.custommonkey.xmlunit.XMLAssert;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,6 +11,8 @@ import org.pageseeder.ox.OXConfig;
 import org.pageseeder.xmlwriter.XML.NamespaceAware;
 import org.pageseeder.xmlwriter.XMLStringWriter;
 import org.pageseeder.xmlwriter.XMLWriter;
+
+import java.io.File;
 
 /**
  * @author Ciber Cai
@@ -26,7 +26,7 @@ public class StepDefinitionTest {
     OXConfig config = OXConfig.get();
     config.setModelsDirectory(modelDir);
   }
-  
+
   @Test
   public void testHandler() throws Exception {
     Model model = new Model("m1");
@@ -57,7 +57,7 @@ public class StepDefinitionTest {
     XMLAssert.assertXpathEvaluatesTo("config-step1", "pipeline/step[1]/input[2]/@name", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("config-step1.txt", "pipeline/step[1]/input[2]/@default-value", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("text2-step1", "pipeline/step[1]/input[2]/text()", xml.toString());
-    
+
     XMLAssert.assertXpathEvaluatesTo("false", "pipeline/step[2]/@async", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("false", "pipeline/step[2]/@downloadable", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("false", "pipeline/step[2]/@viewable", xml.toString());
@@ -69,6 +69,6 @@ public class StepDefinitionTest {
     XMLAssert.assertXpathEvaluatesTo("config-step2.txt", "pipeline/step[2]/input[2]/@default-value", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("text2-step2", "pipeline/step[2]/input[2]/text()", xml.toString());
   }
-  
+
 
 }

@@ -3,12 +3,12 @@
  */
 package org.pageseeder.ox.tool;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.pageseeder.ox.core.ResultStatus;
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * The Class FileResultInfo.
@@ -17,13 +17,13 @@ import org.pageseeder.xmlwriter.XMLWriter;
  * @since 08 Aug. 2018
  */
 public class FileResultInfo implements XMLWritable{
-  
+
   /** The input. */
   private final File _input;
-  
+
   /** The output. */
   private final File _output;
-  
+
   /** The status. */
   private final ResultStatus _status;
 
@@ -40,7 +40,7 @@ public class FileResultInfo implements XMLWritable{
     this._output = output;
     this._status = status;
   }
-  
+
   /**
    * Gets the input.
    *

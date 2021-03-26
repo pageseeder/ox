@@ -1,26 +1,20 @@
 /* Copyright (c) 2011 Allette Systems pty. ltd. */
 package org.pageseeder.ox.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.util.Map;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Templates;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.util.Map;
 
 /**
  * The utilities class for XML.
@@ -48,7 +42,7 @@ public final class XMLUtils {
       parseXML(source, handler);
     }
   }
-  
+
   /**
    * Parse the XML
    * @param in defines the input stream.
@@ -65,7 +59,7 @@ public final class XMLUtils {
 
     parseXML(source, handler);
   }
-  
+
   /**
    * Parses the XML.
    *
@@ -90,7 +84,7 @@ public final class XMLUtils {
       LOGGER.error("Parse XML SAX Error. ", e);
     }
   }
-  
+
 
   /**
    * Transform the XML to result.

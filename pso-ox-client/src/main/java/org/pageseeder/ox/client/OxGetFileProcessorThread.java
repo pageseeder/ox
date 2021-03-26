@@ -1,14 +1,14 @@
 /* Copyright (c) 2014 Allette Systems pty. ltd. */
 package org.pageseeder.ox.client;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.pageseeder.berlioz.BerliozException;
 import org.pageseeder.xmlwriter.XML.NamespaceAware;
 import org.pageseeder.xmlwriter.XMLStringWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * A thread to call the {@link OxGetFileProcessor}

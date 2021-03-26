@@ -3,36 +3,29 @@
  */
 package org.pageseeder.ox.core;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.*;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.Templates;
-import javax.xml.transform.TransformerConfigurationException;
-
 import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.OXEntityResolver;
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.core.Pipeline.PipelineHandler;
-import org.pageseeder.ox.util.FileUtils;
 import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.ox.util.XSLT;
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
+import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.Templates;
+import javax.xml.transform.TransformerConfigurationException;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author Christophe Lauret
@@ -101,19 +94,19 @@ public final class Model implements XMLWritable {
 
   /**
    * Add the pipeline to the list and check if it is unique.
-   * 
+   *
    * @param pipeline
    */
   private void addPipeline (Pipeline pipeline) {
     for (Pipeline s : this._pipelines) {
       //Check the uniqueness of the step
-      if (s.id().equals(pipeline.id())) { 
+      if (s.id().equals(pipeline.id())) {
         throw new IllegalArgumentException("The model " + this.name() + "already has the pipeline " + pipeline.id());
       }
     }
     this._pipelines.add(pipeline);
   }
-  
+
   /**
    * Loads the model definition to know what the pipelines, steps and parameters are.
    * @return the status of load.
@@ -264,8 +257,8 @@ public final class Model implements XMLWritable {
 
   /**
    * Returns the default model (if only one defined)
-   * 
-   * Note: Before use this Method, check if the OXCOnfig model directory is defined.  
+   *
+   * Note: Before use this Method, check if the OXCOnfig model directory is defined.
    */
   public static Model getDefault() {
     List<Model> models = listModels();
@@ -361,7 +354,7 @@ public final class Model implements XMLWritable {
 
   /**
    * Return the default pipeline for this model.
-   * 
+   *
    * @return the first Pipeline found which default attribute has value true. If
    * not found then returns the first.
    */

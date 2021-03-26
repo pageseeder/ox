@@ -3,15 +3,15 @@
  */
 package org.pageseeder.ox.core;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Random;
-
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.core.JobStatus.STATUS;
 import org.pageseeder.ox.util.ISO8601;
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Random;
 
 /**
  * A simple java object to represent a Job for a step.
@@ -29,7 +29,7 @@ public final class StepJob implements XMLWritable, Serializable {
 
   /** The job id. */
   private final String _id;
-  
+
   /** Time the job was started. */
   private final long _startTime;
 
@@ -50,7 +50,7 @@ public final class StepJob implements XMLWritable, Serializable {
    * be deleted.
    */
   private final long _maxInactiveTime;
-  
+
   /**
    * Instantiates a new step job.
    *
@@ -79,7 +79,7 @@ public final class StepJob implements XMLWritable, Serializable {
     this._maxInactiveTime = maxInactiveTime;
     this.status = new JobStatus();
   }
-  
+
   /**
    * Gets the id.
    *
@@ -106,7 +106,7 @@ public final class StepJob implements XMLWritable, Serializable {
   public PackageData getPackageData() {
     return this._package;
   }
-  
+
   /**
    * Gets the max inactive time.
    *
@@ -147,7 +147,7 @@ public final class StepJob implements XMLWritable, Serializable {
     this.status.setJobStatus(STATUS.PROCESSING);
     this.status.setPercentage(this._step.percentage());
   }
-  
+
   /**
    * Set the job to complete status.
    */
@@ -186,7 +186,7 @@ public final class StepJob implements XMLWritable, Serializable {
     xml.attribute("message", tempStatus.getMessage());
     xml.attribute("pipeline", this._step.pipeline().id());
     xml.attribute("step", this._step.name());
-    this._step.toXML(this.result, xml);      
+    this._step.toXML(this.result, xml);
     xml.closeElement();
     tempStatus = null;
   }

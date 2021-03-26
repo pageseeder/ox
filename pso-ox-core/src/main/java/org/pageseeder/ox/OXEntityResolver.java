@@ -1,13 +1,13 @@
 /* Copyright (c) 1999-2014 weborganic systems pty. ltd. */
 package org.pageseeder.ox;
 
-import java.io.InputStream;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import java.io.InputStream;
 
 /**
  * Resolves the identifiers specific to the OX itself.

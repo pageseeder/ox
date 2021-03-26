@@ -3,14 +3,13 @@
  */
 package org.pageseeder.ox.berlioz;
 
-import java.io.IOException;
-
-import javax.xml.transform.TransformerException;
-
 import org.pageseeder.berlioz.content.ContentRequest;
 import org.pageseeder.berlioz.content.ContentStatus;
 import org.pageseeder.ox.OXException;
 import org.pageseeder.xmlwriter.XMLWriter;
+
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
 
 /**
  * A utility class for parameters.
@@ -38,12 +37,12 @@ public final class Errors {
     xml.attribute("message", ex.getMessage());
     xml.closeElement();
   }
-  
+
   /**
    * Write the XML for when a required data cannot process.
-   * 
+   *
    * <p>Also sets the status of the response to 'bad request'.
-   * 
+   *
    * <p>Generator should generally terminate after invoking this method.
    *
    * @param req  The content request
@@ -59,7 +58,7 @@ public final class Errors {
     xml.closeElement();
     req.setStatus(ContentStatus.BAD_REQUEST);
   }
-  
+
   // Client errors
   // ----------------------------------------------------------------------------------------------
 
@@ -155,9 +154,9 @@ public final class Errors {
 
   /**
    * Write the XML for when a required data cannot process.
-   * 
+   *
    * <p>Also sets the status of the response to 'bad request'.
-   * 
+   *
    * <p>Generator should generally terminate after invoking this method.
    *
    * @param req  The content request

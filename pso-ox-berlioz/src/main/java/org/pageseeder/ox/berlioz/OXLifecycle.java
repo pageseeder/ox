@@ -1,13 +1,13 @@
 /* Copyright (c) 2018 Allette Systems pty. ltd. */
 package org.pageseeder.ox.berlioz;
 
-import java.io.File;
-
 import org.pageseeder.berlioz.GlobalSettings;
 import org.pageseeder.berlioz.LifecycleListener;
 import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.cleanup.CleanUpManager;
 import org.pageseeder.ox.core.StepJob;
+
+import java.io.File;
 
 /**
  * The life cycle listener for OX.
@@ -26,7 +26,7 @@ public final class OXLifecycle implements LifecycleListener {
     CleanUpManager cleanUpManager = CleanUpManager.getInstance(maxInactiveTimeAllowed, CleanUpManager.DEFAULT_DELAY, packagesRootFolder);
     cleanUpManager.addFileToIgnore(OXConfig.getOXTempUploadFolder());
     cleanUpManager.start();
-    
+
     // clearCache();
     return true;
   }
