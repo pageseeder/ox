@@ -218,6 +218,13 @@ public final class StepDefinition implements XMLWritable, Serializable {
     return this._downloadable;
   }
 
+  /**
+   * Step parameters.
+   */
+  public final Map<String, String> parameters() {
+    return Collections.unmodifiableMap(this._parameters);
+  }
+
 
   /**
    * @return The previous step if any
@@ -261,7 +268,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
       String input = getInput(data);
       // use input as output if output is null
       String output = this._output != null ? this._output : input;
-      Map<String, String> parameters = Collections.unmodifiableMap(this._parameters);
+      Map<String, String> parameters = this.parameters();
       // step info
       StepInfoImpl info = new StepInfoImpl(this._id, this._name, input, output, parameters);
       // process the step
