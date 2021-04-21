@@ -1,11 +1,11 @@
-plugins {
-  id "com.jfrog.bintray" version "1.7"
-}
+//plugins {
+//  id "com.jfrog.bintray" version "1.7"
+//}
 
 description = "OX adapter for PSML files manipulation"
 
-apply plugin: 'maven-publish'
-apply from: "$rootDir/gradle/publishing.gradle"
+//apply plugin: 'maven-publish'
+//apply from: "$rootDir/gradle/publishing.gradle"
 
 // Dependencies of the project
 dependencies {
@@ -21,7 +21,7 @@ dependencies {
 
   runtime(
     'topologi:topologi-xerces:03',
-    'net.sf.saxon:Saxon-HE:9.7.0-2',
+    "net.sf.saxon:Saxon-HE:${saxonVersion}",
     'ch.qos.logback:logback-core:1.1.+',
     'ch.qos.logback:logback-classic:1.1.+'
   )
@@ -30,14 +30,14 @@ dependencies {
     'junit:junit:4.12',
   )
 }
-
-javadoc {
-  failOnError= false
-}
-
-
-test {
-  testLogging {events 'passed'}
-  //include '**Test'
-}
+//
+//javadoc {
+//  failOnError= false
+//}
+//
+//
+//test {
+//  testLogging {events 'passed'}
+//  //include '**Test'
+//}
 

@@ -1,8 +1,15 @@
+plugins {
+  id 'java'
+  id 'maven-publish'
+  id "io.codearte.nexus-staging" version "0.30.0"
+}
+
 group = 'org.pageseeder.ox'
 
 ext {
   globalVersion = file('version.txt').text
-  simpleVersion = '2021.2-7'
+  simpleVersion = '2021.4'
+  saxonVersion = '9.7.0-2'
 }
 
 subprojects {
@@ -10,6 +17,10 @@ subprojects {
   version = "$globalVersion"
 
   apply plugin: 'java'
+  //apply plugin: 'maven-publish'
+  //apply plugin: "io.codearte.nexus-staging"
+
+  apply from: "$rootDir/gradle/publish-mavencentral.gradle"
 
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
@@ -19,27 +30,39 @@ subprojects {
     jcenter()
     ivy {
       url 'http://ivy.pageseeder.com/shared'
-      layout 'pattern', {
+      patternLayout {
         artifact '[organisation]/[module]/[artifact]-[revision](.[ext])'
         ivy '[organisation]/[module]/ivy-[revision].xml'
       }
     }
   }
-}
+//  buildscript {
+//    dependencies {
+//      classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.30.0"
+//    }
+//  }
+  javadoc {
+    failOnError= false
+  }
 
-task wrapper(type: Wrapper) {
-  gradleVersion = '4.3.1'
-  description 'Generates the Gradle wrapper scripts'
-}
-
-task publishAllToBintray (group: "allette"){
-  subprojects.each {
-    dependsOn("${it.path}:bintrayUpload" )
+  test {
+    testLogging {events 'passed'}
   }
 }
 
-task publishAllToMavenLocal (group: "allette"){
-  subprojects.each {
-    dependsOn("${it.path}:publishToMavenLocal" )
-  }
-}
+//task wrapper(type: Wrapper) {
+//  gradleVersion = '4.3.1'
+//  description 'Generates the Gradle wrapper scripts'
+//}
+//
+//task publishAllToBintray (group: "allette"){
+//  subprojects.each {
+//    dependsOn("${it.path}:bintrayUpload" )
+//  }
+//}
+//
+//task publishAllToMavenLocal (group: "allette"){
+//  subprojects.each {
+//    dependsOn("${it.path}:publishToMavenLocal" )
+//  }
+//}

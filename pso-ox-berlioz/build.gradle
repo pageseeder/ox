@@ -1,11 +1,7 @@
-plugins {
-  id "com.jfrog.bintray" version "1.7"
-}
+//plugins {
+//  id "com.jfrog.bintray" version "1.7"
+//}
 
-description = "Collection of OX generators to run the OX from Berlioz"
-
-apply plugin: 'maven-publish'
-apply from: "$rootDir/gradle/publishing.gradle"
 
 // Dependencies of the project
 dependencies {
@@ -26,7 +22,7 @@ dependencies {
   )
 
   runtime(
-    'net.sf.saxon:Saxon-HE:9.7.0-2',
+    "net.sf.saxon:Saxon-HE:${saxonVersion}",
     'ch.qos.logback:logback-core:1.1.+',
     'ch.qos.logback:logback-classic:1.1.+'
   )
@@ -36,12 +32,12 @@ dependencies {
   )
 }
 
-javadoc {
-  failOnError= false
-}
-
-
-test {
-  testLogging {events 'passed'}
-}
+//javadoc {
+//  failOnError= false
+//}
+//
+//
+//test {
+//  testLogging {events 'passed'}
+//}
 
