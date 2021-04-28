@@ -87,6 +87,12 @@ public final class FileHandler {
   /**
    * Receive.
    *
+   * If there is any parameter in the url like /model/{model}/pipeline/{pipeline}.html . they will not be in the
+   * HttpServletRequest.
+   * Then before calling this method, you will need to set them in the attribute of HttpServletRequest, like:
+   * req.setAttribute("model", model);
+   * req.setAttribute("pipeline", pipeline);
+   *
    * @param req the ContentRequest
    * @return the list of PackageData
    * @throws IOException when I/O error occur.
@@ -119,8 +125,10 @@ public final class FileHandler {
 
     String model = processor.getParameter("model", req.getParameter("model"));
     if (StringUtils.isBlank(model)) {
-//      model = Model.getDefault().name();
-      throw new OXException("Model cannot be null or empty");
+      model = (String) req.getAttribute("model");
+      if (StringUtils.isBlank(model)) {
+        throw new OXException("Model cannot be null or empty");
+      }
     }
 
     if (isMultipart) {

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -64,6 +65,14 @@ public class HandleData implements ContentGenerator {
     if (req instanceof HttpRequestWrapper) {
       HttpRequestWrapper wrapper = (HttpRequestWrapper) req;
       hreq = wrapper.getHttpRequest();
+
+      //If the parameter is in the url (berlioz style). It is not query parameter and neither form input.
+      //They need to be added to the http request, otherwise however uses it will not have this value.
+      Enumeration<String> berliozParameters = req.getParameterNames();
+      while (berliozParameters.hasMoreElements()) {
+        String parameterName = berliozParameters.nextElement();
+        hreq.setAttribute(parameterName, req.getParameter(parameterName, ""));
+      }
     } else {
       throw new IllegalArgumentException("Cannot cast ContentRequest to HttpRequest");
     }
