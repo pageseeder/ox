@@ -27,14 +27,3 @@ dependencies {
     'junit:junit:4.12',
   )
 }
-
-//javadoc {
-//  failOnError= false
-//}
-//
-//
-//test {
-//  testLogging {events 'passed'}
-//  //include '**Test'
-//}
-

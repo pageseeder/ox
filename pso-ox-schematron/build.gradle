@@ -24,14 +24,3 @@ dependencies {
   )
 
 }
-//
-//javadoc {
-//  failOnError= false
-//}
-//
-//
-//test {
-//  testLogging {events 'passed'}
-//  //include '**Test'
-//}
-

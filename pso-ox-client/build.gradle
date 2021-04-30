@@ -1,16 +1,5 @@
 description = "OX Client"
 
-//
-//repositories {
-//  ivy {
-//    url 'http://ivy.pageseeder.com/shared'
-//    layout 'pattern', {
-//      artifact '[organisation]/[module]/[artifact]-[revision](.[ext])'
-//      ivy '[organisation]/[module]/ivy-[revision].xml'
-//    }
-//  }
-//}
-
 // Dependencies of the project
 dependencies {
 
@@ -39,14 +28,3 @@ dependencies {
   )
 
 }
-
-//javadoc {
-//  failOnError= false
-//}
-//
-//
-//test {
-//  testLogging {events 'passed'}
-//  //include '**Test'
-//}
-

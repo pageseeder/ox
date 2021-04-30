@@ -1,4 +1,4 @@
-description = "Contains some helpfull classes for test ox."
+description = "Contains some helpful classes for test ox."
 
 // Dependencies of the project
 dependencies {
@@ -38,14 +38,3 @@ dependencies {
     'org.eclipse.jdt:org.eclipse.jdt.annotation:2.0.0'
   )
 }
-//
-//javadoc {
-//  failOnError= false
-//}
-//
-//
-//test {
-//  testLogging {events 'passed'}
-//  //include '**Test'
-//}
-
