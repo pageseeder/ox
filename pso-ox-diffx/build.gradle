@@ -11,9 +11,9 @@ description = "OX adapter for XML diff using Diffx"
 dependencies {
 
   // module dependencies
-  compile project(':pso-ox-core')
+  implementation project(':pso-ox-core')
 
-  compile (
+  implementation (
     'org.pageseeder.xmlwriter:pso-xmlwriter:1.0.2',
     'org.pageseeder.diffx:pso-diffx:0.8.0',
     'org.slf4j:slf4j-api:1.7.12',
@@ -21,13 +21,13 @@ dependencies {
     'commons-io:commons-io:2.4'
   )
 
-  runtime(
+  runtimeOnly (
     "net.sf.saxon:Saxon-HE:${saxonVersion}",
     'ch.qos.logback:logback-core:1.1.+',
     'ch.qos.logback:logback-classic:1.1.+'
   )
 
-  testCompile (
+  testImplementation (
     'junit:junit:4.12',
     'xmlunit:xmlunit:1.6'
   )

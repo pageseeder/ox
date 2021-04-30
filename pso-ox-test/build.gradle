@@ -10,7 +10,7 @@ description = "Contains some helpfull classes for test ox."
 // Dependencies of the project
 dependencies {
 
-  compile (
+  implementation (
     // module dependencies
     project(':pso-ox-core'),
     project(':pso-ox-berlioz'),
@@ -32,14 +32,14 @@ dependencies {
     'javax.servlet:javax.servlet-api:3.1.0'
   )
 
-  runtime(
+  runtimeOnly (
     'topologi:topologi-xerces:03',
     "net.sf.saxon:Saxon-HE:${saxonVersion}",
     'ch.qos.logback:logback-core:1.1.+',
     'ch.qos.logback:logback-classic:1.1.+',
   )
 
-  testCompile (
+  testImplementation (
     project(':pso-ox-psml'),
     project(':pso-ox-schematron'),
     'org.eclipse.jdt:org.eclipse.jdt.annotation:2.0.0'

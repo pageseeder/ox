@@ -11,9 +11,9 @@ description = "OX adapter for Pageseeder"
 dependencies {
 
   // module dependencies
-  compile project(':pso-ox-core')
+  implementation project(':pso-ox-core')
 
-  compile (
+  implementation (
     'org.pageseeder.xmlwriter:pso-xmlwriter:1.0.2',
     'org.pageseeder.schematron:pso-schematron:1.2+',
     'org.slf4j:slf4j-api:1.7+',
@@ -23,14 +23,14 @@ dependencies {
     "net.pageseeder.app:psberlioz-simple-core:$simpleVersion",
   )
 
-  runtime(
+  runtimeOnly (
     'topologi:topologi-xerces:03',
     "net.sf.saxon:Saxon-HE:${saxonVersion}",
     'ch.qos.logback:logback-core:1.1.+',
     'ch.qos.logback:logback-classic:1.1.+'
   )
 
-  testCompile (
+  testImplementation (
     'junit:junit:4.12',
   )
 }
