@@ -1,11 +1,4 @@
-//plugins {
-//  id "com.jfrog.bintray" version "1.7"
-//}
-
 description = "Contains some helpfull classes for test ox."
-//
-//apply plugin: 'maven-publish'
-//apply from: "$rootDir/gradle/publishing.gradle"
 
 // Dependencies of the project
 dependencies {

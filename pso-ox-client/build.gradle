@@ -1,11 +1,5 @@
-//plugins {
-//  id "com.jfrog.bintray" version "1.7"
-//}
-
 description = "OX Client"
 
-//apply plugin: 'maven-publish'
-//apply from: "$rootDir/gradle/publishing.gradle"
 //
 //repositories {
 //  ivy {
