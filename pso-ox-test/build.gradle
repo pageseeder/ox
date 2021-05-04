@@ -7,34 +7,33 @@ dependencies {
     // module dependencies
     project(':pso-ox-core'),
     project(':pso-ox-berlioz'),
-    'org.pageseeder.berlioz:pso-berlioz:0.11.+',
-    'org.pageseeder.xmlwriter:pso-xmlwriter:1.0.2',
-    'org.slf4j:slf4j-api:1.7.+',
-    'junit:junit:4.12',
+    "org.pageseeder.berlioz:pso-berlioz:$psoBerliozVersion",
+    "org.pageseeder.xmlwriter:pso-xmlwriter:$psoXMLWriterVersion",
+    "org.slf4j:slf4j-api:$slf4jAPIVersion",
+    "junit:junit:$junitVersion",
     'org.hamcrest:java-hamcrest:2.0.0.0',
     'org.hamcrest:hamcrest-junit:2.0.0.0',
     'org.xmlunit:xmlunit-core:2.3.0',
     'org.xmlunit:xmlunit-matchers:2.3.0',
-    'org.pageseeder.xmlwriter:pso-xmlwriter:1.0.2',
     'org.mockito:mockito-all:1.10.19',
     'org.powermock:powermock-mockito-release-full:1.6.4',
   )
 
   compileOnly (
-    'org.eclipse.jdt:org.eclipse.jdt.annotation:2.0.0',
-    'javax.servlet:javax.servlet-api:3.1.0'
+    "org.eclipse.jdt:org.eclipse.jdt.annotation:$eclipseJDTAnnotationVesion",
+    "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
   )
 
   runtimeOnly (
     'topologi:topologi-xerces:03',
     "net.sf.saxon:Saxon-HE:${saxonVersion}",
-    'ch.qos.logback:logback-core:1.1.+',
-    'ch.qos.logback:logback-classic:1.1.+',
+    "ch.qos.logback:logback-core:$logbackVersion",
+    "ch.qos.logback:logback-classic:$logbackVersion"
   )
 
   testImplementation (
     project(':pso-ox-psml'),
     project(':pso-ox-schematron'),
-    'org.eclipse.jdt:org.eclipse.jdt.annotation:2.0.0'
+    "org.eclipse.jdt:org.eclipse.jdt.annotation:$eclipseJDTAnnotationVesion",
   )
 }

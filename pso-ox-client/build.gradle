@@ -7,23 +7,27 @@ dependencies {
   implementation project(':pso-ox-core')
 
   implementation (
-    'org.pageseeder.xmlwriter:pso-xmlwriter:1.0.2',
-    'org.slf4j:slf4j-api:1.7+',
-    'commons-io:commons-io:2.4',
-    'org.pageseeder.berlioz:pso-berlioz:0.11.+',
+    "org.pageseeder.xmlwriter:pso-xmlwriter:$psoXMLWriterVersion",
+    "org.slf4j:slf4j-api:$slf4jAPIVersion",
+    "commons-io:commons-io:$commonsIOVersion",
+    "org.pageseeder.berlioz:pso-berlioz:$psoBerliozVersion",
     'org.pageseeder.bastille:pso-bastille:0.10.0',
-    'javax.servlet:javax.servlet-api:3.1.0'
+    "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
+  )
+
+  compileOnly (
+    "org.eclipse.jdt:org.eclipse.jdt.annotation:$eclipseJDTAnnotationVesion"
   )
 
   runtimeOnly (
     'topologi:topologi-xerces:03',
     "net.sf.saxon:Saxon-HE:${saxonVersion}",
-    'ch.qos.logback:logback-core:1.1.+',
-    'ch.qos.logback:logback-classic:1.1.+'
+    "ch.qos.logback:logback-core:$logbackVersion",
+    "ch.qos.logback:logback-classic:$logbackVersion"
   )
 
   testImplementation (
-    'junit:junit:4.12',
+    "junit:junit:$junitVersion",
     'xmlunit:xmlunit:1.6'
   )
 
