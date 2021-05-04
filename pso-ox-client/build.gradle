@@ -11,6 +11,7 @@ dependencies {
     "org.slf4j:slf4j-api:$slf4jAPIVersion",
     "commons-io:commons-io:$commonsIOVersion",
     "org.pageseeder.berlioz:pso-berlioz:$psoBerliozVersion",
+    "org.pageseeder.cobble:pso-cobble:0.3.2",
     "org.pageseeder.bastille:pso-bastille:$psoBastilleVersion",
     "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
   )
