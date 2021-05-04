@@ -11,12 +11,12 @@ dependencies {
     "org.pageseeder.xmlwriter:pso-xmlwriter:$psoXMLWriterVersion",
     "org.slf4j:slf4j-api:$slf4jAPIVersion",
     "junit:junit:$junitVersion",
-    'org.hamcrest:java-hamcrest:2.0.0.0',
-    'org.hamcrest:hamcrest-junit:2.0.0.0',
-    'org.xmlunit:xmlunit-core:2.3.0',
-    'org.xmlunit:xmlunit-matchers:2.3.0',
-    'org.mockito:mockito-all:1.10.19',
-    'org.powermock:powermock-mockito-release-full:1.6.4',
+    "org.hamcrest:java-hamcrest:$javaHamcrestVersion",
+    "org.hamcrest:hamcrest-junit:$hamcrestJUnitVersion",
+    "org.xmlunit:xmlunit-core:$xmlUnitCoreVersion",
+    "org.xmlunit:xmlunit-matchers:$xmlUnitMatchersVersion",
+    "org.mockito:mockito-all:$mockitoAllVersion",
+    "org.powermock:powermock-mockito-release-full:$powermockMockitoReleaseFullVersion",
   )
 
   compileOnly (

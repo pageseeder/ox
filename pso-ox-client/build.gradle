@@ -11,7 +11,7 @@ dependencies {
     "org.slf4j:slf4j-api:$slf4jAPIVersion",
     "commons-io:commons-io:$commonsIOVersion",
     "org.pageseeder.berlioz:pso-berlioz:$psoBerliozVersion",
-    'org.pageseeder.bastille:pso-bastille:0.10.0',
+    "org.pageseeder.bastille:pso-bastille:$psoBastilleVersion",
     "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
   )
 
@@ -28,7 +28,7 @@ dependencies {
 
   testImplementation (
     "junit:junit:$junitVersion",
-    'xmlunit:xmlunit:1.6'
+    "xmlunit:xmlunit:$xmlUnitVersion"
   )
 
 }

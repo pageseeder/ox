@@ -9,7 +9,9 @@ group = 'org.pageseeder.ox'
 ext {
   globalVersion = file('version.txt').text
   //Allette Open source
-  psoBerliozVersion   = '0.12.0'
+  psoBastilleVersion = '0.10.2'
+  psoBerliozVersion = '0.12.0'
+  psoDiffxVersion = '0.8.1'
   psoSchematronVersion= '1.2.2'
   psoXMLWriterVersion = '1.0.3'
 
@@ -20,11 +22,21 @@ ext {
   commonsFileuploadVersion = '1.3.3'
   commonsIOVersion = '2.5'
   eclipseJDTAnnotationVesion = '2.0.0'
+  hamcrestJUnitVersion = '2.0.0.0'
   javaxServletApiVersion = '3.1.0'
+  javaHamcrestVersion = '2.0.0.0'
   junitVersion = '4.13.2'
   logbackVersion = '1.1.11'
+  mockitoAllVersion = '1.10.19'
+  powermockAPIMockitoVersion = '1.6.6'
+  powermockModulejunit4Version = '1.6.6'
+  powermockMockitoReleaseFullVersion = '1.6.4'
   saxonVersion = '9.7.0-2'
   slf4jAPIVersion = '1.7.30'
+  topologiXercesVersion = '03'
+  xmlUnitVersion = '1.6'
+  xmlUnitCoreVersion = '2.3.0'
+  xmlUnitMatchersVersion = '2.3.0'
 }
 
 subprojects {
@@ -38,7 +50,13 @@ subprojects {
   targetCompatibility = 1.8
 
   repositories {
+    //replacement for mavenCentral and jcenter
+    maven {
+      url = uri("https://maven-central.storage.googleapis.com/maven2")
+    }
+
     maven { url 'https://dl.bintray.com/pageseeder/maven' }
+
     jcenter()
     ivy {
       url 'http://ivy.pageseeder.com/shared'
