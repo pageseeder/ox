@@ -10,10 +10,11 @@ ext {
   globalVersion = file('version.txt').text
   //Allette Open source
   psoBastilleVersion = '0.10.2'
-  psoBerliozVersion = '0.12.0'
+  //psoBerliozVersion = '0.12.0'
+  psoBerliozVersion = '0.11.6'
   psoDiffxVersion = '0.8.1'
-  psoSchematronVersion= '1.2.2'
-  psoXMLWriterVersion = '1.0.3'
+  psoSchematronVersion= '1.2.3'
+  psoXMLWriterVersion = '1.0.4'
 
   //Allette
   simpleVersion = '2021.4'
