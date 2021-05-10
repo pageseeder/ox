@@ -5,7 +5,7 @@ dependencies {
   implementation (
     "org.pageseeder.xmlwriter:pso-xmlwriter:$psoXMLWriterVersion",
     "org.slf4j:slf4j-api:$slf4jAPIVersion",
-    'w3c:jtidy:r938',
+    'net.sf.jtidy:jtidy:r938'//This library is also available in our ivy as 'w3c:jtidy:r938'
   )
 
   compileOnly (

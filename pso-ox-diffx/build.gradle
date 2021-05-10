@@ -11,7 +11,7 @@ dependencies {
     "org.pageseeder.diffx:pso-diffx:$psoDiffxVersion",
     "org.slf4j:slf4j-api:$slf4jAPIVersion",
     'net.sf.jtidy:jtidy:r938',
-    'commons-io:commons-io:2.4'
+    "commons-io:commons-io:$commonsIOVersion",
   )
 
   runtimeOnly (

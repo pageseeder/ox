@@ -10,8 +10,7 @@ ext {
   globalVersion = file('version.txt').text
   //Allette Open source
   psoBastilleVersion = '0.10.2'
-  //psoBerliozVersion = '0.12.0'
-  psoBerliozVersion = '0.11.6'
+  psoBerliozVersion = '0.12.1'
   psoDiffxVersion = '0.8.1'
   psoSchematronVersion= '1.2.3'
   psoXMLWriterVersion = '1.0.4'
@@ -56,15 +55,19 @@ subprojects {
       url = uri("https://maven-central.storage.googleapis.com/maven2")
     }
 
-    maven { url 'https://dl.bintray.com/pageseeder/maven' }
+    // Takes our libraries immediately as the maven central should take hours to get synchronized.
+    maven { url 'https://s01.oss.sonatype.org/content/groups/public/' }
 
-    jcenter()
+    //remove this repository after migrating the modulo pageseeder to another project psn
     ivy {
       url 'http://ivy.pageseeder.com/shared'
       allowInsecureProtocol true
       patternLayout {
         artifact '[organisation]/[module]/[artifact]-[revision](.[ext])'
         ivy '[organisation]/[module]/ivy-[revision].xml'
+      }
+      content {
+        includeGroup "net.pageseeder.app"
       }
     }
   }
