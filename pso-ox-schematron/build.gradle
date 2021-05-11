@@ -20,7 +20,7 @@ dependencies {
 
   testImplementation (
     "junit:junit:$junitVersion",
-    'xmlunit:xmlunit:1.6'
+    "xmlunit:xmlunit:$xmlUnitVersion"
   )
 
 }

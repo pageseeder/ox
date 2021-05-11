@@ -5,7 +5,7 @@ dependencies {
   implementation (
     "org.pageseeder.xmlwriter:pso-xmlwriter:$psoXMLWriterVersion",
     "org.slf4j:slf4j-api:$slf4jAPIVersion",
-    'w3c:jtidy:r938',
+    'net.sf.jtidy:jtidy:r938'//This library is also available in our ivy as 'w3c:jtidy:r938'
   )
 
   compileOnly (
@@ -20,11 +20,11 @@ dependencies {
 
   testImplementation (
     "junit:junit:$junitVersion",
-    'xmlunit:xmlunit:1.6',
-    'org.powermock:powermock-api-mockito:1.6.4',
-    'org.powermock:powermock-module-junit4:1.6.4',
-    'org.xmlunit:xmlunit-core:2.3.0',
-    'org.xmlunit:xmlunit-matchers:2.3.0',
+    "xmlunit:xmlunit:$xmlUnitVersion",
+    "org.powermock:powermock-api-mockito:$powermockAPIMockitoVersion",
+    "org.powermock:powermock-module-junit4:$powermockModulejunit4Version",
+    "org.xmlunit:xmlunit-core:$xmlUnitCoreVersion",
+    "org.xmlunit:xmlunit-matchers:$xmlUnitMatchersVersion",
     "org.eclipse.jdt:org.eclipse.jdt.annotation:$eclipseJDTAnnotationVesion"
   )
 }

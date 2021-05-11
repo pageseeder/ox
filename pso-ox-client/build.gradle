@@ -11,7 +11,8 @@ dependencies {
     "org.slf4j:slf4j-api:$slf4jAPIVersion",
     "commons-io:commons-io:$commonsIOVersion",
     "org.pageseeder.berlioz:pso-berlioz:$psoBerliozVersion",
-    'org.pageseeder.bastille:pso-bastille:0.10.0',
+    "org.pageseeder.cobble:pso-cobble:0.3.2",
+    "org.pageseeder.bastille:pso-bastille:$psoBastilleVersion",
     "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
   )
 
@@ -20,7 +21,7 @@ dependencies {
   )
 
   runtimeOnly (
-    'topologi:topologi-xerces:03',
+    //"topologi:topologi-xerces:$topologiXercesVersion",
     "net.sf.saxon:Saxon-HE:${saxonVersion}",
     "ch.qos.logback:logback-core:$logbackVersion",
     "ch.qos.logback:logback-classic:$logbackVersion"
@@ -28,7 +29,7 @@ dependencies {
 
   testImplementation (
     "junit:junit:$junitVersion",
-    'xmlunit:xmlunit:1.6'
+    "xmlunit:xmlunit:$xmlUnitVersion"
   )
 
 }

@@ -1,4 +1,4 @@
-[ ![Download](https://api.bintray.com/packages/pageseeder/maven/ox/images/download.svg) ](https://bintray.com/pageseeder/maven/ox/_latestVersion)
+[![Maven Central](https://img.shields.io/maven-central/v/org.pageseeder.ox/pso-ox-core.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22org.pageseeder.ox%22%20AND%20a:%22pso-ox-core%22)
 
 # ox
 An XML processing pipeline doing that hard work
