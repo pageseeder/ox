@@ -93,7 +93,8 @@ public class ListURIForURL implements Step {
 
   private String buildURL (PSConfig psConfig, PSGroup group, String folder) {
     Objects.requireNonNull(group.getName());
-    StringBuilder path = new StringBuilder(group.getName().replace("-", "/"));
+    StringBuilder path = new StringBuilder("/");
+    path.append(group.getName().replace("-", "/"));
     if (!StringUtils.isBlank(folder)) {
       path.append("/");
       path.append(folder);
