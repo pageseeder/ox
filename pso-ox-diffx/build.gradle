@@ -8,10 +8,10 @@ dependencies {
 
   implementation (
     "org.pageseeder.xmlwriter:pso-xmlwriter:$psoXMLWriterVersion",
-    'org.pageseeder.diffx:pso-diffx:0.8.0',
+    "org.pageseeder.diffx:pso-diffx:$psoDiffxVersion",
     "org.slf4j:slf4j-api:$slf4jAPIVersion",
     'net.sf.jtidy:jtidy:r938',
-    'commons-io:commons-io:2.4'
+    "commons-io:commons-io:$commonsIOVersion",
   )
 
   runtimeOnly (
@@ -22,7 +22,7 @@ dependencies {
 
   testImplementation (
     "junit:junit:$junitVersion",
-    'xmlunit:xmlunit:1.6'
+    "xmlunit:xmlunit:$xmlUnitVersion"
   )
 
 }

@@ -17,7 +17,7 @@ dependencies {
   )
 
   runtimeOnly (
-    'topologi:topologi-xerces:03',
+    //"topologi:topologi-xerces:$topologiXercesVersion",
     "net.sf.saxon:Saxon-HE:${saxonVersion}",
     "ch.qos.logback:logback-core:$logbackVersion",
     "ch.qos.logback:logback-classic:$logbackVersion"
