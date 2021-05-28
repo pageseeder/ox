@@ -103,6 +103,60 @@ public class StepUtilsTest {
   }
 
   @Test
+  public void applyDynamicParameterLogic_nullPackageData_empty () {
+    PackageData data = null;
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-info","Info test value");
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals(stepParameters.get("Info test value"), StepUtils.applyDynamicParameterLogic(data, info,stepParameters.get("Info test value")));
+  }
+
+  @Test
+  public void applyDynamicParameterLogic_loopCountOne_success () {
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-1","{test-2}");
+    PackageData data = createPackageData(requestParameters);
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-2","value-2");
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals("value-2", StepUtils.applyDynamicParameterLogic(data, info, requestParameters.get("test-1")));
+  }
+
+  @Test
+  public void applyDynamicParameterLogic_loopCountTwo_success () {
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-1","{test-2}");
+    requestParameters.put("test-3","value-3");
+    PackageData data = createPackageData(requestParameters);
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-2","{test-3}");
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals("value-3", StepUtils.applyDynamicParameterLogic(data, info, requestParameters.get("test-1")));
+  }
+
+  @Test
+  public void applyDynamicParameterLogic_loopCountMax_success () {
+    // Maximum 2 {test-2} (first) -> {test-3} (second) -> {test-4} (third not allowed)
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-1","{test-2}");
+    requestParameters.put("test-3","{test-4}");
+    PackageData data = createPackageData(requestParameters);
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-2","{test-3}");
+    stepParameters.put("test-4","value-4");
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals("{test-4}", StepUtils.applyDynamicParameterLogic(data, info, requestParameters.get("test-1")));
+  }
+
+  @Test
+  public void applyDynamicParameterLogic_nullStepInfo_empty () {
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test","Data test value");
+    PackageData data = createPackageData(requestParameters);
+    StepInfo info = null;
+    Assert.assertEquals(requestParameters.get("test"), StepUtils.applyDynamicParameterLogic(data, info, requestParameters.get("test")));
+  }
+  @Test
   public void applyDynamicParameterLogic_nullString_null() {
     Map<String, String> requestParameters = new HashMap<>();
     PackageData data = createPackageData(requestParameters);
