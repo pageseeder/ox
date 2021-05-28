@@ -1,10 +1,12 @@
 package org.pageseeder.ox.util;
 
+import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.parameters.ParameterTemplate;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -14,6 +16,7 @@ import java.util.Map;
  * @since 15 January 2021
  */
 public class StepUtils {
+
   /**
    * Get the input from the step definition, but if it is empty then it uses the file uploaded.
    * It accepts glob pattern.
@@ -117,15 +120,44 @@ public class StepUtils {
    * @return
    */
   public static String applyDynamicParameterLogic(PackageData data, StepInfo info, String parameterValue) {
+
+    Map<String, String> parameters = new HashMap<>();
+
+    //Add request parameters
+    if (data != null) {
+      parameters.putAll(data.getParameters());
+    }
+
+    //Add step parameters
+    if (info != null) {
+      parameters.putAll(info.parameters());
+    }
+    return applyDynamicParameterLogic(parameterValue, parameters, 1);
+  }
+
+  /**
+   * The a request or step parameter can have a dynamic value base in another one.
+   *
+   * Example:
+   * Package data has parameter "root-folder"  with value "data"
+   * parameterValue = /{root-folder}/file.xml  =>
+   * this method returns /data/file.xml
+   *
+   * @param parameterValue
+   * @param parameters A map with all parameters from PackageData and StepInfo.
+   * @param loopCount The dynamic parameter logic allows to use dynamic values within dynamic values. The loop count
+   *                  will how much time it has been doing it. As it will be limited to 2 times
+   * @return
+   */
+  private static String applyDynamicParameterLogic(String parameterValue, Map<String, String> parameters, int loopCount) {
     String newValue = parameterValue;
     if (!StringUtils.isBlank(parameterValue)) {
-      //Add request parameters
-      Map<String, String> parameters = data.getParameters();
-      //Add step parameters
-      parameters.putAll(info.parameters());
-
       ParameterTemplate parameterTemplate = ParameterTemplate.parse(parameterValue);
       newValue = parameterTemplate.toString(parameters);
+      loopCount++;
+      if (loopCount <= 2) {
+        newValue = applyDynamicParameterLogic(newValue, parameters, loopCount);
+      }
     }
     return newValue;
   }
