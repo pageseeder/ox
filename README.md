@@ -205,7 +205,7 @@ There is a parameter called "ps-group-name" with value "test".
 And there is another "input"="/{ps-group-name}/documents". 
 The final value for "input" will be "/test/documents".
 
-It allows a loop of 2
+It allows a cycle reference limited to 2 levels
 "text-1"="{text-2}" (first reference)
 "text-2"="{text-3}" (second reference)
 "text-3"="value-3"
