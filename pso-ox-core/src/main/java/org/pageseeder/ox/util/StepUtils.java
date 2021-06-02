@@ -1,6 +1,5 @@
 package org.pageseeder.ox.util;
 
-import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.parameters.ParameterTemplate;
@@ -106,6 +105,38 @@ public class StepUtils {
   }
 
   /**
+   * Get the parameter from step definition, if it is not found then gets from the request parameter.
+   * Otherwise returns the fallback.
+   *
+   * @param data PackageData
+   * @param info StepInfo
+   * @param parameterName The name of the parameter to get from step info or package data
+   * @param fallback default value.
+   * @return
+   */
+  public static int getParameterIntWithoutDynamicLogic(PackageData data, StepInfo info, String parameterName, int fallback) {
+    int value = fallback;
+    String parameter = null;
+
+    if (info != null) {
+      parameter = info.getParameter(parameterName);
+    }
+
+    if (StringUtils.isBlank(parameter) && data != null) {
+      parameter = data.getParameter(parameterName);
+    }
+
+    if (!StringUtils.isBlank(parameter)) {
+      try {
+        value = Integer.parseInt(parameter);
+      } catch (NumberFormatException ex) {
+        value = fallback;
+      }
+    }
+    return value;
+  }
+
+  /**
    * The a request or step parameter can have a dynamic value base in another one.
    *
    * Example:
@@ -132,7 +163,11 @@ public class StepUtils {
     if (info != null) {
       parameters.putAll(info.parameters());
     }
-    return applyDynamicParameterLogic(parameterValue, parameters, 1);
+
+    int maxLoopAllowed = getParameterIntWithoutDynamicLogic(data, info, "dynamic-param-max-cycle", 2);
+
+
+    return applyDynamicParameterLogic(parameterValue, parameters, 1, maxLoopAllowed);
   }
 
   /**
@@ -146,17 +181,18 @@ public class StepUtils {
    * @param parameterValue
    * @param parameters A map with all parameters from PackageData and StepInfo.
    * @param loopCount The dynamic parameter logic allows to use dynamic values within dynamic values. The loop count
-   *                  will how much time it has been doing it. As it will be limited to 2 times
+   *                  store which cycle it is. As it will be limited by maxLoopAllowed.
+   * @param maxLoopAllowed
    * @return
    */
-  private static String applyDynamicParameterLogic(String parameterValue, Map<String, String> parameters, int loopCount) {
+  private static String applyDynamicParameterLogic(String parameterValue, Map<String, String> parameters, int loopCount, int maxLoopAllowed) {
     String newValue = parameterValue;
     if (!StringUtils.isBlank(parameterValue)) {
       ParameterTemplate parameterTemplate = ParameterTemplate.parse(parameterValue);
       newValue = parameterTemplate.toString(parameters);
       loopCount++;
-      if (loopCount <= 2) {
-        newValue = applyDynamicParameterLogic(newValue, parameters, loopCount);
+      if (loopCount <= maxLoopAllowed) {
+        newValue = applyDynamicParameterLogic(newValue, parameters, loopCount, maxLoopAllowed);
       }
     }
     return newValue;
