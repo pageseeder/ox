@@ -205,9 +205,13 @@ There is a parameter called "ps-group-name" with value "test".
 And there is another "input"="/{ps-group-name}/documents". 
 The final value for "input" will be "/test/documents".
 
-It allows a loop of 2
+By default it allows a cycle reference of 2 levels by default. However the default value can replaced the value in the
+request or step parameter called `dynamic-param-max-cycle`. 
+
 "text-1"="{text-2}" (first reference)
+
 "text-2"="{text-3}" (second reference)
+
 "text-3"="value-3"
 
 The result for text-1 is value-3
