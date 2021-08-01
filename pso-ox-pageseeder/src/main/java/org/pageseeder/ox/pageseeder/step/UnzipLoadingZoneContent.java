@@ -6,7 +6,9 @@ import net.pageseeder.app.simple.vault.PSOAuthConfigManager;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
 import net.pageseeder.app.simple.vault.TokensVaultManager;
 import net.pageseeder.app.simple.vault.VaultUtils;
+import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.model.PSGroup;
+import org.pageseeder.ox.api.Measurable;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.api.StepInfo;
@@ -26,28 +28,65 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
+ *
+ * This step calls a service in pageseeder that is asynchronous. Therefor it is recommended to use this with async=true.
+ *
+ * The parameters that can be used in the step are:
+ *
+ * <ul>
+ *   <li><b>path</b></li>
+ *   <li><b>deleteoriginal</b></li>
+ *   <li><b>uploadid</b></li>
+ *   <li><b>xlinkid</b></li>
+ *   <li><b>thread-delay-milleseconds</b> is used to delay each attempt to check the status of unzipping in
+ *   pageseeder</li>
+ * </ul>
+ *
  * @author ccabral
  * @since 15 February 2021
  */
-public class UnzipLoadingZoneContent implements Step {
+public class UnzipLoadingZoneContent implements Step, Measurable {
+
   private static Logger LOGGER = LoggerFactory.getLogger(UnzipLoadingZoneContent.class);
+
+  private int percentage = 0;
 
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
     LOGGER.debug("Start Unzip Loading zone Content");
 
     TokensVaultItem item = TokensVaultManager.get(VaultUtils.getDefaultPSOAuthConfigName());
+    PSConfig psConfig = PSOAuthConfigManager.get().getConfig();
     DefaultResult result = new DefaultResult(model, data, info, (File) null);
     LoadingZoneService service = new LoadingZoneService();
-
+    int delayInMilleseconds = StepUtils.getParameterInt(data, info, "thread-delay-milleseconds", 500);
+    //There is not an easy way to calculated the percentage, then it will just guess.
+    this.percentage = 3;
     try {
       PSGroup group = new PSGroup(StepUtils.getParameter(data, info, "group", (String) null));
-      XMLStringWriter writer = new XMLStringWriter(XML.NamespaceAware.No);
+      XMLStringWriter unzipWriter = new XMLStringWriter(XML.NamespaceAware.No);
+      XMLStringWriter threadWriter = new XMLStringWriter(XML.NamespaceAware.No);
 
       //Unzip
       UnzipParameter unzipParameter = getUnzipParameters(data, info);
-      service.unzip(item.getMember(), group, unzipParameter, item.getToken(), PSOAuthConfigManager.get().getConfig(), writer);
-      result.addExtraXML(new ExtraResultStringXML(writer.toString()));
+      this.percentage = 5;
+
+      try {
+        //The unzip is an Asynchronous process therefore we need to check its status.
+        service.unzip(item.getMember(), group, unzipParameter, item.getToken(), psConfig, unzipWriter);
+        this.percentage = 20;
+
+        result.addExtraXML(new ExtraResultStringXML(unzipWriter.toString()));
+        this.percentage = 30;
+
+        GroupThreadProgressScheduleExecutorRunnable executorRunnable = new
+            GroupThreadProgressScheduleExecutorRunnable(unzipWriter.toString(), threadWriter, item.getToken(), psConfig,
+            delayInMilleseconds);
+        executorRunnable.run();
+      } finally {
+        result.addExtraXML(new ExtraResultStringXML(threadWriter.toString()));
+        this.percentage = 100;
+      }
     } catch (Exception e){
       LOGGER.error("Exception: {}", e);
       result.setError(e);
@@ -68,5 +107,10 @@ public class UnzipLoadingZoneContent implements Step {
     }
     UnzipParameter parameter = new UnzipParameter(path, deleteOriginal, uploadId, xLinkId);
     return parameter;
+  }
+
+  @Override
+  public int percentage() {
+    return this.percentage;
   }
 }
