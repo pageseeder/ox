@@ -6,7 +6,9 @@ import net.pageseeder.app.simple.vault.PSOAuthConfigManager;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
 import net.pageseeder.app.simple.vault.TokensVaultManager;
 import net.pageseeder.app.simple.vault.VaultUtils;
+import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.model.PSGroup;
+import org.pageseeder.ox.api.Measurable;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.api.StepInfo;
@@ -22,33 +24,90 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 
 /**
+ *
+ * The parameters that can be used in the step are:
+ *
+ * <ul>
+ *   <li><b>assignedto</b></li>
+ *   <li><b>createxrefs</b></li>
+ *   <li><b>description</b></li>
+ *   <li><b>due</b></li>
+ *   <li><b>folder</b></li>
+ *   <li><b>index</b></li>
+ *   <li><b>mode</b></li>
+ *   <li><b>notification-content</b></li>
+ *   <li><b>notification-labels</b></li>
+ *   <li><b>notification-subject</b></li>
+ *   <li><b>notify</b></li>
+ *   <li><b>overwrite</b></li>
+ *   <li><b>overwrite-properties</b></li>
+ *   <li><b>priority</b></li>
+ *   <li><b>status</b></li>
+ *   <li><b>summary</b></li>
+ *   <li><b>uploadid</b></li>
+ *   <li><b>url</b></li>
+ *   <li><b>validate</b></li>
+ *   <li><b>workflow-labels</b></li>
+ *   <li><b>workflow-notify</b></li>
+ *   <li><b>xmlspecv</b></li>
+ *   <li><b>thread-delay-milleseconds</b> is used to delay each attempt to check the status of unzipping in
+ *   pageseeder</li>
+ * </ul>
+ *
+ *
  * @author ccabral
  * @since 15 February 2021
  */
-public class StartLoading implements Step {
+public class StartLoading implements Step, Measurable {
 
   private static Logger LOGGER = LoggerFactory.getLogger(StartLoading.class);
+
+  private int percentage = 0;
 
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
     LOGGER.debug("Start Loading Process");
     TokensVaultItem item = TokensVaultManager.get(VaultUtils.getDefaultPSOAuthConfigName());
+    PSConfig psConfig = PSOAuthConfigManager.get().getConfig();
     DefaultResult result = new DefaultResult(model, data, info, (File) null);
     LoadingZoneService service = new LoadingZoneService();
-    XMLStringWriter writer = new XMLStringWriter(XML.NamespaceAware.No);
-    PSGroup group = new PSGroup(StepUtils.getParameter(data, info, "group", (String) null));
+    int delayInMilleseconds = StepUtils.getParameterInt(data, info, "thread-delay-milleseconds", 500);
+    //There is not an easy way to calculated the percentage, then it will just guess.
+    this.percentage = 3;
     try {
+      PSGroup group = new PSGroup(StepUtils.getParameter(data, info, "group", (String) null));
+      XMLStringWriter unzipWriter = new XMLStringWriter(XML.NamespaceAware.No);
+      XMLStringWriter threadWriter = new XMLStringWriter(XML.NamespaceAware.No);
+
       LOGGER.debug("Start Loading");
       StartLoadingParameter startLoadingParameters = getStartLoadingParameters(data, info);
-      service.startLoading(item.getMember(), group, startLoadingParameters, item.getToken(), PSOAuthConfigManager.get().getConfig(), writer);
-      result.addExtraXML(new ExtraResultStringXML(writer.toString()));
+      this.percentage = 5;
+      try {
+        service.startLoading(item.getMember(), group, startLoadingParameters, item.getToken(), psConfig, unzipWriter);
+        this.percentage = 20;
+
+        result.addExtraXML(new ExtraResultStringXML(unzipWriter.toString()));
+        this.percentage = 30;
+
+        GroupThreadProgressScheduleExecutorRunnable executorRunnable = new
+            GroupThreadProgressScheduleExecutorRunnable(unzipWriter.toString(), threadWriter, item.getToken(), psConfig,
+            delayInMilleseconds);
+        executorRunnable.run();
+      } finally {
+        result.addExtraXML(new ExtraResultStringXML(threadWriter.toString()));
+        this.percentage = 100;
+      }
     } catch (MalformedURLException e) {
       LOGGER.warn("String could not be transformed into URL");
+      result.setError(e);
+    } catch (IOException e){
+      LOGGER.error("Exception: {}", e);
       result.setError(e);
     }
 
@@ -86,5 +145,10 @@ public class StartLoading implements Step {
         index, mode, notificationContent, notificationLabels, notificationSubject, notify, overwrite, overwriteProperties,
         priority, status, summary, uploadId, url, validate, workflowLabels, workflowNotify, xmlspec);
     return parameter;
+  }
+
+  @Override
+  public int percentage() {
+    return percentage;
   }
 }

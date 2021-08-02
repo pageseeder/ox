@@ -11,6 +11,9 @@ dependencies {
     "org.pageseeder.schematron:pso-schematron:$psoSchematronVersion",
     "org.slf4j:slf4j-api:$slf4jAPIVersion",
 
+    //Bridge
+    "org.pageseeder.bridge:pso-bridge:$psoBridgeVersion",
+
     //Simple
     "net.pageseeder.app:psberlioz-simple-vault:$simpleVersion",
     "net.pageseeder.app:psberlioz-simple-core:$simpleVersion",
