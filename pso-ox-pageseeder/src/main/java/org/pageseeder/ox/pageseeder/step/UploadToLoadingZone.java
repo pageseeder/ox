@@ -6,6 +6,7 @@ import net.pageseeder.app.simple.vault.PSOAuthConfigManager;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
 import net.pageseeder.app.simple.vault.TokensVaultManager;
 import net.pageseeder.app.simple.vault.VaultUtils;
+import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.api.StepInfo;
@@ -44,11 +45,25 @@ public class UploadToLoadingZone implements Step {
     TokensVaultItem item = TokensVaultManager.get(VaultUtils.getDefaultPSOAuthConfigName());
     DefaultResult result = new DefaultResult(model, data, info, (File) null);
     LoadingZoneService service = new LoadingZoneService();
-    XMLStringWriter writer = new XMLStringWriter(XML.NamespaceAware.No);
+    int delayInMilleseconds = StepUtils.getParameterInt(data, info, "thread-delay-milleseconds", 500);
+    PSConfig psConfig = PSOAuthConfigManager.get().getConfig();
     try {
-      LoadingZoneUploadParameter uploadParameter = getLoadingZoneParameters(data, info);
-      service.upload(input, uploadParameter, item.getToken(), PSOAuthConfigManager.get().getConfig(), writer);
-      result.addExtraXML(new ExtraResultStringXML(writer.toString()));
+      XMLStringWriter loadingWriter = new XMLStringWriter(XML.NamespaceAware.No);
+      XMLStringWriter threadWriter = new XMLStringWriter(XML.NamespaceAware.No);
+      try {
+        LoadingZoneUploadParameter uploadParameter = getLoadingZoneParameters(data, info);
+        int httpCode = service.upload(input, uploadParameter, item.getToken(), psConfig, loadingWriter);
+        result.addExtraXML(new ExtraResultStringXML(loadingWriter.toString()));
+
+        if (httpCode == 202) {
+          GroupThreadProgressScheduleExecutorRunnable executorRunnable = new
+              GroupThreadProgressScheduleExecutorRunnable(loadingWriter.toString(), threadWriter, item.getToken(), psConfig,
+              delayInMilleseconds);
+          executorRunnable.run();
+        }
+      } finally {
+        result.addExtraXML(new ExtraResultStringXML(threadWriter.toString()));
+      }
     } catch (MalformedURLException e) {
       LOGGER.error("String could not be transformed into URL: {}", e);
       result.setError(e);
