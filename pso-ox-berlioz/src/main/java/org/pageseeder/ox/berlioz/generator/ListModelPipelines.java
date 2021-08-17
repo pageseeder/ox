@@ -35,7 +35,7 @@ public final class ListModelPipelines extends BasicGenerator {
       if (Model.isDefined(name)) {
         model = new Model(name);
       } else {
-        Errors.invalidParameter(req, xml, "model");
+        Errors.noModel(req, xml, name);
       }
     } else {
       model = Model.getDefault();
