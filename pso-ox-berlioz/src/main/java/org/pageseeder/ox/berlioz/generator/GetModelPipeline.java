@@ -37,18 +37,23 @@ public final class GetModelPipeline extends BasicGenerator {
       if (Model.isDefined(name)) {
         model = new Model(name);
       } else {
-        Errors.invalidParameter(req, xml, "model");
+        Errors.noModel(req, xml, name);
       }
     } else {
       model = Model.getDefault();
     }
-    
+
     if (model != null) {
       model.load();
       if (StringUtils.isBlank(pipeline)) {
         pipeline = model.getPipelineDefault().id();
       }
-      model.toXML(xml, pipeline);
+      if (model.getPipeline(pipeline) != null) {
+        model.toXML(xml, pipeline);
+      } else {
+        Errors.noPipeline(req, xml, pipeline);
+      }
+
     } else {
       LOGGER.error("No model found.");
       xml.emptyElement("model");
