@@ -1,4 +1,5 @@
-/* Copyright (c) 2014 Allette Systems pty. ltd. */
+
+
 package org.pageseeder.ox.inspector;
 
 import org.pageseeder.ox.api.PackageInspector;
