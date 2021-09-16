@@ -156,7 +156,11 @@ public class FilesComparator {
     File equivalentResult = null;
     if (expectedFileName.equals("")) {
       if (expected.isFile()) {
-        equivalentResult = new File(this._resultBaseDirectoryOrFile, this._expectedResultsBaseDirectoryOrFile.getName());
+        if (this._resultBaseDirectoryOrFile.isFile()) {
+          equivalentResult = this._resultBaseDirectoryOrFile;
+        } else {
+          equivalentResult = new File(this._resultBaseDirectoryOrFile, this._expectedResultsBaseDirectoryOrFile.getName());
+        }
       } else {
         equivalentResult = this._resultBaseDirectoryOrFile;
       }
