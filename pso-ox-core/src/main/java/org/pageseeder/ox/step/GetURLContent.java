@@ -1,6 +1,5 @@
 package org.pageseeder.ox.step;
 
-import org.pageseeder.ox.ErrorMessage;
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
@@ -22,11 +21,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 
 /**
  * @author ccabral
