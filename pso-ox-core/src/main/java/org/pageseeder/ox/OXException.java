@@ -1,4 +1,18 @@
-/* Copyright (c) 1999-2014 weborganic systems pty. ltd. */
+/*
+ * Copyright 2021 Allette Systems (Australia)
+ * http://www.allette.com.au
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.pageseeder.ox;
 
 /**
@@ -15,14 +29,14 @@ public class OXException extends Exception {
 
   /** The error message code. */
   private final String _errorMessageCode;
-  
+
   /**
    * Instantiates a new OX exception.
    */
   public OXException() {
     this(OXErrorMessage.UNKNOWN);
   }
-  
+
   /**
    * Instantiates a new OX exception.
    *
@@ -40,7 +54,7 @@ public class OXException extends Exception {
    */
   public OXException(String errorMessageCode, String message) {
     super(message);
-    this._errorMessageCode = errorMessageCode;    
+    this._errorMessageCode = errorMessageCode;
   }
 
   /**
@@ -79,5 +93,5 @@ public class OXException extends Exception {
    */
   public String getErrorMessageCode() {
     return this._errorMessageCode;
-  }  
+  }
 }

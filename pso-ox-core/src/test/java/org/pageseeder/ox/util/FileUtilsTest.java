@@ -1,5 +1,17 @@
 /*
- * Copyright (c) 1999-2016 Allette systems pty. ltd.
+ * Copyright 2021 Allette Systems (Australia)
+ * http://www.allette.com.au
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.pageseeder.ox.util;
 
@@ -19,7 +31,7 @@ import org.pageseeder.ox.util.FileUtils;
 
 
 /**
- * @author Adriano Akaishi  
+ * @author Adriano Akaishi
  * @since 01/05/2017
  */
 public class FileUtilsTest {
@@ -30,12 +42,12 @@ public class FileUtilsTest {
     OXConfig config = OXConfig.get();
     config.setModelsDirectory(modelDir);
   }
-  
-  
+
+
   @Test
   public void write() {
     try {
-      String fileContent = "First Line"; 
+      String fileContent = "First Line";
       File target = new File(OXConfig.getOXTempFolder(), "file-write.txt");
       FileUtils.write(fileContent, target);
       Assert.assertEquals(fileContent, FileUtils.read(target));
@@ -46,25 +58,25 @@ public class FileUtilsTest {
 
   @Test
   public void getMIMEType() {
-    File sampleFile = new File("src/test/resources/models/m1/sample.xml");    
+    File sampleFile = new File("src/test/resources/models/m1/sample.xml");
     Assert.assertEquals("Get MIME type not working", "application/xml", FileUtils.getMimeType(sampleFile));
-    sampleFile = new File("src/test/resources/models/m1/sample.html"); 
+    sampleFile = new File("src/test/resources/models/m1/sample.html");
     Assert.assertEquals("Get MIME type not working", "text/html", FileUtils.getMimeType(sampleFile));
-    sampleFile = new File("src/test/resources/models/m1/Sample.docx"); 
+    sampleFile = new File("src/test/resources/models/m1/Sample.docx");
     Assert.assertEquals("Get MIME type not working", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", FileUtils.getMimeType(sampleFile));
-    sampleFile = new File("src/test/resources/models/m1/sample.zip"); 
+    sampleFile = new File("src/test/resources/models/m1/sample.zip");
     Assert.assertEquals("Get MIME type not working", "application/zip", FileUtils.getMimeType(sampleFile));
-    sampleFile = new File("src/test/resources/models/m1/sample.psml"); 
+    sampleFile = new File("src/test/resources/models/m1/sample.psml");
     Assert.assertEquals("Get MIME type not working", "application/vnd.pageseeder.psml+xml", FileUtils.getMimeType(sampleFile));
   }
-  
-  
+
+
   @Test
   public void getExtension() {
-    File sampleFile = new File("src/test/resources/models/m1/sample.xml");    
+    File sampleFile = new File("src/test/resources/models/m1/sample.xml");
     Assert.assertEquals("Get Extension not working", "xml", FileUtils.getFileExtension(sampleFile));
   }
-  
+
   @Test
   public void getXMLFileByExtension() {
     File sampleFile = new File("src/test/resources/models/m1/sample.xml");
@@ -108,7 +120,7 @@ public class FileUtilsTest {
       FileUtils.copy(toCopy, new File(dataFolder,  "file.DOCX"));
       String fileFound = FileUtils.getFileByExtension(data, "docx", ".dotx",".docx");
       Assert.assertEquals("docx/file.DOCX",fileFound);
-      
+
 //      //Extension parameter uppercase
 //      fileFound = FileUtils.getFileByExtension(data, "DOCX");
 //      Assert.assertEquals("docx/file.docx",fileFound);
@@ -116,7 +128,7 @@ public class FileUtilsTest {
       Assert.fail(e.getMessage());
     }
   }
-  
+
   @Test
   public void getDOCXFileByExtensionParameterUppercase() {
     File sampleFile = new File("src/test/resources/models/m1/Sample.docx");
@@ -132,7 +144,7 @@ public class FileUtilsTest {
       Assert.fail(e.getMessage());
     }
   }
-  
+
   @Test
   public void getPSMLFileByExtension() {
     File sampleFile = new File("src/test/resources/models/m1/sample.psml");
@@ -151,10 +163,10 @@ public class FileUtilsTest {
 
   @Test
   public void findFileByExtensions() {
-    File root = new File("src/test/resources/org/pageseeder/ox/util/filefinder");    
+    File root = new File("src/test/resources/org/pageseeder/ox/util/filefinder");
     List<String> extensionsAllowed = new ArrayList<>();
     extensionsAllowed.add("java");
-    extensionsAllowed.add("html");    
+    extensionsAllowed.add("html");
     FileFilter filter = FileUtils.filter(extensionsAllowed, true);
     List<File> files = FileUtils.findFiles(root, filter);
     Assert.assertEquals(files.size(), 12);
@@ -174,20 +186,20 @@ public class FileUtilsTest {
     Assert.assertEquals("fileV1", FileUtils.getNameWithoutExtension(file));
 
   }
-  
+
   @Test
   public void findFileByExtensionsNoDirectory() {
-    File root = new File("src/test/resources/org/pageseeder/ox/util/filefinder");    
+    File root = new File("src/test/resources/org/pageseeder/ox/util/filefinder");
     List<String> extensionsAllowed = new ArrayList<>();
     extensionsAllowed.add("java");
-    extensionsAllowed.add("html");    
+    extensionsAllowed.add("html");
     FileFilter filter = FileUtils.filter(extensionsAllowed, false);
     List<File> files = FileUtils.findFiles(root, filter);
     Assert.assertEquals(files.size(), 4);
     Assert.assertTrue(hasThisFile(files, "c.java"));
     Assert.assertTrue(hasThisFile(files, "c.html"));
   }
-  
+
   private boolean hasThisFile(List<File> files, String filename) {
     return files.stream().filter(file -> file.getName().equals(filename)).collect(Collectors.toList()).size() > 0;
   }
