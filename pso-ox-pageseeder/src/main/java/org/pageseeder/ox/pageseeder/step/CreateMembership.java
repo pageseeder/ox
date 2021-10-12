@@ -72,6 +72,10 @@ public class CreateMembership implements Step {
 
     XMLStringWriter writer = new XMLStringWriter(XML.NamespaceAware.No);
     writer.openElement("membership");
+    writer.attribute("id", newMember.getId().toString());
+    writer.attribute("group", newMember.getGroup().toString());
+    writer.attribute("role", newMember.getRole().toString());
+    writer.attribute("notification", newMember.getNotification().toString());
     writer.openElement("member");
     writer.attribute("id", newMember.getMember().getId().toString());
     writer.attribute("name", newMember.getMember().getUsername());
@@ -80,10 +84,6 @@ public class CreateMembership implements Step {
     writer.attribute("email", newMember.getMember().getEmail());
     writer.attribute("status", newMember.getMember().getStatus().toString());
     writer.closeElement(); //member
-    writer.attribute("id", newMember.getId().toString());
-    writer.attribute("group", newMember.getGroup().toString());
-    writer.attribute("role", newMember.getRole().toString());
-    writer.attribute("notification", newMember.getNotification().toString());
     writer.closeElement(); //membership
     result.addExtraXML(new ExtraResultStringXML(writer.toString()));
 

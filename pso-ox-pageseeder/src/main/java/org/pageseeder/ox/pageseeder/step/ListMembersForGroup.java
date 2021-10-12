@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * @author vku
  * @since 05 October 2021
  */
-public class ListMemberships implements Step {
+public class ListMembersForGroup implements Step {
   private static Logger LOGGER = LoggerFactory.getLogger(FindProjects.class);
 
   @Override

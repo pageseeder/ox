@@ -44,8 +44,6 @@ public class CreateMember implements Step {
     Boolean personalGroup = "true".equals(StepUtils.getParameter(data, info, "personal-group", "false"));
     String surname = StepUtils.getParameter(data, info, "surname", "");
     Boolean welcomeEmail = "true".equals(StepUtils.getParameter(data, info, "welcome-email", "true"));
-//    String memberPassword = StepUtils.getParameter(data, info, "password", "");
-//    Boolean notifyAsync = "true".equals(StepUtils.getParameter(data, info, "notify-async", "true"));
 
     //create service to find Projects;
     MemberService service = new MemberService();
@@ -63,12 +61,12 @@ public class CreateMember implements Step {
 
     XMLStringWriter writer = new XMLStringWriter(XML.NamespaceAware.No);
     writer.openElement("member");
-    writer.attribute("id", member.getId().toString());
-    writer.attribute("name", member.getUsername());
-    writer.attribute("firstname", member.getFirstname());
-    writer.attribute("surname", member.getSurname());
-    writer.attribute("email", member.getEmail());
-    writer.attribute("status", member.getStatus().toString());
+    writer.attribute("id", newMember.getId().toString());
+    writer.attribute("name", newMember.getUsername());
+    writer.attribute("firstname", newMember.getFirstname());
+    writer.attribute("surname", newMember.getSurname());
+    writer.attribute("email", newMember.getEmail());
+    writer.attribute("status", newMember.getStatus().toString());
     writer.closeElement(); //member
     result.addExtraXML(new ExtraResultStringXML(writer.toString()));
 
