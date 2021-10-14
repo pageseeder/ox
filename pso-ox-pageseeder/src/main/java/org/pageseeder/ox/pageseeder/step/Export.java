@@ -6,6 +6,7 @@ import net.pageseeder.app.simple.vault.PSOAuthConfigManager;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
 import net.pageseeder.app.simple.vault.TokensVaultManager;
 import net.pageseeder.app.simple.vault.VaultUtils;
+import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.model.PSGroup;
 import org.pageseeder.bridge.model.PSMember;
 import org.pageseeder.ox.api.Result;
@@ -30,14 +31,18 @@ import java.util.Map;
  */
 public class Export implements Step {
   private static Logger LOGGER = LoggerFactory.getLogger(Export.class);
+  private int percentage = 0;
 
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
     LOGGER.debug("Start Pageseeder Export");
     //Token item to get member and credentials
     TokensVaultItem item = TokensVaultManager.get(VaultUtils.getDefaultPSOAuthConfigName());
+    PSConfig psConfig = PSOAuthConfigManager.get().getConfig();
+    int delayInMilleseconds = StepUtils.getParameterInt(data, info, "thread-delay-milleseconds", 500);
 
-    //Find Member Parameters
+
+    //Find Export Parameters
     DefaultResult result = new DefaultResult(model, data, info, null);
     PSGroup group = new PSGroup(StepUtils.getParameter(data, info, "group", ""));
     String memberUsername = StepUtils.getParameter(data, info, "username", "");
@@ -55,8 +60,7 @@ public class Export implements Step {
     Integer reverseDepth = Integer.valueOf(StepUtils.getParameter(data, info, "reverse-depth", "0"));
     String xrefTypes = StepUtils.getParameter(data, info, "xref-types", "");
 
-
-
+    //Put parameters together
     Map<String, String> parameters = new HashMap<>();
     parameters.put("allurls", java.lang.Boolean.toString(allUrls));
     if (!SimpleStringUtils.isBlank(context)) parameters.put("context", context);
@@ -73,13 +77,35 @@ public class Export implements Step {
     if (!SimpleStringUtils.isBlank(xrefTypes)) parameters.put("xref-types", context);
 
     //create service to find Projects;
-    ExportService service = new ExportService();
-    PSMember member = new PSMember(memberUsername);
+    this.percentage = 3;
 
-    XMLStringWriter writer = new XMLStringWriter(XML.NamespaceAware.No);
+    try {
+      ExportService service = new ExportService();
+      PSMember member = new PSMember(memberUsername);
+      XMLStringWriter exportWriter = new XMLStringWriter(XML.NamespaceAware.No);
+      XMLStringWriter threadWriter = new XMLStringWriter(XML.NamespaceAware.No);
 
-    String etag = service.getGroupURIs(member, group, parameters, writer, item.getToken(), PSOAuthConfigManager.get().getConfig());
-    result.addExtraXML(new ExtraResultStringXML(writer.toString()));
+      try{
+      //The export is an Asynchronous process therefore we need to check its status.
+      String etag = service.getGroupURIs(member, group, parameters, exportWriter, item.getToken(), psConfig);
+      this.percentage = 20;
+
+      result.addExtraXML(new ExtraResultStringXML(exportWriter.toString()));
+      this.percentage = 30;
+
+      GroupThreadProgressScheduleExecutorRunnable executorRunnable = new
+          GroupThreadProgressScheduleExecutorRunnable(exportWriter.toString(), threadWriter, item.getToken(), psConfig,
+          delayInMilleseconds);
+      executorRunnable.run();
+    } finally {
+      result.addExtraXML(new ExtraResultStringXML(threadWriter.toString()));
+      this.percentage = 100;
+    }
+  } catch (Exception e){
+    LOGGER.error("Exception: {}", e);
+    result.setError(e);
+  }
+
 
     LOGGER.debug("Start Pageseeder Export");
     return result;
