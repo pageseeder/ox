@@ -48,6 +48,7 @@ public class ListProjects implements Step {
 
     DefaultResult result = new DefaultResult(model, data, info, null);
 
+    // listProjects requires psberlioz-simple-core:2021.10-03+
     List<PSGroup> groups = new GroupService().listProjects(
       item.getMember(), params, item.getToken(), PSOAuthConfigManager.get().getConfig());
     
