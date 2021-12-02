@@ -15,6 +15,7 @@
  */
 package org.pageseeder.ox.api;
 
+import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 
 /**
@@ -28,10 +29,11 @@ public interface CallbackStep {
   /**
    * To process the callback step.
    *
+   * @param model  the model this callback uses.
    * @param data the data.
    * @param result the current step result.
    * @param info the step information.
    */
-  void process(PackageData data, Result result, StepInfo info);
+  void process(Model model, PackageData data, Result result, StepInfo info);
 
 }

@@ -17,6 +17,7 @@ package org.pageseeder.ox.api;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.powermock.reflect.Whitebox;
 
@@ -33,7 +34,7 @@ public class CallbackStepTest {
     CallbackStep step = new CallbackStep() {
 
       @Override
-      public void process(PackageData data, Result result, StepInfo info) {
+      public void process(Model model, PackageData data, Result result, StepInfo info) {
         // do nothing.
       }
     };

@@ -15,12 +15,11 @@
  */
 package org.pageseeder.ox.util;
 
-import java.io.File;
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Test;
-import org.pageseeder.ox.util.FilesFinder;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * @author Carlos Cabral

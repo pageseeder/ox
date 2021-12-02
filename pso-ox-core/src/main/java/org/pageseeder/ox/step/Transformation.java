@@ -31,15 +31,18 @@ import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.transform.*;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map.Entry;
 
 /**
  * <p>A step to transform the specified input by using provided stylesheet.</p>
@@ -126,7 +129,7 @@ public final class Transformation implements Step {
       result = new TransformResult(model, data, info, downloadableOuput, fileResultInfos, xsl);
 
       try {
-        Transformer transformer = buildXSLTTransformer(xsl, data, info);
+        Transformer transformer = XSLT.buildXSLTTransformer(xsl, data, info);
         for(File extraInput:inputs) {
           fileResultInfos.add(processFile(extraInput, output, transformer));
         }
@@ -180,50 +183,50 @@ public final class Transformation implements Step {
     return new FileResultInfo(input, finalOutput, status);
   }
 
-  /**
-   * Builds the XSLT transformer.
-   *
-   * @param xsl the xsl
-   * @param data the data
-   * @param info the info
-   * @return the transformer
-   * @throws TransformerConfigurationException the transformer configuration exception
-   * @throws IOException Signals that an I/O exception has occurred.
-   */
-  private Transformer buildXSLTTransformer (File xsl, PackageData data, StepInfo info) throws TransformerConfigurationException, IOException {
-    URIResolver resolver = new CustomURIResolver(xsl.getParentFile());
-    Templates templates = XSLT.getTemplates(xsl);
-    Transformer transformer = templates.newTransformer();
-    transformer.setURIResolver(resolver);
-
-    // Add the parameters from post request
-    for (Entry<String, String> p : data.getParameters().entrySet()) {
-      transformer.setParameter(p.getKey(), p.getValue());
-    }
-
-    String originalFileName = data.getProperty(PackageData.ORIGINAL_PROPERTY);
-    if (originalFileName != null) {
-      transformer.setParameter("original_file", originalFileName);
-    }
-    transformer.setParameter("data-id", data.id());
-    transformer.setParameter("data-repository", data.directory().getAbsolutePath().replace('\\', '/'));
-
-    // Add the parameters from step definition in model.xml
-    // these parameters should use the prefix _xslt-
-    for (Entry<String, String> p :info.parameters().entrySet()) {
-      if (p.getKey().startsWith("_xslt-")) {
-        String newValue = StepUtils.applyDynamicParameterLogic(data, info, p.getValue());
-        transformer.setParameter(p.getKey().replaceAll("_xslt-", ""), newValue);
-      }
-    }
-
-    String indent = !StringUtils.isBlank(info.parameters().get("_xslt-indent")) ? info.parameters().get("_xslt-indent") : data.getParameter("_xslt-indent");
-    if (!StringUtils.isBlank(indent)) {
-      transformer.setOutputProperty(OutputKeys.INDENT, indent.equalsIgnoreCase("yes")?"yes":"no");
-    }
-
-    return transformer;
-  }
+//  /**
+//   * Builds the XSLT transformer.
+//   *
+//   * @param xsl the xsl
+//   * @param data the data
+//   * @param info the info
+//   * @return the transformer
+//   * @throws TransformerConfigurationException the transformer configuration exception
+//   * @throws IOException Signals that an I/O exception has occurred.
+//   */
+//  private Transformer buildXSLTTransformer (File xsl, PackageData data, StepInfo info) throws TransformerConfigurationException, IOException {
+//    URIResolver resolver = new CustomURIResolver(xsl.getParentFile());
+//    Templates templates = XSLT.getTemplates(xsl);
+//    Transformer transformer = templates.newTransformer();
+//    transformer.setURIResolver(resolver);
+//
+//    // Add the parameters from post request
+//    for (Entry<String, String> p : data.getParameters().entrySet()) {
+//      transformer.setParameter(p.getKey(), p.getValue());
+//    }
+//
+//    String originalFileName = data.getProperty(PackageData.ORIGINAL_PROPERTY);
+//    if (originalFileName != null) {
+//      transformer.setParameter("original_file", originalFileName);
+//    }
+//    transformer.setParameter("data-id", data.id());
+//    transformer.setParameter("data-repository", data.directory().getAbsolutePath().replace('\\', '/'));
+//
+//    // Add the parameters from step definition in model.xml
+//    // these parameters should use the prefix _xslt-
+//    for (Entry<String, String> p :info.parameters().entrySet()) {
+//      if (p.getKey().startsWith("_xslt-")) {
+//        String newValue = StepUtils.applyDynamicParameterLogic(data, info, p.getValue());
+//        transformer.setParameter(p.getKey().replaceAll("_xslt-", ""), newValue);
+//      }
+//    }
+//
+//    String indent = !StringUtils.isBlank(info.parameters().get("_xslt-indent")) ? info.parameters().get("_xslt-indent") : data.getParameter("_xslt-indent");
+//    if (!StringUtils.isBlank(indent)) {
+//      transformer.setOutputProperty(OutputKeys.INDENT, indent.equalsIgnoreCase("yes")?"yes":"no");
+//    }
+//
+//    return transformer;
+//  }
 
   /**
    * If the input is a folder or zip, it gets the input files inside the folder or zip.
@@ -354,43 +357,6 @@ public final class Transformation implements Step {
       return otherName.substring(0, lastDotPosition) + addition + otherName.substring(lastDotPosition);
     } else {
       return otherName + addition;
-    }
-  }
-
-  /**
-   * A custom URI resolver to get the stylesheet file.
-   * @author Ciber Cai
-   * @since  17 June 2014
-   */
-  private static class CustomURIResolver implements URIResolver {
-
-    /**  the root of stylesheet *. */
-    private final File _root;
-
-    /**
-     * Instantiates a new custom URI resolver.
-     *
-     * @param r the folder of the stylesheet
-     */
-    public CustomURIResolver(File r) {
-      this._root = r;
-    }
-
-    /* (non-Javadoc)
-     * @see javax.xml.transform.URIResolver#resolve(java.lang.String, java.lang.String)
-     */
-    @Override
-    public Source resolve(String href, String base) throws TransformerException {
-      File xsl = new File(this._root, href);
-      Source source = null;
-      try {
-        if (xsl != null && xsl.exists()) {
-          source = new StreamSource(new FileInputStream(xsl));
-        }
-      } catch (FileNotFoundException e) {
-        LOGGER.warn("Cannot find the stylesheet file {}", href);
-      }
-      return source;
     }
   }
 

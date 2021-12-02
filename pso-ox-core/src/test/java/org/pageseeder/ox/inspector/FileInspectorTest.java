@@ -15,14 +15,14 @@
  */
 package org.pageseeder.ox.inspector;
 
-import java.io.File;
-import java.util.Map.Entry;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.pageseeder.ox.api.PackageInspector;
 import org.pageseeder.ox.core.PackageData;
+
+import java.io.File;
+import java.util.Map.Entry;
 
 /**
  * @author Ciber Cai

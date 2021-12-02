@@ -15,11 +15,10 @@
  */
 package org.pageseeder.ox;
 
-import java.io.File;
-
 import org.junit.Assert;
 import org.junit.Test;
-import org.pageseeder.ox.OXConfig;
+
+import java.io.File;
 
 /**
  * @author Ciber Cai
