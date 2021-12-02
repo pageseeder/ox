@@ -17,7 +17,6 @@ package org.pageseeder.ox;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.pageseeder.ox.OXException;
 
 /**
  * @author Ciber Cai

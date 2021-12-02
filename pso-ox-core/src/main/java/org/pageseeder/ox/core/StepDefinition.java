@@ -287,7 +287,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
       if (this._callbackStep != null) {
         try {
           // put the step result to callback step
-          this._callbackStep.process(data, result, info);
+          this._callbackStep.process(this._model, data, result, info);
         } catch (Exception ex) {
           // if error occur, show the warning but doesn't effect the actual step.
           LOGGER.warn("Execute callback step error.", ex);

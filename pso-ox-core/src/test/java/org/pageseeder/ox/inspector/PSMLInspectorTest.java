@@ -15,13 +15,13 @@
  */
 package org.pageseeder.ox.inspector;
 
-import java.io.File;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.pageseeder.ox.core.PackageData;
 import org.powermock.reflect.Whitebox;
+
+import java.io.File;
 
 /**
  * @author Ciber Cai

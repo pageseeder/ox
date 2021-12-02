@@ -15,19 +15,18 @@
  */
 package org.pageseeder.ox.util;
 
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.pageseeder.ox.OXConfig;
+import org.pageseeder.ox.core.PackageData;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.pageseeder.ox.OXConfig;
-import org.pageseeder.ox.core.PackageData;
-import org.pageseeder.ox.util.FileUtils;
 
 
 /**

@@ -17,7 +17,6 @@ package org.pageseeder.ox.util;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.pageseeder.ox.util.GlobPatternUtils;
 
 /**
  * @author Carlos Cabral

@@ -15,13 +15,12 @@
  */
 package org.pageseeder.ox.util;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-
-import org.junit.Assert;
-import org.junit.Test;
-import org.pageseeder.ox.util.ZipUtils;
 
 /**
  * @author Carlos Cabral
