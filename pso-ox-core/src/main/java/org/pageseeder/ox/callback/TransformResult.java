@@ -57,6 +57,7 @@ public class TransformResult extends Transform {
         XSLT.transform(result, output, transformer);
         if (result instanceof DefaultResult) {
           String outputXML = FileUtils.read(output);
+          outputXML = outputXML.replaceAll("<\\?xml.*\\?>",""); //TODO improve regex
           ((DefaultResult) result).addExtraXML(new ExtraResultStringXML(outputXML));
         }
       }
