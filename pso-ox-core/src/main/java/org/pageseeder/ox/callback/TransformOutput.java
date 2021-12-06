@@ -15,7 +15,6 @@
  */
 package org.pageseeder.ox.callback;
 
-import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
@@ -23,6 +22,7 @@ import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.tool.DefaultResult;
 import org.pageseeder.ox.tool.ExtraResultStringXML;
 import org.pageseeder.ox.util.FileUtils;
+import org.pageseeder.ox.util.StepUtils;
 import org.pageseeder.ox.util.XSLT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,21 +40,22 @@ import java.io.IOException;
  *   <li><b>callback-output</b> The place where the transformed XML will be placed.</li>
  * </ul>
  * @author ccabral
- * @since 2 December 2021
+ * @since 3 December 2021
  */
-public class TransformResult extends Transform {
+public class TransformOutput extends Transform {
   private final static Logger LOGGER = LoggerFactory.getLogger(TransformResult.class);
 
   @Override
   public void process(Model model, PackageData data, Result result, StepInfo info) {
 
     try {
+      File input = StepUtils.getOutput(data, info, null);
       File xslt = getXSLFile(model, data, info);
       File output = getOutputFile(data, info);
 
-      if (xslt != null && output != null) {
+      if (input != null && xslt != null && output != null) {
         Transformer transformer = XSLT.buildXSLTTransformer(xslt, data, info);
-        XSLT.transform(result, output, transformer);
+        XSLT.transform(input, output, transformer);
         if (result instanceof DefaultResult) {
           String outputXML = FileUtils.read(output);
           outputXML = outputXML.replaceAll("<\\?xml.*\\?>",""); //TODO improve regex
