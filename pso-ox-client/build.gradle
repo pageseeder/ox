@@ -13,7 +13,10 @@ dependencies {
     "org.pageseeder.berlioz:pso-berlioz:$psoBerliozVersion",
     "org.pageseeder.cobble:pso-cobble:0.3.2",
     "org.pageseeder.bastille:pso-bastille:$psoBastilleVersion",
-    "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
+    "javax.servlet:javax.servlet-api:$javaxServletApiVersion",
+    "jakarta.xml.bind:jakarta.xml.bind-api:2.3.2",
+    "org.glassfish.jaxb:jaxb-runtime:2.3.2",
+    "javax.xml.ws:jaxws-api:2.3.1"
   )
 
   compileOnly (
