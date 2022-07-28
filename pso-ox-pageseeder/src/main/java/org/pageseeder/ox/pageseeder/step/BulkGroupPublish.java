@@ -20,13 +20,15 @@ import org.pageseeder.ox.tool.ExtraResultStringXML;
 import org.pageseeder.ox.util.StepUtils;
 import org.pageseeder.xmlwriter.XML;
 import org.pageseeder.xmlwriter.XMLStringWriter;
+import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
@@ -61,40 +63,66 @@ public class BulkGroupPublish implements Step {
 
     writer.openElement("publishes");
     for (GroupPublish gp : groupPublishList) {
+      try {
+        callPublish(gp, member, credentials, psConfig, publish, writer);
+      } catch (IOException e) {
+        //TODO
+      }
+    }
+    writer.closeElement();//publishes
+    result.addExtraXML(new ExtraResultStringXML(writer.toString()));
+    try {
+      Files.write(
+          StepUtils.getOutput(data, info, inputXml).toPath(), writer.toString().getBytes(StandardCharsets.UTF_8));
+    } catch (IOException exc) {
+    LOGGER.error("Exception thrown while writing output to XML: {}", exc.toString());
+  }
+    return result;
+  }
+
+  private void callPublish(GroupPublish gp, PSMember member, PSCredentials credentials, PSConfig psConfig,
+                           PublishService publish, XMLWriter writer) throws IOException{
+    String errorMessage = "";
+    String status = "";
+    try {
       writer.openElement("publish");
       String project = gp.getProject();
       PSGroup group = new PSGroup(project + "-" + gp.getGroup());
+      PSMember member2 = gp.getMember().isEmpty() ? member : new PSMember(gp.getMember());
       String target = gp.getTarget();
       PublishService.Type type = gp.getType();
       PublishService.LogLevel logLevel = gp.getLogLevel();
-      Map<String,String> scriptParameters = new HashMap<>();
+      Map<String,String> scriptParameters = gp.getParameters();
       PSPublishHandler psPublishHandler = new PSPublishHandler();
-      try {
-        publish.startGroupPublish(member, group, project, target, type, logLevel, scriptParameters, credentials, psConfig,
+      publish.startGroupPublish(member, group, project, target, type, logLevel, scriptParameters, credentials, psConfig,
             psPublishHandler);
-      } catch (IOException e) {
-        throw new SimpleSiteException("Failed to initiate group publish.");
-      }
       PSPublish currentPublish = psPublishHandler.get();
 
-      //INITIALISED
-      //INPROGRESS,
-      String status = currentPublish.getStatus();
+      status = currentPublish.getStatus();
       while (!isPublishCompleted(status)) {
         //check status till completed or error or failed
-        try {
-          publish.checkPublish(member, psPublishHandler.get().getId(), credentials, psConfig, groupPublishInputHandler); //TODO: add new attributes into groupPublishInputHandler
-        } catch (IOException e) {
-          throw new SimpleSiteException("Failed to check group publish.");
-        }
-        //result.addExtraXML(new ExtraResultStringXML(groupPublishHandler)); //TODO: add the new attributes into the xml result
-//        writer.attribute("status", groupPublishHandler.get().getStatus());
+        publish.checkPublish(member, psPublishHandler.get().getId(), credentials, psConfig, psPublishHandler);
+        status = psPublishHandler.get().getStatus();
       }
+      errorMessage = psPublishHandler.get().getMessage();
+    } catch (IOException e) {
+      errorMessage = e.getMessage();
+      status = "exception";
+    } finally {
+      writer.attribute("project", gp.getProject());
+      writer.attribute("group", gp.getGroup());
+      writer.attribute("member", gp.getMember());
+      writer.attribute("target", gp.getTarget());
+      writer.attribute("type", gp.getType().name());
+      writer.attribute("log-level", gp.getLogLevel() != null ? gp.getLogLevel().name() : "");
+      writer.attribute("status", status);
+      writer.attribute("error-msg", errorMessage);
+      for (Map.Entry<String, String> entry : gp.getParameters().entrySet()) {
+        writer.attribute(entry.getKey(), entry.getValue());
+      }
+      //extra param
       writer.closeElement();//publish
     }
-    writer.closeElement();//publishes
-
-    return null;
   }
 
   private List<GroupPublish> readXML(File xml, GroupPublishInputHandler handler) {
@@ -113,4 +141,5 @@ public class BulkGroupPublish implements Step {
   private static boolean isPublishCompleted(String status) {
     return "complete".equals(status) || "cancel".equals(status) || "error".equals(status) || "fail".equals(status);
   }
+
 }

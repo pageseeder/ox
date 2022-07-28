@@ -3,8 +3,7 @@ package org.pageseeder.ox.pageseeder.step;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class GroupPublishInputHandler extends DefaultHandler {
 
@@ -20,11 +19,25 @@ public class GroupPublishInputHandler extends DefaultHandler {
       this.publishes.add(new GroupPublish(
           attributes.getValue("project"),
           attributes.getValue("group"),
+          attributes.getValue("member"),
           attributes.getValue("target"),
           attributes.getValue("type"),
-          attributes.getValue("log-level")
+          attributes.getValue("log-level"),
+          mapParametersFromAttributes(attributes)
       ));
     }
+  }
+
+  private static HashMap<String, String> mapParametersFromAttributes(Attributes attributes) {
+    HashMap<String, String> parameters = new HashMap<>();
+    List<String> attributesToExclude = Arrays.asList("project", "group", "target", "type","log-level", "member");
+    for (int i = 0; i < attributes.getLength(); i++) {
+      String aname = attributes.getLocalName(i) == null ? attributes.getQName(i) : attributes.getLocalName(i);
+      if(!attributesToExclude.contains(aname)) {
+        parameters.put(aname, attributes.getValue(i));
+      }
+    }
+    return parameters;
   }
 
   public List<GroupPublish> getPublishes() {
