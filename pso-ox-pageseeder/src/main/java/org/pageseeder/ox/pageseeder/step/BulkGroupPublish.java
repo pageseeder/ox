@@ -3,11 +3,18 @@ package org.pageseeder.ox.pageseeder.step;
 import net.pageseeder.app.simple.core.SimpleSiteException;
 import net.pageseeder.app.simple.core.utils.SimpleXMLUtils;
 import net.pageseeder.app.simple.pageseeder.model.PSPublish;
+import net.pageseeder.app.simple.pageseeder.service.MemberService;
 import net.pageseeder.app.simple.pageseeder.service.PublishService;
 import net.pageseeder.app.simple.pageseeder.xml.PSPublishHandler;
 import net.pageseeder.app.simple.vault.*;
+import org.pageseeder.berlioz.GlobalSettings;
+import org.pageseeder.bridge.APIException;
 import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.PSCredentials;
+import org.pageseeder.bridge.PSSession;
+import org.pageseeder.bridge.berlioz.auth.Authenticator;
+import org.pageseeder.bridge.berlioz.auth.PSAuthenticator;
+import org.pageseeder.bridge.berlioz.auth.PSUser;
 import org.pageseeder.bridge.model.PSGroup;
 import org.pageseeder.bridge.model.PSMember;
 import org.pageseeder.ox.api.Result;
@@ -61,10 +68,17 @@ public class BulkGroupPublish implements Step {
     PSMember member = item.getMember();
     PSCredentials credentials = item.getToken();
 
+    //TODO Start - While the publish does not accept token
+    PSUser psUser = getUser(psconfigName);
+    PSCredentials session = psUser.getSession();
+    //It needs the session member because it may differ of the token.
+    PSMember sessionMember = psUser.toMember();
+    //TODO END - While the publish does not accept token
+
     writer.openElement("publishes");
     for (GroupPublish gp : groupPublishList) {
       try {
-        callPublish(gp, member, credentials, psConfig, publish, writer);
+        callPublish(gp, member, credentials, sessionMember, session, psConfig, publish, writer);
       } catch (IOException e) {
         //TODO
       }
@@ -80,7 +94,8 @@ public class BulkGroupPublish implements Step {
     return result;
   }
 
-  private void callPublish(GroupPublish gp, PSMember member, PSCredentials credentials, PSConfig psConfig,
+  private void callPublish(GroupPublish gp, PSMember member, PSCredentials credentials,
+                           PSMember sessionMember, PSCredentials session, PSConfig psConfig,
                            PublishService publish, XMLWriter writer) throws IOException{
     String errorMessage = "";
     String status = "";
@@ -88,19 +103,21 @@ public class BulkGroupPublish implements Step {
       writer.openElement("publish");
       String project = gp.getProject();
       PSGroup group = new PSGroup(project + "-" + gp.getGroup());
-      PSMember member2 = gp.getMember().isEmpty() ? member : new PSMember(gp.getMember());
+      PSMember member2 = gp.getMember().isEmpty() ? sessionMember : new PSMember(gp.getMember());
       String target = gp.getTarget();
       PublishService.Type type = gp.getType();
       PublishService.LogLevel logLevel = gp.getLogLevel();
       Map<String,String> scriptParameters = gp.getParameters();
       PSPublishHandler psPublishHandler = new PSPublishHandler();
-      publish.startGroupPublish(member, group, project, target, type, logLevel, scriptParameters, credentials, psConfig,
+      //This service needs the session instead of token
+      publish.startGroupPublish(member2, group, project, target, type, logLevel, scriptParameters, session, psConfig,
             psPublishHandler);
       PSPublish currentPublish = psPublishHandler.get();
 
       status = currentPublish.getStatus();
       while (!isPublishCompleted(status)) {
         //check status till completed or error or failed
+        //This service accepts the token.
         publish.checkPublish(member, psPublishHandler.get().getId(), credentials, psConfig, psPublishHandler);
         status = psPublishHandler.get().getStatus();
       }
@@ -142,4 +159,29 @@ public class BulkGroupPublish implements Step {
     return "complete".equals(status) || "cancel".equals(status) || "error".equals(status) || "fail".equals(status);
   }
 
+  private PSUser getUser(String psconfigName){
+    PSUser user = null;
+    StringBuffer authProperties = new StringBuffer("bridge.");
+    //If it is not the default, then append its name to the property
+    if (!VaultUtils.getDefaultPSOAuthConfigName().equalsIgnoreCase(psconfigName)) {
+      authProperties.append(psconfigName);
+      authProperties.append(".");
+    }
+    authProperties.append("admin");
+    String property = authProperties.toString();
+    String username = GlobalSettings.get(property + ".username");
+    String password = GlobalSettings.get(property + ".password");
+
+    try {
+      Authenticator<PSUser> authenticator = new PSAuthenticator();
+      user = authenticator.login(username, password);
+      if (user == null) {
+        //todo to improve
+        //LOGGER.warn("User config property '{}' not setup property - results in null user", property);
+      }
+    } catch (Exception ex) {
+      //todo to improve
+    }
+    return user;
+  }
 }
