@@ -11,9 +11,10 @@ ext {
   //Allette Open source
   psoBastilleVersion = '0.10.2'
   psoBerliozVersion = '0.12.1'
-  psoBridgeVersion = '0.11.28'
+  psoBridgeVersion = '0.11.32'
   psoDiffxVersion = '0.8.1'
   psoSchematronVersion= '1.2.3'
+  //psoSchematronVersion= '2.1.0'
   psoXMLWriterVersion = '1.0.4'
 
   //Allette
