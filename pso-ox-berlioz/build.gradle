@@ -9,7 +9,8 @@ dependencies {
     "org.slf4j:slf4j-api:$slf4jAPIVersion",
     "commons-io:commons-io:$commonsIOVersion",
     "commons-fileupload:commons-fileupload:$commonsFileuploadVersion",
-    "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
+    "javax.servlet:javax.servlet-api:$javaxServletApiVersion",
+    "com.sun.activation:javax.activation:1.2.0"
   )
 
   compileOnly (

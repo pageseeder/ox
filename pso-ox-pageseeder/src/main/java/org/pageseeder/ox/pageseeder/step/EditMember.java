@@ -50,7 +50,7 @@ public class EditMember implements Step {
     PSMember member = new PSMember(memberUsername);
     XMLStringWriter writer = new XMLStringWriter(XML.NamespaceAware.No);
 
-    String etag = service.edit(member, memberUsernameNew, memberPassword, firstName, surname, writer, item.getToken(), PSOAuthConfigManager.get().getConfig());
+    //String etag = service.edit(member, memberUsernameNew, memberPassword, firstName, surname, writer, item.getToken(), PSOAuthConfigManager.get().getConfig());
     result.addExtraXML(new ExtraResultStringXML(writer.toString()));
 
     LOGGER.debug("End Edit Pageseeder Member");
