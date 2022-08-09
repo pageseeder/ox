@@ -21,30 +21,13 @@ public class GroupPublish implements XMLWritable {
 
   private String errorMessage;
 
-  public GroupPublish(String project, String group, String target, String type, String logLevel) {
-    this.project = project;
-    this.group = group;
-    this.target = target;
-    this.type = PublishService.Type.valueOf(type);
-    this.logLevel = PublishService.LogLevel.valueOf(logLevel);
-  }
-
   public GroupPublish(String project, String group, String member, String target, String type, String logLevel, HashMap<String, String> parameters) {
     this.project = project;
     this.group = group;
     this.member = member;
     this.target = target;
-    this.type = PublishService.Type.valueOf(type);
-    this.logLevel = PublishService.LogLevel.valueOf(logLevel);
-    this.parameters = parameters;
-  }
-
-  public GroupPublish(String project, String group, String target, String type, String logLevel, HashMap<String, String> parameters) {
-    this.project = project;
-    this.group = group;
-    this.target = target;
-    this.type = PublishService.Type.valueOf(type);
-    this.logLevel = PublishService.LogLevel.valueOf(logLevel);
+    this.type = PublishService.Type.valueOf(type.toUpperCase());
+    this.logLevel = PublishService.LogLevel.valueOf(logLevel.toUpperCase());
     this.parameters = parameters;
   }
 
@@ -86,13 +69,5 @@ public class GroupPublish implements XMLWritable {
     }
     xml.closeElement();
   }
-
-//  public void addErrorMessages(XMLWriter writer) {
-//    for (String message : status.getMessages()) {
-//      if (StringUtils.isBlank(message)) {
-//        writer.element("message", message);
-//      }
-//    }
-//  }
 
 }
