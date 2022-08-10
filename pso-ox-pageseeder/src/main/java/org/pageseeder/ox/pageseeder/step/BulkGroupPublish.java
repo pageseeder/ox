@@ -1,3 +1,18 @@
+/*
+ * Copyright 2022 Allette Systems (Australia)
+ * http://www.allette.com.au
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.pageseeder.ox.pageseeder.step;
 
 import net.pageseeder.app.simple.core.utils.SimpleStringUtils;
@@ -16,11 +31,13 @@ import org.pageseeder.bridge.berlioz.auth.PSAuthenticator;
 import org.pageseeder.bridge.berlioz.auth.PSUser;
 import org.pageseeder.bridge.model.PSGroup;
 import org.pageseeder.bridge.model.PSMember;
+import org.pageseeder.ox.api.Measurable;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
+import org.pageseeder.ox.pageseeder.model.GroupPublish;
 import org.pageseeder.ox.tool.DefaultResult;
 import org.pageseeder.ox.tool.ExtraResultStringXML;
 import org.pageseeder.ox.tool.ResultBase;
@@ -40,9 +57,15 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
-public class BulkGroupPublish implements Step {
+/**
+ * @author asantos
+ * @since 12 July 2022
+ */
+public class BulkGroupPublish implements Step, Measurable {
 
   private static Logger LOGGER = LoggerFactory.getLogger(BulkGroupPublish.class);
+
+  private float percentage = 0.0F;
 
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
@@ -51,6 +74,7 @@ public class BulkGroupPublish implements Step {
     String psconfigName = StepUtils.getParameter(data, info, "psconfig", VaultUtils.getDefaultPSOAuthConfigName());
     File inputXml = StepUtils.getInput(data, info);
     File output = StepUtils.getOutput(data, info, inputXml);
+    //long interval = StepUtils.getParameterInt()
 
     //Initiate the result
     DefaultResult result = new DefaultResult(model, data, info, output);
@@ -82,9 +106,17 @@ public class BulkGroupPublish implements Step {
         //Read input file and convert to a list of GroupPublish
         List<GroupPublish> groupPublishList = readXML(inputXml);
 
+        //update percentage
+        this.percentage = 5.0F;
+
+        //It is 90% because 5% was left for getUser and another 5% to write output.
+        float percentageIncrement = 90.0F/groupPublishList.size();
+
         //go through publish groups and call the publish and check the status till it is concluded(Completed or failed)
         for (GroupPublish gp : groupPublishList) {
           callPublish(gp, sessionMember, session, psConfig, publish, writer);
+          //Update Percentage
+          this.percentage += percentageIncrement;
         }
 
       } catch (IOException | AuthException ex) {
@@ -99,6 +131,7 @@ public class BulkGroupPublish implements Step {
 
         //Writes the output.
         writeOutput(output, writer, result);
+        this.percentage = 100.0F;
       }
     } else {
       LOGGER.error("Invalid input file.");
@@ -222,5 +255,9 @@ public class BulkGroupPublish implements Step {
       throw new SecurityException("Unable to retrieve the user to call the publish script.");
     }
     return user;
+  }
+
+  public int percentage() {
+    return (int)this.percentage;
   }
 }
