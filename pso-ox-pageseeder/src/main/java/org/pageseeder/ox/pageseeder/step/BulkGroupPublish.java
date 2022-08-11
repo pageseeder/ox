@@ -56,6 +56,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author asantos
@@ -74,7 +75,7 @@ public class BulkGroupPublish implements Step, Measurable {
     String psconfigName = StepUtils.getParameter(data, info, "psconfig", VaultUtils.getDefaultPSOAuthConfigName());
     File inputXml = StepUtils.getInput(data, info);
     File output = StepUtils.getOutput(data, info, inputXml);
-    //long interval = StepUtils.getParameterInt()
+    long interval = StepUtils.getParameterLongWithoutDynamicLogic(data, info, "interval", 100L);
 
     //Initiate the result
     DefaultResult result = new DefaultResult(model, data, info, output);
@@ -114,7 +115,7 @@ public class BulkGroupPublish implements Step, Measurable {
 
         //go through publish groups and call the publish and check the status till it is concluded(Completed or failed)
         for (GroupPublish gp : groupPublishList) {
-          callPublish(gp, sessionMember, session, psConfig, publish, writer);
+          callPublish(gp, sessionMember, session, psConfig, interval, publish, writer);
           //Update Percentage
           this.percentage += percentageIncrement;
         }
@@ -141,9 +142,10 @@ public class BulkGroupPublish implements Step, Measurable {
   }
 
   private void callPublish(GroupPublish gp, PSMember sessionMember, PSCredentials session, PSConfig psConfig,
-                           PublishService publish, XMLWriter writer) throws IOException {
+                           long interval, PublishService publish, XMLWriter writer) throws IOException {
     String errorMessage = "";
     String status = "";
+    long startedAt = System.currentTimeMillis();
     try {
       //Preparer the parameters to call the publish
       String project = gp.getProject();
@@ -165,6 +167,8 @@ public class BulkGroupPublish implements Step, Measurable {
 
       //check status till completed or error or failed
       while (!isPublishCompleted(status)) {
+        //Before checking, it will make a pause
+        TimeUnit.MILLISECONDS.sleep(interval);
         //This service accepts the token.
         publish.checkPublish(sessionMember, psPublishHandler.get().getId(), session, psConfig, psPublishHandler);
         status = psPublishHandler.get().getStatus();
@@ -173,11 +177,11 @@ public class BulkGroupPublish implements Step, Measurable {
       //Get messages if there are some.
       errorMessage = psPublishHandler.get().getMessage();
 
-    } catch (IOException e) {
+    } catch (IOException | InterruptedException e) {
       errorMessage = e.getMessage();
       status = "exception";
     } finally {
-      writePublishResultXML (gp, writer, status, errorMessage);
+      writePublishResultXML (gp, writer, status, errorMessage, System.currentTimeMillis() - startedAt);
     }
   }
 
@@ -194,7 +198,7 @@ public class BulkGroupPublish implements Step, Measurable {
     return "complete".equals(status) || "cancel".equals(status) || "error".equals(status) || "fail".equals(status);
   }
 
-  private void writePublishResultXML (GroupPublish gp, XMLWriter writer, String status, String errorMessage) throws IOException {
+  private void writePublishResultXML (GroupPublish gp, XMLWriter writer, String status, String errorMessage, long timeSpentMilliseconds) throws IOException {
 
     writer.openElement("publish");
     writer.attribute("project", gp.getProject());
@@ -208,10 +212,12 @@ public class BulkGroupPublish implements Step, Measurable {
     for (Map.Entry<String, String> entry : gp.getParameters().entrySet()) {
       writer.attribute(entry.getKey(), entry.getValue());
     }
+
     writer.attribute("status", status);
-    if (!SimpleStringUtils.isBlank(errorMessage)) {
-      writer.attribute("error-msg", errorMessage);
-    }
+
+    writer.attribute("error-msg", SimpleStringUtils.isBlank(errorMessage) ? "" : errorMessage);
+
+    writer.attribute("time-spent-milliseconds", String.valueOf(timeSpentMilliseconds));
     writer.closeElement();//publish
   }
 
