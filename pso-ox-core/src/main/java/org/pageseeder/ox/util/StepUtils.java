@@ -161,6 +161,57 @@ public class StepUtils {
    * @param fallback default value.
    * @return
    */
+  public static long getParameterLong(PackageData data, StepInfo info, String parameterName, long fallback) {
+    String parameter = getParameter(data, info, parameterName, String.valueOf(fallback));
+    try {
+      return Long.parseLong(parameter);
+    } catch (NumberFormatException ex) {
+      return fallback;
+    }
+  }
+
+  /**
+   * Get the parameter from step definition, if it is not found then gets from the request parameter.
+   * Otherwise returns the fallback.
+   *
+   * @param data PackageData
+   * @param info StepInfo
+   * @param parameterName The name of the parameter to get from step info or package data
+   * @param fallback default value.
+   * @return
+   */
+  public static long getParameterLongWithoutDynamicLogic(PackageData data, StepInfo info, String parameterName, long fallback) {
+    long value = fallback;
+    String parameter = null;
+
+    if (info != null) {
+      parameter = info.getParameter(parameterName);
+    }
+
+    if (StringUtils.isBlank(parameter) && data != null) {
+      parameter = data.getParameter(parameterName);
+    }
+
+    if (!StringUtils.isBlank(parameter)) {
+      try {
+        value = Long.parseLong(parameter);
+      } catch (NumberFormatException ex) {
+        value = fallback;
+      }
+    }
+    return value;
+  }
+
+  /**
+   * Get the parameter from step definition, if it is not found then gets from the request parameter.
+   * Otherwise returns the fallback.
+   *
+   * @param data PackageData
+   * @param info StepInfo
+   * @param parameterName The name of the parameter to get from step info or package data
+   * @param fallback default value.
+   * @return
+   */
   public static char getParameterChar(PackageData data, StepInfo info, String parameterName, char fallback) {
     String parameter = getParameter(data, info, parameterName, String.valueOf(fallback));
     if (StringUtils.isBlank(parameter)) {
