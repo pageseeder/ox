@@ -226,7 +226,7 @@ public class StepUtils {
    *
    * Example:
    * Package data has parameter "root-folder"  with value "data"
-   * parameterValue = /{root-folder}/file.xml  =>
+   * parameterValue = /{root-folder}/file.xml
    * this method returns /data/file.xml
    *
    *
