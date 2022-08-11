@@ -1,8 +1,4 @@
-[![Maven Central](https://img.shields.io/maven-central/v/org.pageseeder.ox/pso-ox-core.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22org.pageseeder.ox%22%20AND%20a:%22pso-ox-core%22)
-
 # Classes
-
-
 
 ## BulkGroupPublish
 
