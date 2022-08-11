@@ -1,5 +1,6 @@
 package org.pageseeder.ox.pageseeder.step;
 
+import org.pageseeder.ox.pageseeder.model.GroupPublish;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 

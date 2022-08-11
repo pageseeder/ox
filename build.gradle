@@ -11,7 +11,7 @@ ext {
   //Allette Open source
   psoBastilleVersion = '0.10.2'
   psoBerliozVersion = '0.12.1'
-  psoBridgeVersion = '0.11.32'
+  psoBridgeVersion = '0.11.33'
   psoDiffxVersion = '0.8.1'
   psoSchematronVersion= '1.2.3'
   //psoSchematronVersion= '2.1.0'
@@ -52,6 +52,9 @@ subprojects {
   targetCompatibility = 1.8
 
   repositories {
+    //Local Maven
+    mavenLocal()
+
     //replacement for mavenCentral and jcenter
     maven {
       url = uri("https://maven-central.storage.googleapis.com/maven2")
@@ -72,9 +75,6 @@ subprojects {
 //        includeGroup "net.pageseeder.app"
 //      }
     }
-
-    //Local Maven
-    mavenLocal()
 
     //Local ivy
     ivy {

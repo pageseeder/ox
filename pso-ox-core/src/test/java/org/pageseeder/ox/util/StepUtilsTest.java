@@ -150,6 +150,46 @@ public class StepUtilsTest {
   }
 
   @Test
+  public void getParameterLongWithoutDynamicLogic_fromRequest_valid() {
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("long", "1");
+    PackageData data = createPackageData(requestParameters);
+    Map<String, String> stepParameters = new HashMap<>();
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals(1L, StepUtils.getParameterLongWithoutDynamicLogic(data, info, "long", 0L));
+  }
+
+
+  @Test
+  public void getParameterLongWithoutDynamicLogic_fromRequest_invalid() {
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("long", "a");
+    PackageData data = createPackageData(requestParameters);
+    Map<String, String> stepParameters = new HashMap<>();
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals(0L, StepUtils.getParameterLongWithoutDynamicLogic(data, info, "long", 0L));
+  }
+
+  @Test
+  public void getParameterLongWithoutDynamicLogic_fromStep_valid() {
+    Map<String, String> requestParameters = new HashMap<>();
+    PackageData data = createPackageData(requestParameters);
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("long", "2");
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals(2L, StepUtils.getParameterLongWithoutDynamicLogic(data, info, "long", 0L));
+  }
+
+  @Test
+  public void getParameterLongWithoutDynamicLogic_fromDefault_valid() {
+    Map<String, String> requestParameters = new HashMap<>();
+    PackageData data = createPackageData(requestParameters);
+    Map<String, String> stepParameters = new HashMap<>();
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals(0, StepUtils.getParameterLongWithoutDynamicLogic(data, info, "long", 0L));
+  }
+
+  @Test
   public void applyDynamicParameterLogic_emptyString_empty() {
     Map<String, String> requestParameters = new HashMap<>();
     PackageData data = createPackageData(requestParameters);

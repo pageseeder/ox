@@ -35,11 +35,11 @@ import java.util.List;
 
 /**
  * A step return a list of the path files.
- * @param model the model
- * @param data the data
- * @param info the info
- * @param globParam Default: all recursive folders and files. If it is added you can use a glob pattern.
- * @return a XML output file with a list of paths*
+ * param model the model
+ * param data the data
+ * param info the info
+ * param globParam Default: all recursive folders and files. If it is added you can use a glob pattern.
+ * return an XML output file with a list of paths*
  *            *
  * @author Adriano Akaishi
  * @author Carlos Cabral

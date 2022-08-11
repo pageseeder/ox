@@ -13,6 +13,7 @@ dependencies {
 
     //Bridge
     "org.pageseeder.bridge:pso-bridge:$psoBridgeVersion",
+    "org.pageseeder.bridge:pso-bridge-berlioz:$psoBridgeVersion",
 
     //Simple
     "net.pageseeder.app:psberlioz-simple-vault:$simpleVersion",
