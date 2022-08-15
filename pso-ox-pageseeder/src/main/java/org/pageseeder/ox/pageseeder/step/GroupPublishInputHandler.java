@@ -8,7 +8,7 @@ import java.util.*;
 
 public class GroupPublishInputHandler extends DefaultHandler {
 
-  List<GroupPublish> publishes; //TODO check the dependency
+  List<GroupPublish> publishes;
 
   public GroupPublishInputHandler() {
     this.publishes = new ArrayList<>();

@@ -16,29 +16,22 @@
 package org.pageseeder.ox.pageseeder.model;
 
 import net.pageseeder.app.simple.pageseeder.service.PublishService;
-import org.pageseeder.xmlwriter.XMLWritable;
-import org.pageseeder.xmlwriter.XMLWriter;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author asantos
  * @since 12 July 2022
  */
-public class GroupPublish implements XMLWritable {
+public class GroupPublish {
 
   private String project;
   private String group;
-
   private String member;
   private String target;
   private PublishService.Type type;
   private PublishService.LogLevel logLevel;
   private HashMap<String, String> parameters;
-
-  private String errorMessage;
 
   public GroupPublish(String project, String group, String member, String target, String type, String logLevel, HashMap<String, String> parameters) {
     this.project = project;
@@ -66,27 +59,12 @@ public class GroupPublish implements XMLWritable {
     return target;
   }
 
-  public PublishService.Type getType() {return type; }
+  public PublishService.Type getType() { return type; }
 
   public PublishService.LogLevel getLogLevel() {
     return logLevel;
   }
 
-  public HashMap<String, String> getParameters() { return parameters;
-  }
-
-  @Override
-  public void toXML(XMLWriter xml) throws IOException {
-    xml.openElement("action");
-    xml.attribute("project", this.getProject());
-    xml.attribute("group", this.getGroup());
-    xml.attribute("target", this.getTarget());
-    xml.attribute("type", this.getType().toString());
-    xml.attribute("log-level", this.getLogLevel().toString());
-    for (Map.Entry<String, String> entry : getParameters().entrySet()) {
-      xml.attribute(entry.getKey(), entry.getValue());
-    }
-    xml.closeElement();
-  }
+  public HashMap<String, String> getParameters() { return parameters; }
 
 }
