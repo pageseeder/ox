@@ -83,6 +83,7 @@ public class BulkGroupPublish implements Step, Measurable {
     //Load the Pageseeder Configuration
     PSOAuthConfig psOAuthConfig = PSOAuthConfigManager.get(psconfigName);
     PSConfig psConfig = psOAuthConfig.getConfig();
+    PSAuthenticator psAuthenticator = getPSAuthenticator(psConfig);
 
     if (inputXml != null && inputXml.exists()) {
       PublishService publish = new PublishService();
@@ -98,7 +99,7 @@ public class BulkGroupPublish implements Step, Measurable {
         // PSMember member = item.getMember();
         // PSCredentials credentials = item.getToken();
         //TODO Start - While the publish does not accept token
-        PSUser psUser = getUser(psconfigName, psConfig);
+        PSUser psUser = getUser(psconfigName, psAuthenticator);
         PSCredentials session = psUser.getSession();
         //It needs the session member because it may differ of the token.
         PSMember sessionMember = psUser.toMember();
@@ -119,7 +120,7 @@ public class BulkGroupPublish implements Step, Measurable {
           //Update Percentage
           this.percentage += percentageIncrement;
         }
-
+        logout(psUser, psAuthenticator);
       } catch (IOException | AuthException ex) {
         LOGGER.error("Exception thrown while writing output to XML: {}", ex.getMessage());
         result.setError(ex);
@@ -234,7 +235,7 @@ public class BulkGroupPublish implements Step, Measurable {
     }
   }
 
-  private PSUser getUser(String psconfigName, PSConfig psConfig) throws AuthException {
+  private PSUser getUser(String psconfigName, PSAuthenticator psAuthenticator) throws AuthException {
     PSUser user = null;
     StringBuffer authProperties = new StringBuffer("bridge.");
     //If it is not the default, then append its name to the property
@@ -249,18 +250,25 @@ public class BulkGroupPublish implements Step, Measurable {
     String username = GlobalSettings.get(property + ".username");
     String password = GlobalSettings.get(property + ".password");
 
-    PSAuthenticator psAuthenticator = new PSAuthenticator();
-    //If the group filter is not set to null, then it loads the membership and this step does need it.
-    psAuthenticator.setGroupFilter(null);
-    //Set which PS config it will use.
-    psAuthenticator.setConfig(psConfig);
-
     user = psAuthenticator.login(username, password);
     if (user == null) {
       LOGGER.error("User config property '{}' not setup - results in null user", property);
       throw new SecurityException("Unable to retrieve the user to call the publish script.");
     }
     return user;
+  }
+
+  private void logout(PSUser user, PSAuthenticator psAuthenticator) throws AuthException {
+    psAuthenticator.logoutUser(user);
+  }
+
+  private PSAuthenticator getPSAuthenticator (PSConfig psConfig) {
+    PSAuthenticator psAuthenticator = new PSAuthenticator();
+    //If the group filter is not set to null, then it loads the membership and this step does need it.
+    psAuthenticator.setGroupFilter(null);
+    //Set which PS config it will use.
+    psAuthenticator.setConfig(psConfig);
+    return psAuthenticator;
   }
 
   public int percentage() {
