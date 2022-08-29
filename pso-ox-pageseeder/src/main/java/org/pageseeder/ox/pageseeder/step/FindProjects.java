@@ -21,6 +21,7 @@ import net.pageseeder.app.simple.vault.PSOAuthConfigManager;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
 import net.pageseeder.app.simple.vault.TokensVaultManager;
 import net.pageseeder.app.simple.vault.VaultUtils;
+import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.model.PSGroup;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
@@ -47,14 +48,16 @@ import java.util.List;
  * @author vku
  * @since 11 February 2021
  */
-public class FindProjects implements Step {
+public class FindProjects extends PageseederStep {
   private static Logger LOGGER = LoggerFactory.getLogger(FindProjects.class);
 
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
     LOGGER.debug("Start Find Pageseeder Projects or Group");
-    //Token item to get member and credentials
-    TokensVaultItem item = TokensVaultManager.get(VaultUtils.getDefaultPSOAuthConfigName());
+
+    //Token item to get member and credentials. And the PSConfig
+    TokensVaultItem item = super.getTokensVaultItem(data, info);
+    PSConfig psConfig = super.getPSOAuthConfig(data, info).getConfig();
 
     //Find Projects Parameters
     Boolean archived = "true".equals(StepUtils.getParameter(data, info, "archived", "false"));
@@ -71,7 +74,7 @@ public class FindProjects implements Step {
 
     //create service to find Projects
     GroupService service = new GroupService();
-    List<PSGroup> groupList = service.findProjectsList(item.getMember(), parameters, item.getToken(), PSOAuthConfigManager.get().getConfig());
+    List<PSGroup> groupList = service.findProjectsList(item.getMember(), parameters, item.getToken(),psConfig);
 
     XMLStringWriter writer = new XMLStringWriter(XML.NamespaceAware.No);
     writer.openElement("projects");

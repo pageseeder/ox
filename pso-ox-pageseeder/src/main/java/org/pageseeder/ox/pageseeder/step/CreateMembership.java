@@ -7,6 +7,7 @@ import net.pageseeder.app.simple.vault.PSOAuthConfigManager;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
 import net.pageseeder.app.simple.vault.TokensVaultManager;
 import net.pageseeder.app.simple.vault.VaultUtils;
+import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.model.*;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
@@ -25,14 +26,15 @@ import org.slf4j.LoggerFactory;
  * @author vku
  * @since 07 October 2021
  */
-public class CreateMembership implements Step {
+public class CreateMembership extends PageseederStep {
   private static Logger LOGGER = LoggerFactory.getLogger(CreateMembership.class);
 
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
     LOGGER.debug("Start Create Pageseeder Membership");
-    //Token item to get member and credentials
-    TokensVaultItem item = TokensVaultManager.get(VaultUtils.getDefaultPSOAuthConfigName());
+    //Token item to get member and credentials. And the PSConfig
+    TokensVaultItem item = super.getTokensVaultItem(data, info);
+    PSConfig psConfig = super.getPSOAuthConfig(data, info).getConfig();
 
     //Find Member Parameters
     DefaultResult result = new DefaultResult(model, data, info, null);
@@ -67,7 +69,7 @@ public class CreateMembership implements Step {
     if (!SimpleStringUtils.isBlank(surname)) parameter.setNotification(PSNotification.valueOf(notification));
     if (!SimpleStringUtils.isBlank(surname)) parameter.setRole(PSRole.valueOf(role));
 
-    PSMembership newMember = service.create(member, group, parameter, item.getToken(), PSOAuthConfigManager.get().getConfig());
+    PSMembership newMember = service.create(member, group, parameter, item.getToken(), psConfig);
 
 
     XMLStringWriter writer = new XMLStringWriter(XML.NamespaceAware.No);

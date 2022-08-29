@@ -64,16 +64,16 @@ import java.util.Objects;
  * @author Carlos Cabral
  * @since 14 April 2021
  */
-public class ListURIForURL implements Step {
+public class ListURIForURL extends PageseederStep {
   private static Logger LOGGER = LoggerFactory.getLogger(ListURIForURL.class);
 
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
     LOGGER.debug("Start Listing URIs fro URL");
 
-    //Token item to get member and credentials
-    TokensVaultItem item = TokensVaultManager.get(VaultUtils.getDefaultPSOAuthConfigName());
-    PSConfig psConfig = PSConfig.getDefault();
+    //Token item to get member and credentials. And the PSConfig
+    TokensVaultItem item = super.getTokensVaultItem(data, info);
+    PSConfig psConfig = super.getPSOAuthConfig(data, info).getConfig();
 
     //Find Projects Parameters
     PSGroup group = new PSGroup(StepUtils.getParameter(data, info, "group", ""));

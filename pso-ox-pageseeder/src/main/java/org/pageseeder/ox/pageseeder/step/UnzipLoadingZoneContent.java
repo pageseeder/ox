@@ -17,18 +17,15 @@ package org.pageseeder.ox.pageseeder.step;
 
 import net.pageseeder.app.simple.pageseeder.model.UnzipParameter;
 import net.pageseeder.app.simple.pageseeder.service.LoadingZoneService;
-import net.pageseeder.app.simple.vault.PSOAuthConfigManager;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
-import net.pageseeder.app.simple.vault.TokensVaultManager;
-import net.pageseeder.app.simple.vault.VaultUtils;
 import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.model.PSGroup;
 import org.pageseeder.ox.api.Measurable;
 import org.pageseeder.ox.api.Result;
-import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
+import org.pageseeder.ox.pageseeder.thread.GroupThreadProgressScheduleExecutorRunnable;
 import org.pageseeder.ox.tool.DefaultResult;
 import org.pageseeder.ox.tool.ExtraResultStringXML;
 import org.pageseeder.ox.util.StepUtils;
@@ -60,7 +57,7 @@ import java.nio.file.Paths;
  * @author ccabral
  * @since 15 February 2021
  */
-public class UnzipLoadingZoneContent implements Step, Measurable {
+public class UnzipLoadingZoneContent extends PageseederStep implements Measurable {
 
   private static Logger LOGGER = LoggerFactory.getLogger(UnzipLoadingZoneContent.class);
 
@@ -70,8 +67,8 @@ public class UnzipLoadingZoneContent implements Step, Measurable {
   public Result process(Model model, PackageData data, StepInfo info) {
     LOGGER.debug("Start Unzip Loading zone Content");
 
-    TokensVaultItem item = TokensVaultManager.get(VaultUtils.getDefaultPSOAuthConfigName());
-    PSConfig psConfig = PSOAuthConfigManager.get().getConfig();
+    TokensVaultItem item = super.getTokensVaultItem(data, info);
+    PSConfig psConfig = super.getPSOAuthConfig(data, info).getConfig();
     DefaultResult result = new DefaultResult(model, data, info, (File) null);
     LoadingZoneService service = new LoadingZoneService();
     int delayInMilleseconds = StepUtils.getParameterInt(data, info, "thread-delay-milleseconds", 500);
