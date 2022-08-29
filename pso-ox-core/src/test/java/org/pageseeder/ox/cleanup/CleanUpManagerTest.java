@@ -59,7 +59,7 @@ public class CleanUpManagerTest {
       manager.start();
 
       //Waiting the job to perform its first iteraction
-      while (manager.status() != CleanUpStatus.WAITING_NEXT_ITERACTION) Thread.sleep(delay);
+      while (manager.status() != CleanUpStatus.WAITING_NEXT_ITERACTION) Thread.sleep(delay+10);
 
       Assert.assertEquals(0, base.list().length);
       manager.stop();

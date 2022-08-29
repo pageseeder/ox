@@ -41,7 +41,7 @@ public class CleanUpJob implements Runnable {
    /** Indicates if the thread should stop (true) or not (false). */
    private AtomicBoolean stop = new AtomicBoolean(false);
 
-   /** how long a file can be inactive in the drive. */
+   /** how long (milliseconds) a file can be inactive in the drive. */
    private final long _maxInactiveTime;
 
    /** The packages root directory. */
@@ -62,7 +62,7 @@ public class CleanUpJob implements Runnable {
    /**
     * Instantiates a new clean up job.
     *
-    * @param maxInactiveTime How long a file can be inactive in the drive.
+    * @param maxInactiveTime How long (milliseconds) a file can be inactive in the drive.
     * @param checkUpDelay the check up delay
     * @param base The packages root directory.
     */

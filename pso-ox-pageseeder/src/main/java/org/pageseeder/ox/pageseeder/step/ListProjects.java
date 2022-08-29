@@ -6,6 +6,7 @@ package org.pageseeder.ox.pageseeder.step;
 import java.util.HashMap;
 import java.util.List;
 
+import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.model.PSGroup;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
@@ -30,13 +31,16 @@ import net.pageseeder.app.simple.vault.VaultUtils;
  * @author lkirkwood
  * @since 2021-10-29
  */
-public class ListProjects implements Step {
+public class ListProjects extends PageseederStep {
   private static Logger LOGGER = LoggerFactory.getLogger(ListProjects.class);
 
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
     LOGGER.debug("ListProjects begin.");
-    TokensVaultItem item = TokensVaultManager.get(VaultUtils.getDefaultPSOAuthConfigName());
+
+    //Token item to get member and credentials. And the PSConfig
+    TokensVaultItem item = super.getTokensVaultItem(data, info);
+    PSConfig psConfig = super.getPSOAuthConfig(data, info).getConfig();
 
     HashMap<String, String> params = new HashMap<>();
       params.put("archived",      StepUtils.getParameter(data, info, "archived",     "false"));
@@ -50,8 +54,8 @@ public class ListProjects implements Step {
 
     // listProjects requires psberlioz-simple-core:2021.10-03+
     List<PSGroup> groups = new GroupService().listProjects(
-      item.getMember(), params, item.getToken(), PSOAuthConfigManager.get().getConfig());
-    
+      item.getMember(), params, item.getToken(), psConfig);
+
     XMLStringWriter writer = new XMLStringWriter(NamespaceAware.No);
     writer.openElement("projects");
     for (PSGroup group : groups) {

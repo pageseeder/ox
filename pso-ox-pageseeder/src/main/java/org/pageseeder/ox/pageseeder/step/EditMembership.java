@@ -5,6 +5,7 @@ import net.pageseeder.app.simple.vault.PSOAuthConfigManager;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
 import net.pageseeder.app.simple.vault.TokensVaultManager;
 import net.pageseeder.app.simple.vault.VaultUtils;
+import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.model.PSGroup;
 import org.pageseeder.bridge.model.PSMember;
 import org.pageseeder.ox.api.Result;
@@ -24,14 +25,16 @@ import org.slf4j.LoggerFactory;
  * @author vku
  * @since 12 October 2021
  */
-public class EditMembership implements Step {
+public class EditMembership extends PageseederStep {
   private static Logger LOGGER = LoggerFactory.getLogger(EditMember.class);
 
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
     LOGGER.debug("Start Edit Pageseeder Membership");
-    //Token item to get member and credentials
-    TokensVaultItem item = TokensVaultManager.get(VaultUtils.getDefaultPSOAuthConfigName());
+
+    //Token item to get member and credentials. And the PSConfig
+    TokensVaultItem item = super.getTokensVaultItem(data, info);
+    PSConfig psConfig = super.getPSOAuthConfig(data, info).getConfig();
 
     //Find Member Parameters
     DefaultResult result = new DefaultResult(model, data, info, null);
@@ -44,7 +47,7 @@ public class EditMembership implements Step {
     PSMember member = new PSMember(memberUsername);
     XMLStringWriter writer = new XMLStringWriter(XML.NamespaceAware.No);
 
-    String etag = service.removeMember(group, member, writer, item.getToken(), PSOAuthConfigManager.get().getConfig());
+    String etag = service.removeMember(group, member, writer, item.getToken(), psConfig);
     result.addExtraXML(new ExtraResultStringXML(writer.toString()));
 
     LOGGER.debug("End Edit Pageseeder Membership");
