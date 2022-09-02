@@ -199,11 +199,21 @@ __`[!a].java`__ -  Matches all files that has any single character different of 
 
 The request and step parameters can have its value connected to other parameter. 
 
+There are prebuilt values that can be used:
+
+| Value          | Description                                                                 |
+|----------------|-----------------------------------------------------------------------------|
+| _uploaded_file | it is the file name of the uploaded file                                    |
+| _input         | it is the file or folder name of the input parameter in the step definition |
+
 Example:
 
 There is a parameter called "ps-group-name" with value "test".
 And there is another "input"="/{ps-group-name}/documents". 
 The final value for "input" will be "/test/documents".
+
+If the uploaded file name is glossary.pdf and the output is /new/{_uploaded_file} the result is /new/glossary.pdf.
+The same will happen if you use any prebuilt value, such as, `_input`.
 
 By default it allows a cycle reference of 2 levels by default. However the default value can replaced the value in the
 request or step parameter called `dynamic-param-max-cycle`. 

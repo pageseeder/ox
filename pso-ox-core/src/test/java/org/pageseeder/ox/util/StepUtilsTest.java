@@ -291,6 +291,35 @@ public class StepUtilsTest {
     Assert.assertNull(StepUtils.applyDynamicParameterLogic(data, info, null));
   }
 
+
+  @Test
+  public void applyDynamicParameterLogic_DynamicUploadedFile_Success(){
+    //Both means DataPAckage and StepInfo
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-data","/folder/{_uploaded_file}");
+    PackageData data = createPackageData(requestParameters);
+    String uploadedFile = data.getProperty("_original_file");
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-info","/folder2/{_uploaded_file}");
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals("/folder/" + uploadedFile, StepUtils.applyDynamicParameterLogic(data, info, requestParameters.get("test-data")));
+    Assert.assertEquals("/folder2/" + uploadedFile, StepUtils.applyDynamicParameterLogic(data, info, stepParameters.get("test-info")));
+  }
+
+  @Test
+  public void applyDynamicParameterLogic_DynamicInput_Success(){
+    //Both means DataPAckage and StepInfo
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-data","/folder/{_input}");
+    PackageData data = createPackageData(requestParameters);
+    String uploadedFile = data.getProperty("_original_file");
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-info","/folder2/{_input}");
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals("/folder/input", StepUtils.applyDynamicParameterLogic(data, info, requestParameters.get("test-data")));
+    Assert.assertEquals("/folder2/input", StepUtils.applyDynamicParameterLogic(data, info, stepParameters.get("test-info")));
+  }
+
   private PackageData createPackageData(Map<String, String> requestParameters) {
     try {
       Path tempFile = Files.createTempFile("test", "unit");
