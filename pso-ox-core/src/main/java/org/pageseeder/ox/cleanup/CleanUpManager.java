@@ -58,7 +58,7 @@ public class CleanUpManager {
   /**
    * Instantiates a new clean up manager.
    *
-   * @param maxInactiveTime How long a file can be inactive in the drive.
+   * @param maxInactiveTime How long (milliseconds) a file can be inactive in the drive.
    * @param delay the delay between check up.
    * @param base The packages root directory.
    */
@@ -78,7 +78,7 @@ public class CleanUpManager {
   /**
    * Returns .
    *
-   * @param maxInactiveTime How long a file can be inactive in the drive.
+   * @param maxInactiveTime How long (milliseconds) a file can be inactive in the drive.
    * @param delay the delay between check up.
    * @param base The packages root directory.
    * @return single instance of CleanUpManager

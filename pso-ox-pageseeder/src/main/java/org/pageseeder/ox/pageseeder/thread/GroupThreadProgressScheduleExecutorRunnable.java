@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.pageseeder.ox.pageseeder.step;
+package org.pageseeder.ox.pageseeder.thread;
 
 import net.pageseeder.app.simple.pageseeder.service.ThreadService;
 import org.pageseeder.bridge.PSConfig;

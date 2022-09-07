@@ -145,8 +145,8 @@ public final class Transformation implements Step {
         ((TransformResult)result).setError(ex);
       }
     } catch (IOException ex) {
-      LOGGER.error("Unexpected transformtion exception happened: {}", ex.getMessage(), ex);
-      result = new InvalidResult(model, data).error(new FileNotFoundException("Unexpected transformtion exception happened: " + ex.getMessage()));
+      LOGGER.error("Unexpected transformation exception happened: {}", ex.getMessage(), ex);
+      result = new InvalidResult(model, data).error(new FileNotFoundException("Unexpected transformation exception happened: " + ex.getMessage()));
     }
     return result;
   }
@@ -260,6 +260,7 @@ public final class Transformation implements Step {
 
     //Handle each input
     for (File input : originalInputs) {
+      //TODO review the reason of the mkdirs here. If it does not exist then cannot be an input
       input.mkdirs();
       if (input.exists()) {
         //handle zip file

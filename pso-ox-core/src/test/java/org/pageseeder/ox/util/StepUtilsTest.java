@@ -150,6 +150,46 @@ public class StepUtilsTest {
   }
 
   @Test
+  public void getParameterLongWithoutDynamicLogic_fromRequest_valid() {
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("long", "1");
+    PackageData data = createPackageData(requestParameters);
+    Map<String, String> stepParameters = new HashMap<>();
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals(1L, StepUtils.getParameterLongWithoutDynamicLogic(data, info, "long", 0L));
+  }
+
+
+  @Test
+  public void getParameterLongWithoutDynamicLogic_fromRequest_invalid() {
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("long", "a");
+    PackageData data = createPackageData(requestParameters);
+    Map<String, String> stepParameters = new HashMap<>();
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals(0L, StepUtils.getParameterLongWithoutDynamicLogic(data, info, "long", 0L));
+  }
+
+  @Test
+  public void getParameterLongWithoutDynamicLogic_fromStep_valid() {
+    Map<String, String> requestParameters = new HashMap<>();
+    PackageData data = createPackageData(requestParameters);
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("long", "2");
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals(2L, StepUtils.getParameterLongWithoutDynamicLogic(data, info, "long", 0L));
+  }
+
+  @Test
+  public void getParameterLongWithoutDynamicLogic_fromDefault_valid() {
+    Map<String, String> requestParameters = new HashMap<>();
+    PackageData data = createPackageData(requestParameters);
+    Map<String, String> stepParameters = new HashMap<>();
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals(0, StepUtils.getParameterLongWithoutDynamicLogic(data, info, "long", 0L));
+  }
+
+  @Test
   public void applyDynamicParameterLogic_emptyString_empty() {
     Map<String, String> requestParameters = new HashMap<>();
     PackageData data = createPackageData(requestParameters);
@@ -249,6 +289,35 @@ public class StepUtilsTest {
     PackageData data = createPackageData(requestParameters);
     StepInfo info = createStepInfo(new HashMap<>());
     Assert.assertNull(StepUtils.applyDynamicParameterLogic(data, info, null));
+  }
+
+
+  @Test
+  public void applyDynamicParameterLogic_DynamicUploadedFile_Success(){
+    //Both means DataPAckage and StepInfo
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-data","/folder/{_uploaded_file}");
+    PackageData data = createPackageData(requestParameters);
+    String uploadedFile = data.getProperty("_original_file");
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-info","/folder2/{_uploaded_file}");
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals("/folder/" + uploadedFile, StepUtils.applyDynamicParameterLogic(data, info, requestParameters.get("test-data")));
+    Assert.assertEquals("/folder2/" + uploadedFile, StepUtils.applyDynamicParameterLogic(data, info, stepParameters.get("test-info")));
+  }
+
+  @Test
+  public void applyDynamicParameterLogic_DynamicInput_Success(){
+    //Both means DataPAckage and StepInfo
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-data","/folder/{_input}");
+    PackageData data = createPackageData(requestParameters);
+    String uploadedFile = data.getProperty("_original_file");
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-info","/folder2/{_input}");
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals("/folder/input", StepUtils.applyDynamicParameterLogic(data, info, requestParameters.get("test-data")));
+    Assert.assertEquals("/folder2/input", StepUtils.applyDynamicParameterLogic(data, info, stepParameters.get("test-info")));
   }
 
   private PackageData createPackageData(Map<String, String> requestParameters) {

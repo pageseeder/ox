@@ -15,7 +15,7 @@
  */
 package org.pageseeder.ox.pageseeder.step;
 
-import net.pageseeder.app.simple.pageseeder.model.UnzipParameter;
+import net.pageseeder.app.simple.pageseeder.model.StartLoadingParameter;
 import net.pageseeder.app.simple.pageseeder.service.LoadingZoneService;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
 import org.pageseeder.bridge.PSConfig;
@@ -36,93 +36,82 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 
 /**
- *
- * This step calls a service in pageseeder that is asynchronous. Therefor it is recommended to use this with async=true.
  *
  * The parameters that can be used in the step are:
  *
  * <ul>
- *   <li><b>path</b></li>
- *   <li><b>deleteoriginal</b></li>
  *   <li><b>uploadid</b></li>
  *   <li><b>xlinkid</b></li>
- *   <li><b>thread-delay-milleseconds</b> is used to delay each attempt to check the status of unzipping in
- *   pageseeder</li>
  * </ul>
  *
+ *
  * @author ccabral
- * @since 15 February 2021
+ * @author Adriano Akaishi
+ * @since 07 September 2022
  */
-public class UnzipLoadingZoneContent extends PageseederStep implements Measurable {
+public class ClearLoadZone extends PageseederStep implements Measurable {
 
-  private static Logger LOGGER = LoggerFactory.getLogger(UnzipLoadingZoneContent.class);
+  private static Logger LOGGER = LoggerFactory.getLogger(ClearLoadZone.class);
 
   private int percentage = 0;
 
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
-    LOGGER.debug("Start Unzip Loading zone Content");
+    LOGGER.debug("Start cleaning load zone");
 
     TokensVaultItem item = super.getTokensVaultItem(data, info);
     PSConfig psConfig = super.getPSOAuthConfig(data, info).getConfig();
     DefaultResult result = new DefaultResult(model, data, info, (File) null);
     LoadingZoneService service = new LoadingZoneService();
-    int delayInMilleseconds = StepUtils.getParameterInt(data, info, "thread-delay-milleseconds", 500);
+
     //There is not an easy way to calculated the percentage, then it will just guess.
     this.percentage = 3;
     try {
       PSGroup group = new PSGroup(StepUtils.getParameter(data, info, "group", (String) null));
+      String uploadId = StepUtils.getParameter(data, info, "uploadid", (String) null);
+      String xlinkid = StepUtils.getParameter(data, info, "xlinkid", (String) null);
       XMLStringWriter unzipWriter = new XMLStringWriter(XML.NamespaceAware.No);
       XMLStringWriter threadWriter = new XMLStringWriter(XML.NamespaceAware.No);
-
-      //Unzip
-      UnzipParameter unzipParameter = getUnzipParameters(data, info);
-      this.percentage = 5;
-
-      try {
-        //The unzip is an Asynchronous process therefore we need to check its status.
-        service.unzip(item.getMember(), group, unzipParameter, item.getToken(), psConfig, unzipWriter);
-        this.percentage = 20;
-
-        result.addExtraXML(new ExtraResultStringXML(unzipWriter.toString()));
-        this.percentage = 30;
-
-        GroupThreadProgressScheduleExecutorRunnable executorRunnable = new
-            GroupThreadProgressScheduleExecutorRunnable(unzipWriter.toString(), threadWriter, item.getToken(), psConfig,
-            delayInMilleseconds);
-        executorRunnable.run();
+//
+//      LOGGER.debug("Start Loading");
+//      StartLoadingParameter startLoadingParameters = getStartLoadingParameters(data, info);
+//      this.percentage = 5;
+//      try {
+//        service.startLoading(item.getMember(), group, startLoadingParameters, item.getToken(), psConfig, unzipWriter);
+//        this.percentage = 20;
+//
+//        result.addExtraXML(new ExtraResultStringXML(unzipWriter.toString()));
+//        this.percentage = 30;
+//
+//        GroupThreadProgressScheduleExecutorRunnable executorRunnable = new
+//            GroupThreadProgressScheduleExecutorRunnable(unzipWriter.toString(), threadWriter, item.getToken(), psConfig,
+//            delayInMilleseconds);
+//        executorRunnable.run();
       } finally {
-        result.addExtraXML(new ExtraResultStringXML(threadWriter.toString()));
-        this.percentage = 100;
+//        result.addExtraXML(new ExtraResultStringXML(threadWriter.toString()));
+//        this.percentage = 100;
       }
-    } catch (Exception e){
-      LOGGER.error("Exception: {}", e);
-      result.setError(e);
-    }
+//    }
+//    catch (MalformedURLException e) {
+//      LOGGER.warn("String could not be transformed into URL");
+//      result.setError(e);
+//    } catch (IOException e){
+//      LOGGER.error("Exception: {}", e);
+//      result.setError(e);
+//    }
 
     return result;
   }
 
-  private UnzipParameter getUnzipParameters(PackageData data, StepInfo info) {
-    String pathString = StepUtils.getParameter(data, info, "path", (String) null);
-    Path path = Paths.get(pathString);
-    Boolean deleteOriginal = "true".equals(StepUtils.getParameter(data, info, "deleteoriginal", "false"));
-    String uploadId = StepUtils.getParameter(data, info, "uploadid", (String) null);
-    String xLinkIdString = StepUtils.getParameter(data, info, "xlinkid", (String) null);
-    Long xLinkId = null;
-    if (!StringUtils.isBlank(xLinkIdString)) {
-      xLinkId = Long.parseLong(xLinkIdString);
-    }
-    UnzipParameter parameter = new UnzipParameter(path, deleteOriginal, uploadId, xLinkId);
-    return parameter;
-  }
 
   @Override
   public int percentage() {
-    return this.percentage;
+    return percentage;
   }
 }
