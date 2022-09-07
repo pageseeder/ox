@@ -320,6 +320,20 @@ public class StepUtilsTest {
     Assert.assertEquals("/folder2/input", StepUtils.applyDynamicParameterLogic(data, info, stepParameters.get("test-info")));
   }
 
+  @Test
+  public void applyDynamicParameterLogic_DynamicPackageID_Success(){
+    //Both means DataPackage and StepInfo
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-data","{_package_id}");
+    PackageData data = createPackageData(requestParameters);
+    String uploadedFile = data.getProperty("_original_file");
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-info","/folder2/{_package_id}");
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals(data.id(), StepUtils.applyDynamicParameterLogic(data, info, requestParameters.get("test-data")));
+    Assert.assertEquals("/folder2/" + data.id(), StepUtils.applyDynamicParameterLogic(data, info, stepParameters.get("test-info")));
+  }
+
   private PackageData createPackageData(Map<String, String> requestParameters) {
     try {
       Path tempFile = Files.createTempFile("test", "unit");
