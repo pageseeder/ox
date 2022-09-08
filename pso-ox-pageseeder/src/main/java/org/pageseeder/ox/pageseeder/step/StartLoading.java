@@ -20,11 +20,14 @@ import net.pageseeder.app.simple.pageseeder.service.LoadingZoneService;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
 import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.model.PSGroup;
+import org.pageseeder.bridge.model.PSThreadStatus;
+import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.api.Measurable;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
+import org.pageseeder.ox.core.ResultStatus;
 import org.pageseeder.ox.pageseeder.thread.GroupThreadProgressScheduleExecutorRunnable;
 import org.pageseeder.ox.tool.DefaultResult;
 import org.pageseeder.ox.tool.ExtraResultStringXML;
@@ -101,6 +104,7 @@ public class StartLoading extends PageseederStep implements Measurable {
       LOGGER.debug("Start Loading");
       StartLoadingParameter startLoadingParameters = getStartLoadingParameters(data, info);
       this.percentage = 5;
+      GroupThreadProgressScheduleExecutorRunnable executorRunnable = null;
       try {
         service.startLoading(item.getMember(), group, startLoadingParameters, item.getToken(), psConfig, unzipWriter);
         this.percentage = 20;
@@ -108,12 +112,16 @@ public class StartLoading extends PageseederStep implements Measurable {
         result.addExtraXML(new ExtraResultStringXML(unzipWriter.toString()));
         this.percentage = 30;
 
-        GroupThreadProgressScheduleExecutorRunnable executorRunnable = new
+        executorRunnable = new
             GroupThreadProgressScheduleExecutorRunnable(unzipWriter.toString(), threadWriter, item.getToken(), psConfig,
             delayInMilleseconds);
         executorRunnable.run();
       } finally {
         result.addExtraXML(new ExtraResultStringXML(threadWriter.toString()));
+        if (executorRunnable != null && executorRunnable.getLastStatus() != null
+            && !PSThreadStatus.Status.COMPLETED.equals(executorRunnable.getLastStatus().getStatus())) {
+          result.setError(new OXException(executorRunnable.getLastStatus().getLastMessage()));
+        }
         this.percentage = 100;
       }
     } catch (MalformedURLException e) {

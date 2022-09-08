@@ -46,6 +46,8 @@ public class GroupThreadProgressScheduleExecutorRunnable {
   private final PSConfig psConfig;
   private final int delayInMilleseconds;
 
+  private PSThreadStatus lastStatus = null;
+
   /**
    *
    * @param firstRequestXML
@@ -108,6 +110,7 @@ public class GroupThreadProgressScheduleExecutorRunnable {
           }
           isFinished = true;
         }
+        this.lastStatus = status;
       } while (!isFinished);//While not finished.
     } finally {
       threadWriter.closeElement();//threads
@@ -142,5 +145,13 @@ public class GroupThreadProgressScheduleExecutorRunnable {
     } finally {
       writer.closeElement();//thread
     }
+  }
+
+  /**
+   *
+   * @return
+   */
+  public PSThreadStatus getLastStatus () {
+    return this.lastStatus;
   }
 }

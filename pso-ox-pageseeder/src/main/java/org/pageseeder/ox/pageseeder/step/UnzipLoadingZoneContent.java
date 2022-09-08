@@ -20,6 +20,8 @@ import net.pageseeder.app.simple.pageseeder.service.LoadingZoneService;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
 import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.model.PSGroup;
+import org.pageseeder.bridge.model.PSThreadStatus;
+import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.api.Measurable;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.StepInfo;
@@ -83,6 +85,7 @@ public class UnzipLoadingZoneContent extends PageseederStep implements Measurabl
       UnzipParameter unzipParameter = getUnzipParameters(data, info);
       this.percentage = 5;
 
+      GroupThreadProgressScheduleExecutorRunnable executorRunnable = null;
       try {
         //The unzip is an Asynchronous process therefore we need to check its status.
         service.unzip(item.getMember(), group, unzipParameter, item.getToken(), psConfig, unzipWriter);
@@ -91,12 +94,16 @@ public class UnzipLoadingZoneContent extends PageseederStep implements Measurabl
         result.addExtraXML(new ExtraResultStringXML(unzipWriter.toString()));
         this.percentage = 30;
 
-        GroupThreadProgressScheduleExecutorRunnable executorRunnable = new
+        executorRunnable = new
             GroupThreadProgressScheduleExecutorRunnable(unzipWriter.toString(), threadWriter, item.getToken(), psConfig,
             delayInMilleseconds);
         executorRunnable.run();
       } finally {
         result.addExtraXML(new ExtraResultStringXML(threadWriter.toString()));
+        if (executorRunnable != null && executorRunnable.getLastStatus() != null
+            && !PSThreadStatus.Status.COMPLETED.equals(executorRunnable.getLastStatus().getStatus())) {
+          result.setError(new OXException(executorRunnable.getLastStatus().getLastMessage()));
+        }
         this.percentage = 100;
       }
     } catch (Exception e){

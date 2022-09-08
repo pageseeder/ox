@@ -19,6 +19,8 @@ import net.pageseeder.app.simple.pageseeder.model.LoadingZoneUploadParameter;
 import net.pageseeder.app.simple.pageseeder.service.LoadingZoneService;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
 import org.pageseeder.bridge.PSConfig;
+import org.pageseeder.bridge.model.PSThreadStatus;
+import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
@@ -61,19 +63,24 @@ public class UploadToLoadingZone extends PageseederStep {
     try {
       XMLStringWriter loadingWriter = new XMLStringWriter(XML.NamespaceAware.No);
       XMLStringWriter threadWriter = new XMLStringWriter(XML.NamespaceAware.No);
+      GroupThreadProgressScheduleExecutorRunnable executorRunnable = null;
       try {
         LoadingZoneUploadParameter uploadParameter = getLoadingZoneParameters(data, info);
         int httpCode = service.upload(input, uploadParameter, item.getToken(), psConfig, loadingWriter);
         result.addExtraXML(new ExtraResultStringXML(loadingWriter.toString()));
 
         if (httpCode == 202) {
-          GroupThreadProgressScheduleExecutorRunnable executorRunnable = new
+          executorRunnable = new
               GroupThreadProgressScheduleExecutorRunnable(loadingWriter.toString(), threadWriter, item.getToken(), psConfig,
               delayInMilleseconds);
           executorRunnable.run();
         }
       } finally {
         result.addExtraXML(new ExtraResultStringXML(threadWriter.toString()));
+        if (executorRunnable != null && executorRunnable.getLastStatus() != null
+            && !PSThreadStatus.Status.COMPLETED.equals(executorRunnable.getLastStatus().getStatus())) {
+          result.setError(new OXException(executorRunnable.getLastStatus().getLastMessage()));
+        }
       }
     } catch (MalformedURLException e) {
       LOGGER.error("String could not be transformed into URL: {}", e);
