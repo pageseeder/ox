@@ -23,6 +23,7 @@ import net.pageseeder.app.simple.vault.TokensVaultItem;
 import net.pageseeder.app.simple.vault.VaultUtils;
 import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.PSCredentials;
+import org.pageseeder.bridge.berlioz.auth.PSAuthenticator;
 import org.pageseeder.bridge.model.PSMember;
 import org.pageseeder.bridge.xml.PSCommentHandler;
 import org.pageseeder.ox.api.Measurable;
@@ -66,7 +67,6 @@ public class BulkCommentChange extends PageseederStep implements Measurable {
     String psconfigName = StepUtils.getParameter(data, info, "psconfig", VaultUtils.getDefaultPSOAuthConfigName());
     File inputXml = StepUtils.getInput(data, info);
     File output = StepUtils.getOutput(data, info, inputXml);
-    long interval = StepUtils.getParameterLongWithoutDynamicLogic(data, info, "interval", 100L);
 
     //Initiate the result
     DefaultResult result = new DefaultResult(model, data, info, output);
@@ -74,7 +74,6 @@ public class BulkCommentChange extends PageseederStep implements Measurable {
     //Load the Pageseeder Configuration
     PSOAuthConfig psOAuthConfig = super.getPSOAuthConfig(psconfigName);
     PSConfig psConfig = psOAuthConfig.getConfig();
-    PSAuthenticator psAuthenticator = super.getPSAuthenticator(psConfig);
 
     if (inputXml != null && inputXml.exists()) {
       CommentService commentService = new CommentService();
