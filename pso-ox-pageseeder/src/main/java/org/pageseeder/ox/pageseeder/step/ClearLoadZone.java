@@ -15,10 +15,13 @@
  */
 package org.pageseeder.ox.pageseeder.step;
 
+import net.pageseeder.app.simple.core.utils.SimpleStringUtils;
 import net.pageseeder.app.simple.pageseeder.model.StartLoadingParameter;
 import net.pageseeder.app.simple.pageseeder.service.LoadingZoneService;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
+import org.jetbrains.annotations.Nullable;
 import org.pageseeder.bridge.PSConfig;
+import org.pageseeder.bridge.PSCredentials;
 import org.pageseeder.bridge.model.PSGroup;
 import org.pageseeder.ox.api.Measurable;
 import org.pageseeder.ox.api.Result;
@@ -32,6 +35,7 @@ import org.pageseeder.ox.util.StepUtils;
 import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.xmlwriter.XML;
 import org.pageseeder.xmlwriter.XMLStringWriter;
+import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,43 +76,33 @@ public class ClearLoadZone extends PageseederStep implements Measurable {
 
     //There is not an easy way to calculated the percentage, then it will just guess.
     this.percentage = 3;
-    try {
-      PSGroup group = new PSGroup(StepUtils.getParameter(data, info, "group", (String) null));
-      String uploadId = StepUtils.getParameter(data, info, "uploadid", (String) null);
-      String xlinkid = StepUtils.getParameter(data, info, "xlinkid", (String) null);
-      XMLStringWriter unzipWriter = new XMLStringWriter(XML.NamespaceAware.No);
-      XMLStringWriter threadWriter = new XMLStringWriter(XML.NamespaceAware.No);
-//
-//      LOGGER.debug("Start Loading");
-//      StartLoadingParameter startLoadingParameters = getStartLoadingParameters(data, info);
-//      this.percentage = 5;
-//      try {
-//        service.startLoading(item.getMember(), group, startLoadingParameters, item.getToken(), psConfig, unzipWriter);
-//        this.percentage = 20;
-//
-//        result.addExtraXML(new ExtraResultStringXML(unzipWriter.toString()));
-//        this.percentage = 30;
-//
-//        GroupThreadProgressScheduleExecutorRunnable executorRunnable = new
-//            GroupThreadProgressScheduleExecutorRunnable(unzipWriter.toString(), threadWriter, item.getToken(), psConfig,
-//            delayInMilleseconds);
-//        executorRunnable.run();
-      } finally {
-//        result.addExtraXML(new ExtraResultStringXML(threadWriter.toString()));
-//        this.percentage = 100;
-      }
-//    }
-//    catch (MalformedURLException e) {
-//      LOGGER.warn("String could not be transformed into URL");
-//      result.setError(e);
-//    } catch (IOException e){
-//      LOGGER.error("Exception: {}", e);
-//      result.setError(e);
-//    }
+    PSGroup group = new PSGroup(StepUtils.getParameter(data, info, "group", (String) null));
+    String uploadId = StepUtils.getParameter(data, info, "uploadid", (String) null);
+    Long xlinkId = getXlinkId(data, info);
 
+    XMLStringWriter cleanWriter = new XMLStringWriter(XML.NamespaceAware.No);
+
+    LOGGER.debug("Start cleaning load zone");
+    this.percentage = 5;
+    service.clear(item.getMember(), group, uploadId, xlinkId, item.getToken(), psConfig, cleanWriter);
+    this.percentage = 95;
+    result.addExtraXML(new ExtraResultStringXML(cleanWriter.toString()));
+    this.percentage = 100;
     return result;
   }
 
+  private Long getXlinkId(PackageData data, StepInfo info) {
+    Long xlinkId = null;
+    String stringXlinkId = StepUtils.getParameter(data, info, "xlinkid", null);
+    if (!SimpleStringUtils.isBlank(stringXlinkId)) {
+      try {
+        xlinkId = Long.parseLong(stringXlinkId);
+      } catch (NumberFormatException ex) {
+        LOGGER.warn("Invalid xlinkid {}", xlinkId);
+      }
+    }
+    return xlinkId;
+  }
 
   @Override
   public int percentage() {
