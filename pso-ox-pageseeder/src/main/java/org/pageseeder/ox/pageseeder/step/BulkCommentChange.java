@@ -23,7 +23,6 @@ import net.pageseeder.app.simple.vault.TokensVaultItem;
 import net.pageseeder.app.simple.vault.VaultUtils;
 import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.PSCredentials;
-import org.pageseeder.bridge.berlioz.auth.PSAuthenticator;
 import org.pageseeder.bridge.model.PSMember;
 import org.pageseeder.bridge.xml.PSCommentHandler;
 import org.pageseeder.ox.api.Measurable;
