@@ -15,16 +15,14 @@
  */
 package org.pageseeder.ox.pageseeder.step;
 
-import net.pageseeder.app.simple.core.utils.SimpleStringUtils;
+import net.pageseeder.app.simple.core.utils.SimpleXMLUtils;
 import net.pageseeder.app.simple.pageseeder.model.CommentParameter;
 import net.pageseeder.app.simple.pageseeder.service.CommentService;
 import net.pageseeder.app.simple.vault.PSOAuthConfig;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
-import net.pageseeder.app.simple.vault.TokensVaultManager;
 import net.pageseeder.app.simple.vault.VaultUtils;
 import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.PSCredentials;
-import org.pageseeder.bridge.berlioz.auth.PSAuthenticator;
 import org.pageseeder.bridge.model.PSMember;
 import org.pageseeder.bridge.xml.PSCommentHandler;
 import org.pageseeder.ox.api.Measurable;
@@ -32,6 +30,7 @@ import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
+import org.pageseeder.ox.pageseeder.xml.CommentParameterHandler;
 import org.pageseeder.ox.tool.DefaultResult;
 import org.pageseeder.ox.tool.ExtraResultStringXML;
 import org.pageseeder.ox.tool.ResultBase;
@@ -43,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -80,23 +80,21 @@ public class BulkCommentChange extends PageseederStep implements Measurable {
       CommentService commentService = new CommentService();
       XMLStringWriter writer = new XMLStringWriter(XML.NamespaceAware.No);
 
-      //Start writing the xml publishes result
+      //Start writing the xml comments result
       writer.openElement("comments");
       try {
-         TokensVaultItem item = TokensVaultManager.get(psconfigName);
-         PSMember tokenMember = item.getMember();
-         PSCredentials token = item.getToken();
+        TokensVaultItem item = super.getTokensVaultItem(psconfigName);
+        PSMember tokenMember = item.getMember();
+        PSCredentials token = item.getToken();
 
-        //Read input file and convert to a list of Comments to change, Maybe Comment Parameter
+        //Read input file and convert to a list of CommentParameters
         List<CommentParameter> commentParameters = readXML(inputXml);
-
         //update percentage
         this.percentage = 5.0F;
 
         //It is 90% because 5% was left for getUser and another 5% to write output.
         float percentageIncrement = 90.0F / commentParameters.size();
-
-        //go through publish groups and call the publish and check the status till it is concluded(Completed or failed)
+        // Iterate through comment parameters and update comments
         for (CommentParameter cp : commentParameters) {
           callChange(cp, tokenMember, token, psConfig,commentService, writer);
           //Update Percentage
@@ -106,10 +104,10 @@ public class BulkCommentChange extends PageseederStep implements Measurable {
         LOGGER.error("Exception thrown while writing output to XML: {}", ex.getMessage());
         result.setError(ex);
       } finally {
-        //Close publishes result
+        //Close comments result
         writer.closeElement();//comments
 
-        //Add publishes result to the final result.
+        //Add comments result to the final result.
         result.addExtraXML(new ExtraResultStringXML(writer.toString()));
 
         //Writes the output.
@@ -129,21 +127,13 @@ public class BulkCommentChange extends PageseederStep implements Measurable {
     String status = "";
     long startedAt = System.currentTimeMillis();
     try {
-
       PSCommentHandler handler = new PSCommentHandler();
       //TODO change to use the new method you created in simple
-      commentService.editComment(cp.getId(), tokenMember, token, cp, handler);
-      // PSPublish currentPublish = handler.get();
-
-//      //Get the first status.
-//      status = currentPublish.getStatus();
-//
-//      //Get messages if there are some.
-//      errorMessage = psPublishHandler.get().getMessage();
-
-//    } catch (IOException | InterruptedException e) {
-//      errorMessage = e.getMessage();
-//      status = "exception";
+      commentService.editComment(cp.getId(), tokenMember, token, cp, psConfig, handler);
+      status = "success";
+    } catch (Exception ex) {
+      status = "failed";
+      errorMessage = ex.getMessage();
     } finally {
       writeChangesResultXML (cp, writer, status, errorMessage, System.currentTimeMillis() - startedAt);
     }
@@ -151,25 +141,26 @@ public class BulkCommentChange extends PageseederStep implements Measurable {
 
   private List<CommentParameter> readXML(File xml) throws IOException {
     //Create a new handler
-//    GroupPublishInputHandler handler = new GroupPublishInputHandler();
-//    SimpleXMLUtils.parseXML(new FileInputStream(xml), handler);
-//    return handler.getCommentParameters();
-    return null;
+    CommentParameterHandler handler = new CommentParameterHandler();
+    SimpleXMLUtils.parseXML(new FileInputStream(xml), handler);
+    return handler.getCommentParameters();
   }
 
 
   private void writeChangesResultXML (CommentParameter cp, XMLWriter writer, String status, String errorMessage, long timeSpentMilliseconds) throws IOException {
-
-    //It will need some updates.
     writer.openElement("comment");
-    writer.attribute("project", String.valueOf(cp.getId()));
-
+    writer.attribute("commentid", String.valueOf(cp.getId()));
+    writer.attribute("title", cp.getTitle());
+    writer.attribute("content", cp.getContent().getContent());
+    writer.attribute("contentType", cp.getContentRole());
+    writer.attribute("labels", cp.getLabels().toString());
+    writer.attribute("properties", cp.getProperties().toString());
+    writer.attribute("notify", cp.getNotify().parameter());
+    writer.attribute("type", cp.getType());
     writer.attribute("status", status);
-
-    writer.attribute("error-msg", SimpleStringUtils.isBlank(errorMessage) ? "" : errorMessage);
-
+    writer.attribute("error-msg", errorMessage);
     writer.attribute("time-spent-milliseconds", String.valueOf(timeSpentMilliseconds));
-    writer.closeElement();//publish
+    writer.closeElement();// close comment
   }
 
   private void writeOutput(File output, XMLWriter writer, ResultBase result) {

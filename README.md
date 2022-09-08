@@ -201,10 +201,11 @@ The request and step parameters can have its value connected to other parameter.
 
 There are prebuilt values that can be used:
 
-| Value          | Description                                                                 |
-|----------------|-----------------------------------------------------------------------------|
-| _uploaded_file | it is the file name of the uploaded file                                    |
-| _input         | it is the file or folder name of the input parameter in the step definition |
+| Value          | Description                                                                                                 |
+|----------------|-------------------------------------------------------------------------------------------------------------|
+| _uploaded_file | it is the file name of the uploaded file.                                                                   |
+| _input         | it is the file or folder name of the input parameter in the step definition.                                |
+| _package_id    | The OX calls each process or upload of `package`. The packge id is an unique value to identify this upload. |        
 
 Example:
 

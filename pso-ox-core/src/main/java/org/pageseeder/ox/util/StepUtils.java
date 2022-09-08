@@ -243,6 +243,7 @@ public class StepUtils {
     if (data != null) {
       parameters.putAll(data.getParameters());
       parameters.put("_uploaded_file", data.getProperty("_original_file", ""));
+      parameters.put("_package_id", data.id());
     }
 
     //Add step parameters
