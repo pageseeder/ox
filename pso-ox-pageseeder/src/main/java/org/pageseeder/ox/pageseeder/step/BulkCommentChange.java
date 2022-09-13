@@ -15,6 +15,7 @@
  */
 package org.pageseeder.ox.pageseeder.step;
 
+import net.pageseeder.app.simple.core.utils.SimpleStringUtils;
 import net.pageseeder.app.simple.core.utils.SimpleXMLUtils;
 import net.pageseeder.app.simple.pageseeder.model.CommentParameter;
 import net.pageseeder.app.simple.pageseeder.service.CommentService;
@@ -126,7 +127,6 @@ public class BulkCommentChange extends PageseederStep implements Measurable {
     long startedAt = System.currentTimeMillis();
     try {
       PSCommentHandler handler = new PSCommentHandler();
-      //TODO change to use the new method you created in simple
       commentService.editComment(cp.getId(), tokenMember, token, cp, psConfig, handler);
       status = "success";
     } catch (Exception ex) {
@@ -149,12 +149,25 @@ public class BulkCommentChange extends PageseederStep implements Measurable {
     writer.openElement("comment");
     writer.attribute("commentid", String.valueOf(cp.getId()));
     writer.attribute("title", cp.getTitle());
-    writer.attribute("content", cp.getContent().getContent());
-    writer.attribute("contentType", cp.getContentRole());
-    writer.attribute("labels", cp.getLabels().toString());
-    writer.attribute("properties", cp.getProperties().toString());
-    writer.attribute("notify", cp.getNotify().parameter());
-    writer.attribute("type", cp.getType());
+    if (cp.getContent() != null) {
+      writer.attribute("content", cp.getContent().getContent());
+    }
+    if (cp.getContentRole() != null) {
+      writer.attribute("contentType", cp.getContentRole());
+    }
+    if (cp.getLabels() != null) {
+      writer.attribute("labels", cp.getLabels().toString());
+    }
+    if (cp.getProperties() != null) {
+      writer.attribute("properties", cp.getProperties().toString());
+    }
+    if (cp.getNotify() != null) {
+      writer.attribute("notify", cp.getNotify().parameter());
+    }
+    if (!SimpleStringUtils.isBlank(cp.getType())) {
+      writer.attribute("type", cp.getType());
+    }
+
     writer.attribute("status", status);
     writer.attribute("error-msg", errorMessage);
     writer.attribute("time-spent-milliseconds", String.valueOf(timeSpentMilliseconds));
