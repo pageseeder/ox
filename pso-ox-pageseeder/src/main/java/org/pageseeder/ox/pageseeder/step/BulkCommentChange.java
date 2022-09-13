@@ -49,6 +49,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author ccabral
@@ -67,6 +68,7 @@ public class BulkCommentChange extends PageseederStep implements Measurable {
     String psconfigName = StepUtils.getParameter(data, info, "psconfig", VaultUtils.getDefaultPSOAuthConfigName());
     File inputXml = StepUtils.getInput(data, info);
     File output = StepUtils.getOutput(data, info, inputXml);
+    long interval = StepUtils.getParameterLongWithoutDynamicLogic(data, info, "interval", 100);
 
     //Initiate the result
     DefaultResult result = new DefaultResult(model, data, info, output);
@@ -98,8 +100,12 @@ public class BulkCommentChange extends PageseederStep implements Measurable {
           callChange(cp, tokenMember, token, psConfig,commentService, writer);
           //Update Percentage
           this.percentage += percentageIncrement;
+          if (interval > 0) {
+            TimeUnit.MILLISECONDS.sleep(interval);
+          }
+
         }
-      } catch (IOException ex) {
+      } catch (IOException | InterruptedException ex) {
         LOGGER.error("Exception thrown while writing output to XML: {}", ex.getMessage());
         result.setError(ex);
       } finally {
