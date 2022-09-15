@@ -119,7 +119,7 @@ public class BulkGroupPublish extends PageseederStep implements Measurable {
           this.percentage += percentageIncrement;
         }
         super.logout(psUser, psAuthenticator);
-      } catch (IOException | AuthException ex) {
+      } catch (Exception ex) {
         LOGGER.error("Exception thrown while writing output to XML: {}", ex.getMessage());
         result.setError(ex);
       } finally {
@@ -176,7 +176,7 @@ public class BulkGroupPublish extends PageseederStep implements Measurable {
       //Get messages if there are some.
       errorMessage = psPublishHandler.get().getMessage();
 
-    } catch (IOException | InterruptedException e) {
+    } catch (Exception e) {
       errorMessage = e.getMessage();
       status = "exception";
     } finally {
