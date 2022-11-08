@@ -15,6 +15,7 @@
  */
 
 package org.pageseeder.ox.pageseeder.xml;
+import net.pageseeder.app.simple.core.utils.SimpleStringUtils;
 import org.pageseeder.bridge.model.PSNotify;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
@@ -45,12 +46,27 @@ public class CommentParameterHandler extends DefaultHandler {
     if (localName.equals("comment")) {
       cpBuilder.id(Long.valueOf(attributes.getValue("commentid")));
       cpBuilder.title(attributes.getValue("title"));
-      cpBuilder.content(attributes.getValue("content"));
-      cpBuilder.contentRole(attributes.getValue("contenttype"));
-      cpBuilder.labels(attributes.getValue("labels"));
-      cpBuilder.properties(attributes.getValue("properties"));
-      cpBuilder.notify(PSNotify.valueOf(attributes.getValue("notify")));
-      cpBuilder.type(attributes.getValue("type"));
+
+      if (!SimpleStringUtils.isBlank(attributes.getValue("content"))) {
+        cpBuilder.content(attributes.getValue("content"));
+      }
+      if (!SimpleStringUtils.isBlank(attributes.getValue("contenttype"))) {
+        cpBuilder.contentRole(attributes.getValue("contenttype"));
+      }
+      if (!SimpleStringUtils.isBlank(attributes.getValue("labels"))) {
+        cpBuilder.labels(attributes.getValue("labels"));
+      }
+      if (!SimpleStringUtils.isBlank(attributes.getValue("properties"))) {
+        cpBuilder.properties(attributes.getValue("properties"));
+      }
+      if (!SimpleStringUtils.isBlank(attributes.getValue("notify"))) {
+        cpBuilder.notify(PSNotify.valueOf(attributes.getValue("notify")));
+      } else {
+        cpBuilder.notify(PSNotify.silent);
+      }
+      if (!SimpleStringUtils.isBlank(attributes.getValue("type"))) {
+        cpBuilder.type(attributes.getValue("type"));
+      }
 
       CommentParameter currCp = cpBuilder.buildComment();
       this.cp.add(currCp);
