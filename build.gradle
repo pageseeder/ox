@@ -33,7 +33,7 @@ ext {
   powermockAPIMockitoVersion = '1.6.6'
   powermockModulejunit4Version = '1.6.6'
   powermockMockitoReleaseFullVersion = '1.6.4'
-  saxonVersion = '9.7.0-2'
+  saxonVersion = '10.6'
   slf4jAPIVersion = '1.7.30'
   topologiXercesVersion = '03'
   xmlUnitVersion = '1.6'
