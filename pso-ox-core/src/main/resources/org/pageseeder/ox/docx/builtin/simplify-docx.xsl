@@ -132,11 +132,11 @@
 <xsl:template match="w:lastRenderedPageBreak[$remove-last-rendered-page-break = 'true']" mode="simplify"/>
 
 <!-- Remove bookmarks -->
-<xsl:template match="w:bookmarkStart[$remove-bookmarks = 'true']" mode="simplify"/>
-<xsl:template match="w:bookmarkEnd  [$remove-bookmarks = 'true']" mode="simplify"/>
+<xsl:template match="w:bookmarkStart[not(@w:name='_GoBack') and $remove-bookmarks = 'true']" mode="simplify"/>
+<xsl:template match="w:bookmarkEnd  [not(@w:id= preceding::w:bookmarkStart[@w:name='_GoBack']/@w:id) and $remove-bookmarks = 'true']" mode="simplify"/>
 
-<xsl:template match="w:bookmarkStart[@w:name='_GoBack'][$remove-goback-bookmarks = 'true']" mode="simplify"/>
-<xsl:template match="w:bookmarkEnd[@w:id= preceding::w:bookmarkStart[@w:name='_GoBack']/@w:id][$remove-goback-bookmarks = 'true']" mode="simplify"/>
+<xsl:template match="w:bookmarkStart[@w:name='_GoBack' and $remove-goback-bookmarks = 'true']" mode="simplify"/>
+<xsl:template match="w:bookmarkEnd[@w:id= preceding::w:bookmarkStart[@w:name='_GoBack']/@w:id and $remove-goback-bookmarks = 'true']" mode="simplify"/>
 
 <!-- Remove Web Hidden -->
 <xsl:template match="w:webHidden[$remove-web-hidden = 'true']" mode="simplify"/>
