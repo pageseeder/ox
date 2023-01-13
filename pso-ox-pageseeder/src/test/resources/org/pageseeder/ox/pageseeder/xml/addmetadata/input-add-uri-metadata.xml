@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadatas>
+   <metadata>
+      <uriid>#N/A</uriid>
+      <title>Test 01</title>
+      <description/>
+      <labels>restricted</labels>
+      <properties>
+         <property name="year" type="string" title="Year" value="2021"/>
+         <property name="year_month" type="string" title="Year" value="2021-01"/>
+         <property name="publish_date"
+                   type="date"
+                   title="Publish Date"
+                   value="2021-01-01"/>
+      </properties>
+   </metadata>
+   <metadata>
+      <uriid>2</uriid>
+      <title>Test 02</title>
+      <description>_chemoc</description>
+      <labels>restricted,embargo</labels>
+      <properties>
+         <property name="year" type="string" title="Year" value="2022"/>
+         <property name="year_month" type="string" title="Year" value="2022-02"/>
+         <property name="publish_date"
+                   type="date"
+                   title="Publish Date"
+                   value="2022-02-02"/>
+      </properties>
+   </metadata>
+   <metadata>
+      <uriid>3</uriid>
+      <title>Test 03</title>
+      <description/>
+      <labels>restricted</labels>
+      <properties>
+         <property name="year" type="string" title="Year" value="2023"/>
+         <property name="year_month" type="string" title="Year" value="2023-03"/>
+         <property name="publish_date"
+                   type="date"
+                   title="Publish Date"
+                   value="2023-03-03"/>
+      </properties>
+   </metadata>
+</metadatas>
