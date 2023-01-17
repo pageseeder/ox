@@ -15,7 +15,9 @@
  */
 package org.pageseeder.ox.pageseeder.step;
 
+import net.pageseeder.app.simple.core.utils.SimpleDateTimeUtils;
 import net.pageseeder.app.simple.core.utils.SimpleXMLUtils;
+import net.pageseeder.app.simple.pageseeder.model.AddURIMetadata;
 import net.pageseeder.app.simple.pageseeder.service.URIService;
 import net.pageseeder.app.simple.vault.PSOAuthConfig;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
@@ -31,7 +33,7 @@ import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.pageseeder.model.AddMetadata;
-import org.pageseeder.ox.pageseeder.xml.AddMetadataHandler;
+import org.pageseeder.ox.pageseeder.xml.AddURIMetadataHandler;
 import org.pageseeder.ox.tool.DefaultResult;
 import org.pageseeder.ox.tool.ExtraResultStringXML;
 import org.pageseeder.ox.tool.ResultBase;
@@ -98,15 +100,15 @@ public class BulkAddURIMetadata extends PageseederStep implements Measurable {
         PSCredentials token = item.getToken();
 
         //Read input file and convert to a list of metadatas
-        List<AddMetadata> addMetadataList = readXML(inputXml);
+        List<AddURIMetadata> addURIMetadataList = readXML(tokenMember, psGroup, inputXml);
         //update percentage
         this.percentage = 5.0F;
 
         //It is 90% because 5% was left for getUser and another 5% to write output.
-        float percentageIncrement = 90.0F / addMetadataList.size();
+        float percentageIncrement = 90.0F / addURIMetadataList.size();
         // Iterate through metadata parameters and update metadatas
-        for (AddMetadata addMetadata : addMetadataList) {
-          callChange(addMetadata, tokenMember, psGroup, token, psConfig, uriService, writer);
+        for (AddURIMetadata addURIMetadata : addURIMetadataList) {
+          callChange(addURIMetadata, token, psConfig, uriService, writer);
           //Update Percentage
           this.percentage += percentageIncrement;
           if (interval > 0) {
@@ -134,15 +136,14 @@ public class BulkAddURIMetadata extends PageseederStep implements Measurable {
     return result;
   }
 
-  private void callChange(AddMetadata addMetadata, PSMember tokenMember, PSGroup psGroup, PSCredentials token,
-                          PSConfig psConfig, URIService uriService, XMLWriter writer) throws IOException {
+  private void callChange(AddURIMetadata addURIMetadata, PSCredentials token, PSConfig psConfig, URIService uriService,
+                          XMLWriter writer) throws IOException {
     String errorMessage = "";
     String status = "";
     long startedAt = System.currentTimeMillis();
     try {
       XMLStringWriter tempWriter = new XMLStringWriter(XML.NamespaceAware.No);
-      uriService.addMetadata(addMetadata.getUriid(), tokenMember, psGroup,  addMetadata.getTitle(),
-          addMetadata.getDescription(), addMetadata.getLabels(), addMetadata.getProperties(), token, psConfig, tempWriter);
+      uriService.addMetadata(addURIMetadata, token, psConfig, tempWriter);
       //Currently it does not use this information. So it will just log.
       LOGGER.debug(tempWriter.toString());
       status = "success";
@@ -150,27 +151,32 @@ public class BulkAddURIMetadata extends PageseederStep implements Measurable {
       status = "failed";
       errorMessage = ex.getMessage();
     } finally {
-      writeChangesResultXML (addMetadata, writer, status, errorMessage, System.currentTimeMillis() - startedAt);
+      writeChangesResultXML (addURIMetadata, writer, status, errorMessage, System.currentTimeMillis() - startedAt);
     }
   }
 
-  private List<AddMetadata> readXML(File xml) throws IOException {
+  private List<AddURIMetadata> readXML(PSMember member, PSGroup group, File xml) throws IOException {
     //Create a new handler
-    AddMetadataHandler handler = new AddMetadataHandler();
+    AddURIMetadataHandler handler = new AddURIMetadataHandler(member, group);
     SimpleXMLUtils.parseXML(new FileInputStream(xml), handler);
     return handler.list();
   }
 
-  private void writeChangesResultXML (AddMetadata addMetadata, XMLWriter writer, String status, String errorMessage, long timeSpentMilliseconds) throws IOException {
+  private void writeChangesResultXML (AddURIMetadata addURIMetadata, XMLWriter writer, String status,
+                                      String errorMessage, long timeSpentMilliseconds) throws IOException {
     writer.openElement("metadata");
-    String uriid = addMetadata.getUriid() != null ? String.valueOf(addMetadata.getUriid()) : "-1";
+    String uriid = addURIMetadata.getUriid() != null ? String.valueOf(addURIMetadata.getUriid()) : "-1";
     writer.element("uriid", uriid);
-    writer.element("title", addMetadata.getTitle());
-    writer.element("description", addMetadata.getDescription());
-    writer.element("labels", String.join(",", addMetadata.getLabels()));
+    SimpleXMLUtils.writeElement("draft", addURIMetadata.getDraft(), writer);
+    SimpleXMLUtils.writeElement("html", addURIMetadata.getHtml(), writer);
+    SimpleXMLUtils.writeElement("last-modified", addURIMetadata.getLastModified(), writer);
+    SimpleXMLUtils.writeElement("note", addURIMetadata.getNote(), writer);
+    SimpleXMLUtils.writeElement("note-labels", addURIMetadata.getNoteLabels(), writer);
+    SimpleXMLUtils.writeElement("note-title", addURIMetadata.getNoteTitle(), writer);
+    SimpleXMLUtils.writeElement("transclude", addURIMetadata.getTransclude(), writer);
 
     writer.openElement("properties");
-    for (Property property : addMetadata.getProperties()) {
+    for (Property property : addURIMetadata.getProperties()) {
       writer.openElement("property");
       writer.attribute("name", property.getName());
       writer.attribute("title", property.getTitle());

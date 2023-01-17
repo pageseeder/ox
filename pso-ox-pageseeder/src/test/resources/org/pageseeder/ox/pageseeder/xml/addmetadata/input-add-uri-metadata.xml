@@ -2,9 +2,13 @@
 <metadatas>
    <metadata>
       <uriid>#N/A</uriid>
-      <title>Test 01</title>
-      <description/>
-      <labels>restricted</labels>
+      <draft>false</draft>
+      <html>true</html>
+      <last-modified />
+      <note>Metadata note 01</note>
+      <note-labels>label01,label02</note-labels>
+      <note-title>Note Tile</note-title>
+      <transclude>true</transclude>
       <properties>
          <property name="year" type="string" title="Year" value="2021"/>
          <property name="year_month" type="string" title="Year" value="2021-01"/>
@@ -16,9 +20,10 @@
    </metadata>
    <metadata>
       <uriid>2</uriid>
-      <title>Test 02</title>
-      <description>_chemoc</description>
-      <labels>restricted,embargo</labels>
+      <draft>true</draft>
+      <last-modified>2023-01-01T01:01:01</last-modified>
+      <note>Metadata note 02</note>
+      <note-title/>
       <properties>
          <property name="year" type="string" title="Year" value="2022"/>
          <property name="year_month" type="string" title="Year" value="2022-02"/>
@@ -30,9 +35,9 @@
    </metadata>
    <metadata>
       <uriid>3</uriid>
-      <title>Test 03</title>
-      <description/>
-      <labels>restricted</labels>
+      <html>false</html>
+      <note-labels/>
+      <transclude/>
       <properties>
          <property name="year" type="string" title="Year" value="2023"/>
          <property name="year_month" type="string" title="Year" value="2023-03"/>
