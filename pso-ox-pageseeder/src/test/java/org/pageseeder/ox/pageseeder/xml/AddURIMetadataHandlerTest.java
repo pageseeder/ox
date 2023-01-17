@@ -69,6 +69,8 @@ public class AddURIMetadataHandlerTest {
                                     List<String> expectedNoteLabels, String expectedNoteTitle,
                                     Boolean expectedTransclude, List<String> propertyValues) {
 
+    Assert.assertEquals(Long.valueOf(1l), addURIMetadata.getMember().getId());
+    Assert.assertEquals(Long.valueOf(1l), addURIMetadata.getGroup().getId());
     Assert.assertEquals(expectedUriid, addURIMetadata.getUriid());
     Assert.assertEquals(expectedDraft, addURIMetadata.getDraft());
     Assert.assertEquals(expectedHtml, addURIMetadata.getHtml());

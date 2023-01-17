@@ -26,8 +26,6 @@ import org.pageseeder.bridge.model.PSGroup;
 import org.pageseeder.bridge.model.PSMember;
 import org.pageseeder.bridge.psml.Property;
 import org.pageseeder.bridge.xml.BasicHandler;
-import org.pageseeder.ox.pageseeder.model.AddMetadata;
-import org.pageseeder.ox.pageseeder.model.AddMetadataBuilder;
 import org.xml.sax.Attributes;
 
 /**
@@ -85,6 +83,8 @@ public class AddURIMetadataHandler extends BasicHandler<AddURIMetadata> {
     switch (element) {
       case "metadata":
         if (this.builder != null) {
+          this.builder.member(this.member);
+          this.builder.group(this.psGroup);
           super.add(builder.build());
         }
         //Reset
