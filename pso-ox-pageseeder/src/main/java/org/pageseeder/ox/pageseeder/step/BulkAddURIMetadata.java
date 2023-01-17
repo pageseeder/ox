@@ -15,7 +15,6 @@
  */
 package org.pageseeder.ox.pageseeder.step;
 
-import net.pageseeder.app.simple.core.utils.SimpleDateTimeUtils;
 import net.pageseeder.app.simple.core.utils.SimpleXMLUtils;
 import net.pageseeder.app.simple.pageseeder.model.AddURIMetadata;
 import net.pageseeder.app.simple.pageseeder.service.URIService;
@@ -32,7 +31,6 @@ import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
-import org.pageseeder.ox.pageseeder.model.AddMetadata;
 import org.pageseeder.ox.pageseeder.xml.AddURIMetadataHandler;
 import org.pageseeder.ox.tool.DefaultResult;
 import org.pageseeder.ox.tool.ExtraResultStringXML;
