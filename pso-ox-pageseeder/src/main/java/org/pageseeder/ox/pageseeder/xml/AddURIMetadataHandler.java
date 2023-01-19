@@ -79,7 +79,6 @@ public class AddURIMetadataHandler extends BasicHandler<AddURIMetadata> {
   }
 
   public void endElement(String element) {
-    final String text = super.buffer(Boolean.TRUE);
     switch (element) {
       case "metadata":
         if (this.builder != null) {
@@ -90,6 +89,18 @@ public class AddURIMetadataHandler extends BasicHandler<AddURIMetadata> {
         //Reset
         this.builder = null;
         break;
+      default:
+        if (this.builder != null) {
+          //If builder is different of null then it is inside the metadata element.
+          //The reason we check if because it maybe used for xml files with another information that can conflict.
+          endElementInsideMetadata(element);
+        }
+    }
+  }
+
+  private void endElementInsideMetadata (String element) {
+    final String text = super.buffer(Boolean.TRUE);
+    switch (element) {
       case "uriid":
         builder.uriid(SimpleNumberUtils.toLong(text, null));
         break;
