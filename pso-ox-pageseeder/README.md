@@ -37,6 +37,38 @@ XML Input Example:
 </metadatas>
 ```
 
+## BulkEditURI
+
+It receives as input a xml and call a service to edit an uri for each uriid.
+
+At the end it writes a report with the result of each calling.
+
+Parameters:
+
+- psconfig: The default value is the default configuration.
+- input: if it is not informed it will use the uploaded file.
+- output: it is required, but if it is not informed than create with a random name.
+- interval: the default value is 100 milliseconds
+- psgroup: it is required
+
+XML Input Example:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<edit-uris>
+  <edit-uri>
+    <uriid>123456</uriid>
+    <description>text</description>
+    <document-id>doc-id</document-id>
+    <labels>label01,label02</labels>
+    <file-name>Test_02</file-name>
+    <publication-id>pub-id</publication-id>
+    <publication-type>type</publication-type>
+    <title>Test 02</title>
+  </edit-uri>
+</edit-uris>
+```
+
 ## BulkGroupPublish
 
 It receives as input a xml and call the publishing script for each publish. 
