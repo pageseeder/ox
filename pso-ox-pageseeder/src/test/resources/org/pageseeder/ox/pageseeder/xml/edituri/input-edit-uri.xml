@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edit-uris>
+   <edit-uri>
+      <uriid>#N/A</uriid>
+      <description/>
+      <document-id/>
+      <labels/>
+      <file-name/>
+      <publication-id/>
+      <publication-type/>
+      <title>Test 01</title>
+   </edit-uri>
+   <edit-uri>
+      <uriid>2</uriid>
+      <description>_chemoc</description>
+      <document-id>doc-id</document-id>
+      <labels>restricted,embargo</labels>
+      <file-name>Test_02</file-name>
+      <publication-id>pub-id</publication-id>
+      <publication-type>type</publication-type>
+      <title>Test 02</title>
+   </edit-uri>
+   <edit-uri>
+      <uriid>3</uriid>
+      <description/>
+      <labels>restricted</labels>
+      <file-name>Test_03</file-name>
+      <title>Test 03</title>
+   </edit-uri>
+</edit-uris>

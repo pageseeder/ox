@@ -21,7 +21,9 @@ import net.pageseeder.app.simple.core.utils.SimpleDateTimeUtils;
 import net.pageseeder.app.simple.core.utils.SimpleNumberUtils;
 import net.pageseeder.app.simple.core.utils.SimpleStringUtils;
 import net.pageseeder.app.simple.pageseeder.model.AddURIMetadata;
+import net.pageseeder.app.simple.pageseeder.model.EditURI;
 import net.pageseeder.app.simple.pageseeder.model.builder.AddURIMetadataBuilder;
+import net.pageseeder.app.simple.pageseeder.model.builder.EditURIBuilder;
 import org.pageseeder.bridge.model.PSGroup;
 import org.pageseeder.bridge.model.PSMember;
 import org.pageseeder.bridge.psml.Property;
@@ -29,24 +31,24 @@ import org.pageseeder.bridge.xml.BasicHandler;
 import org.xml.sax.Attributes;
 
 /**
- * The type Add uri metadata handler.
+ * The typeedit uri handler.
  *
  * @author Carlos Cabral
- * @since 11 January 2023
+ * @since 18 January 2023
  */
-public class AddURIMetadataHandler extends BasicHandler<AddURIMetadata> {
+public class EditURIHandler extends BasicHandler<EditURI> {
 
-  private AddURIMetadataBuilder builder = null;
+  private EditURIBuilder builder = null;
   private final PSMember member;
   private final PSGroup psGroup;
 
   /**
-   * Instantiates a new Add uri metadata handler.
+   * Instantiates a new edit uri handler.
    *
    * @param member  the member
    * @param psGroup the ps group
    */
-  public AddURIMetadataHandler(PSMember member, PSGroup psGroup) {
+  public EditURIHandler(PSMember member, PSGroup psGroup) {
     this.member = member;
     this.psGroup = psGroup;
   }
@@ -55,35 +57,28 @@ public class AddURIMetadataHandler extends BasicHandler<AddURIMetadata> {
     if (attributes == null) throw new SimpleSiteException("Attributes is null");
 
     switch (element) {
-      case "metadata":
-        builder = new AddURIMetadataBuilder();
+      case "edit-uri":
+        builder = new EditURIBuilder();
         break;
       case "uriid":
-      case "draft" :
-      case "html" :
-      case "last-modified" :
-      case "note" :
-      case "note-labels" :
-      case "note-title" :
-      case "transclude" :
+      case "description" :
+      case "document-id" :
+      case "labels" :
+      case "file-name" :
+      case "publication-id" :
+      case "publication-type" :
+      case "title" :
         super.newBuffer();
-        break;
-      case "property":
-        Property property = new Property(attributes.getValue("name"));
-        property.setType(attributes.getValue("type"));
-        property.setTitle(attributes.getValue("title"));
-        property.setValue(attributes.getValue("value"));
-        builder.property(property);
         break;
     }
   }
 
   public void endElement(String element) {
     switch (element) {
-      case "metadata":
+      case "edit-uri":
         if (this.builder != null) {
-          this.builder.member(this.member);
-          this.builder.group(this.psGroup);
+          this.builder.member(this.getMember());
+          this.builder.group(this.getPsGroup());
           super.add(builder.build());
         }
         //Reset
@@ -91,52 +86,58 @@ public class AddURIMetadataHandler extends BasicHandler<AddURIMetadata> {
         break;
       default:
         if (this.builder != null) {
-          //If builder is different of null then it is inside the metadata element.
+          //If builder is different of null then it is inside the edit-uri element.
           //The reason we check if because it maybe used for xml files with another information that can conflict.
-          endElementInsideMetadata(element);
+          endElementInsideEditURI(element);
         }
     }
   }
 
-  private void endElementInsideMetadata (String element) {
+
+  /**
+   * End element inside edit uri.
+   *
+   * @param element the element
+   */
+  public void endElementInsideEditURI(String element) {
     final String text = super.buffer(Boolean.TRUE);
     switch (element) {
       case "uriid":
         builder.uriid(SimpleNumberUtils.toLong(text, null));
         break;
-      case "draft" :
+      case "description" :
         if (!SimpleStringUtils.isBlank(text)) {
-          builder.draft("true".equalsIgnoreCase(text));
+          builder.description(text);
         }
         break;
-      case "html" :
+      case "document-id" :
         if (!SimpleStringUtils.isBlank(text)) {
-          builder.html("true".equalsIgnoreCase(text));
+          builder.documentId(text);
         }
         break;
-      case "last-modified" :
+      case "labels" :
         if (!SimpleStringUtils.isBlank(text)) {
-          builder.lastModified(SimpleDateTimeUtils.toDateTime(text));
+          builder.labels(SimpleStringUtils.toList(text));
         }
         break;
-      case "note" :
+      case "file-name" :
         if (!SimpleStringUtils.isBlank(text)) {
-          builder.note(text);
+          builder.fileName(text);
         }
         break;
-      case "note-labels" :
+      case "publication-id" :
         if (!SimpleStringUtils.isBlank(text)) {
-          builder.noteLabels(SimpleStringUtils.toList(text));
+          builder.publicationId(text);
         }
         break;
-      case "note-title" :
+      case "publication-type" :
         if (!SimpleStringUtils.isBlank(text)) {
-          builder.noteTitle(text);
+          builder.publicationType(text);
         }
         break;
-      case "transclude" :
+      case "title" :
         if (!SimpleStringUtils.isBlank(text)) {
-          builder.transclude(!"false".equalsIgnoreCase(text));
+          builder.title(text);
         }
         break;
     }
