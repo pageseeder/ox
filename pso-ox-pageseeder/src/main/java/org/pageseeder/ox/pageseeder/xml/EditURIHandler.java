@@ -106,37 +106,37 @@ public class EditURIHandler extends BasicHandler<EditURI> {
         builder.uriid(SimpleNumberUtils.toLong(text, null));
         break;
       case "description" :
-        if (!SimpleStringUtils.isBlank(text)) {
+        if (text != null) {//It allows empty values in case wants to clean a value.
           builder.description(text);
         }
         break;
       case "document-id" :
-        if (!SimpleStringUtils.isBlank(text)) {
+        if (text != null) {//It allows empty values in case wants to clean a value.
           builder.documentId(text);
         }
         break;
       case "labels" :
-        if (!SimpleStringUtils.isBlank(text)) {
+        if (text != null) {
           builder.labels(SimpleStringUtils.toList(text));
         }
         break;
       case "file-name" :
-        if (!SimpleStringUtils.isBlank(text)) {
+        if (text != null) {
           builder.fileName(text);
         }
         break;
       case "publication-id" :
-        if (!SimpleStringUtils.isBlank(text)) {
+        if (text != null) {
           builder.publicationId(text);
         }
         break;
       case "publication-type" :
-        if (!SimpleStringUtils.isBlank(text)) {
+        if (text != null) {
           builder.publicationType(text);
         }
         break;
       case "title" :
-        if (!SimpleStringUtils.isBlank(text)) {
+        if (text != null) {
           builder.title(text);
         }
         break;
