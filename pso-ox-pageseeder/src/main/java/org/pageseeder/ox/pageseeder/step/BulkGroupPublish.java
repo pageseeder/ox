@@ -24,7 +24,6 @@ import net.pageseeder.app.simple.vault.PSOAuthConfig;
 import net.pageseeder.app.simple.vault.VaultUtils;
 import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.PSCredentials;
-import org.pageseeder.bridge.berlioz.auth.AuthException;
 import org.pageseeder.bridge.berlioz.auth.PSAuthenticator;
 import org.pageseeder.bridge.berlioz.auth.PSUser;
 import org.pageseeder.bridge.model.PSGroup;
