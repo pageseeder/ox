@@ -20,12 +20,21 @@ import net.pageseeder.app.simple.pageseeder.service.PublishService;
 import java.util.HashMap;
 
 /**
+ * The type Group publish.
+ *
  * @author asantos
  * @since 12 July 2022
  */
 public class GroupPublish {
 
+  /**
+   * How to run for archived projects. There is one example that the group is 'archive-subscribers-subscriber09124104'
+   * and project is just 'subscribers'
+   */
   private String project;
+  /**
+   * the group name project-group or archive-project-group
+   */
   private String group;
   private String member;
   private String target;
@@ -33,6 +42,20 @@ public class GroupPublish {
   private PublishService.LogLevel logLevel;
   private HashMap<String, String> parameters;
 
+  /**
+   * Instantiates a new Group publish.
+   *
+   * How to run for archived projects. There is one example that the group is 'archive-subscribers-subscriber09124104'
+   * and project is just 'subscribers'
+   *
+   * @param project    the project
+   * @param group      the group name project-group or archive-project-group
+   * @param member     the member
+   * @param target     the target
+   * @param type       the type
+   * @param logLevel   the log level
+   * @param parameters the parameters
+   */
   public GroupPublish(String project, String group, String member, String target, String type, String logLevel, HashMap<String, String> parameters) {
     this.project = project;
     this.group = group;
@@ -43,28 +66,63 @@ public class GroupPublish {
     this.parameters = parameters;
   }
 
+  /**
+   * Gets project.
+   *
+   * @return the project
+   */
   public String getProject() {
     return project;
   }
 
+  /**
+   * Gets group.
+   *
+   * @return the group
+   */
   public String getGroup() {
     return group;
   }
 
+  /**
+   * Gets member.
+   *
+   * @return the member
+   */
   public String getMember() {
     return member;
   }
 
+  /**
+   * Gets target.
+   *
+   * @return the target
+   */
   public String getTarget() {
     return target;
   }
 
+  /**
+   * Gets type.
+   *
+   * @return the type
+   */
   public PublishService.Type getType() { return type; }
 
+  /**
+   * Gets log level.
+   *
+   * @return the log level
+   */
   public PublishService.LogLevel getLogLevel() {
     return logLevel;
   }
 
+  /**
+   * Gets parameters.
+   *
+   * @return the parameters
+   */
   public HashMap<String, String> getParameters() { return parameters; }
 
 }

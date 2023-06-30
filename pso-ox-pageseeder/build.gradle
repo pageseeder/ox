@@ -18,7 +18,17 @@ dependencies {
     //Simple
     "net.pageseeder.app:psberlioz-simple-vault:$simpleVersion",
     "net.pageseeder.app:psberlioz-simple-core:$simpleVersion",
+
+    //Ehcache required by bridge
+    'net.sf.ehcache:ehcache:2.10.4',
   )
+
+  //This version net.sf.ehcache:ehcache:2.11.0.2.10 is not compatible with JDK8
+  implementation ('net.sf.ehcache:ehcache') {
+    version {
+      strictly '2.10.4'
+    }
+  }
 
   runtimeOnly (
     //"topologi:topologi-xerces:$topologiXercesVersion",
