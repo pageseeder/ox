@@ -110,6 +110,54 @@ public class StepUtilsTest {
   }
 
   @Test
+  public void getParameterWithoutDynamicLogic_LiteralValueFromPackageData_Success(){
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test","Data test value");
+    PackageData data = createPackageData(requestParameters);
+    StepInfo info = createStepInfo(new HashMap<>());
+    Assert.assertEquals("Data test value", StepUtils.getParameterWithoutDynamicLogic(data, info,"test", ""));
+  }
+
+  @Test
+  public void getParameterWithoutDynamicLogic_LiteralValueFromStepInfo_Success(){
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test","Info test value");
+    PackageData data = createPackageData(new HashMap<>());
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals("Info test value", StepUtils.getParameterWithoutDynamicLogic(data, info,"test", ""));
+  }
+
+  @Test
+  public void getParameterWithoutDynamicLogic_LiteralValueFromBoth_Success(){
+    //Both means DataPAckage and StepInfo
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-data","Data test value");
+    PackageData data = createPackageData(requestParameters);
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-info","Info test value");
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals("Data test value", StepUtils.getParameterWithoutDynamicLogic(data, info,"test-data", ""));
+    Assert.assertEquals("Info test value", StepUtils.getParameterWithoutDynamicLogic(data, info,"test-info", ""));
+  }
+
+  @Test
+  public void getParameterWithoutDynamicLogic_LiteralValueFromFallback_Success(){
+    Map<String, String> requestParameters = new HashMap<>();
+    PackageData data = createPackageData(requestParameters);
+    Map<String, String> stepParameters = new HashMap<>();
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertEquals("Fallback value", StepUtils.getParameterWithoutDynamicLogic(data, info,"test-data", "Fallback value"));
+  }
+  @Test
+  public void getParameterWithoutDynamicLogic_NonExistingValue_Success(){
+    Map<String, String> requestParameters = new HashMap<>();
+    PackageData data = createPackageData(requestParameters);
+    Map<String, String> stepParameters = new HashMap<>();
+    StepInfo info = createStepInfo(stepParameters);
+    Assert.assertNull(StepUtils.getParameterWithoutDynamicLogic(data, info,"test-data", null));
+  }
+
+  @Test
   public void getParameterIntWithoutDynamicLogic_fromRequest_valid() {
     Map<String, String> requestParameters = new HashMap<>();
     requestParameters.put("int", "1");
