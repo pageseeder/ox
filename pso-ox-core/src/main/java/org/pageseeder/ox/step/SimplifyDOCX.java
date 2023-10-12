@@ -25,6 +25,7 @@ import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.tool.InvalidResult;
 import org.pageseeder.ox.tool.ResultBase;
 import org.pageseeder.ox.util.FileUtils;
+import org.pageseeder.ox.util.StepUtils;
 import org.pageseeder.ox.util.XSLT;
 import org.pageseeder.ox.util.ZipUtils;
 import org.pageseeder.xmlwriter.XMLWriter;
@@ -45,16 +46,17 @@ import java.util.Map.Entry;
 
 /**
  * <p>A step for simplified a Docx document. </p>
+ * <p>It can receive a DOCX or folder with unpacked DOCX. If it receives a DOCX, then it will unpack it.</p>
  *
  * <h3>Step Parameters</h3>
  * <ul>
- *  <li>No parameter is required.</li>
+ *   <li><var>input</var> can be a docx file or a folder (the unpacked docx folder). If it is blank then this steps will
+ *   the file uploaded.</li>
  * </ul>
- *
  *
  * @author Christophe Lauret
  * @author Ciber Cai
- * @since  8 May 2014
+ * @since 8 May 2014
  */
 public final class SimplifyDOCX implements Step {
 
@@ -79,46 +81,75 @@ public final class SimplifyDOCX implements Step {
   public Result process(Model model, PackageData data, StepInfo info) {
 
     // unpack data
-    boolean hasPacked = unpack(data);
-
-    if (hasPacked) {
-      return process(model, data, "unpacked", "simplified", computeSettings(model, data.getParameters()));
-    } else {
-      InvalidResult invalid = new InvalidResult(model, data);
-      invalid.setError(new IllegalStateException("The specified docx file cannot unpack."));
-      return invalid;
-    }
-  }
-
-  private static boolean unpack(PackageData data) {
-    // make sure unpack the docx
-    boolean hasPacked = false;
+    ResultBase result = null;
     try {
-      boolean unpacked = data.isUnpacked();
-      if (!unpacked) {
-        data.unpack();
+      File sourceDirectory = getInput(data, info);
+      boolean sourceExist = sourceDirectory != null && sourceDirectory.exists();
+
+      //File output =
+      if (sourceDirectory != null) {
+        return process(model, data, sourceDirectory, "simplified", computeSettings(model, data.getParameters()));
+      } else {
+        InvalidResult invalid = new InvalidResult(model, data);
+        invalid.setError(new IllegalStateException("The specified docx file cannot unpack."));
+        result = invalid;
       }
-      hasPacked = true;
     } catch (IOException ex) {
-      hasPacked = false;
-      LOGGER.warn("Cannot unpack doc", ex);
+      result = new InvalidResult(model, data).error(ex);
     }
-    return hasPacked;
+    return result;
   }
 
-  private SimplifierResult process(Model model, PackageData data, String sourceDir, String targetDir, Map<String, String> settings) {
+  private File getInput(PackageData data, StepInfo info) throws IOException {
+    File initialInput = StepUtils.getInput(data, info);
+    File finalInput = initialInput;
+    if (initialInput != null && initialInput.getPath().toLowerCase().endsWith(".docx")) {
+      //In case it is a DOCX, it is necessary to unpack it.
+      String filenameWithoutExtension = FileUtils.getNameWithoutExtension(initialInput);
+      finalInput = new File(initialInput.getParent(), filenameWithoutExtension + "-unpacked");
+      ZipUtils.unzip(initialInput, finalInput);
+    }
+    return finalInput;
+  }
+
+//  private File getOutput(PackageData data, StepInfo info) {
+//    File originalOutput = StepUtils.getOutput(data, info, null)
+//    String name = data.getProperty("name", data.id());
+//    File downloadable = new File(sub, name + "-simplified.docx");
+//  }
+
+//
+//  private static boolean unpack(PackageData data) {
+//    // make sure unpack the docx
+//    boolean hasPacked = false;
+//    try {
+//      boolean unpacked = data.isUnpacked();
+//      if (!unpacked) {
+//        data.unpack();
+//      }
+//      hasPacked = true;
+//    } catch (IOException ex) {
+//      hasPacked = false;
+//      LOGGER.warn("Cannot unpack doc", ex);
+//    }
+//    return hasPacked;
+//  }
+
+  private SimplifierResult process(Model model, PackageData data, File sourceDir, String targetDir, Map<String, String> settings) {
     SimplifierResult result = new SimplifierResult(model, data, sourceDir, targetDir, settings);
 
-    File source = data.getFile(sourceDir);
+    //File source = data.getFile(sourceDir);
     File target = data.getFile(targetDir);
 
     try {
       // This gives us the WordProcessingML we need
-      File original = new File(source, MAIN_PART);
-      if (!original.exists()) { throw new FileNotFoundException(source.getName() + "/" + MAIN_PART); }
+      File original = new File(sourceDir, MAIN_PART);
+      if (!original.exists()) {
+        throw new FileNotFoundException(sourceDir.getName() + "/" + MAIN_PART);
+      }
 
       // Copy directory structure
-      FileUtils.copy(source, target);
+      FileUtils.copy(sourceDir, target);
 
       // Resulting XML
       File simplified = new File(target, MAIN_PART);
@@ -155,7 +186,6 @@ public final class SimplifyDOCX implements Step {
    * Set all the known settings for the simplifier from the parameters in the content request as
    * parameters for the transformer
    *
-   * @param transformer The transformer.
    * @param parameters  The parameters from model
    */
   private static Map<String, String> computeSettings(Model model, Map<String, String> parameters) {
@@ -202,7 +232,7 @@ public final class SimplifyDOCX implements Step {
 
   private final class SimplifierResult extends ResultBase implements Result, Downloadable {
 
-    private final String _source;
+    private File _source;
 
     private final String _target;
 
@@ -210,7 +240,7 @@ public final class SimplifyDOCX implements Step {
 
     private File downloadFile = null;
 
-    private SimplifierResult(Model model, PackageData data, String source, String target, Map<String, String> settings) {
+    private SimplifierResult(Model model, PackageData data, File source, String target, Map<String, String> settings) {
       super(model, data);
       this._source = source;
       this._target = target;
@@ -277,6 +307,9 @@ public final class SimplifyDOCX implements Step {
 
   }
 
+  /**
+   * The Simplifier settings.
+   */
   public final static List<String> SIMPLIFIER_SETTINGS = Collections.unmodifiableList(Arrays.asList("remove-custom-xml",
   //
   "remove-smart-tags",

@@ -24,6 +24,7 @@ import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.core.ResultStatus;
 import org.pageseeder.ox.core.StepInfoImpl;
+import org.pageseeder.ox.util.ZipUtils;
 import org.pageseeder.xmlwriter.XML.NamespaceAware;
 import org.pageseeder.xmlwriter.XMLStringWriter;
 
@@ -64,5 +65,42 @@ public class SimplifyDOCXTest {
     System.out.println(xml.toString());
     Assert.assertEquals(ResultStatus.OK, result.status());
 
+  }
+
+  @Test
+  public void test_getInput_docx(){
+    File file = new File("src/test/resources/models/m1/Sample.docx");
+    Model model = new Model("m1");
+    PackageData data = PackageData.newPackageData("Simplify", file);
+    Map<String, String> params = new HashMap<>();
+    StepInfoImpl info = new StepInfoImpl("step-id", "step name", "Sample.docx", "Sample-simplified.docx", params);
+
+    SimplifyDOCX step = new SimplifyDOCX();
+    Result result = step.process(model, data, info);
+    Assert.assertEquals(ResultStatus.OK, result.status());
+    File unpacked = new File (data.directory(),"Sample-unpacked");
+    Assert.assertTrue(unpacked.exists());
+  }
+
+  @Test
+  public void test_getInput_directory(){
+    try {
+      File file = new File("src/test/resources/models/m1/Sample.docx");
+      Model model = new Model("m1");
+      PackageData data = PackageData.newPackageData("Simplify", file);
+      File unpacked = new File(data.directory(), "unpacked");
+      ZipUtils.unzip(file, unpacked);
+
+      Map<String, String> params = new HashMap<>();
+      StepInfoImpl info = new StepInfoImpl("step-id", "step name", "unpacked", "Sample-simplified.docx", params);
+
+      SimplifyDOCX step = new SimplifyDOCX();
+      Result result = step.process(model, data, info);
+      Assert.assertEquals(ResultStatus.OK, result.status());
+      Assert.assertTrue(unpacked.exists());
+    } catch (IOException ex) {
+      Assert.fail(ex.getMessage());
+
+    }
   }
 }
