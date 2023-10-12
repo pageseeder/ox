@@ -100,7 +100,52 @@ public class SimplifyDOCXTest {
       Assert.assertTrue(unpacked.exists());
     } catch (IOException ex) {
       Assert.fail(ex.getMessage());
-
     }
+  }
+
+  @Test
+  public void test_getOutput_docx(){
+    File file = new File("src/test/resources/models/m1/Sample.docx");
+    Model model = new Model("m1");
+    PackageData data = PackageData.newPackageData("Simplify", file);
+    Map<String, String> params = new HashMap<>();
+    StepInfoImpl info = new StepInfoImpl("step-id", "step name", "Sample.docx", "Sample-simplified.docx", params);
+
+    SimplifyDOCX step = new SimplifyDOCX();
+    Result result = step.process(model, data, info);
+    Assert.assertEquals(ResultStatus.OK, result.status());
+    File output = new File (data.directory(),"Sample-simplified.docx");
+    Assert.assertTrue(output.exists());
+  }
+
+  @Test
+  public void test_getOutput_directory(){
+    File file = new File("src/test/resources/models/m1/Sample.docx");
+    Model model = new Model("m1");
+    PackageData data = PackageData.newPackageData("Simplify", file);
+    Map<String, String> params = new HashMap<>();
+    StepInfoImpl info = new StepInfoImpl("step-id", "step name", "Sample.docx", "simplified", params);
+
+    SimplifyDOCX step = new SimplifyDOCX();
+    Result result = step.process(model, data, info);
+
+    Assert.assertEquals(ResultStatus.OK, result.status());
+    File output = new File (data.directory(),"simplified/"+ data.id() + "-simplified.docx");
+    Assert.assertTrue(output.exists());
+  }
+
+  @Test
+  public void test_getOutput_empty(){
+    File file = new File("src/test/resources/models/m1/Sample.docx");
+    Model model = new Model("m1");
+    PackageData data = PackageData.newPackageData("Simplify", file);
+    Map<String, String> params = new HashMap<>();
+    StepInfoImpl info = new StepInfoImpl("step-id", "step name", "Sample.docx", "", params);
+
+    SimplifyDOCX step = new SimplifyDOCX();
+    Result result = step.process(model, data, info);
+    Assert.assertEquals(ResultStatus.OK, result.status());
+    File output = new File (data.directory(), data.id() + "-simplified.docx");
+    Assert.assertTrue(output.exists());
   }
 }

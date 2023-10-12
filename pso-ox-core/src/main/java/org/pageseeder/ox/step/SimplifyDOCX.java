@@ -46,12 +46,15 @@ import java.util.Map.Entry;
 
 /**
  * <p>A step for simplified a Docx document. </p>
- * <p>It can receive a DOCX or folder with unpacked DOCX. If it receives a DOCX, then it will unpack it.</p>
+ * <p>It can receive a DOCX or folder with unpacked DOCX. If it receives a DOCX, then it will unpack it (unpack means unzip).</p>
  *
  * <h3>Step Parameters</h3>
  * <ul>
  *   <li><var>input</var> can be a docx file or a folder (the unpacked docx folder). If it is blank then this steps will
  *   the file uploaded.</li>
+ *   <li><var>output</var> It should be a docx file. It it is a folder, it will create a docx inside this folder with
+ *   the default value. If it is empty, then it will be create with the default value. The default value is the
+ *   {package-id}-simplified.</li>
  * </ul>
  *
  * @author Christophe Lauret
@@ -84,14 +87,24 @@ public final class SimplifyDOCX implements Step {
     ResultBase result = null;
     try {
       File sourceDirectory = getInput(data, info);
+      File output = getOutput(data, info);
       boolean sourceExist = sourceDirectory != null && sourceDirectory.exists();
+      boolean outputExist = output != null;//We do not check if exists because it has not been created yet.
 
       //File output =
-      if (sourceDirectory != null) {
-        return process(model, data, sourceDirectory, "simplified", computeSettings(model, data.getParameters()));
+      if (sourceExist && outputExist) {
+        return process(model, data, sourceDirectory, output, computeSettings(model, data.getParameters()));
       } else {
         InvalidResult invalid = new InvalidResult(model, data);
-        invalid.setError(new IllegalStateException("The specified docx file cannot unpack."));
+        StringBuilder builder = new StringBuilder();
+        if (sourceExist) {
+          builder.append("Input file is invalid. ");
+        }
+
+        if (outputExist) {
+          builder.append("Output file is invalid.");
+        }
+        invalid.setError(new IllegalStateException(builder.toString()));
         result = invalid;
       }
     } catch (IOException ex) {
@@ -99,6 +112,51 @@ public final class SimplifyDOCX implements Step {
     }
     return result;
   }
+
+  private SimplifierResult process(Model model, PackageData data, File sourceDir, File output, Map<String, String> settings) {
+    SimplifierResult result = new SimplifierResult(model, data, sourceDir, output, settings);
+
+    //File source = data.getFile(sourceDir);
+    File simplifiedDirectory = new File (output.getParentFile(), FileUtils.getNameWithoutExtension(output) + "-unpacked");
+
+    try {
+      // This gives us the WordProcessingML we need
+      File original = new File(sourceDir, MAIN_PART);
+      if (!original.exists()) {
+        throw new FileNotFoundException(sourceDir.getName() + "/" + MAIN_PART);
+      }
+
+      // Copy original document unpacked to the simplified directory.
+      FileUtils.copy(sourceDir, simplifiedDirectory);
+
+      // Resulting XML
+      File simplified = new File(simplifiedDirectory, MAIN_PART);
+      LOGGER.debug("Deleting simplified {}.", simplified.getAbsolutePath());
+      //Delete because it will be modified to simplify.
+      simplified.delete();
+
+      // Run XSLT
+      Templates templates = XSLT.getTemplatesFromResource(BUILTIN_TEMPLATES);
+      Transformer transformer = templates.newTransformer();
+      for (Entry<String, String> s : settings.entrySet()) {
+        transformer.setParameter(s.getKey(), s.getValue());
+      }
+      transformer.transform(new StreamSource(original), new StreamResult(simplified));
+
+
+      ZipUtils.zip(simplifiedDirectory, output);
+      result.downloadFile = output;
+
+      // Stop the timer
+      result.done();
+
+    } catch (IOException | TransformerException ex) {
+      result.setError(ex);
+    }
+
+    return result;
+  }
+
 
   private File getInput(PackageData data, StepInfo info) throws IOException {
     File initialInput = StepUtils.getInput(data, info);
@@ -112,74 +170,19 @@ public final class SimplifyDOCX implements Step {
     return finalInput;
   }
 
-//  private File getOutput(PackageData data, StepInfo info) {
-//    File originalOutput = StepUtils.getOutput(data, info, null)
-//    String name = data.getProperty("name", data.id());
-//    File downloadable = new File(sub, name + "-simplified.docx");
-//  }
-
-//
-//  private static boolean unpack(PackageData data) {
-//    // make sure unpack the docx
-//    boolean hasPacked = false;
-//    try {
-//      boolean unpacked = data.isUnpacked();
-//      if (!unpacked) {
-//        data.unpack();
-//      }
-//      hasPacked = true;
-//    } catch (IOException ex) {
-//      hasPacked = false;
-//      LOGGER.warn("Cannot unpack doc", ex);
-//    }
-//    return hasPacked;
-//  }
-
-  private SimplifierResult process(Model model, PackageData data, File sourceDir, String targetDir, Map<String, String> settings) {
-    SimplifierResult result = new SimplifierResult(model, data, sourceDir, targetDir, settings);
-
-    //File source = data.getFile(sourceDir);
-    File target = data.getFile(targetDir);
-
-    try {
-      // This gives us the WordProcessingML we need
-      File original = new File(sourceDir, MAIN_PART);
-      if (!original.exists()) {
-        throw new FileNotFoundException(sourceDir.getName() + "/" + MAIN_PART);
+  private File getOutput(PackageData data, StepInfo info) {
+    File output = StepUtils.getOutput(data, info, null);
+    if (output != null) {
+      if (data.directory().getPath().equals(output.getPath())) {
+        //StepUtils.getOutput() returns the data directory
+        output = new File(data.directory(), data.id() + "-simplified.docx");
+      } else if (!output.getName().endsWith(".docx")) {
+        //If the output is not a docx file, then we change it to docx
+        output = new File(output, data.id() + "-simplified.docx");
       }
-
-      // Copy directory structure
-      FileUtils.copy(sourceDir, target);
-
-      // Resulting XML
-      File simplified = new File(target, MAIN_PART);
-      LOGGER.debug("Deleting simplified {}.", simplified.getAbsolutePath());
-      simplified.delete();
-
-      // Run XSLT
-      Templates templates = XSLT.getTemplatesFromResource(BUILTIN_TEMPLATES);
-      Transformer transformer = templates.newTransformer();
-      for (Entry<String, String> s : settings.entrySet()) {
-        transformer.setParameter(s.getKey(), s.getValue());
-      }
-      transformer.transform(new StreamSource(original), new StreamResult(simplified));
-
-      // Package up the DOCX document
-      File sub = data.getDownloadDir(data.getFile("download"));
-      String name = data.getProperty("name", data.id());
-      File downloadable = new File(sub, name + "-simplified.docx");
-
-      ZipUtils.zip(data.getFile("simplified"), downloadable);
-      result.downloadFile = downloadable;
-
-      // Stop the timer
-      result.done();
-
-    } catch (IOException | TransformerException ex) {
-      result.setError(ex);
     }
 
-    return result;
+    return output;
   }
 
   /**
@@ -234,13 +237,13 @@ public final class SimplifyDOCX implements Step {
 
     private File _source;
 
-    private final String _target;
+    private final File _target;
 
     private final Map<String, String> _settings;
 
     private File downloadFile = null;
 
-    private SimplifierResult(Model model, PackageData data, File source, String target, Map<String, String> settings) {
+    private SimplifierResult(Model model, PackageData data, File source, File target, Map<String, String> settings) {
       super(model, data);
       this._source = source;
       this._target = target;
