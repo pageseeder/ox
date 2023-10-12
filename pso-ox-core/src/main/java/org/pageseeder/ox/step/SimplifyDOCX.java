@@ -97,11 +97,11 @@ public final class SimplifyDOCX implements Step {
       } else {
         InvalidResult invalid = new InvalidResult(model, data);
         StringBuilder builder = new StringBuilder();
-        if (sourceExist) {
+        if (!sourceExist) {
           builder.append("Input file is invalid. ");
         }
 
-        if (outputExist) {
+        if (!outputExist) {
           builder.append("Output file is invalid.");
         }
         invalid.setError(new IllegalStateException(builder.toString()));
