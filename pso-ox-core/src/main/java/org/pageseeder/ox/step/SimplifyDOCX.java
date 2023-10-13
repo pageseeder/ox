@@ -54,7 +54,31 @@ import java.util.Map.Entry;
  *   the file uploaded.</li>
  *   <li><var>output</var> It should be a docx file. It it is a folder, it will create a docx inside this folder with
  *   the default value. If it is empty, then it will be create with the default value. The default value is the
- *   {package-id}-simplified.</li>
+ *   {package-id}-simplified.</li> *
+ * </ul>
+ *
+ * <h3>Extra parameters that setups the simplifying process</h3>
+ * <p>It is used in the XLST transformation of /word/document.xml. The value are  true or false.</p>
+ * <p>The dynamic logic will no be applied and these parameter can defined in the step config or as input in the page.</p>
+ * <ul>
+ *   <li><var>remove-smart-tags</var></li>
+ *   <li><var>remove-content-controls</var></li>
+ *   <li><var>remove-rsid-info</var></li>
+ *   <li><var>remove-permissions</var></li>
+ *   <li><var>remove-proof</var></li>
+ *   <li><var>remove-soft-hyphens</var></li>
+ *   <li><var>remove-last-rendered-page-break</var></li>
+ *   <li><var>remove-bookmarks</var></li>
+ *   <li><var>remove-goback-bookmarks</var></li>
+ *   <li><var>remove-web-hidden</var></li>
+ *   <li><var>remove-language-info</var></li>
+ *   <li><var>remove-comments</var></li>
+ *   <li><var>remove-end-and-foot-notes</var></li>
+ *   <li><var>remove-field-codes</var></li>
+ *   <li><var>replace-nobreak-hyphens</var></li>
+ *   <li><var>replace-tabs</var></li>
+ *   <li><var>remove-font-info</var></li>
+ *   <li><var>remove-paragraph-properties</var></li>
  * </ul>
  *
  * @author Christophe Lauret
@@ -191,7 +215,7 @@ public final class SimplifyDOCX implements Step {
    *
    * @param parameters  The parameters from model
    */
-  private static Map<String, String> computeSettings(Model model, Map<String, String> parameters) {
+  private static Map<String, String> computeSettings(Model model, PackageData data, StepInfo info) {
     Map<String, String> settings = new HashMap<String, String>();
     // Load values from the model
     Properties p = getModelSettings(model);
@@ -200,13 +224,11 @@ public final class SimplifyDOCX implements Step {
       String value = e.getValue().toString();
       settings.put(name, value);
     }
-    // Load values from the model
-    if (parameters != null) {
-      for (String setting : SIMPLIFIER_SETTINGS) {
-        String value = parameters.get(setting);
-        if (value != null) {
-          settings.put(setting, value);
-        }
+
+    for (String setting : SIMPLIFIER_SETTINGS) {
+      String value = StepUtils.getParameterWithoutDynamicLogic(data, info, setting, null);
+      if (value != null) {
+        settings.put(setting, value);
       }
     }
     return settings;
