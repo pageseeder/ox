@@ -51,7 +51,7 @@ public class SimplifyDOCXTest {
     Model model = new Model("m1");
     PackageData data = PackageData.newPackageData("Simplify", file);
     Map<String, String> params = new HashMap<>();
-    StepInfoImpl info = new StepInfoImpl("step-id", "step name", "Sample.docx", "simplify.xml", params);
+    StepInfoImpl info = new StepInfoImpl("step-id", "step name", "Sample.docx", "", params);
 
     SimplifyDOCX step = new SimplifyDOCX();
     Result result = step.process(model, data, info);
