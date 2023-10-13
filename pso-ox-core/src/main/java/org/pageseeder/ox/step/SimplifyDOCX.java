@@ -117,7 +117,7 @@ public final class SimplifyDOCX implements Step {
 
       //File output =
       if (sourceExist && outputExist) {
-        return process(model, data, sourceDirectory, output, computeSettings(model, data.getParameters()));
+        return process(model, data, sourceDirectory, output, computeSettings(model, data, info));
       } else {
         InvalidResult invalid = new InvalidResult(model, data);
         StringBuilder builder = new StringBuilder();
