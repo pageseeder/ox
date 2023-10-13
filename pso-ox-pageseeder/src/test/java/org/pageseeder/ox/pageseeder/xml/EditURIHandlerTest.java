@@ -30,6 +30,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,8 +51,8 @@ public class EditURIHandlerTest {
     Assert.assertNotNull(editURIList);
     Assert.assertEquals(3, editURIList.size());
     EditURI editURI = editURIList.get(0);
-    validateEditURI(editURI, null, null, null, null,
-        null, null, null, "Test 01");
+    validateEditURI(editURI, null, "", "", Collections.emptyList(),
+        "", "", "", "Test 01");
 
     editURI = editURIList.get(1);
     validateEditURI(editURI, 2l, "_chemoc", "doc-id",
@@ -59,7 +60,7 @@ public class EditURIHandlerTest {
         "type", "Test 02");
 
     editURI = editURIList.get(2);
-    validateEditURI(editURI, 3l, null,null,
+    validateEditURI(editURI, 3l, "",null,
         Arrays.asList("restricted"), "Test_03",null, null,
         "Test 03");
   }
