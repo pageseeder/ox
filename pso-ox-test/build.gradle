@@ -35,5 +35,7 @@ dependencies {
     project(':pso-ox-psml'),
     project(':pso-ox-schematron'),
     "org.eclipse.jdt:org.eclipse.jdt.annotation:$eclipseJDTAnnotationVesion",
+    "javax.servlet:javax.servlet-api:$javaxServletApiVersion",
   )
+
 }

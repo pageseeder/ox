@@ -22,12 +22,13 @@ import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
-import org.pageseeder.ox.tool.InvalidResult;
-import org.pageseeder.ox.tool.ResultBase;
+import org.pageseeder.ox.tool.*;
 import org.pageseeder.ox.util.FileUtils;
 import org.pageseeder.ox.util.StepUtils;
 import org.pageseeder.ox.util.XSLT;
 import org.pageseeder.ox.util.ZipUtils;
+import org.pageseeder.xmlwriter.XML;
+import org.pageseeder.xmlwriter.XMLStringWriter;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,7 +118,7 @@ public final class SimplifyDOCX implements Step {
 
       //File output =
       if (sourceExist && outputExist) {
-        return process(model, data, sourceDirectory, output, computeSettings(model, data, info));
+        result = process(model, data, info, sourceDirectory, output, computeSettings(model, data, info));
       } else {
         InvalidResult invalid = new InvalidResult(model, data);
         StringBuilder builder = new StringBuilder();
@@ -137,10 +138,19 @@ public final class SimplifyDOCX implements Step {
     return result;
   }
 
-  private SimplifierResult process(Model model, PackageData data, File sourceDir, File output, Map<String, String> settings) {
-    SimplifierResult result = new SimplifierResult(model, data, sourceDir, output, settings);
+  /**
+   *
+   * @param model
+   * @param data
+   * @param info
+   * @param sourceDir
+   * @param output
+   * @param settings
+   * @return
+   */
+  private DefaultResult process(Model model, PackageData data, StepInfo info, File sourceDir, File output, Map<String, String> settings) {
+    DefaultResult result = new DefaultResult(model, data, info, output);
 
-    //File source = data.getFile(sourceDir);
     File simplifiedDirectory = new File (output.getParentFile(), FileUtils.getNameWithoutExtension(output) + "-unpacked");
 
     try {
@@ -167,12 +177,16 @@ public final class SimplifyDOCX implements Step {
       }
       transformer.transform(new StreamSource(original), new StreamResult(simplified));
 
+      XMLStringWriter xmlStringWriter = new XMLStringWriter(XML.NamespaceAware.No);
+      xmlStringWriter.openElement("docx-main-part");
+      xmlStringWriter.attribute("source-path", data.getPath(original));
+      xmlStringWriter.attribute("simplified-path", data.getPath(simplified));
+      xmlStringWriter.closeElement();
+      xmlStringWriter.close();
+      ExtraResultStringXML resultStringXML = new ExtraResultStringXML(xmlStringWriter.toString());
+      result.addExtraXML(resultStringXML);
 
       ZipUtils.zip(simplifiedDirectory, output);
-      result.downloadFile = output;
-
-      // Stop the timer
-      result.done();
 
     } catch (IOException | TransformerException ex) {
       result.setError(ex);
@@ -182,6 +196,13 @@ public final class SimplifyDOCX implements Step {
   }
 
 
+  /**
+   *
+   * @param data
+   * @param info
+   * @return
+   * @throws IOException
+   */
   private File getInput(PackageData data, StepInfo info) throws IOException {
     File initialInput = StepUtils.getInput(data, info);
     File finalInput = initialInput;
@@ -194,6 +215,12 @@ public final class SimplifyDOCX implements Step {
     return finalInput;
   }
 
+  /**
+   *
+   * @param data
+   * @param info
+   * @return
+   */
   private File getOutput(PackageData data, StepInfo info) {
     File output = StepUtils.getOutput(data, info, null);
     if (output != null) {
@@ -213,7 +240,9 @@ public final class SimplifyDOCX implements Step {
    * Set all the known settings for the simplifier from the parameters in the content request as
    * parameters for the transformer
    *
-   * @param parameters  The parameters from model
+   * @param model
+   * @param data
+   * @param info
    */
   private static Map<String, String> computeSettings(Model model, PackageData data, StepInfo info) {
     Map<String, String> settings = new HashMap<String, String>();
@@ -253,83 +282,6 @@ public final class SimplifyDOCX implements Step {
       }
     }
     return p;
-  }
-
-  private final class SimplifierResult extends ResultBase implements Result, Downloadable {
-
-    private File _source;
-
-    private final File _target;
-
-    private final Map<String, String> _settings;
-
-    private File downloadFile = null;
-
-    private SimplifierResult(Model model, PackageData data, File source, File target, Map<String, String> settings) {
-      super(model, data);
-      this._source = source;
-      this._target = target;
-      this._settings = settings;
-    }
-
-    @Override
-    public void toXML(XMLWriter xml) throws IOException {
-      xml.openElement("result", true);
-      xml.attribute("type", "simplify-docx");
-      xml.attribute("id", data().id());
-      xml.attribute("model", model().name());
-      xml.attribute("status", status().toString().toLowerCase());
-      xml.attribute("time", Long.toString(time()));
-      xml.attribute("downloadable", String.valueOf(isDownloadable()));
-      xml.attribute("path", data().getPath(downloadPath()));
-
-      // Source document
-      xml.openElement("source");
-      xml.attribute("path", this._source + "/" + MAIN_PART);
-      xml.closeElement();
-
-      // Target document
-      xml.openElement("target");
-      xml.attribute("path", this._target + "/" + MAIN_PART);
-      xml.closeElement();
-
-      // Settings specified
-      xml.openElement("settings", true);
-      if (this._settings != null) {
-        for (Entry<String, String> p : this._settings.entrySet()) {
-          xml.openElement("setting");
-          xml.attribute("name", p.getKey());
-          xml.attribute("value", p.getValue());
-          xml.closeElement();
-        }
-      }
-      xml.closeElement();
-
-      // Return SVRL data if available
-      if (this.downloadFile != null) {
-        xml.openElement("download");
-        xml.attribute("href", "/" + this.downloadFile.getName());
-        xml.closeElement();
-      }
-
-      // Print the details of any error
-      if (error() != null) {
-        OXErrors.toXML(error(), xml, true);
-      }
-
-      xml.closeElement();
-    }
-
-    @Override
-    public File downloadPath() {
-      return this.downloadFile;
-    }
-
-    @Override
-    public boolean isDownloadable() {
-      return true;
-    }
-
   }
 
   /**

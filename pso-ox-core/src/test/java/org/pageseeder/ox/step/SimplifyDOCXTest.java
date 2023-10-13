@@ -15,6 +15,8 @@
  */
 package org.pageseeder.ox.step;
 
+import org.custommonkey.xmlunit.XMLAssert;
+import org.custommonkey.xmlunit.exceptions.XpathException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +29,7 @@ import org.pageseeder.ox.core.StepInfoImpl;
 import org.pageseeder.ox.util.ZipUtils;
 import org.pageseeder.xmlwriter.XML.NamespaceAware;
 import org.pageseeder.xmlwriter.XMLStringWriter;
+import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.IOException;
@@ -147,5 +150,54 @@ public class SimplifyDOCXTest {
     Assert.assertEquals(ResultStatus.OK, result.status());
     File output = new File (data.directory(), data.id() + "-simplified.docx");
     Assert.assertTrue(output.exists());
+  }
+
+  @Test
+  public void test_processWithExtraParameters() throws IOException, XpathException, SAXException {
+    File file = new File("src/test/resources/models/m1/Sample.docx");
+    Model model = new Model("m1");
+    PackageData data = PackageData.newPackageData("Simplify", file);
+    String extraParameterValue = "true";
+    Map<String, String> params = getExtraParameterMap(extraParameterValue);
+    StepInfoImpl info = new StepInfoImpl("step-id", "step name", "Sample.docx", "", params);
+
+    SimplifyDOCX step = new SimplifyDOCX();
+    Result result = step.process(model, data, info);
+    Assert.assertEquals(ResultStatus.OK, result.status());
+
+    XMLStringWriter xml = new XMLStringWriter(NamespaceAware.No);
+    result.toXML(xml);
+    xml.flush();
+    xml.close();
+    String xmlResult = xml.toString();
+    for (Map.Entry<String, String> entry : params.entrySet()) {
+      String xpath = "/result/parameters/parameter[@name='" + entry.getKey() + "']/@value";
+      XMLAssert.assertXpathEvaluatesTo(extraParameterValue, xpath, xmlResult);
+      //XMLUnit.a
+      //assertThat(xmlResult).valueByXPath(xpath).isEqualTo(extraParameterValue);
+    }
+  }
+
+  private Map<String, String> getExtraParameterMap( String value) {
+    Map<String, String> params = new HashMap<>();
+    params.put("remove-smart-tags", value);
+    params.put("remove-content-controls", value);
+    params.put("remove-rsid-info", value);
+    params.put("remove-permissions", value);
+    params.put("remove-proof", value);
+    params.put("remove-soft-hyphens", value);
+    params.put("remove-last-rendered-page-break", value);
+    params.put("remove-bookmarks", value);
+    params.put("remove-goback-bookmarks", value);
+    params.put("remove-web-hidden", value);
+    params.put("remove-language-info", value);
+    params.put("remove-comments", value);
+    params.put("remove-end-and-foot-notes", value);
+    params.put("remove-field-codes", value);
+    params.put("replace-nobreak-hyphens", value);
+    params.put("replace-tabs", value);
+    params.put("remove-font-info", value);
+    params.put("remove-paragraph-properties", value);
+    return params;
   }
 }
