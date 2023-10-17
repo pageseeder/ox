@@ -9,16 +9,16 @@ group = 'org.pageseeder.ox'
 ext {
   globalVersion = file('version.txt').text
   //Allette Open source
-  psoBastilleVersion = '0.10.2'
-  psoBerliozVersion = '0.12.1'
-  psoBridgeVersion = '0.11.33'
+  psoBastilleVersion = '0.11.1'
+  psoBerliozVersion = '0.12.3'
+  psoBridgeVersion = '0.11.34'
   psoDiffxVersion = '0.8.1'
   psoSchematronVersion= '1.2.3'
   //psoSchematronVersion= '2.1.0'
   psoXMLWriterVersion = '1.0.4'
 
   //Allette
-  simpleVersion = '2023.02-12'
+  simpleVersion = '2023.04-01'
 
   //Third party
   commonsFileuploadVersion = '1.3.3'

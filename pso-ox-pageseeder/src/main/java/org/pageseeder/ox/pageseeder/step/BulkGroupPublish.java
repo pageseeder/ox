@@ -24,7 +24,6 @@ import net.pageseeder.app.simple.vault.PSOAuthConfig;
 import net.pageseeder.app.simple.vault.VaultUtils;
 import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.PSCredentials;
-import org.pageseeder.bridge.berlioz.auth.AuthException;
 import org.pageseeder.bridge.berlioz.auth.PSAuthenticator;
 import org.pageseeder.bridge.berlioz.auth.PSUser;
 import org.pageseeder.bridge.model.PSGroup;
@@ -140,6 +139,18 @@ public class BulkGroupPublish extends PageseederStep implements Measurable {
     return result;
   }
 
+  /**
+   * How to run for archived projects. There is one example that the group is 'archive-subscribers-subscriber09124104'
+   * and project is just 'subscribers'
+   * @param gp
+   * @param sessionMember
+   * @param session
+   * @param psConfig
+   * @param interval
+   * @param publish
+   * @param writer
+   * @throws IOException
+   */
   private void callPublish(GroupPublish gp, PSMember sessionMember, PSCredentials session, PSConfig psConfig,
                            long interval, PublishService publish, XMLWriter writer) throws IOException {
     String errorMessage = "";
@@ -148,7 +159,7 @@ public class BulkGroupPublish extends PageseederStep implements Measurable {
     try {
       //Preparer the parameters to call the publish
       String project = gp.getProject();
-      PSGroup group = new PSGroup(project + "-" + gp.getGroup());
+      PSGroup group = new PSGroup(gp.getGroup());
       PSMember member2 = gp.getMember().isEmpty() ? sessionMember : new PSMember(gp.getMember());
       String target = gp.getTarget();
       PublishService.Type type = gp.getType();

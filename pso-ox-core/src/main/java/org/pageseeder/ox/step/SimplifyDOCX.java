@@ -22,11 +22,13 @@ import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
-import org.pageseeder.ox.tool.InvalidResult;
-import org.pageseeder.ox.tool.ResultBase;
+import org.pageseeder.ox.tool.*;
 import org.pageseeder.ox.util.FileUtils;
+import org.pageseeder.ox.util.StepUtils;
 import org.pageseeder.ox.util.XSLT;
 import org.pageseeder.ox.util.ZipUtils;
+import org.pageseeder.xmlwriter.XML;
+import org.pageseeder.xmlwriter.XMLStringWriter;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,16 +47,44 @@ import java.util.Map.Entry;
 
 /**
  * <p>A step for simplified a Docx document. </p>
+ * <p>It can receive a DOCX or folder with unpacked DOCX. If it receives a DOCX, then it will unpack it (unpack means unzip).</p>
  *
  * <h3>Step Parameters</h3>
  * <ul>
- *  <li>No parameter is required.</li>
+ *   <li><var>input</var> can be a docx file or a folder (the unpacked docx folder). If it is blank then this steps will
+ *   the file uploaded.</li>
+ *   <li><var>output</var> It should be a docx file. It it is a folder, it will create a docx inside this folder with
+ *   the default value. If it is empty, then it will be create with the default value. The default value is the
+ *   {package-id}-simplified.</li> *
  * </ul>
  *
+ * <h3>Extra parameters that setups the simplifying process</h3>
+ * <p>It is used in the XLST transformation of /word/document.xml. The value are  true or false.</p>
+ * <p>The dynamic logic will no be applied and these parameter can defined in the step config or as input in the page.</p>
+ * <ul>
+ *   <li><var>remove-smart-tags</var></li>
+ *   <li><var>remove-content-controls</var></li>
+ *   <li><var>remove-rsid-info</var></li>
+ *   <li><var>remove-permissions</var></li>
+ *   <li><var>remove-proof</var></li>
+ *   <li><var>remove-soft-hyphens</var></li>
+ *   <li><var>remove-last-rendered-page-break</var></li>
+ *   <li><var>remove-bookmarks</var></li>
+ *   <li><var>remove-goback-bookmarks</var></li>
+ *   <li><var>remove-web-hidden</var></li>
+ *   <li><var>remove-language-info</var></li>
+ *   <li><var>remove-comments</var></li>
+ *   <li><var>remove-end-and-foot-notes</var></li>
+ *   <li><var>remove-field-codes</var></li>
+ *   <li><var>replace-nobreak-hyphens</var></li>
+ *   <li><var>replace-tabs</var></li>
+ *   <li><var>remove-font-info</var></li>
+ *   <li><var>remove-paragraph-properties</var></li>
+ * </ul>
  *
  * @author Christophe Lauret
  * @author Ciber Cai
- * @since  8 May 2014
+ * @since 8 May 2014
  */
 public final class SimplifyDOCX implements Step {
 
@@ -79,50 +109,64 @@ public final class SimplifyDOCX implements Step {
   public Result process(Model model, PackageData data, StepInfo info) {
 
     // unpack data
-    boolean hasPacked = unpack(data);
-
-    if (hasPacked) {
-      return process(model, data, "unpacked", "simplified", computeSettings(model, data.getParameters()));
-    } else {
-      InvalidResult invalid = new InvalidResult(model, data);
-      invalid.setError(new IllegalStateException("The specified docx file cannot unpack."));
-      return invalid;
-    }
-  }
-
-  private static boolean unpack(PackageData data) {
-    // make sure unpack the docx
-    boolean hasPacked = false;
+    ResultBase result = null;
     try {
-      boolean unpacked = data.isUnpacked();
-      if (!unpacked) {
-        data.unpack();
+      File sourceDirectory = getInput(data, info);
+      File output = getOutput(data, info);
+      boolean sourceExist = sourceDirectory != null && sourceDirectory.exists();
+      boolean outputExist = output != null;//We do not check if exists because it has not been created yet.
+
+      //File output =
+      if (sourceExist && outputExist) {
+        result = process(model, data, info, sourceDirectory, output, computeSettings(model, data, info));
+      } else {
+        InvalidResult invalid = new InvalidResult(model, data);
+        StringBuilder builder = new StringBuilder();
+        if (!sourceExist) {
+          builder.append("Input file is invalid. ");
+        }
+
+        if (!outputExist) {
+          builder.append("Output file is invalid.");
+        }
+        invalid.setError(new IllegalStateException(builder.toString()));
+        result = invalid;
       }
-      hasPacked = true;
     } catch (IOException ex) {
-      hasPacked = false;
-      LOGGER.warn("Cannot unpack doc", ex);
+      result = new InvalidResult(model, data).error(ex);
     }
-    return hasPacked;
+    return result;
   }
 
-  private SimplifierResult process(Model model, PackageData data, String sourceDir, String targetDir, Map<String, String> settings) {
-    SimplifierResult result = new SimplifierResult(model, data, sourceDir, targetDir, settings);
+  /**
+   *
+   * @param model
+   * @param data
+   * @param info
+   * @param sourceDir
+   * @param output
+   * @param settings
+   * @return
+   */
+  private DefaultResult process(Model model, PackageData data, StepInfo info, File sourceDir, File output, Map<String, String> settings) {
+    DefaultResult result = new DefaultResult(model, data, info, output);
 
-    File source = data.getFile(sourceDir);
-    File target = data.getFile(targetDir);
+    File simplifiedDirectory = new File (output.getParentFile(), FileUtils.getNameWithoutExtension(output) + "-unpacked");
 
     try {
       // This gives us the WordProcessingML we need
-      File original = new File(source, MAIN_PART);
-      if (!original.exists()) { throw new FileNotFoundException(source.getName() + "/" + MAIN_PART); }
+      File original = new File(sourceDir, MAIN_PART);
+      if (!original.exists()) {
+        throw new FileNotFoundException(sourceDir.getName() + "/" + MAIN_PART);
+      }
 
-      // Copy directory structure
-      FileUtils.copy(source, target);
+      // Copy original document unpacked to the simplified directory.
+      FileUtils.copy(sourceDir, simplifiedDirectory);
 
       // Resulting XML
-      File simplified = new File(target, MAIN_PART);
+      File simplified = new File(simplifiedDirectory, MAIN_PART);
       LOGGER.debug("Deleting simplified {}.", simplified.getAbsolutePath());
+      //Delete because it will be modified to simplify.
       simplified.delete();
 
       // Run XSLT
@@ -133,16 +177,16 @@ public final class SimplifyDOCX implements Step {
       }
       transformer.transform(new StreamSource(original), new StreamResult(simplified));
 
-      // Package up the DOCX document
-      File sub = data.getDownloadDir(data.getFile("download"));
-      String name = data.getProperty("name", data.id());
-      File downloadable = new File(sub, name + "-simplified.docx");
+      XMLStringWriter xmlStringWriter = new XMLStringWriter(XML.NamespaceAware.No);
+      xmlStringWriter.openElement("docx-main-part");
+      xmlStringWriter.attribute("source-path", data.getPath(original));
+      xmlStringWriter.attribute("simplified-path", data.getPath(simplified));
+      xmlStringWriter.closeElement();
+      xmlStringWriter.close();
+      ExtraResultStringXML resultStringXML = new ExtraResultStringXML(xmlStringWriter.toString());
+      result.addExtraXML(resultStringXML);
 
-      ZipUtils.zip(data.getFile("simplified"), downloadable);
-      result.downloadFile = downloadable;
-
-      // Stop the timer
-      result.done();
+      ZipUtils.zip(simplifiedDirectory, output);
 
     } catch (IOException | TransformerException ex) {
       result.setError(ex);
@@ -151,14 +195,56 @@ public final class SimplifyDOCX implements Step {
     return result;
   }
 
+
+  /**
+   *
+   * @param data
+   * @param info
+   * @return
+   * @throws IOException
+   */
+  private File getInput(PackageData data, StepInfo info) throws IOException {
+    File initialInput = StepUtils.getInput(data, info);
+    File finalInput = initialInput;
+    if (initialInput != null && initialInput.getPath().toLowerCase().endsWith(".docx")) {
+      //In case it is a DOCX, it is necessary to unpack it.
+      String filenameWithoutExtension = FileUtils.getNameWithoutExtension(initialInput);
+      finalInput = new File(initialInput.getParent(), filenameWithoutExtension + "-unpacked");
+      ZipUtils.unzip(initialInput, finalInput);
+    }
+    return finalInput;
+  }
+
+  /**
+   *
+   * @param data
+   * @param info
+   * @return
+   */
+  private File getOutput(PackageData data, StepInfo info) {
+    File output = StepUtils.getOutput(data, info, null);
+    if (output != null) {
+      if (data.directory().getPath().equals(output.getPath())) {
+        //StepUtils.getOutput() returns the data directory
+        output = new File(data.directory(), data.id() + "-simplified.docx");
+      } else if (!output.getName().endsWith(".docx")) {
+        //If the output is not a docx file, then we change it to docx
+        output = new File(output, data.id() + "-simplified.docx");
+      }
+    }
+
+    return output;
+  }
+
   /**
    * Set all the known settings for the simplifier from the parameters in the content request as
    * parameters for the transformer
    *
-   * @param transformer The transformer.
-   * @param parameters  The parameters from model
+   * @param model
+   * @param data
+   * @param info
    */
-  private static Map<String, String> computeSettings(Model model, Map<String, String> parameters) {
+  private static Map<String, String> computeSettings(Model model, PackageData data, StepInfo info) {
     Map<String, String> settings = new HashMap<String, String>();
     // Load values from the model
     Properties p = getModelSettings(model);
@@ -167,13 +253,11 @@ public final class SimplifyDOCX implements Step {
       String value = e.getValue().toString();
       settings.put(name, value);
     }
-    // Load values from the model
-    if (parameters != null) {
-      for (String setting : SIMPLIFIER_SETTINGS) {
-        String value = parameters.get(setting);
-        if (value != null) {
-          settings.put(setting, value);
-        }
+
+    for (String setting : SIMPLIFIER_SETTINGS) {
+      String value = StepUtils.getParameterWithoutDynamicLogic(data, info, setting, null);
+      if (value != null) {
+        settings.put(setting, value);
       }
     }
     return settings;
@@ -200,83 +284,9 @@ public final class SimplifyDOCX implements Step {
     return p;
   }
 
-  private final class SimplifierResult extends ResultBase implements Result, Downloadable {
-
-    private final String _source;
-
-    private final String _target;
-
-    private final Map<String, String> _settings;
-
-    private File downloadFile = null;
-
-    private SimplifierResult(Model model, PackageData data, String source, String target, Map<String, String> settings) {
-      super(model, data);
-      this._source = source;
-      this._target = target;
-      this._settings = settings;
-    }
-
-    @Override
-    public void toXML(XMLWriter xml) throws IOException {
-      xml.openElement("result", true);
-      xml.attribute("type", "simplify-docx");
-      xml.attribute("id", data().id());
-      xml.attribute("model", model().name());
-      xml.attribute("status", status().toString().toLowerCase());
-      xml.attribute("time", Long.toString(time()));
-      xml.attribute("downloadable", String.valueOf(isDownloadable()));
-      xml.attribute("path", data().getPath(downloadPath()));
-
-      // Source document
-      xml.openElement("source");
-      xml.attribute("path", this._source + "/" + MAIN_PART);
-      xml.closeElement();
-
-      // Target document
-      xml.openElement("target");
-      xml.attribute("path", this._target + "/" + MAIN_PART);
-      xml.closeElement();
-
-      // Settings specified
-      xml.openElement("settings", true);
-      if (this._settings != null) {
-        for (Entry<String, String> p : this._settings.entrySet()) {
-          xml.openElement("setting");
-          xml.attribute("name", p.getKey());
-          xml.attribute("value", p.getValue());
-          xml.closeElement();
-        }
-      }
-      xml.closeElement();
-
-      // Return SVRL data if available
-      if (this.downloadFile != null) {
-        xml.openElement("download");
-        xml.attribute("href", "/" + this.downloadFile.getName());
-        xml.closeElement();
-      }
-
-      // Print the details of any error
-      if (error() != null) {
-        OXErrors.toXML(error(), xml, true);
-      }
-
-      xml.closeElement();
-    }
-
-    @Override
-    public File downloadPath() {
-      return this.downloadFile;
-    }
-
-    @Override
-    public boolean isDownloadable() {
-      return true;
-    }
-
-  }
-
+  /**
+   * The Simplifier settings.
+   */
   public final static List<String> SIMPLIFIER_SETTINGS = Collections.unmodifiableList(Arrays.asList("remove-custom-xml",
   //
   "remove-smart-tags",

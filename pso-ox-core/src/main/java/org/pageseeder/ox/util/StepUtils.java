@@ -93,11 +93,36 @@ public class StepUtils {
    * @return
    */
   public static String getParameter(PackageData data, StepInfo info, String parameterName, String fallback) {
-    String parameterValue = info.getParameter(parameterName, data.getParameter(parameterName));
+    String parameterValue = getParameterWithoutDynamicLogic(data, info, parameterName, fallback);
+    return applyDynamicParameterLogic(data, info, parameterValue);
+  }
+
+
+  /**
+   * Get the parameter from step definition, if it is not found then gets from the request parameter.
+   * Otherwise, returns the fallback.
+   *
+   * @param data PackageData
+   * @param info StepInfo
+   * @param parameterName The name of the parameter to get from step info or package data
+   * @param fallback default value.
+   * @return
+   */
+  public static String getParameterWithoutDynamicLogic(PackageData data, StepInfo info, String parameterName, String fallback) {
+    String parameterValue = null;
+
+    if (info != null) {
+      parameterValue = info.getParameter(parameterName);
+    }
+
+    if (StringUtils.isBlank(parameterValue) && data != null) {
+      parameterValue = data.getParameter(parameterName);
+    }
+
     if (StringUtils.isBlank(parameterValue)) {
       parameterValue = fallback;
     }
-    return applyDynamicParameterLogic(data, info, parameterValue);
+    return parameterValue;
   }
 
   /**
@@ -131,15 +156,7 @@ public class StepUtils {
    */
   public static int getParameterIntWithoutDynamicLogic(PackageData data, StepInfo info, String parameterName, int fallback) {
     int value = fallback;
-    String parameter = null;
-
-    if (info != null) {
-      parameter = info.getParameter(parameterName);
-    }
-
-    if (StringUtils.isBlank(parameter) && data != null) {
-      parameter = data.getParameter(parameterName);
-    }
+    String parameter = getParameterWithoutDynamicLogic(data, info, parameterName, null);
 
     if (!StringUtils.isBlank(parameter)) {
       try {
@@ -182,15 +199,8 @@ public class StepUtils {
    */
   public static long getParameterLongWithoutDynamicLogic(PackageData data, StepInfo info, String parameterName, long fallback) {
     long value = fallback;
-    String parameter = null;
 
-    if (info != null) {
-      parameter = info.getParameter(parameterName);
-    }
-
-    if (StringUtils.isBlank(parameter) && data != null) {
-      parameter = data.getParameter(parameterName);
-    }
+    String parameter = getParameterWithoutDynamicLogic(data, info, parameterName, null);
 
     if (!StringUtils.isBlank(parameter)) {
       try {
