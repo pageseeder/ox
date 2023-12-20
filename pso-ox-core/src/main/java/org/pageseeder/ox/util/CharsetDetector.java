@@ -149,22 +149,22 @@ public final class CharsetDetector {
    * @throws IOException If thrown while attempting to read the file.
    */
   public static Charset getFromBOM(File f) throws IOException {
+    Charset charset = null;
     byte[] bom = new byte[MAX_BOM_SIZE];
     // Check if there is a byte-order mark
-    FileInputStream in = null;
-    try {
-      in = new FileInputStream(f);
+    try (FileInputStream in = new FileInputStream(f)) {
       int read = in.read(bom);
-      if (read < 2) return null;
-      in.close();
-      for (ByteOrderMark b : ByteOrderMark.values()) {
-        if (b.matches(bom)) return b.charset();
+      if (read >= 2) {
+        for (ByteOrderMark b : ByteOrderMark.values()) {
+          if (b.matches(bom)) {
+            charset = b.charset();
+            break;
+          }
+        }
       }
-    } finally {
-      if (in != null) in.close();
     }
     // Return null if no BOM was present
-    return null;
+    return charset;
   }
 
   /**
@@ -182,11 +182,10 @@ public final class CharsetDetector {
   public static Charset getFromContent(File f) throws IOException {
     Charset cs = Charset.forName("US-ASCII");
     // Load into a byte buffer
-    FileInputStream fis = null;
-    FileChannel fc = null;
-    try {
-      fis = new FileInputStream(f);
-      fc = fis.getChannel();
+
+    try (FileInputStream fis = new FileInputStream(f);
+         FileChannel fc = fis.getChannel()){
+
       int upto = fc.size() > MAX_FILE_SIZE ? MAX_FILE_SIZE : (int) fc.size();
       MappedByteBuffer buffer = fc.map(FileChannel.MapMode.READ_ONLY, 0, upto);
 
@@ -201,6 +200,7 @@ public final class CharsetDetector {
         CoderResult result = decoder.decode(buffer, out, true);
         // no error reported
         if (!result.isError()) {
+          cs = charset;
           // If it is ISO 8859-1, Let's check whether we're dealing with Windows encoding
           if (charset.equals(Charset.forName("ISO-8859-1"))) {
             buffer.rewind();
@@ -208,21 +208,16 @@ public final class CharsetDetector {
               byte b = buffer.get();
               if (b >= (byte) 0x80 && b < (byte) 0xA0) {
                 if (Charset.isSupported("Cp1252")) {
-                  fc.close();
-                  return Charset.forName("Cp1252");
+                  cs =  Charset.forName("Cp1252");
+                  break;
                 }
               }
             }
           }
-          fc.close();
-          return charset;
+          break;
         }
       }
-    } finally {
-      if (fc != null) fc.close();
-      if (fis != null) fis.close();
     }
-
     return cs;
   }
 
@@ -274,17 +269,13 @@ public final class CharsetDetector {
    * @throws IOException If the file is not found.
    */
   private static ByteBuffer getFileContent(File f, int upto) throws IOException {
-    FileChannel fc = null;
     ByteBuffer buffer = null;
-    try (FileInputStream in = new FileInputStream(f)) {
-      fc = in.getChannel();
+    try (FileInputStream in = new FileInputStream(f);
+         FileChannel fc = in.getChannel()) {
       buffer = ByteBuffer.allocate(upto);
       fc.read(buffer);
-      fc.close();
       // reset the buffer so that it is ready to use
       buffer.rewind();
-    } catch (IOException ex) {
-      if (fc != null) fc.close();
     }
     return buffer;
   }

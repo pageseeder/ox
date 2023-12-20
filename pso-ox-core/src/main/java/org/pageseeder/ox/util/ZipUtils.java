@@ -39,7 +39,7 @@ public final class ZipUtils {
   private ZipUtils() {}
 
   /**
-   * Unzip the the file at the specified location.
+   * Unzip the file at the specified location.
    *
    * @param src  The file to unzip
    * @param dest The destination folder
@@ -47,11 +47,10 @@ public final class ZipUtils {
    */
   public static void unzip(File src, File dest) throws IOException {
     dest.mkdirs();
-    BufferedOutputStream out = null;
-    BufferedInputStream is = null;
-    try {
+
+    try (ZipFile zip = new ZipFile(src)) {
       ZipEntry entry;
-      ZipFile zip = new ZipFile(src);
+
       for (Enumeration<? extends ZipEntry> e = zip.entries(); e.hasMoreElements();) {
         entry = e.nextElement();
         String name = entry.getName();
@@ -65,28 +64,18 @@ public final class ZipUtils {
         }
         // Only process files
         if (!entry.isDirectory()) {
-          is = new BufferedInputStream(zip.getInputStream(entry));
-          int count;
           byte[] data = new byte[BUFFER];
           File f = new File(dest, name);
-          try (FileOutputStream fos = new FileOutputStream(f)) {
-            out = new BufferedOutputStream(fos, BUFFER);
+          try (BufferedInputStream is = new BufferedInputStream(zip.getInputStream(entry));
+               FileOutputStream fos = new FileOutputStream(f);
+               BufferedOutputStream out = new BufferedOutputStream(fos, BUFFER)) {
+            int count;
             while ((count = is.read(data, 0, BUFFER)) != -1) {
               out.write(data, 0, count);
             }
             out.flush();
           }
-          is.close();
         }
-      }
-      zip.close();
-    } finally {
-      // If the ZIP is empty these may be null
-      if (is != null) {
-        is.close();
-      }
-      if (out != null) {
-        out.close();
       }
     }
   }
@@ -99,10 +88,8 @@ public final class ZipUtils {
    * @throws IOException when IO error occur.
    */
   public static void zip(File src, File dest) throws IOException {
-    ZipOutputStream out = null;
-    try {
-      FileOutputStream zip = new FileOutputStream(dest);
-      out = new ZipOutputStream(new BufferedOutputStream(zip));
+    try (FileOutputStream zip = new FileOutputStream(dest);
+         ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(zip))){
       if (src.isFile()) {
         // Source is a single file
         addToZip(src, out, null);
@@ -113,16 +100,11 @@ public final class ZipUtils {
           addToZip(f, out, null);
         }
       }
-
-    } finally {
-      if (out != null) {
-        out.close();
-      }
     }
   }
 
   /**
-   * Zip the a set of specified file or folder.
+   * Zip a set of specified file or folder.
    *
    * @param dest The destination zip
    * @param sources  The list of files
@@ -166,19 +148,13 @@ public final class ZipUtils {
       // File
     } else {
       byte[] data = new byte[BUFFER];
-      BufferedInputStream origin = null;
-      try {
-        FileInputStream fi = new FileInputStream(file);
-        origin = new BufferedInputStream(fi, BUFFER);
+      try (FileInputStream fi = new FileInputStream(file);
+           BufferedInputStream origin = new BufferedInputStream(fi, BUFFER)){
         ZipEntry entry = new ZipEntry(folder != null ? folder + file.getName() : file.getName());
         out.putNextEntry(entry);
         int count;
         while ((count = origin.read(data, 0, BUFFER)) != -1) {
           out.write(data, 0, count);
-        }
-      } finally {
-        if (origin != null) {
-          origin.close();
         }
       }
     }

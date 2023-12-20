@@ -81,24 +81,13 @@ public class PSMLValidator {
   public ValidationResult validateWithSchema(String schemaPath, File original) {
     String schemaName = schemaPath == null ? null : schemaPath.substring(schemaPath.lastIndexOf('/') + 1);
     String error = null;
-    InputStream reader = null;
-    try {
-      reader = new FileInputStream(original);
+    try (InputStream reader = new FileInputStream(original);) {
+
       return new ValidationResult("schema", true, schemaName, Validators.validateXmlFileWithSchemaReturnErrors(reader, schemaPath, null));
     } catch (SAXException ex) {
       error = "Error when validating file: " + ex.getMessage();
     } catch (IOException ex) {
       error = "Error when reading file: " + ex.getMessage();
-    } finally {
-      try {
-        if (reader != null) {
-          reader.close();
-        }
-      } catch (IOException ex) {
-        // should not happen
-        if (error == null)
-          error = "Error when closing stream of file: " + ex.getMessage();
-      }
     }
     return new ValidationResult("schema", false, schemaName, error);
   }
@@ -133,35 +122,14 @@ public class PSMLValidator {
     }
     if (validator != null) {
       // validate then if found
-      InputStream reader = null;
-      try {
+      try (InputStream reader = new FileInputStream(original);){
         // validate
-        reader = new FileInputStream(original);
         SchematronResult result = validator.validate(new StreamSource(reader));
         return new ValidationResult("schematron", true, schematron, result.getFailedAssertions());
       } catch (SchematronException ex) {
         error = "Error when validating file:, " + ex.getMessage();
       } catch (IOException ex) {
         error = "Error when reading file: " + ex.getMessage();
-      } finally {
-        try {
-          if (reader != null) {
-            reader.close();
-          }
-        } catch (IOException ex) {
-          // should not happen
-          if (error == null)
-            error = "Error when closing stream of file: " + ex.getMessage();
-        }
-        try {
-          if (schematronStream != null) {
-            schematronStream.close();
-          }
-        } catch (IOException ex) {
-          // should not happen
-          if (error == null)
-            error = "Error when closing stream of schematron: " + ex.getMessage();
-        }
       }
     }
     return new ValidationResult("schematron", false, schematron, error);
@@ -192,22 +160,10 @@ public class PSMLValidator {
    */
   public ValidationResult validateWellFormed(File original) {
     String error = null;
-    InputStream reader = null;
-    try {
-      reader = new FileInputStream(original);
+    try (InputStream reader = new FileInputStream(original)){
       return new ValidationResult("well-formed", true, null, Validators.validateWellFormednessReturnErrors(reader));
     } catch (IOException | SAXException ex) {
       error = "Error when validating file: " + ex.getMessage();
-    } finally {
-      try {
-        if (reader != null) {
-          reader.close();
-        }
-      } catch (IOException ex) {
-        // should not happen
-        if (error == null)
-          error ="Error when closing stream of file: " + ex.getMessage();
-      }
     }
     return new ValidationResult("well-formed", true, null, error);
   }

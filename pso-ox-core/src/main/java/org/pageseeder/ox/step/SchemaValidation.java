@@ -139,8 +139,8 @@ public final class SchemaValidation implements Step {
       }
     }
 
-    StringWriter out = new StringWriter();
-    try {
+
+    try (StringWriter out = new StringWriter()) {
       SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
       // set resource resolver
       if (resolver != null) {
@@ -184,27 +184,28 @@ public final class SchemaValidation implements Step {
      */
     @Override
     public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI) {
-
-      if (systemId == null) { return null; }
-      LSInput input = new LSInputImpl();
-      try {
+      LSInput input = null;
+      if (systemId != null) {
         File schema = new File(this._schemaDir, systemId);
         if (schema != null && !schema.exists()) {
-          FileInputStream is = new FileInputStream(schema);
-          input.setByteStream(is);
-          input.setPublicId(publicId);
-          input.setSystemId(systemId);
-          input.setBaseURI(baseURI);
-          input.setCharacterStream(new InputStreamReader(is));
-          is.close();
+          input = new LSInputImpl();
+          try (FileInputStream is = new FileInputStream(schema);
+               Reader reader = new InputStreamReader(is)) {
+            input.setByteStream(is);
+            input.setPublicId(publicId);
+            input.setSystemId(systemId);
+            input.setBaseURI(baseURI);
+            input.setCharacterStream(reader);
+          } catch (IOException ex) {
+            LOGGER.warn("Cannot resolve schema.", ex);
+          }
         } else {
-          throw new FileNotFoundException("Cannot find the internal schema " + schema + ".");
+          LOGGER.error("Cannot find the internal schema " + schema + ".");
         }
-        return input;
-      } catch (IOException ex) {
-        LOGGER.warn("Cannot resolve schema.", ex);
-        return null;
+      } else {
+        LOGGER.error("systemID is null.");
       }
+      return input;
     }
   }
 
