@@ -292,7 +292,7 @@ public final class Model implements XMLWritable {
   public static List<Model> listModels(boolean reload) {
     List<Model> models = new ArrayList<Model>();
 
-    System.out.println("Model Directory: " + getModelsDirectory().getAbsoluteFile());
+    LOGGER.debug("Model Directory: " + getModelsDirectory().getAbsoluteFile());
     String[] names = getModelsDirectory().list(new FilenameFilter() {
       @Override
       public boolean accept(File modelsRootDirectoy, String name) {

@@ -233,14 +233,10 @@ public class FileUtils {
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public static void write(String fileContent, File target, String charset) throws IOException {
-    Writer writer = null;
-    try {
-      writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(target), charset));
+    try (FileOutputStream fos = new FileOutputStream(target);
+         OutputStreamWriter osw = new OutputStreamWriter(fos, charset);
+         Writer writer = new BufferedWriter(osw)) {
       writer.write(fileContent);
-    } finally {
-      if (writer != null) {
-        writer.close();
-      }
     }
   }
 

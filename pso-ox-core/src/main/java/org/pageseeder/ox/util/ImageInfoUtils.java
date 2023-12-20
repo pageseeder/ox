@@ -999,33 +999,6 @@ public class ImageInfoUtils {
       // TODO Auto-generated catch block
       ex.printStackTrace();
     }
-		/*if (args.length == 0) {
-			run(null, System.in, imageInfo, verbose);
-		} else {
-			int index = 0;
-			while (index < args.length) {
-				InputStream in = null;
-				try {
-					String name = args[index++];
-					System.out.print(name + ";");
-					if (name.startsWith("http://")) {
-						in = new URL(name).openConnection().getInputStream();
-					} else {
-						in = new FileInputStream(name);
-					}
-					run(name, in, imageInfo, verbose);
-					in.close();
-				} catch (IOException e) {
-					System.out.println(e);
-					try {
-						if (in != null) {
-							in.close();
-						}
-					} catch (IOException ee) {
-					}
-				}
-			}
-		}*/
 	}
 
 	private static void print(String sourceName, ImageInfoUtils ii, boolean verbose) {

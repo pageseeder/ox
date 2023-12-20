@@ -199,9 +199,9 @@ public final class OXDownloadServlet extends HttpServlet implements Servlet {
    * @throws IOException
    */
   private static void toResponse(OutputStream out, File file) throws IOException {
-    InputStream ins = new BufferedInputStream(new FileInputStream(file));
+
     // get file
-    try {
+    try (InputStream ins = new BufferedInputStream(new FileInputStream(file))) {
       // get output stream for response
       byte[] buff = new byte[BUFFER_SIZE];
       boolean reading = true;
@@ -214,8 +214,6 @@ public final class OXDownloadServlet extends HttpServlet implements Servlet {
           reading = false;
         }
       }
-    } finally {
-      ins.close();
     }
   }
 
