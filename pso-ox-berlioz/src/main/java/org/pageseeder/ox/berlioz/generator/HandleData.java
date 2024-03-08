@@ -40,12 +40,12 @@ import java.util.List;
  * @author Ciber Cai
  * @version 14 February 2014
  */
-public class HandleData implements ContentGenerator {
+public class HandleData extends ProfilerGenerator {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(HandleData.class);
 
   @Override
-  public void process(ContentRequest req, XMLWriter xml) throws BerliozException, IOException {
+  public void processSub(ContentRequest req, XMLWriter xml) throws BerliozException, IOException {
 
     LOGGER.debug("receive package");
 
