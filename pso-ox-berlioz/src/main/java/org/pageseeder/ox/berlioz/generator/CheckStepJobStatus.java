@@ -37,10 +37,10 @@ import java.io.IOException;
  * @author Carlos Cabral
  * @version 27 February 2017
  */
-public class CheckStepJobStatus implements ContentGenerator {
+public class CheckStepJobStatus extends ProfilerGenerator {
 
   @Override
-  public void process(ContentRequest req, XMLWriter xml) throws BerliozException, IOException {
+  public void processSub(ContentRequest req, XMLWriter xml) throws BerliozException, IOException {
     String id = req.getParameter("id");
     if (id == null) {
       req.setStatus(ContentStatus.BAD_REQUEST);

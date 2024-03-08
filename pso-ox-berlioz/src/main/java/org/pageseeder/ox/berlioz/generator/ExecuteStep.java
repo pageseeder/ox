@@ -46,12 +46,12 @@ import java.util.Enumeration;
  * @author Ciber Cai
  * @version 16 June 2014
  */
-public class ExecuteStep implements ContentGenerator {
+public class ExecuteStep extends ProfilerGenerator {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ExecuteStep.class);
 
   @Override
-  public void process(ContentRequest req, XMLWriter xml) throws BerliozException, IOException {
+  public void processSub(ContentRequest req, XMLWriter xml) throws BerliozException, IOException {
     // get the model
     Model model = Requests.getModel(req, xml);
     if (model == null) {

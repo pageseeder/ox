@@ -37,10 +37,10 @@ import java.io.IOException;
  * @author Ciber Cai
  * @version 28 November 2014
  */
-public class CheckPipelineJobStatus implements ContentGenerator {
+public class CheckPipelineJobStatus extends ProfilerGenerator {
 
   @Override
-  public void process(ContentRequest req, XMLWriter xml) throws BerliozException, IOException {
+  public void processSub(ContentRequest req, XMLWriter xml) throws BerliozException, IOException {
     String id = req.getParameter("id");
     if (id == null) {
       req.setStatus(ContentStatus.BAD_REQUEST);
