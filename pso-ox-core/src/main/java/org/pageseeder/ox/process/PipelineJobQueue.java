@@ -15,6 +15,7 @@
  */
 package org.pageseeder.ox.process;
 
+import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.core.JobStatus;
 import org.pageseeder.ox.core.PipelineJob;
 import org.pageseeder.xmlwriter.XMLWritable;
@@ -25,6 +26,7 @@ import java.util.Iterator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A job queue to store the jobs.
@@ -41,31 +43,34 @@ public class PipelineJobQueue implements XMLWritable {
   /**  Singleton instance (Lazy init). */
   private static volatile PipelineJobQueue INSTANCE;
 
+  /** Shows that this queue is locked. This means that cannot be used. */
+  private static volatile AtomicBoolean LOCKED = new AtomicBoolean(false);
+
   /**  The list of imported jobs. */
-  private final BlockingQueue<PipelineJob> _waiting;
+  private BlockingQueue<PipelineJob> waiting;
 
   /**  the list of slow jobs. */
-  private final BlockingQueue<PipelineJob> _slow;
+  private BlockingQueue<PipelineJob> slow;
 
   /**  The list of completed jobs. */
-  private final BlockingQueue<PipelineJob> _completed;
+  private BlockingQueue<PipelineJob> completed;
 
   /**  The current running import job *. */
-  private final BlockingQueue<PipelineJob> _running;
+  private BlockingQueue<PipelineJob> running;
 
   /** The key will be the package and the value the job id. */
-  private final ConcurrentHashMap<String, String> _packageAndJobMap;
+  private ConcurrentHashMap<String, String> packageAndJobMap;
 
   /**
    * the private constructor.
    */
   private PipelineJobQueue(int maxStoredCompletedJob) {
-    this._waiting = new LinkedBlockingQueue<PipelineJob>();
-    this._slow = new LinkedBlockingQueue<PipelineJob>();
-    this._completed = new LinkedBlockingQueue<PipelineJob>();
-    this._running = new LinkedBlockingQueue<PipelineJob>();
+    this.waiting = new LinkedBlockingQueue<PipelineJob>();
+    this.slow = new LinkedBlockingQueue<PipelineJob>();
+    this.completed = new LinkedBlockingQueue<PipelineJob>();
+    this.running = new LinkedBlockingQueue<PipelineJob>();
     this._maxStoredCompletedJob = maxStoredCompletedJob;
-    this._packageAndJobMap = new ConcurrentHashMap<>();
+    this.packageAndJobMap = new ConcurrentHashMap<>();
 
   }
 
@@ -76,6 +81,7 @@ public class PipelineJobQueue implements XMLWritable {
    * @return the instance of ImportProcessor
    */
   public static PipelineJobQueue getInstance(int maxStoredCompletedJob) {
+    if (LOCKED.get()) new OXException("Pipeline job queue is locked to use.");
     if (INSTANCE == null) {
       INSTANCE = new PipelineJobQueue(maxStoredCompletedJob);
     }
@@ -89,12 +95,12 @@ public class PipelineJobQueue implements XMLWritable {
    */
   protected void add(PipelineJob job) {
     if (job.isSlowJob()) {
-      this._slow.add(job);
+      this.slow.add(job);
     } else {
-      this._waiting.add(job);
+      this.waiting.add(job);
     }
 
-    this._packageAndJobMap.put(job.getPackageData().id(), job.getId());
+    this.packageAndJobMap.put(job.getPackageData().id(), job.getId());
     //clear completed job when new job comes in.
     clearCompletedJob();
   }
@@ -107,9 +113,9 @@ public class PipelineJobQueue implements XMLWritable {
    * @throws InterruptedException the interrupted exception
    */
   protected PipelineJob next(boolean slowMode) throws InterruptedException {
-    PipelineJob job = slowMode ? this._slow.take() : this._waiting.take();
+    PipelineJob job = slowMode ? this.slow.take() : this.waiting.take();
     if (job != null) {
-      this._running.add(job);
+      this.running.add(job);
     }
     return job;
   }
@@ -120,7 +126,7 @@ public class PipelineJobQueue implements XMLWritable {
    * @return the total number of jobs in the queue.
    */
   protected int total() {
-    return this._waiting.size() + this._slow.size();
+    return this.waiting.size() + this.slow.size();
   }
 
   /**
@@ -133,22 +139,22 @@ public class PipelineJobQueue implements XMLWritable {
     if (id == null) { throw new NullPointerException("job id cannot be null"); }
 
     // check running job
-    for (PipelineJob job : this._running) {
+    for (PipelineJob job : this.running) {
       if (id.equals(job.getId())) { return job; }
     }
 
     // check completed queue
-    for (PipelineJob job : this._completed) {
+    for (PipelineJob job : this.completed) {
       if (id.equals(job.getId())) { return job; }
     }
 
     // check the waiting queue
-    for (PipelineJob job : this._waiting) {
+    for (PipelineJob job : this.waiting) {
       if (id.equals(job.getId())) { return job; }
     }
 
     // check the slow queue
-    for (PipelineJob job : this._slow) {
+    for (PipelineJob job : this.slow) {
       if (id.equals(job.getId())) { return job; }
     }
 
@@ -177,7 +183,7 @@ public class PipelineJobQueue implements XMLWritable {
   public static String getJobId(String packageId) {
     String jobId = null;
     if (INSTANCE != null) {
-      jobId = INSTANCE._packageAndJobMap.get(packageId);
+      jobId = INSTANCE.packageAndJobMap.get(packageId);
     }
     return jobId;
   }
@@ -188,18 +194,18 @@ public class PipelineJobQueue implements XMLWritable {
    * @param job set the job to completed queue
    */
   protected void completed(PipelineJob job) {
-    this._completed.add(job);
-    this._running.remove(job);
+    this.completed.add(job);
+    this.running.remove(job);
   }
 
   /**
    * clear the completed job.
    */
   private void clearCompletedJob() {
-    for (PipelineJob job : this._completed) {
-      if (this._completed.size() >= this._maxStoredCompletedJob && job.isInactive()) {
-        this._completed.remove(job);
-        this._packageAndJobMap.remove(job.getPackageData().id());
+    for (PipelineJob job : this.completed) {
+      if (this.completed.size() >= this._maxStoredCompletedJob && job.isInactive()) {
+        this.completed.remove(job);
+        this.packageAndJobMap.remove(job.getPackageData().id());
       }
     }
   }
@@ -210,10 +216,10 @@ public class PipelineJobQueue implements XMLWritable {
   @Override
   public void toXML(XMLWriter xml) throws IOException {
     xml.openElement("jobs");
-    toXML(xml, this._completed, "completed");
-    toXML(xml, this._running, "running");
-    toXML(xml, this._slow, "slow");
-    toXML(xml, this._waiting, "waiting");
+    toXML(xml, this.completed, "completed");
+    toXML(xml, this.running, "running");
+    toXML(xml, this.slow, "slow");
+    toXML(xml, this.waiting, "waiting");
     xml.closeElement();
   }
 
@@ -225,5 +231,37 @@ public class PipelineJobQueue implements XMLWritable {
       job.toXML(xml);
     }
     xml.closeElement();
+  }
+
+  /**
+   * Clean all class variables and the singleton instance.
+   */
+  protected void clear(){
+    if (this.waiting != null) {
+      this.waiting.clear();
+      this.waiting = null;
+    }
+
+    if (this.slow != null) {
+      this.slow.clear();
+      this.slow = null;
+    }
+
+    if (this.completed != null) {
+      this.completed.clear();
+      this.completed = null;
+    }
+
+    if (this.running != null) {
+      this.running.clear();
+      this.running = null;
+    }
+
+    if (this.packageAndJobMap != null) {
+      this.packageAndJobMap.clear();
+      this.packageAndJobMap = null;
+    }
+    LOCKED.set(true);
+    INSTANCE = null;
   }
 }
