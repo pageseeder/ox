@@ -15,11 +15,13 @@
  */
 package org.pageseeder.ox.process;
 
+import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.core.JobStatus;
 import org.pageseeder.ox.core.StepJob;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A job queue to store the jobs.
@@ -35,17 +37,20 @@ public class StepJobQueue {
   /** Singleton instance (Lazy init) */
   private static volatile StepJobQueue INSTANCE;
 
+  /** Shows that this queue is locked. This means that cannot be used. */
+  private static volatile AtomicBoolean LOCKED = new AtomicBoolean(false);
+
   /** The list of waiting job. */
-  private final BlockingQueue<StepJob> _waiting;
+  private BlockingQueue<StepJob> waiting;
 
   /** The list of completed jobs. */
-  private final BlockingQueue<StepJob> _completed;
+  private BlockingQueue<StepJob> completed;
 
   /** The current running job. **/
-  private final BlockingQueue<StepJob> _running;
+  private BlockingQueue<StepJob> running;
 
   /** Max number of completed job stored in memory. */
-  private final int _maxStoredCompletedJob;
+  private int _maxStoredCompletedJob;
 
   /**
    * the private constructor.
@@ -53,9 +58,9 @@ public class StepJobQueue {
    * @param maxStoredCompletedJob the max completed jobs that will be stored.
    */
   private StepJobQueue(int maxStoredCompletedJob) {
-    this._waiting = new LinkedBlockingQueue<StepJob>();
-    this._completed = new LinkedBlockingQueue<StepJob>();
-    this._running = new LinkedBlockingQueue<StepJob>();
+    this.waiting = new LinkedBlockingQueue<StepJob>();
+    this.completed = new LinkedBlockingQueue<StepJob>();
+    this.running = new LinkedBlockingQueue<StepJob>();
     if (maxStoredCompletedJob > 0 ) {
      this._maxStoredCompletedJob = maxStoredCompletedJob;
     } else {
@@ -73,19 +78,19 @@ public class StepJobQueue {
   /**
    * @return the instance of ImportProcessor
    */
-  protected static StepJobQueue getInstance(int maxStoredCompletedJob) {
+  protected static synchronized StepJobQueue getInstance(int maxStoredCompletedJob) {
+    if (LOCKED.get()) new OXException("Step job queue is locked to use.");
     if (INSTANCE == null) {
       INSTANCE = new StepJobQueue(maxStoredCompletedJob);
     }
     return INSTANCE;
   }
 
-
   /**
    * @param job the job
    */
   protected void add(StepJob job) {
-    this._waiting.add(job);
+    this.waiting.add(job);
 
     //clear completed job when new job comes in.
     clearCompletedJob();
@@ -96,9 +101,9 @@ public class StepJobQueue {
    * @throws InterruptedException
    */
   protected StepJob next() throws InterruptedException {
-    StepJob job = this._waiting.take();
+    StepJob job = this.waiting.take();
     if (job != null) {
-      this._running.add(job);
+      this.running.add(job);
     }
     return job;
   }
@@ -107,7 +112,7 @@ public class StepJobQueue {
    * @return the total number of jobs in the queue.
    */
   protected int total() {
-    return this._waiting.size();
+    return this.waiting.size();
   }
 
   /**
@@ -118,17 +123,17 @@ public class StepJobQueue {
     if (id == null) { throw new NullPointerException("job id cannot be null"); }
 
     // check running job
-    for (StepJob job : this._running) {
+    for (StepJob job : this.running) {
       if (id.equals(job.getId())) { return job; }
     }
 
     // check completed queue
-    for (StepJob job : this._completed) {
+    for (StepJob job : this.completed) {
       if (id.equals(job.getId())) { return job; }
     }
 
     // check the waiting queue
-    for (StepJob job : this._waiting) {
+    for (StepJob job : this.waiting) {
       if (id.equals(job.getId())) { return job; }
     }
 
@@ -150,19 +155,40 @@ public class StepJobQueue {
    * @param job set the job to completed queue
    */
   protected void completed(StepJob job) {
-    this._completed.add(job);
-    this._running.remove(job);
+    this.completed.add(job);
+    this.running.remove(job);
   }
 
   /**
    * clear the completed job.
    */
   private void clearCompletedJob() {
-    for (StepJob job : this._completed) {
-      if (this._completed.size() >= this._maxStoredCompletedJob && job.isInactive()) {
-        this._completed.remove(job);
+    for (StepJob job : this.completed) {
+      if (this.completed.size() >= this._maxStoredCompletedJob && job.isInactive()) {
+        this.completed.remove(job);
       }
     }
   }
 
+  /**
+   * Clean all class variables and the singleton instance.
+   */
+  protected void clear(){
+    if (this.waiting != null) {
+      this.waiting.clear();
+      this.waiting = null;
+    }
+
+    if (this.completed != null) {
+      this.completed.clear();
+      this.completed = null;
+    }
+
+    if (this.running != null) {
+      this.running.clear();
+      this.running = null;
+    }
+    LOCKED.set(true);
+    INSTANCE = null;
+  }
 }
