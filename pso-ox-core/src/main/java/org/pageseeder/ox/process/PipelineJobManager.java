@@ -45,7 +45,7 @@ public class PipelineJobManager implements XMLWritable{
   private static ExecutorService SLOW_EXECUTOR = null;
 
   /** the job queue */
-  private final PipelineJobQueue _queue;
+  private PipelineJobQueue queue;
 
   /** the number of thread to process */
   private final int _noThreads;
@@ -63,7 +63,7 @@ public class PipelineJobManager implements XMLWritable{
    */
   public PipelineJobManager(int nThreads, int maxStoredCompletedJob) {
     this._noThreads = nThreads;
-    this._queue = PipelineJobQueue.getInstance(maxStoredCompletedJob);
+    this.queue = PipelineJobQueue.getInstance(maxStoredCompletedJob);
     synchronized (PipelineJobManager.class) {
       if (DEFAULT_EXECUTOR == null) {
         start();
@@ -100,11 +100,18 @@ public class PipelineJobManager implements XMLWritable{
     LOGGER.debug("Stopping the Pipeline Processor.");
     if (DEFAULT_EXECUTOR != null) {
       DEFAULT_EXECUTOR.shutdown();
-    }
-    if (SLOW_EXECUTOR != null) {
-      SLOW_EXECUTOR.shutdown();
+      DEFAULT_EXECUTOR = null;
     }
 
+    if (SLOW_EXECUTOR != null) {
+      SLOW_EXECUTOR.shutdown();
+      SLOW_EXECUTOR = null;
+    }
+
+    if (this.queue != null) {
+      this.queue.clear();
+      this.queue = null;
+    }
     LOGGER.debug("Stopped.");
   }
 
@@ -114,12 +121,12 @@ public class PipelineJobManager implements XMLWritable{
    */
   public void addJob(PipelineJob job) {
     // add job to queue
-    this._queue.add(job);
+    this.queue.add(job);
     if (job.isSlowJob()) {
-      SLOW_EXECUTOR.execute(new PipelineProcessor(this._queue, true));
+      SLOW_EXECUTOR.execute(new PipelineProcessor(this.queue, true));
     } else {
       // start  thread or use the existing thread in the pool
-      DEFAULT_EXECUTOR.execute(new PipelineProcessor(this._queue, false));
+      DEFAULT_EXECUTOR.execute(new PipelineProcessor(this.queue, false));
     }
 
   }
@@ -130,14 +137,14 @@ public class PipelineJobManager implements XMLWritable{
    * @return the status of job
    */
   public JobStatus checkJobStatus(String id) {
-    return this._queue.getJobStatus(id);
+    return this.queue.getJobStatus(id);
   }
 
   /**
    * @return the total number of jobs in the waiting queue.
    */
   public int noWaitingJob() {
-    return this._queue.total();
+    return this.queue.total();
   }
 
   /**
@@ -145,7 +152,7 @@ public class PipelineJobManager implements XMLWritable{
    * @return the PipelineJob
    */
   public PipelineJob getJobId(String id) {
-    return this._queue.get(id);
+    return this.queue.get(id);
   }
 
   /* (non-Javadoc)
@@ -153,6 +160,6 @@ public class PipelineJobManager implements XMLWritable{
    */
   @Override
   public void toXML(XMLWriter xml) throws IOException {
-    this._queue.toXML(xml);
+    this.queue.toXML(xml);
   }
 }

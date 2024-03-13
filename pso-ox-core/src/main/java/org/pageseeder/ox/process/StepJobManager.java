@@ -35,14 +35,14 @@ public class StepJobManager {
   /** the logger */
   private static final Logger LOGGER = LoggerFactory.getLogger(StepJobManager.class);
 
-  /** the default number of thread for processing pipeline */
+  /** the default number of thread for processing step */
   public static final int DEAULT_NUMBER_OF_THREAD = 1;
 
   /** a thread executor */
   private static ExecutorService DEFAULT_EXECUTOR = null;
 
   /** the job queue */
-  private final StepJobQueue _queue;
+  private StepJobQueue queue;
 
   /** the number of thread to process */
   private final int _noThreads;
@@ -55,14 +55,14 @@ public class StepJobManager {
   }
 
   /**
-   * the pipeline job manager.
+   * the step job manager.
    *
-   * @param nThreads               The number of pipeline thread.
+   * @param nThreads               The number of step thread.
    * @param maxStoredCompletedJob  The max number of completed job stored in memory
    */
   public StepJobManager(int nThreads, int maxStoredCompletedJob) {
     this._noThreads = nThreads;
-    this._queue = StepJobQueue.getInstance(maxStoredCompletedJob);
+    this.queue = StepJobQueue.getInstance(maxStoredCompletedJob);
     synchronized (StepJobManager.class) {
       if (DEFAULT_EXECUTOR == null) {
         start();
@@ -72,7 +72,7 @@ public class StepJobManager {
   }
 
   /**
-   * Start the Pipeline job.
+   * Start the Step job manager.
    */
   private void start() {
     DEFAULT_EXECUTOR = Executors.newFixedThreadPool(this._noThreads, new ThreadFactory() {
@@ -80,17 +80,22 @@ public class StepJobManager {
 
       @Override
       public Thread newThread(Runnable r) {
-        LOGGER.info("Start a new Pipeline Processor - {}", this.no);
-        Thread t = new Thread(r, "Pipeline Processor - " + (this.no++));
+        LOGGER.info("Start a new Step job manager - {}", this.no);
+        Thread t = new Thread(r, "Step job manager - " + (this.no++));
         return t;
       }
     });
   }
 
   public void stop() {
-    LOGGER.debug("Stopping the Pipeline Processor.");
+    LOGGER.debug("Stopping the Step job manager.");
     if (DEFAULT_EXECUTOR != null) {
       DEFAULT_EXECUTOR.shutdown();
+      DEFAULT_EXECUTOR = null;
+    }
+    if (this.queue != null) {
+      this.queue.clear();
+      this.queue = null;
     }
     LOGGER.debug("Stopped.");
   }
@@ -101,9 +106,9 @@ public class StepJobManager {
    */
   public void addJob(StepJob job) {
     // add job to queue
-    this._queue.add(job);
+    this.queue.add(job);
     // start  thread or use the existing thread in the pool
-    DEFAULT_EXECUTOR.execute(new StepJobProcessor(this._queue));
+    DEFAULT_EXECUTOR.execute(new StepJobProcessor(this.queue));
   }
 
   /**
@@ -112,14 +117,14 @@ public class StepJobManager {
    * @return the status of job
    */
   public JobStatus checkJobStatus(String id) {
-    return this._queue.getJobStatus(id);
+    return this.queue.getJobStatus(id);
   }
 
   /**
    * @return the total number of jobs in the waiting queue.
    */
   public int noWaitingJob() {
-    return this._queue.total();
+    return this.queue.total();
   }
 
   /**
@@ -127,6 +132,6 @@ public class StepJobManager {
    * @return the StepJob
    */
   public StepJob getJobId(String id) {
-    return this._queue.get(id);
+    return this.queue.get(id);
   }
 }
