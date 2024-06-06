@@ -104,8 +104,9 @@ public final class OXGetFile extends HttpServlet {
            }
 
            // Replace the text
-           String originalText = "replaceable-nonce";
-           String modifiedContent = htmlContent.toString().replace(originalText, nonce);
+           String originalText = "<script";
+           String newText = "<script nonce=\"" + nonce + "\"";
+           String modifiedContent = htmlContent.toString().replace(originalText, newText);
 
            // Return the modified content
            PrintWriter out = res.getWriter();
