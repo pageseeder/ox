@@ -16,6 +16,7 @@
 package org.pageseeder.ox.berlioz.servlet;
 
 import org.pageseeder.ox.OXConfig;
+import org.pageseeder.ox.berlioz.util.NonceUtils;
 import org.pageseeder.ox.util.FileUtils;
 import org.pageseeder.ox.util.StringUtils;
 import org.slf4j.Logger;
@@ -26,10 +27,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Files;
 
 /**
  * <p>Get a file inside in the ox structure (Packages). </p>
@@ -92,19 +91,40 @@ public final class OXGetFile extends HttpServlet {
          String contentDisposition = "true".equals(this.downloadable) ? "attachment" : "inline";
          LOGGER.debug("Content Disposition {}.", contentDisposition);
          res.setHeader("Content-Disposition", contentDisposition + "; filename=\"" + file.getName() + '"');
+         String nonce = NonceUtils.getNonce(req);
+         if ("text/html".equals(mediaType) && !StringUtils.isBlank(nonce)) {
 
-         try (InputStream ins = new FileInputStream(file)) {
-           // get output stream for servlet
-           ServletOutputStream outs = res.getOutputStream();
-           byte[] buff = new byte[BUFFER_SIZE];
-           boolean reading = true;
-           while (reading) {
-             int i = ins.read(buff, 0, BUFFER_SIZE);
-             if (i > 0) {
-               outs.write(buff, 0, i);
+           // Read the HTML file
+           StringBuilder htmlContent = new StringBuilder();
+           try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+             String line;
+             while ((line = reader.readLine()) != null) {
+               htmlContent.append(line).append(System.lineSeparator());
              }
-             if (i != BUFFER_SIZE) {
-               reading = false;
+           }
+
+           // Replace the text
+           String originalText = "replaceable-nonce";
+           String modifiedContent = htmlContent.toString().replace(originalText, nonce);
+
+           // Return the modified content
+           PrintWriter out = res.getWriter();
+           out.println(modifiedContent);
+         } else {
+
+           try (InputStream ins = Files.newInputStream(file.toPath())) {
+             // get output stream for servlet
+             ServletOutputStream outs = res.getOutputStream();
+             byte[] buff = new byte[BUFFER_SIZE];
+             boolean reading = true;
+             while (reading) {
+               int i = ins.read(buff, 0, BUFFER_SIZE);
+               if (i > 0) {
+                 outs.write(buff, 0, i);
+               }
+               if (i != BUFFER_SIZE) {
+                 reading = false;
+               }
              }
            }
          }
