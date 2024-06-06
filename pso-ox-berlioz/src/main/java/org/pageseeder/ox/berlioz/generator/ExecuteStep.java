@@ -22,6 +22,7 @@ import org.pageseeder.berlioz.content.ContentRequest;
 import org.pageseeder.berlioz.content.ContentStatus;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.berlioz.Requests;
+import org.pageseeder.ox.berlioz.util.NonceUtils;
 import org.pageseeder.ox.core.*;
 import org.pageseeder.ox.process.StepJobManager;
 import org.pageseeder.ox.process.StepJobQueue;
@@ -84,6 +85,11 @@ public class ExecuteStep extends ProfilerGenerator {
       }
     }
 
+    //Add nonce to the data package if there is one
+    String nonce = NonceUtils.getNonce(req);
+    if (!StringUtils.isBlank(nonce)) {
+      data.setParameter("nonce", nonce);
+    }
 
     if (data == null) {
       req.setStatus(ContentStatus.NOT_FOUND);
