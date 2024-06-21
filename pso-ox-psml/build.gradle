@@ -9,6 +9,7 @@ dependencies {
   implementation (
     "org.pageseeder.xmlwriter:pso-xmlwriter:$psoXMLWriterVersion",
     "org.pageseeder.schematron:pso-schematron:$psoSchematronVersion",
+    "org.pageseeder:pso-psml:$psoPsmlVersion",
     "org.slf4j:slf4j-api:$slf4jAPIVersion",
   )
 
@@ -18,6 +19,8 @@ dependencies {
     "ch.qos.logback:logback-core:$logbackVersion",
     "ch.qos.logback:logback-classic:$logbackVersion"
   )
+
+  testImplementation project(':pso-ox-test')
 
   testImplementation (
     "junit:junit:$junitVersion",
