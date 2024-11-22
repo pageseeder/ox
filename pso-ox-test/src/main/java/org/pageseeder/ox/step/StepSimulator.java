@@ -15,6 +15,7 @@
  */
 package org.pageseeder.ox.step;
 
+import org.pageseeder.ox.api.CallbackStep;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.core.Model;
@@ -75,6 +76,23 @@ public class StepSimulator {
    * @return result
    */
   public Result process (Step step, String input, String output, String stepName, Map<String, String> parameters) {
+    // process the step
+    return process(step, input, output, stepName, parameters, null);
+  }
+
+  /**
+   *
+   * @param step         is an instance of the step we are going to process.
+   * @param input        The input file/folder for this step. It can be null if it is the uploadedFile used in this class
+   *                     constructor.
+   * @param output       The output file/folder for this step. It can be null.
+   * @param stepName     The step name cannot be null or empty.
+   * @param parameters   The parameters that exclusively belongs to this step.
+   * @param callbackStep The callback step
+   * @return result
+   */
+  public Result process (Step step, String input, String output, String stepName, Map<String, String> parameters,
+                         CallbackStep callbackStep) {
     if (StringUtils.isBlank(stepName)) {
       throw new IllegalArgumentException("The step name cannot be blank (null or empty)");
     }
@@ -96,7 +114,15 @@ public class StepSimulator {
     StepInfoImpl info = new StepInfoImpl(this.getData().id(), stepName, input, output, parameters);
 
     // process the step
-    return step.process(this.model, this.getData(), info);
+    Result result = step.process(this.model, this.getData(), info);
+
+    // process the callback step
+    if (callbackStep != null) {
+      // put the step result to callback step
+      callbackStep.process(this.model, this.getData(), result, info);
+    }
+
+    return result;
   }
 
   /**
