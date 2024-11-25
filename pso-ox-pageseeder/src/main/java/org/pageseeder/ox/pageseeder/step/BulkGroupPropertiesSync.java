@@ -28,12 +28,15 @@ import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.PSCredentials;
 import org.pageseeder.bridge.model.PSGroup;
 import org.pageseeder.bridge.model.PSMember;
+import org.pageseeder.bridge.model.PSProject;
 import org.pageseeder.bridge.xml.PSGroupHandler;
 import org.pageseeder.ox.api.Measurable;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
+import org.pageseeder.ox.pageseeder.model.GroupAndGroupOptionWrapper;
+import org.pageseeder.ox.pageseeder.xml.GroupAndGroupOptionHandler;
 import org.pageseeder.ox.tool.DefaultResult;
 import org.pageseeder.ox.tool.ExtraResultStringXML;
 import org.pageseeder.ox.tool.ResultBase;
@@ -50,7 +53,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * It creates a group or update its title, description.
@@ -78,9 +83,10 @@ public class BulkGroupPropertiesSync extends PageseederStep implements Measurabl
     if (inputXml != null && inputXml.exists()) {
       GroupService groupService = new GroupService();
       XMLStringWriter writer = new XMLStringWriter(XML.NamespaceAware.No);
-      //Start writing the xml publishes result
-      writer.openElement("groups-sync");
       try {
+        //Start writing the xml result
+        writer.openElement("groups-sync");
+
         //Load the Pageseeder Configuration
         PSOAuthConfig psOAuthConfig = super.getPSOAuthConfig(psconfigName);
         PSConfig psConfig = psOAuthConfig.getConfig();
@@ -90,17 +96,17 @@ public class BulkGroupPropertiesSync extends PageseederStep implements Measurabl
         PSMember member = item.getMember();
         PSCredentials credentials = item.getToken();
 
-        //Read input file and convert to a list of GroupPublish
-        List<PSGroup> psGroupList = readXML(inputXml);
+        //Read input file and convert to a list
+        List<GroupAndGroupOptionWrapper> groupList = readXML(inputXml);
 
         //update percentage
         this.percentage = 5.0F;
 
         //It is 90% because 5% was left for getUser and another 5% to write output.
-        float percentageIncrement = 90.0F/psGroupList.size();
+        float percentageIncrement = 90.0F/groupList.size();
 
         //go through groups
-        for (PSGroup gp : psGroupList) {
+        for (GroupAndGroupOptionWrapper gp : groupList) {
           callSync(gp, member, credentials, psConfig, groupService, writer);
           //Update Percentage
           this.percentage += percentageIncrement;
@@ -109,10 +115,10 @@ public class BulkGroupPropertiesSync extends PageseederStep implements Measurabl
         LOGGER.error("Exception thrown while writing output to XML: {}", ex.getMessage());
         result.setError(ex);
       } finally {
-        //Close publishes result
-        writer.closeElement();//publishes
+        //Close groups-sync result
+        writer.closeElement();//groups-sync
 
-        //Add publishes result to the final result.
+        //Add synchronization result to the final result.
         result.addExtraXML(new ExtraResultStringXML(writer.toString()));
 
         //Writes the output.
@@ -128,7 +134,7 @@ public class BulkGroupPropertiesSync extends PageseederStep implements Measurabl
 
   /**
    *
-   * @param group
+   * @param groupAndGroupOptionWrapper
    * @param editor
    * @param credentials
    * @param psConfig
@@ -136,27 +142,34 @@ public class BulkGroupPropertiesSync extends PageseederStep implements Measurabl
    * @param writer
    * @throws IOException
    */
-  private void callSync(PSGroup group, PSMember editor, PSCredentials credentials, PSConfig psConfig,
-                        GroupService groupService, XMLWriter writer) throws IOException {
+  private void callSync(GroupAndGroupOptionWrapper groupAndGroupOptionWrapper, PSMember editor, PSCredentials credentials,
+                        PSConfig psConfig, GroupService groupService, XMLWriter writer) throws IOException {
     String errorMessage = "";
     String status = "";
     long startedAt = System.currentTimeMillis();
     PSGroup groupSynchronized = null;
     try {
 
-      //Maybe in the future group option could come from the XML
-      GroupOptions options = new GroupOptions();
+      PSGroup group = groupAndGroupOptionWrapper.getGroup();
+      GroupOptions options = groupAndGroupOptionWrapper.getGroupOptions();
 
-      //Group Exist
+      // Group/Project Exist
       PSGroup groupExists = getGroup(group, groupService, psConfig, credentials);
       if (groupExists != null) {
-        //This group exists, then just update
+        //This group/project exists, then just update
         group.setId(groupExists.getId());
         groupSynchronized = groupService.edit(group, editor, options, credentials, psConfig);
         status = "updated";
       } else {
-        //This group does not exist, then just create
-        groupSynchronized = groupService.create(group, editor, options, credentials, psConfig);
+        //This group/project does not exist, then just create
+        if(SimpleStringUtils.isBlank(group.getParentName())) {
+          //It is project
+          groupSynchronized = groupService.createProject(toProject(group), editor, toProjectParameters(options),
+              credentials, psConfig);
+        } else {
+          //It is a group
+          groupSynchronized = groupService.create(group, editor, options, credentials, psConfig);
+        }
         status = "created";
       }
 
@@ -178,8 +191,8 @@ public class BulkGroupPropertiesSync extends PageseederStep implements Measurabl
     return groupFound;
   }
 
-  private List<PSGroup> readXML(File xml) throws IOException {
-    PSGroupHandler handler = new PSGroupHandler();
+  private List<GroupAndGroupOptionWrapper> readXML(File xml) throws IOException {
+    GroupAndGroupOptionHandler handler = new GroupAndGroupOptionHandler();
     SimpleXMLUtils.parseXML(new FileInputStream(xml), handler);
     return handler.list();
   }
@@ -214,6 +227,41 @@ public class BulkGroupPropertiesSync extends PageseederStep implements Measurabl
       LOGGER.error("Exception thrown while writing output to XML: {}", ex.toString());
       result.setError(ex);
     }
+  }
+
+  private PSProject toProject(PSGroup group) {
+    PSProject project = new PSProject();
+    project.setId(group.getId());
+    project.setName(group.getName());
+    project.setDescription(group.getDescription());
+    project.setOwner(group.getOwner());
+    project.setDefaultNotification(group.getDefaultNotification());
+    project.setDefaultRole(group.getDefaultRole());
+    project.setDetailsType(group.getDetailsType());
+    project.setTemplate(group.getTemplate());
+    project.setTitle(group.getTitle());
+    return project;
+  }
+
+  private Map<String, String> toProjectParameters(GroupOptions options) {
+    Map<String, String> parameters = new HashMap<>();
+    if (options.getAccess() != null) {
+      parameters.put("access", options.getAccess());
+    }
+
+    if (options.getMessage() != null) {
+      parameters.put("message", options.getMessage());
+    }
+
+    if (options.getRelatedurl() != null) {
+      parameters.put("relatedurl", options.getRelatedurl());
+    }
+
+    if (options.getVisibility() != null) {
+      parameters.put("visibility", options.getVisibility());
+    }
+
+    return parameters;
   }
 
   public int percentage() {
