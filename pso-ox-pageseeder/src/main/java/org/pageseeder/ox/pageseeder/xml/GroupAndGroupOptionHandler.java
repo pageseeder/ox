@@ -129,6 +129,9 @@ public final class GroupAndGroupOptionHandler extends BasicHandler<GroupAndGroup
           case "visibility":
             opts.setVisibility(value);
             break;
+          case "addmember":
+            opts.setAddCreatorAsMember("false".equalsIgnoreCase(value));
+            break;
         }
       }
     }
