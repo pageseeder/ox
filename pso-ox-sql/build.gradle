@@ -1,0 +1,27 @@
+description = "OX adapter for SQL"
+
+// Dependencies of the project
+dependencies {
+
+  // module dependencies
+  implementation project(':pso-ox-core')
+
+  implementation (
+    "org.pageseeder.xmlwriter:pso-xmlwriter:$psoXMLWriterVersion",
+    "org.slf4j:slf4j-api:$slf4jAPIVersion",
+    //"commons-io:commons-io:$commonsIOVersion",
+    'org.xerial:sqlite-jdbc:3.49.1.0'
+  )
+
+  runtimeOnly (
+    //"net.sf.saxon:Saxon-HE:${saxonVersion}",
+    "ch.qos.logback:logback-core:$logbackVersion",
+    "ch.qos.logback:logback-classic:$logbackVersion"
+  )
+
+  testImplementation (
+    "junit:junit:$junitVersion",
+    "xmlunit:xmlunit:$xmlUnitVersion"
+  )
+
+}
