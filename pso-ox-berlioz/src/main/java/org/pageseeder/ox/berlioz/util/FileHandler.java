@@ -44,7 +44,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * A file file handler to receive the data from user upload.
+ * A file handler to receive the data from user upload.
  *
  * @author Ciber Cai
  * @version 10 November 2014
@@ -53,48 +53,6 @@ public final class FileHandler {
 
   /** The logger. */
   private static Logger LOGGER = LoggerFactory.getLogger(FileHandler.class);
-
-  /**
-   * To pipeline jobs.
-   *
-   * @param packs the packs
-   * @return the list
-   */
-  public static List<PipelineJob> toPipelineJobs(List<PackageData> packs) {
-    ensureConfigured();
-    List<PipelineJob> jobs = new ArrayList<PipelineJob>();
-    long slowSize = GlobalSettings.get("ox2.slow-mode.size", -1);
-    long maxInactiveTimeAllowed = Long.parseLong(GlobalSettings.get("ox2.max-inactive-time-ms",
-        String.valueOf(StepJob.DEFAULT_MAX_INACTIVE_TIME_MS)));
-    LOGGER.debug("Started creating the Pipeline Jobs");
-    for (PackageData pack : packs) {
-      boolean isSlowMode = slowSize > 0 && pack.getOriginal().exists() && (pack.getOriginal().length() - slowSize * 1024 > 0);
-      LOGGER.debug("slow mode {}", isSlowMode);
-      String p = pack.getParameter("pipeline");
-      String modelName = pack.getParameter("model");
-      Model model = new Model(modelName);
-      LOGGER.debug("Model {} ", modelName);
-      if (p != null) {
-        Pipeline pipeline = model.getPipeline(p);
-        if (pipeline != null) {
-          PipelineJob job = new PipelineJob(pipeline, pack);
-          job.setSlowMode(isSlowMode);
-          job.setMaxInactiveTimeAllowed(maxInactiveTimeAllowed);
-          jobs.add(job);
-        } else {
-          LOGGER.warn("pipeline {} not found", p);
-        }
-      } else {
-        Pipeline pipeline = model.getPipelineDefault();
-        PipelineJob job = new PipelineJob(pipeline, pack);
-        job.setSlowMode(isSlowMode);
-        jobs.add(job);
-      }
-    }
-    LOGGER.debug("Ended creating the Pipeline Jobs");
-
-    return jobs;
-  }
 
   /**
    * Receive.
@@ -301,19 +259,6 @@ public final class FileHandler {
     }
     LOGGER.debug("Ends toPackageData {}/{}", model, filename);
     return pack;
-  }
-
-  /**
-   * Ensure the configuration file is set.
-   */
-  private static void ensureConfigured() {
-    OXConfig config = OXConfig.get();
-    File dir = config.getModelsDirectory();
-    LOGGER.debug("Model Directory is null {}", dir == null);
-    if (dir == null) {
-      LOGGER.debug("Global Settings {}", GlobalSettings.getAppData());
-      config.setModelsDirectory(new File(GlobalSettings.getAppData(), "model"));
-    }
   }
 
   /**

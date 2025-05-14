@@ -18,6 +18,7 @@ package org.pageseeder.ox.berlioz;
 import org.junit.runner.RunWith;
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.berlioz.servlet.OXHandleData;
+import org.pageseeder.ox.berlioz.util.BerliozOXUtils;
 import org.pageseeder.ox.berlioz.util.FileHandler;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.core.PipelineJob;
@@ -96,7 +97,7 @@ public class BatchProcessingCallJob {
 
     List<PackageData> packs = mockedPackageList();
     System.out.println(packs.get(0).directory());
-    List<PipelineJob> jobs = FileHandler.toPipelineJobs(packs);
+    List<PipelineJob> jobs = BerliozOXUtils.toPipelineJobs(packs);
     when(response.getWriter()).thenReturn(new PrintWriter(writer));
     when(request.getMethod()).thenReturn("POST");
     when(request.getParameter("model")).thenReturn(this._model);
@@ -104,7 +105,7 @@ public class BatchProcessingCallJob {
 
     PowerMockito.mockStatic(FileHandler.class);
     PowerMockito.when(FileHandler.receive(request)).thenReturn(packs);
-    PowerMockito.when(FileHandler.toPipelineJobs(packs)).thenReturn(jobs);
+    PowerMockito.when(BerliozOXUtils.toPipelineJobs(packs)).thenReturn(jobs);
 
     // Call pipeline
     OXHandleData handler = new OXHandleData();
