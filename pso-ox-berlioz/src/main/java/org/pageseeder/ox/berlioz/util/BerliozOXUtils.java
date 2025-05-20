@@ -17,13 +17,17 @@ package org.pageseeder.ox.berlioz.util;
 
 import org.pageseeder.berlioz.GlobalSettings;
 import org.pageseeder.ox.OXConfig;
+import org.pageseeder.ox.berlioz.request.RequestHandlerType;
 import org.pageseeder.ox.core.*;
+import org.pageseeder.ox.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ccabral
@@ -32,6 +36,18 @@ import java.util.List;
 public class BerliozOXUtils {
   /** The logger. */
   private static Logger LOGGER = LoggerFactory.getLogger(BerliozOXUtils.class);
+
+  public static RequestHandlerType getRequestHandlerType(String requestHandlerType) {
+    RequestHandlerType type = RequestHandlerType.FILE;
+    if (requestHandlerType != null) {
+      try {
+        type = RequestHandlerType.valueOf(requestHandlerType.toUpperCase());
+      } catch (IllegalArgumentException e) {
+        type = RequestHandlerType.FILE;
+      }
+    }
+    return type;
+  }
 
   /**
    * To pipeline jobs.
@@ -86,5 +102,42 @@ public class BerliozOXUtils {
       LOGGER.debug("Global Settings {}", GlobalSettings.getAppData());
       config.setModelsDirectory(new File(GlobalSettings.getAppData(), "model"));
     }
+  }
+
+  /**
+   * Flatten parameters.
+   *
+   * @param newParameters the parameters to be flattened
+   * @return the map
+   */
+  public static Map<String, String> flattenParameters (Map<String, String[]> newParameters) {
+    return flattenParameters(newParameters);
+  }
+
+
+
+  /**
+   * Flatten parameters.
+   *
+   * @param newParameters the parameters to be flattened and added to alreadyFlattenParameters
+   * @param alreadyFlattenParameters the parameters already flattened
+   * @return the map
+   */
+  public static Map<String, String> flattenParameters (Map<String, String[]> newParameters, Map<String, String> alreadyFlattenParameters) {
+    Map<String, String> parameters = new HashMap<String, String>();
+
+    if (alreadyFlattenParameters == null) {
+      alreadyFlattenParameters = new HashMap<>();
+    }
+
+    if (newParameters != null) {
+      for(Map.Entry<String, String[]> param:newParameters.entrySet()) {
+        if (!alreadyFlattenParameters.containsKey(param.getKey())) {
+          alreadyFlattenParameters.put(param.getKey(), StringUtils.convertToString(param.getValue(), ","));
+        }
+      }
+    }
+
+    return alreadyFlattenParameters;
   }
 }

@@ -18,10 +18,8 @@ package org.pageseeder.ox.berlioz;
 import org.junit.runner.RunWith;
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.berlioz.model.JobResponse;
-import org.pageseeder.ox.berlioz.util.FileHandler;
 import org.pageseeder.ox.berlioz.xml.JobResponseHandler;
 import org.pageseeder.ox.util.XMLUtils;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.servlet.ServletException;
@@ -36,8 +34,8 @@ import java.util.Map;
  * @since 28 Mar. 2018
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(FileHandler.class)
 public class BatchProcessingSimulator {
+//  private final static Logger LOGGER = LoggerFactory.getLogger(BatchProcessingSimulator.class);
   private final String _model;
   private final String _pipeline;
   private final Map<String, String> parameters;
@@ -63,6 +61,7 @@ public class BatchProcessingSimulator {
     do {
       Thread.sleep(1000l);
       String jobStatusXMLResponse = getJobStatus.getJobStatus(jobid);
+//      LOGGER.info(jobStatusXMLResponse);
       JobResponseHandler statusHandler = new JobResponseHandler();
       XMLUtils.parseXML(jobStatusXMLResponse, statusHandler);
       jobStatus = statusHandler.getJob();

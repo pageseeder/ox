@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.pageseeder.ox.berlioz.util;
+package org.pageseeder.ox.berlioz.request;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase.InvalidContentTypeException;
@@ -26,7 +26,10 @@ import org.pageseeder.berlioz.GlobalSettings;
 import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.OXErrorMessage;
 import org.pageseeder.ox.OXException;
-import org.pageseeder.ox.core.*;
+import org.pageseeder.ox.berlioz.util.BerliozOXUtils;
+import org.pageseeder.ox.berlioz.util.UploadFactory;
+import org.pageseeder.ox.berlioz.util.UploadProcessor;
+import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,14 +48,27 @@ import java.util.Map.Entry;
 
 /**
  * A file handler to receive the data from user upload.
+ * This class should be used when a file is uploaded to start a pipeline.
+ * If there is more than one file, this class will create a PackageData for each of them.
+ * Except if it is in a zip.
  *
  * @author Ciber Cai
  * @version 10 November 2014
  */
-public final class FileHandler {
+public final class FileHandler implements RequestHandler {
 
   /** The logger. */
-  private static Logger LOGGER = LoggerFactory.getLogger(FileHandler.class);
+  private final static Logger LOGGER = LoggerFactory.getLogger(FileHandler.class);
+
+  private final static FileHandler INSTANCE = new FileHandler();
+
+  private FileHandler(){
+    LOGGER.info("FileHandler created");
+  }
+
+  public static FileHandler getInstance() {
+    return INSTANCE;
+  }
 
   /**
    * Receive.
@@ -68,7 +84,7 @@ public final class FileHandler {
    * @throws IOException when I/O error occur.
    * @throws OXException the OX exception
    */
-  public static List<PackageData> receive(HttpServletRequest req) throws IOException, OXException {
+  public List<PackageData> receive(HttpServletRequest req) throws IOException, OXException {
     List<PackageData> packs = new ArrayList<PackageData>();
     // parse the upload request
     UploadProcessor processor = null;
@@ -142,22 +158,14 @@ public final class FileHandler {
    * @param urlParameters the url parameters
    * @return the map
    */
-  private static Map<String, String> mixParameters (Map<String, String> formParameters, Map<String, String[]> urlParameters) {
-    Map<String, String> parameters = new HashMap<String, String>();
+  private Map<String, String> mixParameters (Map<String, String> formParameters, Map<String, String[]> urlParameters) {
+    Map<String, String> parameters = new HashMap<>();
 
     if (formParameters != null) {
       parameters.putAll(formParameters);
     }
 
-    if (urlParameters != null) {
-      for(Entry<String, String[]> param:urlParameters.entrySet()) {
-        if (!parameters.containsKey(param.getKey())) {
-          parameters.put(param.getKey(), StringUtils.convertToString(param.getValue(), ","));
-        }
-      }
-    }
-
-    return parameters;
+    return BerliozOXUtils.flattenParameters(urlParameters, parameters);
   }
 
 
@@ -171,7 +179,7 @@ public final class FileHandler {
    * @throws IOException Signals that an I/O exception has occurred.
    * @throws OXException the OX exception
    */
-  private static final int copyTo(InputStream stream, File file) throws IOException, OXException {
+  private int copyTo(InputStream stream, File file) throws IOException, OXException {
     LOGGER.debug("Writing file: {}", file != null ? file.getAbsolutePath() : "null");
     if (file == null || file.isDirectory()) throw new OXException(OXErrorMessage.FILE_NOT_SELECTED);
     int copied = 0;
@@ -191,7 +199,7 @@ public final class FileHandler {
    * @param filename the specified file
    * @return the type of specified file.
    */
-  private static String toType(String filename) {
+  private String toType(String filename) {
     if (filename == null) { throw new NullPointerException("file name cannot be null"); }
     String lcfilename = filename.toLowerCase();
     if (lcfilename.endsWith("xml")) {
@@ -217,7 +225,7 @@ public final class FileHandler {
    * @param filename the filename
    * @return the name of file without extension.
    */
-  private static String toName(String filename) {
+  private String toName(String filename) {
     int dot = filename.lastIndexOf('.');
     return filename.substring(0, dot);
   }
@@ -231,7 +239,7 @@ public final class FileHandler {
    * @throws IOException Signals that an I/O exception has occurred.
    * @throws OXException the OX exception
    */
-  private static PackageData toPackageData(FileItem item, String filename, String model) throws IOException, OXException {
+  private PackageData toPackageData(FileItem item, String filename, String model) throws IOException, OXException {
     if (StringUtils.isBlank(filename)) throw new OXException(OXErrorMessage.FILE_NOT_SELECTED);
     LOGGER.debug("Starts toPackageData {}/{}", model, filename);
     InputStream stream = item.getInputStream();
@@ -268,7 +276,7 @@ public final class FileHandler {
    * @return the filename
    * @throws OXException the OX exception
    */
-  private static String getFilename(FileItem item) throws OXException {
+  private String getFilename(FileItem item) throws OXException {
     String filename = item.getName();
     LOGGER.debug("Original filename {}", filename);
     if (!StringUtils.isBlank(filename)) {
@@ -289,7 +297,7 @@ public final class FileHandler {
    * @return the temp upload directory
    * @throws IOException Signals that an I/O exception has occurred.
    */
-  private static File getTempUploadDirectory() throws IOException {
+  private File getTempUploadDirectory() throws IOException {
     File tempUploadOX = OXConfig.getOXTempUploadFolder();
     File tempDirectory = Files.createTempDirectory(tempUploadOX.toPath(), "upload").toFile();
     LOGGER.debug("Temporary upload directory {}", tempDirectory.getAbsolutePath());

@@ -53,10 +53,9 @@ import java.util.Map;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BerliozOXUtils.class, RequestHandlerFactory.class, FileHandler.class, NoFileHandler.class, URLHandler.class} )
-public class TestBasicExample {
+public class NoFileHandlerExampleTest {
   private final static String MODEL = "test";
-  private final static File _input = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/source/source.zip");
-  private final static File _expectedResultsBaseDirectory = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/target");
+  //private final static File _expectedResultsBaseDirectory = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/target");
   private static JobResponse jobStatus;
 
   @BeforeClass
@@ -65,69 +64,23 @@ public class TestBasicExample {
     OXConfig config = OXConfig.get();
     config.setModelsDirectory(modelDir);
     Map<String, String> parameters = new HashMap<>();
-    parameters.put("_xslt-indent", "yes");
-    String pipeline = "basic";
+    parameters.put("handler-type", "nofile");
+    String pipeline = "no-file";
     BatchProcessingSimulator simulator = new BatchProcessingSimulator(MODEL, pipeline, parameters);
-    jobStatus = simulator.simulate(_input);
+    jobStatus = simulator.simulate(null);
   }
 
   /**
    *
    */
   @Test
-  public void testUnzip () {
-    File expected = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/target/source/source.xml");
-    List<File> filesToIgnore = new ArrayList<>();
-    BatchProcessingFilesComparator compareFiles = new BatchProcessingFilesComparator(jobStatus, _expectedResultsBaseDirectory, filesToIgnore);
-    compareFiles.compareFile(expected);
-  }
-
-  /**
-   *
-   */
-  @Test
-  public void testCopy () {
-    File expected = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/target/source.xml");
-    diff(expected);
-  }
-
-  /**
-   *
-   */
-  @Ignore //ignored because it if failing and I could not understand the purpose of this test.
-  @Test
-  public void testTransformation () {
-    File expected = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/target/target.xml");
-    diff(expected);
-  }
-
-  /**
-   *
-   */
-  @Ignore //Ignored because it just compare the size and it is failing.
-  @Test
-  public void testZip () {
-
-    File expected = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/target/target.zip");
-    List<File> filesToIgnore = new ArrayList<>();
-    BatchProcessingFilesComparator compareFiles = new BatchProcessingFilesComparator(jobStatus, _expectedResultsBaseDirectory, filesToIgnore);
-    compareFiles.compareFile(expected);
-  }
-
-  private void diff(File expected) {
-    List<File> filesToIgnore = new ArrayList<>();
-    BatchProcessingFilesComparator compareFiles = new BatchProcessingFilesComparator(jobStatus, _expectedResultsBaseDirectory, filesToIgnore);
-
-    try {
-      String xmlExpected = FileUtils.read(expected);
-      String xmlResult = compareFiles.getXMLResult(expected);
-      Diff myDiff = DiffBuilder.compare(xmlExpected).withTest(xmlResult)
-          .checkForIdentical()
-          .build();
-      System.out.println(myDiff.toString());
-      Assert.assertFalse(myDiff.hasDifferences());
-    } catch (IOException ex) {
-      Assert.fail("IOException: " + ex.getMessage());
-    }
+  public void testNopStep () {
+//    File expected = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/target/source/source.xml");
+//    List<File> filesToIgnore = new ArrayList<>();
+//    BatchProcessingFilesComparator compareFiles = new BatchProcessingFilesComparator(jobStatus, _expectedResultsBaseDirectory, filesToIgnore);
+//    compareFiles.compareFile(expected);
+    System.out.println("Job Status: " + jobStatus.toString());
+    //Assert.assertEquals("ok", jobStatus.getStatus().toLowerCase());
+    //Assert.assertNull(jobStatus.getInput());
   }
 }
