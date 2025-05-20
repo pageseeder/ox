@@ -175,63 +175,63 @@ public final class StepDefinition implements XMLWritable, Serializable {
   /**
    * @return A unique ID for the step within the pipeline.
    */
-  public final String id() {
+  public String id() {
     return this._id;
   }
 
   /**
    * @return The step name.
    */
-  public final String name() {
+  public String name() {
     return this._name;
   }
 
   /**
    * @return The model the pipeline is part of
    */
-  public final Model model() {
+  public Model model() {
     return this._model;
   }
 
   /**
    * @return The pipeline this step is part of.
    */
-  public final Pipeline pipeline() {
+  public Pipeline pipeline() {
     return this._pipeline;
   }
 
   /**
    * @return is async.
    */
-  public final boolean async() {
+  public boolean async() {
     return this._async;
   }
 
   /**
    * @return fails on error.
    */
-  public final boolean failOnError() {
+  public boolean failOnError() {
     return this._failOnError;
   }
 
   /**
    * @return is viewable.
    */
-  public final boolean viewable() {
+  public boolean viewable() {
     return this._viewable;
   }
 
   /**
    * @return is downloadable.
    */
-  public final boolean downloadable() {
+  public boolean downloadable() {
     return this._downloadable;
   }
 
   /**
    * Step parameters.
    */
-  public final Map<String, String> parameters() {
+  public Map<String, String> parameters() {
     return Collections.unmodifiableMap(this._parameters);
   }
 
@@ -239,7 +239,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
   /**
    * @return The previous step if any
    */
-  public final StepDefinition previous() {
+  public StepDefinition previous() {
     if (this._position < 0) {
       this._position = findSelfPosition();
     }
@@ -249,7 +249,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
   /**
    * @return The next step if any
    */
-  public final StepDefinition next() {
+  public StepDefinition next() {
     if (this._position < 0) {
       this._position = findSelfPosition();
     }
@@ -259,7 +259,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
   /**
    * @return the output of this step
    */
-  public final String output() {
+  public  String output() {
     return this._output;
   }
 
@@ -272,7 +272,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
    */
   public Result exec(PackageData data) {
     //TODO Maybe it will need to receive the session in order to allow the steps to get user logged
-    Result result = null;
+    Result result;
     try {
       // TODO replace tokens in output and parameters
       String input = getInput(data);
@@ -286,14 +286,15 @@ public final class StepDefinition implements XMLWritable, Serializable {
       // process the callback step
       if (this._callbackStep != null) {
         try {
-          // put the step result to callback step
+          // put the step result to a callback step
           this._callbackStep.process(this._model, data, result, info);
         } catch (Exception ex) {
-          // if error occur, show the warning but doesn't effect the actual step.
+          // if an error occurs, show the warning but doesn't affect the actual step.
           LOGGER.warn("Execute callback step error.", ex);
         }
       }
     } catch (Exception ex) {
+      LOGGER.error("Step execution error.", ex);
       InvalidResult invalidResult = new InvalidResult(this._model, data);
       invalidResult.error(ex);
       invalidResult.setStatus(ResultStatus.ERROR);
@@ -371,8 +372,9 @@ public final class StepDefinition implements XMLWritable, Serializable {
     if (this._position > 1) {
       xml.attribute("position", this._position);
     }
-    if (next() != null) {
-      xml.attribute("next-id", next().id());
+    StepDefinition nextStep = next();
+    if (nextStep != null) {
+      xml.attribute("next-id", nextStep.id());
     }
     if (this._parameters != null) {
       for (String name : this._parameters.keySet()) {
@@ -472,7 +474,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
     private boolean downloadable = false;
     private boolean failOnError = true;
 
-    private Map<String, String> parameters = new HashMap<String, String>();
+    private Map<String, String> parameters = new HashMap<>();
 
     /** If there are any other attributes that are not expected. */
     private Map<String, String> extraAttributes = new HashMap<>();

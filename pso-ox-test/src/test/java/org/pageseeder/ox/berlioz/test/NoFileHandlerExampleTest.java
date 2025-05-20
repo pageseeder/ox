@@ -17,12 +17,10 @@ package org.pageseeder.ox.berlioz.test;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.OXException;
-import org.pageseeder.ox.berlioz.BatchProcessingFilesComparator;
 import org.pageseeder.ox.berlioz.BatchProcessingSimulator;
 import org.pageseeder.ox.berlioz.model.JobResponse;
 import org.pageseeder.ox.berlioz.request.FileHandler;
@@ -30,18 +28,14 @@ import org.pageseeder.ox.berlioz.request.NoFileHandler;
 import org.pageseeder.ox.berlioz.request.RequestHandlerFactory;
 import org.pageseeder.ox.berlioz.request.URLHandler;
 import org.pageseeder.ox.berlioz.util.BerliozOXUtils;
-import org.pageseeder.ox.util.FileUtils;
+import org.pageseeder.ox.core.JobStatus;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.xmlunit.builder.DiffBuilder;
-import org.xmlunit.diff.Diff;
 
 import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -75,12 +69,7 @@ public class NoFileHandlerExampleTest {
    */
   @Test
   public void testNopStep () {
-//    File expected = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/target/source/source.xml");
-//    List<File> filesToIgnore = new ArrayList<>();
-//    BatchProcessingFilesComparator compareFiles = new BatchProcessingFilesComparator(jobStatus, _expectedResultsBaseDirectory, filesToIgnore);
-//    compareFiles.compareFile(expected);
-    System.out.println("Job Status: " + jobStatus.toString());
-    //Assert.assertEquals("ok", jobStatus.getStatus().toLowerCase());
-    //Assert.assertNull(jobStatus.getInput());
+    Assert.assertEquals(JobStatus.STATUS.COMPLETED.name().toLowerCase(), jobStatus.getStatus().toLowerCase());
+    Assert.assertEquals("no-file", jobStatus.getInput());
   }
 }
