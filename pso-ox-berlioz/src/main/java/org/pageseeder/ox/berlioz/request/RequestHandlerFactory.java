@@ -20,6 +20,8 @@ import org.pageseeder.ox.berlioz.util.BerliozOXUtils;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * The type Request handler factory.
+ *
  * @author ccabral
  * @since 15 May 2025
  */
@@ -31,12 +33,24 @@ public class RequestHandlerFactory {
 
   }
 
+  /**
+   * Gets instance.
+   *
+   * @return the instance
+   */
   public static RequestHandlerFactory getInstance() {
     return INSTANCE;
   }
 
+  /**
+   * Gets request handler.
+   *
+   * @param req the req
+   * @return the request handler
+   */
   public RequestHandler getRequestHandler(HttpServletRequest req) {
-    RequestHandlerType requestHandlerType = BerliozOXUtils.getRequestHandlerType(req.getParameter(RequestHandler.HANDLER_TYPE_PARAMETER));
+    String parameterHandler = BerliozOXUtils.getParameterHandlerType(req);
+    RequestHandlerType requestHandlerType = BerliozOXUtils.getRequestHandlerType(parameterHandler);
     RequestHandler requestHandler;
     switch (requestHandlerType) {
       case NOFILE:
