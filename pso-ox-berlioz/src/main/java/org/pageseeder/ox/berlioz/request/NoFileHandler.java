@@ -15,9 +15,6 @@
  */
 package org.pageseeder.ox.berlioz.request;
 
-import org.apache.commons.io.IOUtils;
-import org.pageseeder.ox.OXConfig;
-import org.pageseeder.ox.OXErrorMessage;
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.berlioz.util.BerliozOXUtils;
 import org.pageseeder.ox.core.PackageData;
@@ -26,13 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -80,12 +72,7 @@ public final class NoFileHandler implements RequestHandler {
    * @throws OXException the OX exception
    */
   public List<PackageData> receive(HttpServletRequest req) throws IOException, OXException {
-    List<PackageData> packs = new ArrayList<PackageData>();
-
-    // Check that we have a file upload request
-//    boolean isMultipart = false;
-//    LOGGER.debug("Is it multipart? {}", isMultipart);
-
+    List<PackageData> packs = new ArrayList<>();
     String model = req.getParameter("model");
     if (StringUtils.isBlank(model)) {
       model = (String) req.getAttribute("model");
@@ -94,16 +81,10 @@ public final class NoFileHandler implements RequestHandler {
       }
     }
 
-      PackageData pack = toPackageData(model, toParameters(req.getParameterMap()));
-      LOGGER.debug("pack {}", pack.id());
-      pack.saveProperties();
-      packs.add(pack);
-
-//      LOGGER.debug("Adding parameters to package.");
-//      Map<String, String[]> urlParameters = req.getParameterMap();
-//      Map<String, String> parameters = toParameters(urlParameters);
-//      LOGGER.debug("Number of parameters {}", parameters.size());
-
+    PackageData pack = toPackageData(model, toParameters(req.getParameterMap()));
+    LOGGER.debug("pack {}", pack.id());
+    pack.saveProperties();
+    packs.add(pack);
     // Return package data
     return packs;
   }
@@ -124,7 +105,6 @@ public final class NoFileHandler implements RequestHandler {
 
     for (Entry<String, String> parameter : parameters.entrySet()) {
       pack.setParameter(parameter.getKey(), parameter.getValue());
-      pack.saveProperties();
     }
 
     LOGGER.debug("Ends toPackageData {}/{}", model, pack.id());
@@ -140,100 +120,4 @@ public final class NoFileHandler implements RequestHandler {
   private Map<String, String> toParameters (Map<String, String[]> urlParameters) {
     return BerliozOXUtils.flattenParameters(urlParameters);
   }
-
-
-
-//  /**
-//   * Copy to.
-//   *
-//   * @param stream the stream
-//   * @param file the file
-//   * @return the int
-//   * @throws IOException Signals that an I/O exception has occurred.
-//   * @throws OXException the OX exception
-//   */
-//  private static final int copyTo(InputStream stream, File file) throws IOException, OXException {
-//    LOGGER.debug("Writing file: {}", file != null ? file.getAbsolutePath() : "null");
-//    if (file == null || file.isDirectory()) throw new OXException(OXErrorMessage.FILE_NOT_SELECTED);
-//    int copied = 0;
-//    FileOutputStream os = null;
-//    try {
-//      os = new FileOutputStream(file);
-//      copied = IOUtils.copy(stream, os);
-//    } finally {
-//      IOUtils.closeQuietly(os);
-//    }
-//    return copied;
-//  }
-//
-//  /**
-//   * To type.
-//   *
-//   * @param filename the specified file
-//   * @return the type of specified file.
-//   */
-//  private static String toType(String filename) {
-//    if (filename == null) { throw new NullPointerException("file name cannot be null"); }
-//    String lcfilename = filename.toLowerCase();
-//    if (lcfilename.endsWith("xml")) {
-//      return "xml";
-//    } else if (lcfilename.endsWith("docx")) {
-//      return "docx";
-//    } else if (lcfilename.endsWith("html")) {
-//      return "html";
-//    } else if (lcfilename.endsWith("htm")) {
-//      return "html";
-//    } else if (lcfilename.endsWith("psml")) {
-//      return "psml";
-//    } else if (lcfilename.endsWith("zip")) {
-//      return "zip";
-//    } else {
-//      return filename.substring(filename.lastIndexOf(".") + 1);
-//    }
-//  }
-//
-//  /**
-//   * To name.
-//   *
-//   * @param filename the filename
-//   * @return the name of file without extension.
-//   */
-//  private static String toName(String filename) {
-//    int dot = filename.lastIndexOf('.');
-//    return filename.substring(0, dot);
-//  }
-//  /**
-//   * Gets the filename.
-//   *
-//   * @param item the item
-//   * @return the filename
-//   * @throws OXException the OX exception
-//   */
-//  private static String getFilename(FileItem item) throws OXException {
-//    String filename = item.getName();
-//    LOGGER.debug("Original filename {}", filename);
-//    if (!StringUtils.isBlank(filename)) {
-//      //It is necessary because the Internet Explore and Edge send the full path of the file
-//      //the this method remove all unnecessary path and returns the file name.
-//      filename = FilenameUtils.getName(filename);
-//      LOGGER.debug("Cleaned filename {}", filename);
-//    } else {
-//      LOGGER.debug("The uploaded file name is empty it may be because any file has been selected.");
-//      throw new OXException(OXErrorMessage.FILE_NOT_SELECTED);
-//    }
-//    return filename;
-//  }
-//
-//  /**
-//   * Gets the temp upload directory.
-//   *
-//   * @return the temp upload directory
-//   * @throws IOException Signals that an I/O exception has occurred.
-//   */
-//  private static File getTempUploadDirectory() throws IOException {
-//    File tempUploadOX = OXConfig.getOXTempUploadFolder();
-//    File tempDirectory = Files.createTempDirectory(tempUploadOX.toPath(), "upload").toFile();
-//    LOGGER.debug("Temporary upload directory {}", tempDirectory.getAbsolutePath());
-//    return tempDirectory;
-//  }
 }
