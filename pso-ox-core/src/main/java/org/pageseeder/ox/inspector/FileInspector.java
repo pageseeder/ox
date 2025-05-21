@@ -50,14 +50,15 @@ public class FileInspector implements PackageInspector {
 
   private static void setFileProperties(File file, PackageData pack) {
     FileSizeFormat fmt = new FileSizeFormat();
-    if (file.isFile()) {
-      pack.setProperty(PREFIX + "length [" + file.getName() + "]", fmt.format(file.length()));
-      pack.setProperty(PREFIX + "lastModified [" + file.getName() + "]", ISO8601.format(file.lastModified(), ISO8601.DATETIME));
-    } else {
-      for (File f : file.listFiles()) {
-        setFileProperties(f, pack);
+    if (file != null) {
+      if (file.isFile()) {
+        pack.setProperty(PREFIX + "length [" + file.getName() + "]", fmt.format(file.length()));
+        pack.setProperty(PREFIX + "lastModified [" + file.getName() + "]", ISO8601.format(file.lastModified(), ISO8601.DATETIME));
+      } else {
+        for (File f : file.listFiles()) {
+          setFileProperties(f, pack);
+        }
       }
-
     }
   }
 }

@@ -39,7 +39,7 @@ import java.util.Map;
  */
 public class BerliozOXUtils {
   /** The logger. */
-  private static Logger LOGGER = LoggerFactory.getLogger(BerliozOXUtils.class);
+  private final static Logger LOGGER = LoggerFactory.getLogger(BerliozOXUtils.class);
 
   /**
    * Gets parameter handler type.
@@ -67,7 +67,7 @@ public class BerliozOXUtils {
       try {
         type = RequestHandlerType.valueOf(requestHandlerType.toUpperCase());
       } catch (IllegalArgumentException e) {
-        type = RequestHandlerType.FILE;
+        LOGGER.info("Invalid request handler type: {}", requestHandlerType);
       }
     }
     return type;
@@ -81,7 +81,7 @@ public class BerliozOXUtils {
    */
   public static List<PipelineJob> toPipelineJobs(List<PackageData> packs) {
     ensureConfigured();
-    List<PipelineJob> jobs = new ArrayList<PipelineJob>();
+    List<PipelineJob> jobs = new ArrayList<>();
     long slowSize = GlobalSettings.get("ox2.slow-mode.size", -1);
     long maxInactiveTimeAllowed = Long.parseLong(GlobalSettings.get("ox2.max-inactive-time-ms",
         String.valueOf(StepJob.DEFAULT_MAX_INACTIVE_TIME_MS)));
@@ -147,7 +147,7 @@ public class BerliozOXUtils {
    * @return the map
    */
   public static Map<String, String> flattenParameters (Map<String, String[]> newParameters, Map<String, String> alreadyFlattenParameters) {
-    Map<String, String> parameters = new HashMap<String, String>();
+    Map<String, String> parameters = new HashMap<>();
 
     if (alreadyFlattenParameters == null) {
       alreadyFlattenParameters = new HashMap<>();

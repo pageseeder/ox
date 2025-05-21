@@ -95,10 +95,8 @@ public final class NoFileHandler implements RequestHandler {
    * @param model the model
    * @param parameters the parameters
    * @return the package data
-   * @throws IOException Signals that an I/O exception has occurred.
-   * @throws OXException the OX exception
    */
-  private PackageData toPackageData(String model, Map<String, String> parameters) throws IOException, OXException {
+  private PackageData toPackageData(String model, Map<String, String> parameters) {
     LOGGER.debug("Starts toPackageData {}", model);
 
     PackageData pack = PackageData.newPackageData(model, null);
