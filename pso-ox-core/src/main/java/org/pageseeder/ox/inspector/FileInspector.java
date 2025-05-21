@@ -37,8 +37,8 @@ public class FileInspector implements PackageInspector {
 
   @Override
   public boolean supportsMediaType(String mediatype) {
-    // support everything
-    return true;
+    // support everything except the no-file.
+    return !"no-file".equals(mediatype);
   }
 
   @Override
@@ -60,5 +60,4 @@ public class FileInspector implements PackageInspector {
 
     }
   }
-
 }
