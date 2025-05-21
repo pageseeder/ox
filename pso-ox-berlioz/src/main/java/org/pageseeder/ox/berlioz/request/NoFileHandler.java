@@ -71,7 +71,7 @@ public final class NoFileHandler implements RequestHandler {
    * @throws IOException when I/O error occur.
    * @throws OXException the OX exception
    */
-  public List<PackageData> receive(HttpServletRequest req) throws IOException, OXException {
+  public List<PackageData> receive(HttpServletRequest req) throws OXException {
     List<PackageData> packs = new ArrayList<>();
     String model = req.getParameter("model");
     if (StringUtils.isBlank(model)) {

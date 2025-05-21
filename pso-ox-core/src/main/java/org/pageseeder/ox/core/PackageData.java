@@ -282,7 +282,7 @@ public final class PackageData implements XMLWritable, Serializable {
    * @return the properties maps.
    */
   public Map<String, String> getProperties() {
-    Map<String, String> properties = new HashMap<String, String>();
+    Map<String, String> properties = new HashMap<>();
     for (Entry<Object, Object> entry : this._properties.entrySet()) {
       String key = (String) entry.getKey();
       if (!key.startsWith("parameter-")) {

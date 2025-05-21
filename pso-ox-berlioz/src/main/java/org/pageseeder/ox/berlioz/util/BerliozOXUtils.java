@@ -147,8 +147,6 @@ public class BerliozOXUtils {
    * @return the map
    */
   public static Map<String, String> flattenParameters (Map<String, String[]> newParameters, Map<String, String> alreadyFlattenParameters) {
-    Map<String, String> parameters = new HashMap<>();
-
     if (alreadyFlattenParameters == null) {
       alreadyFlattenParameters = new HashMap<>();
     }
