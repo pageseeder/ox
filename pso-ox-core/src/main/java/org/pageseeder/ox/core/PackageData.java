@@ -523,7 +523,7 @@ public final class PackageData implements XMLWritable, Serializable {
    * @return the mime type by filename
    */
   private String getMediaType(File file) {
-    String mediaType = "unknown";
+    String mediaType = file != null ? "unknown" : "no-file";
     // if it's directory FIXME this could be wrong.
     if (file != null && file.isDirectory()) { mediaType = "text/directory"; }
 
