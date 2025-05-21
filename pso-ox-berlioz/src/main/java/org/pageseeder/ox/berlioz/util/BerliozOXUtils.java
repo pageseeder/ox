@@ -17,12 +17,14 @@ package org.pageseeder.ox.berlioz.util;
 
 import org.pageseeder.berlioz.GlobalSettings;
 import org.pageseeder.ox.OXConfig;
+import org.pageseeder.ox.berlioz.request.RequestHandler;
 import org.pageseeder.ox.berlioz.request.RequestHandlerType;
 import org.pageseeder.ox.core.*;
 import org.pageseeder.ox.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * The type Berlioz ox utils.
+ *
  * @author ccabral
  * @since 13 May 2025
  */
@@ -37,6 +41,26 @@ public class BerliozOXUtils {
   /** The logger. */
   private static Logger LOGGER = LoggerFactory.getLogger(BerliozOXUtils.class);
 
+  /**
+   * Gets parameter handler type.
+   *
+   * @param req the req
+   * @return the parameter handler type
+   */
+  public static String getParameterHandlerType(HttpServletRequest req) {
+    String parameterHandler = req.getParameter(RequestHandler.HANDLER_TYPE_PARAMETER);
+    if (StringUtils.isBlank(parameterHandler)) {
+      parameterHandler = (String) req.getAttribute(RequestHandler.HANDLER_TYPE_PARAMETER);
+    }
+    return parameterHandler;
+  }
+
+  /**
+   * Gets request handler type.
+   *
+   * @param requestHandlerType the request handler type
+   * @return the request handler type
+   */
   public static RequestHandlerType getRequestHandlerType(String requestHandlerType) {
     RequestHandlerType type = RequestHandlerType.FILE;
     if (requestHandlerType != null) {
@@ -111,15 +135,14 @@ public class BerliozOXUtils {
    * @return the map
    */
   public static Map<String, String> flattenParameters (Map<String, String[]> newParameters) {
-    return flattenParameters(newParameters);
+    return flattenParameters(newParameters, null);
   }
-
 
 
   /**
    * Flatten parameters.
    *
-   * @param newParameters the parameters to be flattened and added to alreadyFlattenParameters
+   * @param newParameters            the parameters to be flattened and added to alreadyFlattenParameters
    * @param alreadyFlattenParameters the parameters already flattened
    * @return the map
    */
