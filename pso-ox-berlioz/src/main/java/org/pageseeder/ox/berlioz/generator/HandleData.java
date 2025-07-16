@@ -16,13 +16,13 @@
 package org.pageseeder.ox.berlioz.generator;
 
 import org.pageseeder.berlioz.BerliozException;
-import org.pageseeder.berlioz.content.ContentGenerator;
 import org.pageseeder.berlioz.content.ContentRequest;
 import org.pageseeder.berlioz.content.ContentStatus;
 import org.pageseeder.berlioz.servlet.HttpRequestWrapper;
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.berlioz.Errors;
-import org.pageseeder.ox.berlioz.util.FileHandler;
+import org.pageseeder.ox.berlioz.request.RequestHandler;
+import org.pageseeder.ox.berlioz.request.RequestHandlerFactory;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
@@ -52,7 +52,10 @@ public class HandleData extends ProfilerGenerator {
     LOGGER.debug("Model: {}", req.getParameter("model"));
 
     try {
-      List<PackageData> packs = FileHandler.receive(toHttpServletRequest(req));
+      HttpServletRequest httpServletRequest = toHttpServletRequest(req);
+      RequestHandlerFactory requestHandlerFactory = RequestHandlerFactory.getInstance();
+      RequestHandler requestHandler = requestHandlerFactory.getRequestHandler(httpServletRequest);
+      List<PackageData> packs = requestHandler.receive(httpServletRequest);
 
       // if it's empty packagedata
       if (packs == null || packs.isEmpty()) {

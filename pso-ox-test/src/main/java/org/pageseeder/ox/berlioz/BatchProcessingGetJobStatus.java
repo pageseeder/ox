@@ -17,8 +17,6 @@ package org.pageseeder.ox.berlioz;
 
 import org.junit.runner.RunWith;
 import org.pageseeder.ox.berlioz.servlet.OXCheckStatus;
-import org.pageseeder.ox.berlioz.util.FileHandler;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.servlet.ServletException;
@@ -37,7 +35,6 @@ import static org.mockito.Mockito.when;
  * @since 28 Mar. 2018
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(FileHandler.class)
 public class BatchProcessingGetJobStatus {
 
   public String getJobStatus(String jobid) throws IOException, ServletException {

@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.pageseeder.ox.psml;
+package org.pageseeder.ox.berlioz.test;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.OXException;
-import org.pageseeder.ox.berlioz.BatchProcessingFilesComparator;
 import org.pageseeder.ox.berlioz.BatchProcessingSimulator;
 import org.pageseeder.ox.berlioz.model.JobResponse;
 import org.pageseeder.ox.berlioz.request.FileHandler;
@@ -28,15 +28,14 @@ import org.pageseeder.ox.berlioz.request.NoFileHandler;
 import org.pageseeder.ox.berlioz.request.RequestHandlerFactory;
 import org.pageseeder.ox.berlioz.request.URLHandler;
 import org.pageseeder.ox.berlioz.util.BerliozOXUtils;
+import org.pageseeder.ox.core.JobStatus;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -48,31 +47,29 @@ import java.util.Map;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BerliozOXUtils.class, RequestHandlerFactory.class, FileHandler.class, NoFileHandler.class, URLHandler.class} )
-public class TestPSMLValidation {
-  private final static String MODEL = "psml";
-  private final static File _input = new File("src/test/resources/org/pageseeder/ox/psml/basic/source/source.psml");
-  private final static File _expectedResultsBaseDirectory = new File("src/test/resources/org/pageseeder/ox/psml/basic/target");
+public class NoFileHandlerExampleTest {
+  private final static String MODEL = "test";
+  //private final static File _expectedResultsBaseDirectory = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/target");
   private static JobResponse jobStatus;
 
   @BeforeClass
   public static void setupServlet() throws IOException, OXException, ServletException, InterruptedException {
-    File modelDir = new File("src/test/resources/org/pageseeder/ox/psml/basic/model");
+    File modelDir = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/model");
     OXConfig config = OXConfig.get();
     config.setModelsDirectory(modelDir);
     Map<String, String> parameters = new HashMap<>();
-    parameters.put("_xslt-indent", "yes");
-    String pipeline = "psml-validate";
+    parameters.put("handler-type", "nofile");
+    String pipeline = "no-file";
     BatchProcessingSimulator simulator = new BatchProcessingSimulator(MODEL, pipeline, parameters);
-    jobStatus = simulator.simulate(_input);
+    jobStatus = simulator.simulate(null);
   }
 
   /**
    *
    */
   @Test
-  public void testAllFiles () {
-    List<File> filesToIgnore = new ArrayList<>();
-    BatchProcessingFilesComparator compareFiles = new BatchProcessingFilesComparator(jobStatus, _expectedResultsBaseDirectory, filesToIgnore);
-    compareFiles.compare();
+  public void testNopStep () {
+    Assert.assertEquals(JobStatus.STATUS.COMPLETED.name().toLowerCase(), jobStatus.getStatus().toLowerCase());
+    Assert.assertEquals("no-file", jobStatus.getInput());
   }
 }

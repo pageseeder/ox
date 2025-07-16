@@ -20,7 +20,7 @@ import org.pageseeder.ox.api.StepInfo;
 import java.util.Map;
 
 /**
- * A implementation of StepInfo.
+ * Aa implementation of StepInfo.
  *
  * @author Christophe Lauret
  * @since  8 May 2014
@@ -43,6 +43,10 @@ public final class StepInfoImpl implements StepInfo {
   private final Map<String, String> _parameters;
 
   /**
+   *
+   * From May 2025 it will allow input and output to be null. Because the OX starts allowing the users to start a
+   * pipeline without an input file.
+   *
    * @param id The id of step
    * @param name The name of step.
    * @param input The input path
@@ -52,8 +56,6 @@ public final class StepInfoImpl implements StepInfo {
   public StepInfoImpl(String id, String name, String input, String output, Map<String, String> parameters) {
     if (id == null) { throw new NullPointerException("id is null."); }
     if (name == null) { throw new NullPointerException("name is null."); }
-    if (input == null) { throw new NullPointerException("input is null."); }
-    if (output == null) { throw new NullPointerException("output is null."); }
     if (parameters == null) { throw new NullPointerException("parameters is null."); }
     this._id = id;
     this._name = name;

@@ -230,7 +230,11 @@ public final class PipelineJob implements XMLWritable, Serializable {
     xml.attribute("id", this._id);
     xml.attribute("start", ISO8601.DATETIME.format(this._startTime));
     xml.attribute("status", this.status.toString());
-    xml.attribute("input", this._package.getOriginal().getName());
+    if (this._package.getOriginal() != null) {
+      xml.attribute("input", this._package.getOriginal().getName());
+    } else {
+      xml.attribute("input", "no-file");
+    }
     xml.attribute("mode", this.isSlow ? "slow" : "normal");
     if (this.download != null) {
       xml.attribute("path", this.download);

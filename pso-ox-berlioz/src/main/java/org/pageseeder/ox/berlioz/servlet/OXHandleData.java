@@ -20,7 +20,10 @@ import org.pageseeder.berlioz.GlobalSettings;
 import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.berlioz.Errors;
 import org.pageseeder.ox.berlioz.OXBerliozErrorMessage;
-import org.pageseeder.ox.berlioz.util.FileHandler;
+import org.pageseeder.ox.berlioz.request.RequestHandler;
+import org.pageseeder.ox.berlioz.request.RequestHandlerFactory;
+import org.pageseeder.ox.berlioz.util.BerliozOXUtils;
+import org.pageseeder.ox.berlioz.request.FileHandler;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.core.PipelineJob;
 import org.pageseeder.ox.process.PipelineJobManager;
@@ -93,7 +96,9 @@ public final class OXHandleData extends HttpServlet {
         throw new OXException(OXBerliozErrorMessage.REQUEST_IS_NOT_MULTIPART);
 
       // get packdata
-      List<PackageData> packs = FileHandler.receive(req);
+      RequestHandlerFactory requestHandlerFactory = RequestHandlerFactory.getInstance();
+      RequestHandler requestHandler = requestHandlerFactory.getRequestHandler(req);
+      List<PackageData> packs = requestHandler.receive(req);
       LOGGER.debug("Number os packs found: {}.", packs.size());
 
       if (packs == null || packs.isEmpty()) {
@@ -102,7 +107,7 @@ public final class OXHandleData extends HttpServlet {
         return;
       }
       // get the list of pipelineJob
-      List<PipelineJob> jobs = FileHandler.toPipelineJobs(packs);
+      List<PipelineJob> jobs = BerliozOXUtils.toPipelineJobs(packs);
       LOGGER.debug("Number of pipelines jobs: {}.", jobs.size());
 
       // get the pipeline manager

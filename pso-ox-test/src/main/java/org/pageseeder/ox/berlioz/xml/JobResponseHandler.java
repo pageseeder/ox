@@ -16,8 +16,8 @@
 package org.pageseeder.ox.berlioz.xml;
 
 import org.pageseeder.ox.berlioz.model.JobResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -30,7 +30,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class JobResponseHandler extends DefaultHandler {
 
   /** The logger. */
-  private static Logger LOGGER = LoggerFactory.getLogger(JobResponseHandler.class);
+//  private static Logger LOGGER = LoggerFactory.getLogger(JobResponseHandler.class);
 
   /**
    * Job.
