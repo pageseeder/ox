@@ -19,7 +19,7 @@ ext {
   psoPsmlVersion = '1.3.1'
 
   //Allette
-  simpleVersion = '2024.11-03-SNAPSHOT'
+  simpleVersion = '2025.07'
 
   //Third party
   commonsFileuploadVersion = '1.5'
