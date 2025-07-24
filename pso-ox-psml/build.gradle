@@ -14,7 +14,7 @@ dependencies {
   )
 
   runtimeOnly (
-    "topologi:topologi-xerces:$topologiXercesVersion",
+    "topologi:topologi-xerces:$topologiXercesVersion", // It is used in the Step Validate for option "wellformed"
     "net.sf.saxon:Saxon-HE:${saxonVersion}",
     "ch.qos.logback:logback-core:$logbackVersion",
     "ch.qos.logback:logback-classic:$logbackVersion"

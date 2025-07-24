@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?><document id="462166" schemaversion="1.4" date="2023-06-13T17:24:08+10:00" version="current" level="portable"><documentinfo><uri id="462166" external="false" mediatype="application/vnd.pageseeder.psml+xml" created="2021-07-22T17:07:33+10:00" modified="2023-06-13T17:24:08+10:00" scheme="http" host="ps.allette.com.au" port="80" path="/ps/allette/www/website/pageseeder/6_integration_and_application_development.psml" decodedpath="/ps/allette/www/website/pageseeder/6_integration_and_application_development.psml" title="Integration and Application Development"><displaytitle>Integration and Application Development</displaytitle></uri><reversexrefs><reversexref uriid="462080" href="_local/website/pageseeder.psml" frag="19" urititle="PageSeeder" mediatype="application/vnd.pageseeder.psml+xml" id="4712289" title="Review and Annotation" type="none" forwardtype="none" forwardtitle="Learn more" forwarddisplay="manual" forwardfrag="default" labels="button-primary"/><reversexref uriid="549396" href="_local/website/_menu.psml" frag="2" urititle="_menu" mediatype="application/vnd.pageseeder.psml+xml" documenttype="references" id="5053538" title="References" config="default" type="none" forwardtype="embed" forwarddisplay="document" forwardfrag="default" level="1"/></reversexrefs></documentinfo><fragmentinfo structure-modified="2021-07-22T15:14:27+10:00"><locator id="642106" fragment="24" modified="2021-07-22T15:14:28+10:00"><labels>s-col-md-4,s-mb-4,s-mb-md-0</labels></locator><locator id="642105" fragment="23" modified="2021-07-22T15:14:28+10:00"><labels>s-col-md-4,s-mb-4,s-mb-md-0</labels></locator><locator id="642108" fragment="27" modified="2021-07-22T15:14:28+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642107" fragment="26" modified="2021-07-22T15:14:28+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642110" fragment="29" modified="2021-07-22T15:14:28+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642109" fragment="28" modified="2021-07-22T15:14:28+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642112" fragment="32" modified="2021-07-22T15:14:28+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642111" fragment="30" modified="2021-07-22T15:14:28+10:00"><labels>spacer</labels></locator><locator id="642098" fragment="16" modified="2021-07-22T15:14:28+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642097" fragment="13" modified="2021-07-22T15:14:28+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642100" fragment="19" modified="2021-07-22T15:15:51+10:00"><labels>s-col,v-align-middle</labels></locator><locator id="642099" fragment="18" modified="2021-07-22T15:15:51+10:00"><labels>s-col,v-align-middle</labels></locator><locator id="642102" fragment="7" modified="2021-07-22T15:14:28+10:00"><labels>s-col-md-6,s-text-center,v-align-middle</labels></locator><locator id="642101" fragment="2" modified="2021-07-22T15:14:28+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642104" fragment="22" editid="5055711" modified="2023-06-13T17:24:07+10:00"><labels>s-col-md-4,s-mb-4,s-mb-md-0</labels></locator><locator id="642103" fragment="21" editid="5055708" modified="2023-06-13T17:22:30+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="25" modified="2020-10-23T17:32:07+11:00"><labels>spacer</labels></locator><locator fragment="31" modified="2020-10-30T17:17:33+11:00"><labels>spacer</labels></locator><locator fragment="10" modified="2020-10-30T11:06:27+11:00"/><locator fragment="11" modified="2021-07-22T15:15:51+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="33" modified="2021-07-22T15:15:51+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="12" modified="2021-07-22T15:15:51+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="34" modified="2020-10-30T17:26:25+11:00"/><locator fragment="35" modified="2020-10-30T17:28:54+11:00"><labels>spacer</labels></locator><locator fragment="14" modified="2020-10-20T15:25:46+11:00"><labels>spacer</labels></locator><locator fragment="36" modified="2020-10-30T18:08:32+11:00"><labels>spacer</labels></locator><locator fragment="37" modified="2020-10-30T18:08:42+11:00"><labels>spacer</labels></locator><locator fragment="15" modified="2020-10-20T15:25:46+11:00"><labels>spacer</labels></locator><locator fragment="17" modified="2021-07-22T15:15:51+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="1" modified="2021-07-22T15:14:28+10:00"><labels>s-text-center</labels></locator><locator fragment="100" modified="2021-07-22T15:14:28+10:00"><labels>row-start,row-bg-secondary,spacer</labels></locator><locator fragment="101" modified="2021-07-22T15:14:28+10:00"><labels>spacer</labels></locator><locator fragment="3" modified="2021-07-22T15:14:28+10:00"><labels>s-text-center</labels></locator><locator fragment="102" modified="2021-07-22T15:14:28+10:00"><labels>row-start,row-bg-white,spacer</labels></locator><locator fragment="103" modified="2021-07-22T15:14:28+10:00"><labels>spacer</labels></locator><locator fragment="4" modified="2021-07-22T15:14:28+10:00"><labels>s-text-center</labels></locator><locator fragment="5" modified="2021-07-22T15:14:28+10:00"><labels>s-text-center</labels></locator><locator fragment="104" modified="2021-07-22T15:14:28+10:00"><labels>row-start,row-bg-primary,spacer</labels></locator><locator fragment="6" modified="2021-07-22T15:14:28+10:00"><labels>s-col-md-6,v-align-middle</labels></locator><locator fragment="105" modified="2021-07-22T15:14:28+10:00"><labels>spacer</labels></locator><locator fragment="106" modified="2021-07-22T15:14:28+10:00"><labels>row-start,row-bg-white,spacer</labels></locator><locator fragment="107" modified="2021-07-22T15:14:28+10:00"><labels>spacer</labels></locator><locator fragment="8" modified="2020-10-20T15:25:46+11:00"><labels>spacer</labels></locator><locator fragment="108" modified="2021-07-22T15:14:28+10:00"><labels>row-start,row-bg-grey-lighten-4,spacer</labels></locator><locator fragment="9" modified="2020-10-30T11:06:23+11:00"/><locator fragment="109" modified="2021-07-22T15:14:28+10:00"><labels>spacer</labels></locator><locator fragment="20" modified="2021-07-22T15:15:51+10:00"><labels>s-col,v-align-middle</labels></locator></fragmentinfo><metadata/><section id="content" title="content" fragmenttype="default,embed"><fragment id="100" labels="row-start,row-bg-secondary,spacer"/><fragment id="1" labels="s-text-center">
+      <heading level="1">Integration and Application Development</heading>
+    </fragment><fragment id="8" labels="spacer"/><fragment id="6" labels="s-col-md-6,v-align-middle">
+      <heading level="2">Overview</heading>
+      <para>Document processing has always involved moving data between applications for review, format, update and release. To support these workflows, PageSeeder provides several options to help reduce the lifecycle costs of documents.</para>
+    </fragment><fragment id="7" labels="s-col-md-6,s-text-center,v-align-middle">
+      <para>
+        <image src="integration_and_application_development/integration-application-development-feature.png" uriid="462137" width="386" height="422" alt="integration-application-development-feature.png"/>
+      </para>
+    </fragment><fragment id="101" labels="spacer"/><fragment id="102" labels="row-start,row-bg-white,spacer"/><fragment id="11" labels="s-col,v-align-middle">
+      <heading level="3">Developers</heading>
+      <para>Mature, well-documented REST-based API services, OAuth2 support. Rich, performant framework for developing websites. Use standard development environments, deploy using common CI/CD tools and code repositories. Development licenses are free.</para>
+    </fragment><fragment id="2" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="integration_and_application_development/Developers.png" uriid="462025" width="640" height="440" alt="Developers.png"/>
+      </para>
+    </fragment><fragment id="14" labels="spacer"/><fragment id="13" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="integration_and_application_development/Analysts.png" uriid="461906" width="640" height="440" alt="Analysts.png"/>
+      </para>
+    </fragment><fragment id="12" labels="s-col,v-align-middle">
+      <heading level="3">Analysts</heading>
+      <para>PageSeeder is an excellent environment for prototyping information models and workflows. It includes lightweight development tools for quickly modifying templates or document structures. Sample code for a range of applications. Application packaging for easy distribution. </para>
+    </fragment><fragment id="15" labels="spacer"/><fragment id="17" labels="s-col,v-align-middle">
+      <heading level="3">Users</heading>
+      <para>Ease of development makes it possible to customize applications to improve productivity for complex tasks. Support for external applications allows users to continue to update Excel workbooks, or other applications, then re-upload content for publishing.</para>
+    </fragment><fragment id="16" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="integration_and_application_development/Users.png" uriid="461990" width="640" height="440" alt="Users.png"/>
+      </para>
+    </fragment><fragment id="103" labels="spacer"/><fragment id="104" labels="row-start,row-bg-primary,spacer"/><fragment id="3" labels="s-text-center">
+      <heading level="2">Services</heading>
+    </fragment><fragment id="25" labels="spacer"/><fragment id="18" labels="s-col,v-align-middle">
+      <heading level="3">REST API</heading>
+      <para>Using a REST architectural style,  the Web service API exposes much of the PageSeeder functionality to external applications. For a complete list of the available functionality, see our <link href="https://dev.pageseeder.com/api/web_services/services.html" uriid="461666">Developer site</link>.
+      </para>
+    </fragment><fragment id="26" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="integration_and_application_development/REST%20API.png" uriid="462096" width="640" height="440" alt="REST API.png"/>
+      </para>
+    </fragment><fragment id="36" labels="spacer"/><fragment id="27" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="integration_and_application_development/Java.png" uriid="462130" width="640" height="440" alt="Java.png"/>
+      </para>
+    </fragment><fragment id="19" labels="s-col,v-align-middle">
+      <heading level="3">Java bridge</heading>
+      <para>An Open-source <link href="https://github.com/pageseeder/bridge" uriid="461667">library</link> that simplifies the task of accessing the PageSeeder service API from Java or Kotlin applications.</para>
+      <para>For non-Java developers, the service API is always accessible using HTTP and XML / JSON.</para>
+    </fragment><fragment id="37" labels="spacer"/><fragment id="20" labels="s-col,v-align-middle">
+      <heading level="3">Batch API</heading>
+      <para>Publishing systems have always required support for batch processing. It is very rare for a document lifecycle to exist only in a single system. That is why PageSeeder developers have a complete API for importing, exporting and processing content as batch tasks.</para>
+    </fragment><fragment id="28" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="integration_and_application_development/Batch%20API.png" uriid="462133" width="640" height="440" alt="Batch API.png"/>
+      </para>
+    </fragment><fragment id="105" labels="spacer"/><fragment id="106" labels="row-start,row-bg-white,spacer"/><fragment id="4" labels="s-text-center">
+      <heading level="2">Berlioz Framework</heading>
+    </fragment><fragment id="30" labels="spacer">
+      <para>Designed to publish PSML documents to the web, Berlioz can support any type of XML source data. Ideal for developers with Java and XSLT experience, Berlioz can deliver performant sites rich in functionality. When combined with PageSeeder semantics, developers can quickly create websites based on searchable collections.</para>
+      <para>See <xref id="4712494" frag="default" reversefrag="30" reversetitle="Berlioz" reverselink="true" reversetype="none" display="document" type="none" uriid="462126" href="_local/website/case_studies/pbs/pharmaceutical_benefits_scheme_%28pbs%29.psml" urititle="Pharmaceutical Benefits Scheme (PBS)" mediatype="application/vnd.pageseeder.psml+xml">Pharmaceutical Benefits Scheme (PBS)</xref> and <xref id="4712495" frag="default" reversefrag="30" reversetitle="Berlioz" reverselink="true" reversetype="none" display="document" type="none" uriid="462125" href="_local/website/case_studies/natspec/natspec.psml" urititle="NATSPEC" mediatype="application/vnd.pageseeder.psml+xml">NATSPEC</xref>.
+      </para>
+    </fragment><fragment id="21" labels="s-col,v-align-middle"><heading level="3">Simple Site</heading><para><xref id="4712486" title="Simple site" frag="default" reversefrag="21" reversetitle="Simple Site" reverselink="true" reversetype="none" display="manual" type="none" uriid="462102" href="_local/website/resources/simple_site.psml" urititle="Simple" mediatype="application/vnd.pageseeder.psml+xml">Simple site</xref> is a Ready to use Application designed to reduce the effort necessary to use PageSeeder to deliver and manage a website. With Simple site you can:</para><list><item>Modify the aspects of your layout through the Simple Site Admin, such as colour schemes, Logo, favicon and more;</item><item>Enable and disable features like Private areas, Search, Newsletter, Social Media links.</item></list><para>Providing a dynamic facade to an ordinary PageSeeder group, the Simple Site application acts as filter that exposes only a subset of possible functionality.</para></fragment><fragment id="29" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="integration_and_application_development/Simple%20site.png" uriid="462093" width="640" height="440" alt="Simple site.png"/>
+      </para>
+    </fragment><fragment id="31" labels="spacer"/><fragment id="32" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="integration_and_application_development/Custom%20Applications.png" uriid="461920" width="640" height="440" alt="Custom Applications.png"/>
+      </para>
+    </fragment><fragment id="33" labels="s-col,v-align-middle">
+      <heading level="3">Custom Applications</heading>
+      <para>For requirements that don't fall neatly within the functionality of Simple Site, the code is available for customization by Allette Systems, one of our partners or by a user organization directly.</para>
+    </fragment><fragment id="107" labels="spacer"/><fragment id="108" labels="row-start,row-bg-grey-lighten-4,spacer"/><fragment id="5" labels="s-text-center">
+      <heading level="2">Developer support</heading>
+      <para>As developers ourselves, Allette Systems understand what can be done to help explain and evaluate new technologies. These include the following:</para>
+    </fragment><fragment id="35" labels="spacer"/><fragment id="22" labels="s-col-md-4,s-mb-4,s-mb-md-0"><heading level="3">Licenses</heading><para>PageSeeder is available under more than one license and most of them are free, especially for developers. More details are available <link href="https://dev.pageseeder.com/reference/glossary/license.html" uriid="461668">here</link>.</para></fragment><fragment id="23" labels="s-col-md-4,s-mb-4,s-mb-md-0">
+      <heading level="3">Examples</heading>
+      <para>
+        <link href="https://dev.pageseeder.com/reference/sample_code.html" uriid="461669">Sample codes</link> are available to help explain PageSeeder concepts and get development started quickly.</para>
+    </fragment><fragment id="24" labels="s-col-md-4,s-mb-4,s-mb-md-0">
+      <heading level="3">Documentation</heading>
+      <para>The <link href="https://dev.pageseeder.com/" uriid="376175">developer website</link> provides detailed documentation for the PageSeeder API and the different modelling and configuration options.</para>
+    </fragment><fragment id="109" labels="spacer"/></section></document>

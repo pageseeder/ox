@@ -1,0 +1,5 @@
+<projects>
+  <project from-name="group01" from-ps-config-name="staging" from-perspective="test" to-name="group01" to-ps-config-name="new" />
+  <project from-name="group02" from-ps-config-name="staging" from-perspective="test" to-name="group03" to-ps-config-name="staging" />
+  <project from-name="group04" to-name="group05"/>
+</projects>

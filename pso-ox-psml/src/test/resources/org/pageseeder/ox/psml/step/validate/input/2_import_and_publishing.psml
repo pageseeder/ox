@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?><document id="462169" schemaversion="1.4" date="2023-06-13T17:10:26+10:00" version="current" level="portable"><documentinfo><uri id="462169" external="false" mediatype="application/vnd.pageseeder.psml+xml" created="2021-07-22T17:07:33+10:00" modified="2023-06-13T17:10:26+10:00" scheme="http" host="ps.allette.com.au" port="80" path="/ps/allette/www/website/pageseeder/2_import_and_publishing.psml" decodedpath="/ps/allette/www/website/pageseeder/2_import_and_publishing.psml" title="Import and Publishing"><displaytitle>Import and Publishing</displaytitle></uri><reversexrefs><reversexref uriid="462080" href="_local/website/pageseeder.psml" frag="11" urititle="PageSeeder" mediatype="application/vnd.pageseeder.psml+xml" id="4712281" title="Review and Annotation" type="none" forwardtype="none" forwardtitle="Learn more" forwarddisplay="manual" forwardfrag="default" labels="button-primary"/><reversexref uriid="549396" href="_local/website/_menu.psml" frag="2" urititle="_menu" mediatype="application/vnd.pageseeder.psml+xml" documenttype="references" id="5053534" title="References" config="default" type="none" forwardtype="embed" forwarddisplay="document" forwardfrag="default" level="1"/></reversexrefs></documentinfo><fragmentinfo structure-modified="2021-07-22T11:33:18+10:00"><locator id="642122" fragment="16" modified="2021-07-22T11:33:18+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642121" fragment="35" modified="2021-07-22T11:33:18+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642124" fragment="7" modified="2021-07-22T11:33:18+10:00"><labels>s-col-md-6,s-text-center,v-align-middle</labels></locator><locator id="642123" fragment="2" modified="2021-07-22T11:33:18+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="714666" fragment="34" editid="5055693" modified="2023-06-13T17:10:26+10:00"><labels>s-col,v-align-middle</labels></locator><locator id="642125" fragment="20" modified="2021-07-22T11:33:18+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642116" fragment="22" modified="2021-07-22T11:33:18+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642118" fragment="29" modified="2021-07-22T11:33:18+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642117" fragment="26" modified="2021-07-22T11:33:18+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642120" fragment="13" modified="2021-07-22T11:33:18+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642119" fragment="31" modified="2021-07-22T11:33:18+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator fragment="23" modified="2021-07-22T11:34:08+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="24" modified="2020-10-20T17:28:34+11:00"><labels>spacer</labels></locator><locator fragment="25" modified="2021-07-22T11:34:08+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="27" modified="2020-10-20T17:29:33+11:00"><labels>spacer</labels></locator><locator fragment="28" modified="2021-07-22T11:34:08+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="30" modified="2020-10-20T17:30:45+11:00"><labels>spacer</labels></locator><locator fragment="32" modified="2021-07-22T11:34:08+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="10" modified="2020-10-29T15:01:43+11:00"/><locator fragment="11" modified="2021-07-22T11:34:08+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="33" modified="2020-10-20T17:34:22+11:00"><labels>spacer</labels></locator><locator fragment="12" modified="2021-07-22T11:34:08+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="14" modified="2020-10-20T14:37:56+11:00"><labels>spacer</labels></locator><locator fragment="15" modified="2020-10-20T14:38:24+11:00"><labels>spacer</labels></locator><locator fragment="17" modified="2021-07-22T11:34:08+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="18" modified="2020-10-20T17:25:14+11:00"><labels>spacer</labels></locator><locator fragment="19" modified="2021-07-22T11:34:08+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="100" modified="2021-07-22T11:33:18+10:00"><labels>row-start,row-bg-secondary,spacer</labels></locator><locator fragment="1" modified="2021-07-22T11:33:18+10:00"><labels>s-text-center</labels></locator><locator fragment="101" modified="2021-07-22T11:33:18+10:00"><labels>spacer</labels></locator><locator fragment="3" modified="2021-07-22T11:33:18+10:00"><labels>s-text-center</labels></locator><locator fragment="102" modified="2021-07-22T11:33:18+10:00"><labels>row-start,row-bg-white,spacer</labels></locator><locator fragment="4" modified="2021-07-22T11:33:18+10:00"><labels>s-text-center</labels></locator><locator fragment="103" modified="2021-07-22T11:33:18+10:00"><labels>spacer</labels></locator><locator fragment="104" modified="2021-07-22T11:33:18+10:00"><labels>row-start,row-bg-primary,spacer</labels></locator><locator fragment="5" modified="2021-07-22T11:33:18+10:00"><labels>s-text-center</labels></locator><locator fragment="6" modified="2021-07-22T11:33:18+10:00"><labels>s-col-md-6,v-align-middle</labels></locator><locator fragment="105" modified="2021-07-22T11:33:18+10:00"><labels>spacer</labels></locator><locator fragment="106" modified="2021-07-22T11:33:18+10:00"><labels>row-start,row-bg-white,spacer</labels></locator><locator fragment="107" modified="2021-07-22T11:33:18+10:00"><labels>spacer</labels></locator><locator fragment="8" modified="2020-10-20T14:33:14+11:00"><labels>spacer</labels></locator><locator fragment="108" modified="2021-07-22T11:33:18+10:00"><labels>row-start,row-bg-grey-lighten-4,spacer</labels></locator><locator fragment="9" modified="2020-10-29T15:01:38+11:00"/><locator fragment="109" modified="2021-07-22T11:33:18+10:00"><labels>spacer</labels></locator><locator fragment="21" modified="2020-10-20T17:27:09+11:00"><labels>spacer</labels></locator></fragmentinfo><metadata/><section id="content" title="content" fragmenttype="default,embed"><fragment id="100" labels="row-start,row-bg-secondary,spacer"/><fragment id="1" labels="s-text-center">
+      <heading level="1">Import and Publishing</heading>
+    </fragment><fragment id="8" labels="spacer"/><fragment id="6" labels="s-col-md-6,v-align-middle">
+      <heading level="2">Overview</heading>
+      <para>The PageSeeder batch processing API and mature document model make it possible to import and export content from a range of data structures and formats, including:</para>
+      <list>
+        <item>conventional document formats such as Adobe InDesign, Microsoft Word, PDF and HTML,</item>
+        <item>relational databases, spreadsheets, and CSV,</item>
+        <item>industry standard XML initiatives such as DITA and Akomo Ntoso,</item>
+        <item>arbitrary markup languages such as wikis or markdown,</item>
+        <item>specialist formats such as JSON, SVG, MathJax or ASCIImath.</item>
+      </list>
+    </fragment><fragment id="7" labels="s-col-md-6,s-text-center,v-align-middle">
+      <para>
+        <image src="import_and_publishing/import-publishing-feature.png" uriid="462124" width="407" height="364" alt="import-publishing-feature.png"/>
+      </para>
+    </fragment><fragment id="101" labels="spacer"/><fragment id="102" labels="row-start,row-bg-white,spacer"/><fragment id="11" labels="s-col,v-align-middle">
+      <heading level="3">Developers</heading>
+      <para>PageSeeder makes it possible to aggregate content from different sources into searchable documents. Data objects can overwrite specific content fragments without affecting the surrounding document. Features such as “diff before write” mean that a document is only updated when content changes rather than when a file is uploaded.</para>
+    </fragment><fragment id="2" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="import_and_publishing/Developers.png" uriid="461896" width="640" height="440" alt="Developers.png"/>
+      </para>
+    </fragment><fragment id="14" labels="spacer"/><fragment id="13" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="import_and_publishing/analysts.png" uriid="461975" width="640" height="440" alt="analysts.png"/>
+      </para>
+    </fragment><fragment id="12" labels="s-col,v-align-middle">
+      <heading level="3">Analysts</heading>
+      <para>“Low code” environment for managing formatting templates separate to data transformations. Filter content on any searchable parameters such as document type, version, status, workflow, last edited date, author, other metadata or content properties then consolidate results of a search into a single file document for publishing.</para>
+      <para>Use our OX conversion and validation workbench to analyze, test and validate any incoming data before loading it to PageSeeder.</para>
+    </fragment><fragment id="15" labels="spacer"/><fragment id="17" labels="s-col,v-align-middle">
+      <heading level="3">Users</heading>
+      <para>Manage your Word templates then upload them to PageSeeder so exported documents are branded. Know that complex paragraph and cross-reference numbering, plus markers such as footnotes, index and bibliography entries will export consistently.</para>
+      <para>Remap style names before importing or exporting. Validate publications to find errors before exporting.</para>
+    </fragment><fragment id="16" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="import_and_publishing/Users.png" uriid="462167" width="640" height="440" alt="Users.png"/>
+      </para>
+    </fragment><fragment id="103" labels="spacer"/><fragment id="104" labels="row-start,row-bg-primary,spacer"/><fragment id="3" labels="s-text-center">
+      <heading level="2">Document model</heading>
+    </fragment><fragment id="18" labels="spacer"/><fragment id="19" labels="s-col,v-align-middle">
+      <heading level="3">Word and Excel support</heading>
+      <list>
+        <item>Support for converting PSML documents to <italic>docx</italic> and <italic>docx</italic> to PSML is a standard feature of PageSeeder. Available under the export action icon on the Document -&gt; Browse page, there is a standard conversion that will process any PSML document without modification;</item>
+        <item>
+          <italic>Docx</italic> files can be converted into PageSeeder documents through the Upload menu;</item>
+        <item>How <italic>docx</italic> files are processed is customizable;</item>
+        <item>Saving the results of a search in CSV format so the data can be imported into Excel;</item>
+        <item>The use of an Excel worksheet to build a document collection.</item>
+      </list>
+    </fragment><fragment id="20" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="import_and_publishing/Word%20and%20Excel%20support.png" uriid="461991" width="640" height="440" alt="Word and Excel support.png"/>
+      </para>
+    </fragment><fragment id="21" labels="spacer"/><fragment id="22" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="import_and_publishing/Hierarchical%20and%20graph%20data.png" uriid="462134" width="640" height="440" alt="Hierarchical and graph data.png"/>
+      </para>
+    </fragment><fragment id="23" labels="s-col,v-align-middle">
+      <heading level="3">Hierarchical and graph data</heading>
+    </fragment><fragment id="24" labels="spacer"/><fragment id="25" labels="s-col,v-align-middle">
+      <heading level="3">Tabular and relational data</heading>
+    </fragment><fragment id="26" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="import_and_publishing/Tabular%20and%20relational%20data.png" uriid="462140" width="640" height="440" alt="Tabular and relational data.png"/>
+      </para>
+    </fragment><fragment id="105" labels="spacer"/><fragment id="106" labels="row-start,row-bg-white,spacer"/><fragment id="4" labels="s-text-center">
+      <heading level="2">OX</heading>
+    </fragment><fragment id="27" labels="spacer"/><fragment id="28" labels="s-col,v-align-middle">
+      <heading level="3">Batch validation</heading>
+      <para>The search results page allows users to validate multiple files at once using the Validate option at the Action menu.</para>
+    </fragment><fragment id="29" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="import_and_publishing/Batch%20Validation.png" uriid="462013" width="640" height="440" alt="Batch Validation.png"/>
+      </para>
+    </fragment><fragment id="30" labels="spacer"/><fragment id="31" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="import_and_publishing/Batch%20Conversion.png" uriid="461928" width="640" height="440" alt="Batch Conversion.png"/>
+      </para>
+    </fragment><fragment id="32" labels="s-col,v-align-middle">
+      <heading level="3">Batch conversion</heading>
+      <para>The search results page allows users to process multiple files at once using one of the actions batch functions at the Action menu.</para>
+    </fragment><fragment id="107" labels="spacer"/><fragment id="108" labels="row-start,row-bg-grey-lighten-4,spacer"/><fragment id="5" labels="s-text-center">
+      <heading level="2">External source data</heading>
+    </fragment><fragment id="33" labels="spacer"/><fragment id="34" labels="s-col,v-align-middle"><heading level="3">Import</heading><para>Import content from a range of data structures and formats.</para></fragment><fragment id="35" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="import_and_publishing/Import.png" uriid="462087" width="640" height="440" alt="Import.png"/>
+      </para>
+    </fragment><fragment id="109" labels="spacer"/></section></document>

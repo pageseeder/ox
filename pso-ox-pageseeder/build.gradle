@@ -39,5 +39,6 @@ dependencies {
 
   testImplementation (
     "junit:junit:$junitVersion",
+    "org.pageseeder.xmlwriter:pso-xmlwriter:$psoXMLWriterVersion",
   )
 }

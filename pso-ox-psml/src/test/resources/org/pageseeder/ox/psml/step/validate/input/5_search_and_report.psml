@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?><document id="462040" schemaversion="1.4" date="2023-06-13T17:13:46+10:00" version="current" level="portable"><documentinfo><uri id="462040" external="false" mediatype="application/vnd.pageseeder.psml+xml" created="2021-07-22T17:07:32+10:00" modified="2023-06-13T17:13:46+10:00" scheme="http" host="ps.allette.com.au" port="80" path="/ps/allette/www/website/pageseeder/5_search_and_report.psml" decodedpath="/ps/allette/www/website/pageseeder/5_search_and_report.psml" title="Search and Report"><displaytitle>Search and Report</displaytitle></uri><reversexrefs><reversexref uriid="462080" href="_local/website/pageseeder.psml" frag="16" urititle="PageSeeder" mediatype="application/vnd.pageseeder.psml+xml" id="4712286" title="Review and Annotation" type="none" forwardtype="none" forwardtitle="Learn more" forwarddisplay="manual" forwardfrag="default" labels="button-secondary"/><reversexref uriid="549396" href="_local/website/_menu.psml" frag="2" urititle="_menu" mediatype="application/vnd.pageseeder.psml+xml" documenttype="references" id="5053537" title="References" config="default" type="none" forwardtype="embed" forwarddisplay="document" forwardfrag="default" level="1"/></reversexrefs></documentinfo><fragmentinfo structure-modified="2021-07-22T12:40:47+10:00"><locator id="714667" fragment="18" editid="5055700" modified="2023-06-13T17:12:51+10:00"><labels>s-col,v-align-middle</labels></locator><locator id="641930" fragment="28" modified="2021-07-22T12:39:35+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="714668" fragment="19" editid="5055699" modified="2023-06-13T17:12:51+10:00"><labels>s-col,v-align-middle</labels></locator><locator id="641929" fragment="24" modified="2021-07-22T12:39:35+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="641932" fragment="13" modified="2021-07-22T12:39:35+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="641933" fragment="16" modified="2021-07-22T12:39:35+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="714669" fragment="27" editid="5055703" modified="2023-06-13T17:13:45+10:00"><labels>s-col,v-align-middle</labels></locator><locator id="641935" fragment="2" modified="2021-07-22T12:39:35+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="641937" fragment="7" modified="2021-07-22T12:39:35+10:00"><labels>s-col-md-6,s-text-center,v-align-middle</labels></locator><locator id="641925" fragment="22" modified="2021-07-22T12:39:35+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="641927" fragment="23" modified="2021-07-22T12:39:35+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator fragment="25" modified="2020-10-29T17:52:00+11:00"/><locator fragment="26" modified="2020-10-29T18:02:49+11:00"><labels>spacer</labels></locator><locator fragment="10" modified="2020-10-29T17:00:56+11:00"/><locator fragment="11" modified="2021-07-22T12:39:35+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="12" modified="2021-07-22T12:39:35+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="14" modified="2020-10-20T15:22:47+11:00"><labels>spacer</labels></locator><locator fragment="15" modified="2020-10-20T15:22:47+11:00"><labels>spacer</labels></locator><locator fragment="17" modified="2021-07-22T12:39:35+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="1" modified="2021-07-22T12:39:35+10:00"><labels>s-text-center</labels></locator><locator fragment="100" modified="2021-07-22T12:39:35+10:00"><labels>row-start,row-bg-secondary,spacer</labels></locator><locator fragment="101" modified="2021-07-22T12:39:35+10:00"><labels>spacer</labels></locator><locator fragment="3" modified="2021-07-22T12:39:35+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="102" modified="2021-07-22T12:39:35+10:00"><labels>row-start,row-bg-white,spacer</labels></locator><locator fragment="103" modified="2021-07-22T12:39:35+10:00"><labels>spacer</labels></locator><locator fragment="4" modified="2021-07-22T12:39:35+10:00"><labels>s-text-center</labels></locator><locator fragment="104" modified="2021-07-22T12:39:35+10:00"><labels>row-start,row-bg-primary,spacer</labels></locator><locator fragment="5" modified="2020-11-03T17:45:53+11:00"/><locator fragment="6" modified="2021-07-22T12:39:35+10:00"><labels>s-col-md-6,v-align-middle</labels></locator><locator fragment="105" modified="2021-07-22T12:39:35+10:00"><labels>spacer</labels></locator><locator fragment="106" modified="2021-07-22T12:39:35+10:00"><labels>row-start,row-bg-white,spacer</labels></locator><locator fragment="107" modified="2021-07-22T12:39:35+10:00"><labels>spacer</labels></locator><locator fragment="8" modified="2020-10-20T15:22:47+11:00"><labels>spacer</labels></locator><locator fragment="108" modified="2021-07-22T12:40:47+10:00"><labels>spacer</labels></locator><locator fragment="9" modified="2020-10-29T17:01:00+11:00"/><locator fragment="109" modified="2021-07-22T12:40:47+10:00"><labels>spacer</labels></locator><locator fragment="20" modified="2021-07-22T12:39:35+10:00"><labels>s-text-center</labels></locator><locator fragment="21" modified="2020-10-23T17:20:22+11:00"><labels>spacer</labels></locator></fragmentinfo><metadata/><section id="content" title="content" fragmenttype="default,embed"><fragment id="100" labels="row-start,row-bg-secondary,spacer"/><fragment id="1" labels="s-text-center">
+      <heading level="1">Search and Report</heading>
+    </fragment><fragment id="8" labels="spacer"/><fragment id="6" labels="s-col-md-6,v-align-middle">
+      <heading level="2">Overview</heading>
+      <para>Fast, flexible search across all content in a group or project. Any new semantics or structures added to documents are immediately reflected in the search interface without any modification to the implementation.</para>
+      <para>Understanding file types means that format-specific metadata properties (Microsoft Office files, PDF, JPG and more) are automatically indexed upon upload. This helps to track versions and revisions.</para>
+    </fragment><fragment id="7" labels="s-col-md-6,s-text-center,v-align-middle">
+      <para>
+        <image src="search_and_report/search-report-feature.png" uriid="462006" width="450" height="352" alt="search-report-feature.png"/>
+      </para>
+    </fragment><fragment id="101" labels="spacer"/><fragment id="102" labels="row-start,row-bg-white,spacer"/><fragment id="11" labels="s-col,v-align-middle">
+      <heading level="3">Developers</heading>
+      <para>Based on widely supported Apache Lucene, PageSeeder search is fast and rich. The API services provide facet support for user-defined semantics such as document, block and inline labels. The results of a search can be input into other processes such as validation or publishing task.</para>
+    </fragment><fragment id="2" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="search_and_report/Developers.png" uriid="462149" width="640" height="440" alt="Developers.png"/>
+      </para>
+    </fragment><fragment id="14" labels="spacer"/><fragment id="13" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="search_and_report/Analysts.png" uriid="462001" width="640" height="440" alt="Analysts.png"/>
+      </para>
+    </fragment><fragment id="12" labels="s-col,v-align-middle">
+      <heading level="3">Analysts</heading>
+      <para>A search can be created through the user interface then saved as a URL for sharing with other users or recalling later. Search results can be transformed into publications or exported as CSV format for use in Excel (for example).</para>
+    </fragment><fragment id="15" labels="spacer"/><fragment id="17" labels="s-col,v-align-middle">
+      <heading level="3">Users</heading>
+      <para>Displaying search results in the “Sheet” format provides an efficient way to update the content of properties or inline labels across a whole collection of documents. This is useful for improving data integrity or cleansing obsolete values.</para>
+    </fragment><fragment id="16" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="search_and_report/Users.png" uriid="462164" width="640" height="440" alt="Users.png"/>
+      </para>
+    </fragment><fragment id="103" labels="spacer"/><fragment id="104" labels="row-start,row-bg-primary,spacer"/><fragment id="20" labels="s-text-center">
+      <heading level="2">Features</heading>
+    </fragment><fragment id="21" labels="spacer"/><fragment id="3" labels="s-col,v-align-middle">
+      <heading level="3">Facet support</heading>
+      <para>Choose a range of facets to filter your search.</para>
+    </fragment><fragment id="22" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="search_and_report/Facets.png" uriid="462129" width="640" height="440" alt="Facets.png"/>
+      </para>
+    </fragment><fragment id="108" labels="spacer"/><fragment id="23" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="search_and_report/Process%20Results.png" uriid="462049" width="640" height="440" alt="Process Results.png"/>
+      </para>
+    </fragment><fragment id="18" labels="s-col,v-align-middle"><heading level="3">Process results</heading><para>Display a list of results from the current search.</para></fragment><fragment id="109" labels="spacer"/><fragment id="19" labels="s-col,v-align-middle"><heading level="3">Edit sheet</heading><para>Quickly edit documents using the sheet display for the search results.</para></fragment><fragment id="24" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="search_and_report/Edit%20sheet.png" uriid="461948" width="640" height="440" alt="Edit sheet.png"/>
+      </para>
+    </fragment><fragment id="105" labels="spacer"/><fragment id="106" labels="row-start,row-bg-white,spacer"/><fragment id="4" labels="s-text-center">
+      <heading level="2">Activity report</heading>
+    </fragment><fragment id="26" labels="spacer"/><fragment id="27" labels="s-col,v-align-middle"><heading level="3">Overview</heading><para>Provides a list of the activities of a group, sortable by the Activity (Edit, Comment, Creation of a Document etc), Document, Date, Member, Label or only Activities that are Labelled.</para></fragment><fragment id="28" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="search_and_report/Activity%20report.png" uriid="462062" width="640" height="440" alt="Activity report.png"/>
+      </para>
+    </fragment><fragment id="107" labels="spacer"/></section></document>

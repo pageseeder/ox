@@ -264,6 +264,13 @@ public final class StepDefinition implements XMLWritable, Serializable {
   }
 
   /**
+   *
+   * @return the callback of step.
+   */
+  public CallbackStep callbackStep() {
+    return this._callbackStep;
+  }
+  /**
    * Execute this step for specified data.
    *
    * @param data The package data

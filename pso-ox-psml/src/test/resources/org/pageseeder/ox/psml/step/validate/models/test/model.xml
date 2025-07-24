@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE pipelines PUBLIC "-//PageSeeder//DTD::OX model 1.0//EN"
+                            "http://www.pageseeder.org/schema/ox/model-1.0.dtd">
+<pipelines icon="engine" >
+
+  <pipeline id="test-pipeline" name="Test Pipeline"
+            description="The sample pipeline will test"
+            accepts="application/vnd.pageseeder.psml+xml" default="true">
+
+
+    <step id="validate-char" name="Characters validation" class="org.pageseeder.ox.psml.step.Validate">
+      <parameter name="type"   value="characters" />
+      <parameter name="output" value="psml-reports/characters-report.psml" />
+    </step>
+    <step id="validate-wf" name="Simple XML validation" class="org.pageseeder.ox.psml.step.Validate">
+      <parameter name="type"   value="well-formed" />
+      <parameter name="output" value="psml-reports/wellformed-report.psml" />
+    </step>
+    <step id="validate-xsd" name="Schema validation" class="org.pageseeder.ox.psml.step.Validate">
+      <parameter name="type"   value="schema" />
+      <parameter name="output" value="psml-reports/schema-report.psml" />
+    </step>
+    <step id="validate-sch" name="Schematron validation" class="org.pageseeder.ox.psml.step.Validate">
+      <parameter name="type"   value="schematron" />
+      <parameter name="output" value="psml-reports/schematron-report.psml" />
+    </step>
+  </pipeline>
+</pipelines>

@@ -15,7 +15,6 @@
  */
 package org.pageseeder.ox.callback;
 
-import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
