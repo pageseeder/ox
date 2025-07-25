@@ -24,6 +24,7 @@ import java.io.File;
  * @since 17 June 2014
  * @deprecated There is not a need for this class as we can check if there an output (Check {@link org.pageseeder.ox.tool.DefaultResult})
  */
+@Deprecated
 public interface Downloadable {
 
   /**
