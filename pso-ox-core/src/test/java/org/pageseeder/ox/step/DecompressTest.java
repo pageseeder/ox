@@ -26,11 +26,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * The type Decompress test.
+ *
  * @author Ciber Cai
  * @since 18 Jul 2016
  */
 public class DecompressTest {
 
+  /**
+   * Test process no params.
+   */
   @Test
   public void test_process_no_params() {
     File file = new File("src/test/resources/models/m1/sample.zip");
@@ -47,6 +52,9 @@ public class DecompressTest {
 
   }
 
+  /**
+   * Test process params.
+   */
   @Test
   public void test_process_params() {
     File file = new File("src/test/resources/models/m1/sample.zip");

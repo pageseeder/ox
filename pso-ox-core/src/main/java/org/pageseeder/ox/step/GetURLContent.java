@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 /**
+ * The type Get url content.
+ *
  * @author ccabral
  * @since 15 September 2021
  */

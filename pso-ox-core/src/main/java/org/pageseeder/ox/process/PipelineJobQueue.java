@@ -177,8 +177,8 @@ public class PipelineJobQueue implements XMLWritable {
   /**
    * TODO The design of PipelineJob Classes are not good. It needs to be rethought.
    *
-   * @param packageId
-   * @return
+   * @param packageId the package id
+   * @return job id
    */
   public static String getJobId(String packageId) {
     String jobId = null;

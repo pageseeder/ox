@@ -27,7 +27,6 @@ import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
-import org.pageseeder.ox.core.ResultStatus;
 import org.pageseeder.ox.pageseeder.thread.GroupThreadProgressScheduleExecutorRunnable;
 import org.pageseeder.ox.tool.DefaultResult;
 import org.pageseeder.ox.tool.ExtraResultStringXML;

@@ -17,7 +17,7 @@ import java.nio.charset.Charset;
  * It set the charset and length to the property in PackageData.
  *
  * @author Ciber Cai
- * @since  05 November 2014
+ * @since 05 November 2014
  */
 public class ZipInspector implements PackageInspector {
 

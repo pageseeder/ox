@@ -30,7 +30,7 @@ import java.io.IOException;
  *
  * @author Christophe Lauret
  * @author Ciber Cai
- * @since  13 June 2014
+ * @since 13 June 2014
  */
 public final class NOPStep implements Step {
 
@@ -43,13 +43,15 @@ public final class NOPStep implements Step {
    * The results of a NOOP command.
    *
    * @author Christophe Lauret
-   * @since  8 May 2014
+   * @since 8 May 2014
    */
   public final class NOPResult extends ResultBase implements Result {
 
     /**
+     * Instantiates a new Nop result.
+     *
      * @param model the {@link Model}
-     * @param data the {@link PackageData}
+     * @param data  the {@link PackageData}
      */
     public NOPResult(Model model, PackageData data) {
       super(model, data);

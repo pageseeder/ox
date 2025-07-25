@@ -15,21 +15,21 @@
  */
 package org.pageseeder.ox.step;
 
-import org.pageseeder.ox.OXErrors;
-import org.pageseeder.ox.api.Downloadable;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
-import org.pageseeder.ox.tool.*;
+import org.pageseeder.ox.tool.DefaultResult;
+import org.pageseeder.ox.tool.ExtraResultStringXML;
+import org.pageseeder.ox.tool.InvalidResult;
+import org.pageseeder.ox.tool.ResultBase;
 import org.pageseeder.ox.util.FileUtils;
 import org.pageseeder.ox.util.StepUtils;
 import org.pageseeder.ox.util.XSLT;
 import org.pageseeder.ox.util.ZipUtils;
 import org.pageseeder.xmlwriter.XML;
 import org.pageseeder.xmlwriter.XMLStringWriter;
-import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,7 +55,7 @@ import java.util.Map.Entry;
  *   the file uploaded.</li>
  *   <li><var>output</var> It should be a docx file. It it is a folder, it will create a docx inside this folder with
  *   the default value. If it is empty, then it will be create with the default value. The default value is the
- *   {package-id}-simplified.</li> *
+ *   {package-id}-simplified.</li>
  * </ul>
  *
  * <h3>Extra parameters that setups the simplifying process</h3>

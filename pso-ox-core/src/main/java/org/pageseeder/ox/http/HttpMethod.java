@@ -24,16 +24,34 @@ package org.pageseeder.ox.http;
  */
 public enum HttpMethod {
 
+  /**
+   * Get http method.
+   */
   GET,
 
+  /**
+   * Head http method.
+   */
   HEAD,
 
+  /**
+   * Delete http method.
+   */
   DELETE,
 
+  /**
+   * Patch http method.
+   */
   PATCH,
 
+  /**
+   * Post http method.
+   */
   POST,
 
+  /**
+   * Put http method.
+   */
   PUT
 
 }

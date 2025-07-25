@@ -15,34 +15,24 @@
  */
 package org.pageseeder.ox.pageseeder.step;
 
-import net.pageseeder.app.simple.core.SimpleSiteNotFoundException;
 import net.pageseeder.app.simple.core.utils.SimpleStringUtils;
 import net.pageseeder.app.simple.core.utils.SimpleXMLUtils;
-import net.pageseeder.app.simple.pageseeder.model.GroupOptions;
-import net.pageseeder.app.simple.pageseeder.service.GroupService;
 import net.pageseeder.app.simple.pageseeder.service.ResourceService;
-import net.pageseeder.app.simple.vault.PSOAuthConfig;
 import net.pageseeder.app.simple.vault.TokensVaultManager;
 import net.pageseeder.app.simple.vault.VaultUtils;
 import org.pageseeder.bridge.PSConfig;
 import org.pageseeder.bridge.PSCredentials;
-import org.pageseeder.bridge.model.PSGroup;
-import org.pageseeder.bridge.model.PSMember;
-import org.pageseeder.bridge.model.PSProject;
 import org.pageseeder.ox.api.Measurable;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
-import org.pageseeder.ox.pageseeder.model.GroupAndGroupOptionWrapper;
 import org.pageseeder.ox.pageseeder.model.GroupResourcesSync;
-import org.pageseeder.ox.pageseeder.xml.GroupAndGroupOptionHandler;
 import org.pageseeder.ox.pageseeder.xml.GroupResourcesSyncHandler;
 import org.pageseeder.ox.tool.DefaultResult;
 import org.pageseeder.ox.tool.ExtraResultStringXML;
 import org.pageseeder.ox.tool.ResultBase;
 import org.pageseeder.ox.util.StepUtils;
-import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.xmlwriter.XML;
 import org.pageseeder.xmlwriter.XMLStringWriter;
 import org.pageseeder.xmlwriter.XMLWriter;
@@ -55,9 +45,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Export the project resources from one pageseeder and project and import to another PageSeeder and project or

@@ -21,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * The type No file inspector.
+ *
  * @author Carlos
  * @since 21 May 2025
  */

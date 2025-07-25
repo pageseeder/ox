@@ -36,14 +36,13 @@ import java.io.InputStream;
  *
  * @author Christophe Lauret
  * @author Ciber Cai
- *
  * @since OX 0.6.1
  */
 public final class OXEntityResolver implements EntityResolver {
 
   /**
    * The prefix used by OX for all public identifiers.
-   *
+   * <p>
    * Public identifiers starting with any other prefix will be ignored.
    */
   public static final String PUBLIC_ID_PREFIX = "-//PageSeeder//DTD::OX ";

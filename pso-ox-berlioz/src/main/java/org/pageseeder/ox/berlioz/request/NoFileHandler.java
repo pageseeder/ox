@@ -68,7 +68,6 @@ public final class NoFileHandler implements RequestHandler {
    *
    * @param req the ContentRequest
    * @return the list of PackageData
-   * @throws IOException when I/O error occur.
    * @throws OXException the OX exception
    */
   public List<PackageData> receive(HttpServletRequest req) throws OXException {

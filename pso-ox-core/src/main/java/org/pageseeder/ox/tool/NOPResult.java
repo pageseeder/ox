@@ -28,13 +28,19 @@ import java.io.IOException;
  * <h3>Return XML</h3>
  * <pre>{@code
  *   <result type="no-operation" downloadable="false"/>
- * }</pre>
+ * }*</pre>
  *
  * @author Ciber Cai
  * @since 18 July 2016
  */
 public class NOPResult extends ResultBase implements Result {
 
+  /**
+   * Instantiates a new Nop result.
+   *
+   * @param model the model
+   * @param data  the data
+   */
   public NOPResult(Model model, PackageData data) {
     super(model, data);
   }

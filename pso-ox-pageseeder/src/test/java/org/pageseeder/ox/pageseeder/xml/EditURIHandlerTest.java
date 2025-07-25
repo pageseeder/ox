@@ -15,20 +15,16 @@
  */
 package org.pageseeder.ox.pageseeder.xml;
 
-import net.pageseeder.app.simple.core.utils.SimpleDateTimeUtils;
-import net.pageseeder.app.simple.pageseeder.model.AddURIMetadata;
 import net.pageseeder.app.simple.pageseeder.model.EditURI;
 import org.junit.Assert;
 import org.junit.Test;
 import org.pageseeder.bridge.model.PSGroup;
 import org.pageseeder.bridge.model.PSMember;
-import org.pageseeder.bridge.psml.Property;
 import org.pageseeder.ox.util.XMLUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

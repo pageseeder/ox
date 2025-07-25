@@ -42,7 +42,7 @@ public class FileResultInfo implements XMLWritable{
   /**
    * Instantiates a new file result info.
    *
-   * @param input the input
+   * @param input  the input
    * @param output the output
    * @param status the status
    */

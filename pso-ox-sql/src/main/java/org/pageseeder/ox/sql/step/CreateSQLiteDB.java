@@ -22,15 +22,9 @@ import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.core.ResultStatus;
 import org.pageseeder.ox.sql.core.SqliteDBFactory;
-import org.pageseeder.ox.step.Transformation;
-import org.pageseeder.ox.tool.DefaultResult;
 import org.pageseeder.ox.tool.FileResultInfo;
 import org.pageseeder.ox.tool.MultipleFilesResult;
-import org.pageseeder.ox.util.FileUtils;
-import org.pageseeder.ox.util.FilesFinder;
 import org.pageseeder.ox.util.StepUtils;
-import org.pageseeder.xmlwriter.XML;
-import org.pageseeder.xmlwriter.XMLStringWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

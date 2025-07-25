@@ -19,11 +19,16 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
+ * The type Inspector service test.
+ *
  * @author Ciber Cai
  * @since 16 June 2016
  */
 public class InspectorServiceTest {
 
+  /**
+   * Test inspector by type.
+   */
   @Test
   public void test_inspector_by_type() {
     InspectorService service = InspectorService.getInstance();

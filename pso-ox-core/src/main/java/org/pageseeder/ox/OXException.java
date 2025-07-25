@@ -19,8 +19,7 @@ package org.pageseeder.ox;
  * <p>The OX Exception.</p>
  *
  * @author Christophe Lauret
- * @since  08 November 2013
- *
+ * @since 08 November 2013
  */
 public class OXException extends Exception {
 
@@ -42,7 +41,7 @@ public class OXException extends Exception {
    *
    * @param errorMessage the error message
    */
- public OXException(ErrorMessage errorMessage) {
+  public OXException(ErrorMessage errorMessage) {
    this(errorMessage.getCode(), errorMessage.getMessage());
  }
 
@@ -50,7 +49,7 @@ public class OXException extends Exception {
    * Instantiates a new OX exception.
    *
    * @param errorMessageCode the error message code
-   * @param message the message of the Exception
+   * @param message          the message of the Exception
    */
   public OXException(String errorMessageCode, String message) {
     super(message);
@@ -58,6 +57,8 @@ public class OXException extends Exception {
   }
 
   /**
+   * Instantiates a new Ox exception.
+   *
    * @param message the message of the Exception
    */
   public OXException(String message) {
@@ -66,10 +67,10 @@ public class OXException extends Exception {
   }
 
   /**
- * Instantiates a new OX exception.
- *
- * @param cause the {@link Throwable}
- */
+   * Instantiates a new OX exception.
+   *
+   * @param cause the {@link Throwable}
+   */
   public OXException(Throwable cause) {
     super(cause);
     this._errorMessageCode = OXErrorMessage.UNKNOWN.getCode();
@@ -79,7 +80,7 @@ public class OXException extends Exception {
    * Instantiates a new OX exception.
    *
    * @param message the message of the exception
-   * @param cause the {@link Throwable}
+   * @param cause   the {@link Throwable}
    */
   public OXException(String message, Throwable cause) {
     super(message, cause);

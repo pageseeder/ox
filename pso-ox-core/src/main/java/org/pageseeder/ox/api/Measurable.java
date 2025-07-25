@@ -16,11 +16,10 @@
 package org.pageseeder.ox.api;
 
 /**
- *
  * Implement this interface to {@link Step} if the custom are able to return the percentage of its process.
  *
  * @author Carlos Cabral
- * @since  17 June 2014
+ * @since 17 June 2014
  */
 public interface Measurable {
 

@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
+ * The type Clean up job.
+ *
  * @author Carlos Cabral
  * @since 29 Oct. 2018
  */
@@ -59,14 +61,14 @@ public class CleanUpJob implements Runnable {
     */
    private final List<File> filesToIgnore = new ArrayList<>();
 
-   /**
-    * Instantiates a new clean up job.
-    *
-    * @param maxInactiveTime How long (milliseconds) a file can be inactive in the drive.
-    * @param checkUpDelay the check up delay
-    * @param base The packages root directory.
-    */
-   public CleanUpJob(long maxInactiveTime, long checkUpDelay, File base) {
+  /**
+   * Instantiates a new clean up job.
+   *
+   * @param maxInactiveTime How long (milliseconds) a file can be inactive in the drive.
+   * @param checkUpDelay    the check up delay
+   * @param base            The packages root directory.
+   */
+  public CleanUpJob(long maxInactiveTime, long checkUpDelay, File base) {
      super();
      LOGGER_JOB.debug("Max Inactive Time: {}", maxInactiveTime);
      LOGGER_JOB.debug("Base Directory: {}", base);
@@ -83,19 +85,21 @@ public class CleanUpJob implements Runnable {
      this.setStatus(CleanUpStatus.NOT_STARTED);
    }
 
-   /**
-    * Add file to be ignored and then they will not be deleted.
-    * @param toIgnore
-    */
-   public void addFileToIgnore(File toIgnore){
+  /**
+   * Add file to be ignored and then they will not be deleted.
+   *
+   * @param toIgnore the to ignore
+   */
+  public void addFileToIgnore(File toIgnore){
      this.filesToIgnore.add(toIgnore);
    }
 
-   /**
-    * remove file that is supposed to be ignored.
-    * @param toIgnore
-    */
-   public void removeFileToIgnore(File toIgnore) {
+  /**
+   * remove file that is supposed to be ignored.
+   *
+   * @param toIgnore the to ignore
+   */
+  public void removeFileToIgnore(File toIgnore) {
      this.filesToIgnore.remove(toIgnore);
    }
 
@@ -245,20 +249,20 @@ public class CleanUpJob implements Runnable {
      return time.truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
    }
 
-   /**
-    * Stop.
-    */
-   public void stop() {
+  /**
+   * Stop.
+   */
+  public void stop() {
      this.setStop(true);
      this.setStatus(CleanUpStatus.STOPPING);
    }
 
-   /**
-    * Gets the status.
-    *
-    * @return the status
-    */
-   public CleanUpStatus getStatus() {
+  /**
+   * Gets the status.
+   *
+   * @return the status
+   */
+  public CleanUpStatus getStatus() {
      return this.status;
    }
 
@@ -271,39 +275,39 @@ public class CleanUpJob implements Runnable {
      this.status = status;
    }
 
-   /**
-    * Gets the max inactive time.
-    *
-    * @return the max inactive time
-    */
-   public long getMaxInactiveTime() {
+  /**
+   * Gets the max inactive time.
+   *
+   * @return the max inactive time
+   */
+  public long getMaxInactiveTime() {
      return _maxInactiveTime;
    }
 
-   /**
-    * Gets the base.
-    *
-    * @return the base
-    */
-   public File getBase() {
+  /**
+   * Gets the base.
+   *
+   * @return the base
+   */
+  public File getBase() {
      return _base;
    }
 
-   /**
-    * Gets the check up delay.
-    *
-    * @return the check up delay
-    */
-   public long getCheckUpDelay() {
+  /**
+   * Gets the check up delay.
+   *
+   * @return the check up delay
+   */
+  public long getCheckUpDelay() {
      return _checkUpDelay;
    }
 
-   /**
-    * Gets the stop.
-    *
-    * @return the stop
-    */
-   public AtomicBoolean getStop() {
+  /**
+   * Gets the stop.
+   *
+   * @return the stop
+   */
+  public AtomicBoolean getStop() {
      return stop;
    }
 

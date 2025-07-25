@@ -31,7 +31,7 @@ import java.nio.charset.CodingErrorAction;
  * This class can be used to detect the Charset for a file.
  *
  * @author Christophe Lauret
- * @since  4 December 2014
+ * @since 4 December 2014
  */
 public final class CharsetDetector {
 
@@ -55,32 +55,31 @@ public final class CharsetDetector {
   /**
    * An enumeration of byte order marks supported by this class.
    *
+   * @author Christophe Lauret
    * @see <a href="http://www.unicode.org/versions/Unicode5.0.0/ch02.pdf">Unicode 5.0</a>
    * @see <a href="http://tools.ietf.org/html/rfc3629#section-6">RFC 3629: UTF8 - Section 6: Byte order mark (BOM)</a>
    * @see <a href="http://en.wikipedia.org/wiki/Byte-order_mark">Wikipedia: Byte Order Mark</a>
-   *
-   * @author Christophe Lauret
-   * @since  1 September 2009
+   * @since 1 September 2009
    */
   public enum ByteOrderMark {
 
     /**
      * The byte-order mark for UTF-8 (Eight-bit UCS Transformation Format).
-     *
+     * <p>
      * xEF xBB xBF
      */
     UTF8(new byte[] { (byte) 0xef, (byte) 0xbb, (byte) 0xbf }, "UTF-8"),
 
     /**
      * The byte-order mark for UTF-16LE (Sixteen-bit UCS Transformation Format, little-endian byte order).
-     *
+     * <p>
      * 0xFF 0xFE
      */
     UTF16LE(new byte[] { (byte) 0xff, (byte) 0xFE }, "UTF-16LE"),
 
     /**
      * The byte-order mark for UTF-16LE (Sixteen-bit UCS Transformation Format, big-endian byte order).
-     *
+     * <p>
      * 0xFE 0xFF
      */
     UTF16BE(new byte[] { (byte) 0xFE, (byte) 0xFF }, "UTF-16BE");
@@ -110,7 +109,6 @@ public final class CharsetDetector {
      * Indicates whether the specified byte-order mark matches on the constants.
      *
      * @param bom The BOM array.
-     *
      * @return <code>true</code> if the
      */
     public boolean matches(byte[] bom) {
@@ -139,13 +137,11 @@ public final class CharsetDetector {
   /**
    * Returns the encoding of the specified file based on the byte-order mark to see if it matches a charset defined in
    * this class.
-   *
+   * <p>
    * Returns <code>null</code> if there is no byte order mark.
    *
    * @param f The file to check the encoding for.
-   *
    * @return The corresponding charset.
-   *
    * @throws IOException If thrown while attempting to read the file.
    */
   public static Charset getFromBOM(File f) throws IOException {
@@ -169,14 +165,12 @@ public final class CharsetDetector {
 
   /**
    * Returns the encoding of the specified file by examining its content.
-   *
+   * <p>
    * This method will do the following: - Check if there are any non-ASCII characters, if not return US-ASCII - Attempts
    * to read as a Unicode UTF-8 or UTF-16 - Default to the machine default
    *
    * @param f The file to check the encoding for.
-   *
    * @return The corresponding charset.
-   *
    * @throws IOException If thrown while attempting to read the file.
    */
   public static Charset getFromContent(File f) throws IOException {
@@ -223,14 +217,12 @@ public final class CharsetDetector {
 
   /**
    * Returns the encoding of the specified file by examining its content.
-   *
+   * <p>
    * This method will do the following: - Check if there are any non-ASCII characters, if not return US-ASCII - Attempts
    * to read as a Unicode UTF-8 or UTF-16 - Default to the machine default
    *
    * @param f The file to check the encoding for.
-   *
    * @return The corresponding charset.
-   *
    * @throws IOException If thrown while attempting to read the file.
    */
   public static CharBuffer decode(File f) throws IOException {

@@ -15,7 +15,7 @@
  */
 package org.pageseeder.ox.xml.utils;
 
-import org.eclipse.jdt.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Node;
 import org.xmlunit.diff.Comparison;
@@ -40,7 +40,7 @@ public class IgnoreAttributesDifferenceEvaluator implements DifferenceEvaluator 
    *
    * @param attributesName the attributes name
    */
-  public IgnoreAttributesDifferenceEvaluator(@NonNull List<String> attributesName) {
+  public IgnoreAttributesDifferenceEvaluator(@NotNull List<String> attributesName) {
       this.attributesName = attributesName;
   }
 

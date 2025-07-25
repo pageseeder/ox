@@ -15,7 +15,7 @@
  */
 package org.pageseeder.ox.step;
 
-import org.eclipse.jdt.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.pageseeder.ox.OXErrors;
 import org.pageseeder.ox.api.Downloadable;
 import org.pageseeder.ox.api.Result;
@@ -53,7 +53,7 @@ import java.util.Objects;
  * <p><b>Note: </b> Input and output allows dynamic/variable value.</p>
  *
  * @author Ciber Cai
- * @since  23 June 2014
+ * @since 23 June 2014
  */
 public class Compression implements Step {
 
@@ -168,7 +168,7 @@ public class Compression implements Step {
     }
   }
 
-  private @NonNull String validateInputFiles(List<File> inputs) {
+  private @NotNull String validateInputFiles(List<File> inputs) {
     String errorMessage = "";
     if (Objects.isNull(inputs)) {
       errorMessage = "input cannot be null.";

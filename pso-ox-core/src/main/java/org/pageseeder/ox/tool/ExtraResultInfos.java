@@ -39,6 +39,10 @@ public class ExtraResultInfos implements XMLWritable {
 
   /**
    * Instantiates a new Extra Result Infos
+   *
+   * @param infoName the info name
+   * @param headers  the headers
+   * @param infos    the infos
    */
   public ExtraResultInfos(String infoName, List<Header> headers, List<Info> infos) {
     Objects.requireNonNull(infoName);
@@ -55,14 +59,29 @@ public class ExtraResultInfos implements XMLWritable {
     }
   }
 
+  /**
+   * Gets info name.
+   *
+   * @return the info name
+   */
   public String getInfoName() {
     return _infoName;
   }
 
+  /**
+   * Gets headers.
+   *
+   * @return the headers
+   */
   public List<Header> getHeaders() {
     return _headers;
   }
 
+  /**
+   * Gets infos.
+   *
+   * @return the infos
+   */
   public List<Info> getInfos() {
     return _infos;
   }

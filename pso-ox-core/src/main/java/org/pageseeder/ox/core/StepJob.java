@@ -29,14 +29,16 @@ import java.util.Random;
  * A simple java object to represent a Job for a step.
  *
  * @author Carlos Cabral
- * @since  27 February 2017
+ * @since 27 February 2017
  */
 public final class StepJob implements XMLWritable, Serializable {
 
   /**  the serial version. */
   private static final long serialVersionUID = -3028660547170793478L;
 
-  /** Maximum inactive time in milliseconds. */
+  /**
+   * Maximum inactive time in milliseconds.
+   */
   public static final long DEFAULT_MAX_INACTIVE_TIME_MS = 60 * 60 * 1000; // 60 minutes
 
   /** The job id. */
@@ -76,8 +78,8 @@ public final class StepJob implements XMLWritable, Serializable {
   /**
    * Instantiates a new step job.
    *
-   * @param step The {@link StepDefinition}
-   * @param pack The {@link PackageData}
+   * @param step            The {@link StepDefinition}
+   * @param pack            The {@link PackageData}
    * @param maxInactiveTime the max inactive time
    */
   public StepJob(StepDefinition step, PackageData pack, long maxInactiveTime) {
@@ -162,6 +164,8 @@ public final class StepJob implements XMLWritable, Serializable {
 
   /**
    * Set the job to complete status.
+   *
+   * @param result the result
    */
   public void completed(Result result) {
     this.status.setJobStatus(STATUS.COMPLETED);
@@ -171,6 +175,7 @@ public final class StepJob implements XMLWritable, Serializable {
 
   /**
    * Set the job to error status.
+   *
    * @param result the details of result.
    */
   public void failed(Result result) {

@@ -1,21 +1,16 @@
 package org.pageseeder.ox.sql.step;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.core.StepInfoImpl;
-import org.pageseeder.ox.step.Compression;
-import org.pageseeder.ox.step.Copy;
 import org.pageseeder.xmlwriter.XML;
 import org.pageseeder.xmlwriter.XMLStringWriter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -23,6 +23,8 @@ import org.pageseeder.ox.util.ISO8601;
 import java.io.File;
 
 /**
+ * The type File inspector.
+ *
  * @author Ciber Cai
  * @since 19 July 2016
  */

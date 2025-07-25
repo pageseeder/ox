@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
+ * The type Tidy void writer.
+ *
  * @author Carlos Cabral
  * @since 17 Aug. 2018
  */

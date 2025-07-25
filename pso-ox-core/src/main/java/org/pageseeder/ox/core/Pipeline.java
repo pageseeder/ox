@@ -36,17 +36,17 @@ import java.util.Map.Entry;
 
 /**
  * Defines an pipeline (a concept borrowed from xproc)
- *
+ * <p>
  * XML Structure:
- *
- *  &gt;pipeline id="" name="" accepts="" description="" default="false" &lt;
- *    &gt;step&lt;
- *    &gt;/step&lt;
- *  &gt;/pipeline&lt;.
+ * <p>
+ * &gt;pipeline id="" name="" accepts="" description="" default="false" &lt;
+ * &gt;step&lt;
+ * &gt;/step&lt;
+ * &gt;/pipeline&lt;.
  *
  * @author Christophe Lauret
  * @author Ciber Cai
- * @since  16 December 2013
+ * @since 16 December 2013
  */
 public final class Pipeline implements XMLWritable, Serializable {
 
@@ -94,8 +94,8 @@ public final class Pipeline implements XMLWritable, Serializable {
   /**
    * Instantiates a new pipeline.
    *
-   * @param id the id
-   * @param name The name of pipeline
+   * @param id      the id
+   * @param name    The name of pipeline
    * @param accepts the accept mine-type
    */
   public Pipeline(String id, String name, String accepts) {
@@ -105,10 +105,10 @@ public final class Pipeline implements XMLWritable, Serializable {
   /**
    * Instantiates a new pipeline.
    *
-   * @param id the id
-   * @param name The name of pipeline
-   * @param accepts the accept mine-type
-   * @param description the description of pipeline
+   * @param id           the id
+   * @param name         The name of pipeline
+   * @param accepts      the accept mine-type
+   * @param description  the description of pipeline
    * @param defaultValue the default value
    */
   public Pipeline(String id, String name, String accepts, String description, boolean defaultValue) {
@@ -171,7 +171,7 @@ public final class Pipeline implements XMLWritable, Serializable {
   /**
    * Adds the extra attributes.
    *
-   * @param name the name
+   * @param name  the name
    * @param value the value
    */
   public void addExtraAttributes (String name, String value) {

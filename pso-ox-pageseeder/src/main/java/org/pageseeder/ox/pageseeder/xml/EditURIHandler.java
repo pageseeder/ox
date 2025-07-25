@@ -17,16 +17,12 @@
 package org.pageseeder.ox.pageseeder.xml;
 
 import net.pageseeder.app.simple.core.SimpleSiteException;
-import net.pageseeder.app.simple.core.utils.SimpleDateTimeUtils;
 import net.pageseeder.app.simple.core.utils.SimpleNumberUtils;
 import net.pageseeder.app.simple.core.utils.SimpleStringUtils;
-import net.pageseeder.app.simple.pageseeder.model.AddURIMetadata;
 import net.pageseeder.app.simple.pageseeder.model.EditURI;
-import net.pageseeder.app.simple.pageseeder.model.builder.AddURIMetadataBuilder;
 import net.pageseeder.app.simple.pageseeder.model.builder.EditURIBuilder;
 import org.pageseeder.bridge.model.PSGroup;
 import org.pageseeder.bridge.model.PSMember;
-import org.pageseeder.bridge.psml.Property;
 import org.pageseeder.bridge.xml.BasicHandler;
 import org.xml.sax.Attributes;
 

@@ -26,11 +26,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * The type Compression test.
+ *
  * @author Ciber Cai
  * @since 18 Jul 2016
  */
 public class CompressionTest {
 
+  /**
+   * Test compress process no params.
+   */
   @Test
   public void test_compress_process_no_params() {
     File file = new File("src/test/resources/models/m1/Sample.docx");
@@ -47,6 +52,9 @@ public class CompressionTest {
 
   }
 
+  /**
+   * Test compress process params.
+   */
   @Test
   public void test_compress_process_params() {
     File file = new File("src/test/resources/models/m1/Sample.docx");

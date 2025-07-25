@@ -40,14 +40,11 @@ import java.util.Date;
  * <p>
  * The capital letter T is used to separate the date and time components.
  *
+ * @author Christophe Lauret
  * @see <a href="http://en.wikipedia.org/wiki/ISO_8601">Wikipedia: ISO 8601</a>
  * @see <a href="http://www.w3.org/TR/NOTE-datetime">W3C Note: Date and Time Formats</a>
- * @see <a href="http://www.iso.org/iso/date_and_time_format">ISO: Numeric representation of Dates
- *      and Time</a>
- *
- * @author Christophe Lauret
- *
- * @since  Berlioz 0.9.4 - 31 January 2014
+ * @see <a href="http://www.iso.org/iso/date_and_time_format">ISO: Numeric representation of Dates      and Time</a>
+ * @since Berlioz 0.9.4 - 31 January 2014
  * @since Berlioz 0.6
  */
 public enum ISO8601 {
@@ -114,7 +111,6 @@ public enum ISO8601 {
    *
    * @param date The date the format
    * @return the corresponding date as the specified ISO 8601 format.
-   *
    * @throws ParseException Should an error be thrown by the {@link SimpleDateFormat#parse(String)} method.
    */
   public Date parse(String date) throws ParseException {
@@ -145,7 +141,6 @@ public enum ISO8601 {
    *
    * @param date the specified date.
    * @return the date formatted using ISO 8601.
-   *
    * @throws ParseException Should an error be thrown by the {@link SimpleDateFormat#parse(String)} method.
    */
   public static Date parseAuto(String date) throws ParseException {

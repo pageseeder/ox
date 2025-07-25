@@ -23,10 +23,9 @@ import java.util.*;
 
 /**
  * The SPI for {@link PackageInspector}.
- *
+ * <p>
  * To Register {@link PackageInspector} service, you must specify the service in
  * :CLASPATH/META-INF/services/org.pageseeder.ox.api.PackageInspector
- *
  *
  * @author Ciber Cai
  * @since 15 June 2016
@@ -46,6 +45,8 @@ public final class InspectorService {
   }
 
   /**
+   * Gets instance.
+   *
    * @return the {@link InspectorService} instance.
    */
   public static InspectorService getInstance() {
@@ -66,6 +67,7 @@ public final class InspectorService {
 
   /**
    * Return the list of {@link PackageInspector}s base on the media type.
+   *
    * @param mediaType the request media type
    * @return the List of {@link PackageInspector}s
    */

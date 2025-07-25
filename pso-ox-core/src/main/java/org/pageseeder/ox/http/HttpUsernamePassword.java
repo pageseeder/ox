@@ -42,8 +42,7 @@ public final class HttpUsernamePassword implements HttpCredentials {
    *
    * @param username The username
    * @param password The password
-   *
-   * @throws NullPointerException if either argument is <code>null</code>
+   * @throws NullPointerException     if either argument is <code>null</code>
    * @throws IllegalArgumentException if either argument is considered invalid.
    */
   public HttpUsernamePassword(String username, String password) {
@@ -53,6 +52,8 @@ public final class HttpUsernamePassword implements HttpCredentials {
   }
 
   /**
+   * Username string.
+   *
    * @return The username (cannot be <code>null</code>).
    */
   public String username() {
@@ -60,6 +61,8 @@ public final class HttpUsernamePassword implements HttpCredentials {
   }
 
   /**
+   * Password string.
+   *
    * @return The password (cannot be <code>null</code>).
    */
   public String password() {
@@ -67,6 +70,8 @@ public final class HttpUsernamePassword implements HttpCredentials {
   }
 
   /**
+   * To basic authorization string.
+   *
    * @return The basic authorization string
    */
   public String toBasicAuthorization() {

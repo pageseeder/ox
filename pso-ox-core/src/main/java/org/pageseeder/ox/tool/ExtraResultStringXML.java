@@ -35,7 +35,7 @@ public class ExtraResultStringXML implements XMLWritable {
    */
   private String extraXML;
 
-   /**
+  /**
    * Instantiates a new Extra result info.
    *
    * @param extraXML the extra information

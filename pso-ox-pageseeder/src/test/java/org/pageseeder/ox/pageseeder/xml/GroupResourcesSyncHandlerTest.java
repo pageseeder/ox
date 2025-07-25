@@ -15,22 +15,15 @@
  */
 package org.pageseeder.ox.pageseeder.xml;
 
-import net.pageseeder.app.simple.pageseeder.model.GroupOptions;
 import org.junit.Assert;
 import org.junit.Test;
-import org.pageseeder.bridge.model.PSGroup;
-import org.pageseeder.bridge.model.PSNotification;
-import org.pageseeder.bridge.model.PSRole;
-import org.pageseeder.ox.pageseeder.model.GroupAndGroupOptionWrapper;
 import org.pageseeder.ox.pageseeder.model.GroupResourcesSync;
 import org.pageseeder.ox.util.XMLUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  *

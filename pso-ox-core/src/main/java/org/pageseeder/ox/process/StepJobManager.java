@@ -28,14 +28,16 @@ import java.util.concurrent.ThreadFactory;
  * A manager class for dealing with {@link StepJob}.
  *
  * @author Carlos Cabral
- * @since  27 February 2017
+ * @since 27 February 2017
  */
 public class StepJobManager {
 
   /** the logger */
   private static final Logger LOGGER = LoggerFactory.getLogger(StepJobManager.class);
 
-  /** the default number of thread for processing step */
+  /**
+   * the default number of thread for processing step
+   */
   public static final int DEAULT_NUMBER_OF_THREAD = 1;
 
   /** a thread executor */
@@ -57,8 +59,8 @@ public class StepJobManager {
   /**
    * the step job manager.
    *
-   * @param nThreads               The number of step thread.
-   * @param maxStoredCompletedJob  The max number of completed job stored in memory
+   * @param nThreads              The number of step thread.
+   * @param maxStoredCompletedJob The max number of completed job stored in memory
    */
   public StepJobManager(int nThreads, int maxStoredCompletedJob) {
     this._noThreads = nThreads;
@@ -87,6 +89,9 @@ public class StepJobManager {
     });
   }
 
+  /**
+   * Stop.
+   */
   public void stop() {
     LOGGER.debug("Stopping the Step job manager.");
     if (DEFAULT_EXECUTOR != null) {
@@ -102,6 +107,7 @@ public class StepJobManager {
 
   /**
    * Add a job to process.
+   *
    * @param job the StepJob
    */
   public void addJob(StepJob job) {
@@ -112,8 +118,9 @@ public class StepJobManager {
   }
 
   /**
-   * @param id the id of job
+   * Check job status job status.
    *
+   * @param id the id of job
    * @return the status of job
    */
   public JobStatus checkJobStatus(String id) {
@@ -121,6 +128,8 @@ public class StepJobManager {
   }
 
   /**
+   * No waiting job int.
+   *
    * @return the total number of jobs in the waiting queue.
    */
   public int noWaitingJob() {
@@ -128,6 +137,8 @@ public class StepJobManager {
   }
 
   /**
+   * Gets job id.
+   *
    * @param id the id of job
    * @return the StepJob
    */

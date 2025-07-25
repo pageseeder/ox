@@ -23,7 +23,7 @@ import java.util.Map;
  * Aa implementation of StepInfo.
  *
  * @author Christophe Lauret
- * @since  8 May 2014
+ * @since 8 May 2014
  */
 public final class StepInfoImpl implements StepInfo {
 
@@ -43,14 +43,13 @@ public final class StepInfoImpl implements StepInfo {
   private final Map<String, String> _parameters;
 
   /**
-   *
    * From May 2025 it will allow input and output to be null. Because the OX starts allowing the users to start a
    * pipeline without an input file.
    *
-   * @param id The id of step
-   * @param name The name of step.
-   * @param input The input path
-   * @param output The output path
+   * @param id         The id of step
+   * @param name       The name of step.
+   * @param input      The input path
+   * @param output     The output path
    * @param parameters The list of parameters
    */
   public StepInfoImpl(String id, String name, String input, String output, Map<String, String> parameters) {

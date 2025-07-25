@@ -16,11 +16,22 @@
 package org.pageseeder.ox.tool;
 
 /**
+ * The enum Info type.
+ *
  * @author ccabral
  * @since 02 March 2021
  */
 public enum InfoType {
+  /**
+   * String info type.
+   */
   string,
+  /**
+   * List info type.
+   */
   list,
+  /**
+   * Map info type.
+   */
   map
 }

@@ -31,7 +31,7 @@ import java.util.concurrent.ThreadFactory;
  * A manager class for dealing with {@link PipelineJob}.
  *
  * @author Ciber Cai
- * @since  10 November 2014
+ * @since 10 November 2014
  */
 public class PipelineJobManager implements XMLWritable{
 
@@ -59,7 +59,9 @@ public class PipelineJobManager implements XMLWritable{
 
   /**
    * the pipeline job manager
-   * @param nThreads number of pipeline thread.
+   *
+   * @param nThreads              number of pipeline thread.
+   * @param maxStoredCompletedJob the max stored completed job
    */
   public PipelineJobManager(int nThreads, int maxStoredCompletedJob) {
     this._noThreads = nThreads;
@@ -96,6 +98,9 @@ public class PipelineJobManager implements XMLWritable{
     });
   }
 
+  /**
+   * Stop.
+   */
   public void stop() {
     LOGGER.debug("Stopping the Pipeline Processor.");
     if (DEFAULT_EXECUTOR != null) {
@@ -117,6 +122,7 @@ public class PipelineJobManager implements XMLWritable{
 
   /**
    * Add a job to process.
+   *
    * @param job the PipelineJob
    */
   public void addJob(PipelineJob job) {
@@ -132,8 +138,9 @@ public class PipelineJobManager implements XMLWritable{
   }
 
   /**
-   * @param id the id of job
+   * Check job status job status.
    *
+   * @param id the id of job
    * @return the status of job
    */
   public JobStatus checkJobStatus(String id) {
@@ -141,6 +148,8 @@ public class PipelineJobManager implements XMLWritable{
   }
 
   /**
+   * No waiting job int.
+   *
    * @return the total number of jobs in the waiting queue.
    */
   public int noWaitingJob() {
@@ -148,6 +157,8 @@ public class PipelineJobManager implements XMLWritable{
   }
 
   /**
+   * Gets job id.
+   *
    * @param id the id of job
    * @return the PipelineJob
    */

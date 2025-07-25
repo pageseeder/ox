@@ -15,8 +15,8 @@
  */
 package org.pageseeder.ox.tool;
 
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.pageseeder.ox.OXErrors;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.StepInfo;
@@ -58,7 +58,7 @@ public class DefaultResult extends ResultBase implements Result {
    * @param info   the info
    * @param output the output (it can only be a zip or a file or null)
    */
-  public DefaultResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info, @Nullable File output) {
+  public DefaultResult(@NotNull Model model, @NotNull PackageData data, @NotNull StepInfo info, @Nullable File output) {
     super(model, data);
     this._info = info;
     this._output = output;

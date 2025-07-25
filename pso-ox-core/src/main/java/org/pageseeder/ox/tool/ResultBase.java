@@ -24,7 +24,7 @@ import org.pageseeder.ox.core.ResultStatus;
  * An abstract implementation of a command result
  *
  * @author Christophe Lauret
- * @since  28 October 2013
+ * @since 28 October 2013
  */
 public abstract class ResultBase implements Result {
 
@@ -41,8 +41,10 @@ public abstract class ResultBase implements Result {
   private Exception error = null;
 
   /**
+   * Instantiates a new Result base.
+   *
    * @param model The {@link Model}
-   * @param data the {@link Package}
+   * @param data  the {@link Package}
    */
   protected ResultBase(Model model, PackageData data) {
     this._model = model;
@@ -51,6 +53,8 @@ public abstract class ResultBase implements Result {
   }
 
   /**
+   * Model model.
+   *
    * @return the {@link Model}
    */
   public final Model model() {
@@ -58,6 +62,8 @@ public abstract class ResultBase implements Result {
   }
 
   /**
+   * Data package data.
+   *
    * @return {@link PackageData}
    */
   public final PackageData data() {
@@ -91,6 +97,8 @@ public abstract class ResultBase implements Result {
   }
 
   /**
+   * Sets status.
+   *
    * @param status the status to set
    */
   public final void setStatus(ResultStatus status) {
@@ -98,6 +106,8 @@ public abstract class ResultBase implements Result {
   }
 
   /**
+   * Sets error.
+   *
    * @param ex the exception causing the error.
    */
   public final void setError(Exception ex) {
@@ -106,6 +116,11 @@ public abstract class ResultBase implements Result {
     done();
   }
 
+  /**
+   * Is downloadable boolean.
+   *
+   * @return the boolean
+   */
   public abstract boolean isDownloadable();
 
 }

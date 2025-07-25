@@ -29,7 +29,6 @@ import org.pageseeder.bridge.PSCredentials;
 import org.pageseeder.bridge.model.PSGroup;
 import org.pageseeder.bridge.model.PSMember;
 import org.pageseeder.bridge.model.PSProject;
-import org.pageseeder.bridge.xml.PSGroupHandler;
 import org.pageseeder.ox.api.Measurable;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.StepInfo;

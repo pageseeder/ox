@@ -16,26 +16,40 @@
 package org.pageseeder.ox.cleanup;
 
 /**
+ * The enum Clean up status.
+ *
  * @author Carlos Cabral
  * @since 29 Oct. 2018
  */
 public enum CleanUpStatus {
 
-  /** The not started. */
+  /**
+   * The not started.
+   */
   NOT_STARTED,
 
-  /** The waiting next iteraction. */
+  /**
+   * The waiting next iteraction.
+   */
   WAITING_NEXT_ITERACTION,
 
-  /** The running. */
+  /**
+   * The running.
+   */
   RUNNING,
 
-  /** The stopping. */
+  /**
+   * The stopping.
+   */
   STOPPING,
 
-  /** The stopped. */
+  /**
+   * The stopped.
+   */
   STOPPED,
-  /** If the job failed. */
+  /**
+   * If the job failed.
+   */
   FAILED;
 
 }

@@ -35,7 +35,7 @@ public class Header implements XMLWritable {
   /**
    * Instantiates a new Header object
    *
-   * @param text the value that is displayed in the front end
+   * @param text  the value that is displayed in the front end
    * @param value the value used to match the information with the attribute name in the element info
    */
   public Header(String text, String value) {
@@ -45,10 +45,20 @@ public class Header implements XMLWritable {
     this._value = value;
   }
 
+  /**
+   * Gets text.
+   *
+   * @return the text
+   */
   public String getText() {
     return _text;
   }
 
+  /**
+   * Gets value.
+   *
+   * @return the value
+   */
   public String getValue() {
     return _value;
   }

@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  * The Class StringUtils.
  *
  * @author Carlos Cabral
- * @since  4 March 2016
+ * @since 4 March 2016
  */
 public class StringUtils {
 
@@ -52,7 +52,7 @@ public class StringUtils {
   /**
    * Convert to string.
    *
-   * @param values the values
+   * @param values    the values
    * @param separator the separator
    * @return the string
    */
@@ -72,7 +72,7 @@ public class StringUtils {
   /**
    * Convert to string.
    *
-   * @param values the values
+   * @param values    the values
    * @param separator the separator
    * @return the string
    */

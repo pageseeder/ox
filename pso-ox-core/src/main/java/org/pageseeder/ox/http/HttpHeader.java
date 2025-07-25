@@ -15,7 +15,7 @@
  */
 package org.pageseeder.ox.http;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
@@ -72,6 +72,8 @@ public final class HttpHeader {
   }
 
   /**
+   * Name string.
+   *
    * @return The header name
    */
   public String name() {
@@ -79,6 +81,8 @@ public final class HttpHeader {
   }
 
   /**
+   * Value string.
+   *
    * @return The header string value
    */
   public String value() {
@@ -87,6 +91,8 @@ public final class HttpHeader {
   }
 
   /**
+   * Long value long.
+   *
    * @return The header long value
    */
   public long longValue() {
@@ -104,9 +110,7 @@ public final class HttpHeader {
    * Format the specified date using the HTTP-Date format.
    *
    * @param date Date to format
-   *
    * @return The corresponding string.
-   *
    * @see <a href="https://tools.ietf.org/html/rfc7231#section-7.1.1.1">HTTP Date format</a>
    */
   public static String formatHTTPDate(Date date) {
@@ -119,12 +123,9 @@ public final class HttpHeader {
    * Parse the specified date using the HTTP-Date format.
    *
    * @param date Date to parse.
-   *
    * @return The corresponding string.
-   *
-   * @see <a href="https://tools.ietf.org/html/rfc7231#section-7.1.1.1">HTTP Date format</a>
-   *
    * @throws ParseException If the date cannot be parsed as a HTTP date string.
+   * @see <a href="https://tools.ietf.org/html/rfc7231#section-7.1.1.1">HTTP Date format</a>
    */
   public static Date parseHTTPDate(String date) throws ParseException {
     SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
@@ -138,7 +139,6 @@ public final class HttpHeader {
    * <p>For example, it will return "application/xml" for "application/xml; charset=utf-8".
    *
    * @param contentType The value of the "Content-Type" header.
-   *
    * @return the corresponding mediatype.
    */
   public static @Nullable String toMediaType(@Nullable String contentType) {
@@ -157,12 +157,9 @@ public final class HttpHeader {
    * <p>For example, it will return "utf-8" for "application/xml".
    *
    * @param contentType The value of the "Content-Type" header.
-   *
    * @return the corresponding charset instance or <code>null</code>
-   *
    * @throws IllegalCharsetNameException If the given charset name is illegal
-   * @throws UnsupportedCharsetException If no support for the named charset is available
-   *         in this instance of the Java virtual machine
+   * @throws UnsupportedCharsetException If no support for the named charset is available         in this instance of the Java virtual machine
    */
   public static @Nullable Charset toCharset(@Nullable String contentType) {
     if (contentType == null) return null;

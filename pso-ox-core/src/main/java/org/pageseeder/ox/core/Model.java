@@ -40,8 +40,10 @@ import java.io.IOException;
 import java.util.*;
 
 /**
+ * The type Model.
+ *
  * @author Christophe Lauret
- * @since  31 October 2013
+ * @since 31 October 2013
  */
 public final class Model implements XMLWritable {
 
@@ -71,6 +73,7 @@ public final class Model implements XMLWritable {
 
   /**
    * Create a new model.
+   *
    * @param name the name of model.
    */
   public Model(String name) {
@@ -78,6 +81,8 @@ public final class Model implements XMLWritable {
   }
 
   /**
+   * Name string.
+   *
    * @return the name of this model
    */
   public String name() {
@@ -85,8 +90,9 @@ public final class Model implements XMLWritable {
   }
 
   /**
+   * Extra attributes map.
    *
-   * @return
+   * @return map map
    */
   public Map<String, String> extraAttributes(){
     return Collections.unmodifiableMap(this.extraAttributes);
@@ -121,6 +127,7 @@ public final class Model implements XMLWritable {
 
   /**
    * Loads the model definition to know what the pipelines, steps and parameters are.
+   *
    * @return the status of load.
    */
   public boolean load() {
@@ -154,6 +161,8 @@ public final class Model implements XMLWritable {
 
   /**
    * Returns model xml file.
+   *
+   * @return the model xml
    */
   public File getModelXML() {
     return getFile("model.xml");
@@ -175,6 +184,8 @@ public final class Model implements XMLWritable {
   }
 
   /**
+   * Gets root.
+   *
    * @return the model root.
    */
   public File getRoot() {
@@ -185,7 +196,6 @@ public final class Model implements XMLWritable {
    * Load a properties file from the package.
    *
    * @param path the path to the properties file.
-   *
    * @return the properties loaded from the model or <code>null</code>.
    */
   public Properties getProperties(String path) {
@@ -205,9 +215,8 @@ public final class Model implements XMLWritable {
    * Returns templates from this model, falling back on the built-in templates.
    *
    * @param path the path to the template
-   *
    * @return the templates loaded from the model or <code>null</code>.
-   * @throws IOException when IO error occur.
+   * @throws IOException                       when IO error occur.
    * @throws TransformerConfigurationException when transformation occur.
    */
   public Templates getTemplates(String path) throws IOException, TransformerConfigurationException {
@@ -227,6 +236,13 @@ public final class Model implements XMLWritable {
     this.toXML(xml, null);
   }
 
+  /**
+   * To xml.
+   *
+   * @param xml        the xml
+   * @param pipelineId the pipeline id
+   * @throws IOException the io exception
+   */
   public void toXML(XMLWriter xml, String pipelineId) throws IOException {
     xml.openElement("model", true);
     xml.attribute("name", this._name);
@@ -250,6 +266,7 @@ public final class Model implements XMLWritable {
 
   /**
    * Indicates whether the model exists.
+   *
    * @param name the name of model
    * @return the status whether is defined
    */
@@ -269,8 +286,10 @@ public final class Model implements XMLWritable {
 
   /**
    * Returns the default model (if only one defined)
-   *
+   * <p>
    * Note: Before use this Method, check if the OXCOnfig model directory is defined.
+   *
+   * @return the default
    */
   public static Model getDefault() {
     List<Model> models = listModels();
@@ -279,6 +298,8 @@ public final class Model implements XMLWritable {
   }
 
   /**
+   * List models list.
+   *
    * @return the list of {@link Model}s
    */
   public static List<Model> listModels() {
@@ -286,6 +307,8 @@ public final class Model implements XMLWritable {
   }
 
   /**
+   * List models list.
+   *
    * @param reload whether to reload the models
    * @return the list of {@link Model}s
    */
@@ -353,6 +376,8 @@ public final class Model implements XMLWritable {
   }
 
   /**
+   * Gets pipeline.
+   *
    * @param id the id of the pipeline
    * @return the Pipeline based on the name.
    */
@@ -367,8 +392,7 @@ public final class Model implements XMLWritable {
   /**
    * Return the default pipeline for this model.
    *
-   * @return the first Pipeline found which default attribute has value true. If
-   * not found then returns the first.
+   * @return the first Pipeline found which default attribute has value true. If not found then returns the first.
    */
   public Pipeline getPipelineDefault() {
     load();
@@ -386,6 +410,8 @@ public final class Model implements XMLWritable {
   }
 
   /**
+   * Size int.
+   *
    * @return the number of pipeline in the model.
    */
   public int size() {
@@ -395,7 +421,7 @@ public final class Model implements XMLWritable {
 
   /**
    * SAX parser for a model.
-   *
+   * <p>
    * This parser delegates the task of parsing the pipeline.
    */
   static class ModelHandler extends DefaultHandler implements ContentHandler {
@@ -410,7 +436,9 @@ public final class Model implements XMLWritable {
     private Locator _locator = null;
 
     /**
+     * Instantiates a new Model handler.
      *
+     * @param model the model
      */
     public ModelHandler(Model model) {
       this._model = model;
@@ -472,6 +500,8 @@ public final class Model implements XMLWritable {
     }
 
     /**
+     * Gets model.
+     *
      * @return the _model
      */
     public Model getModel() {

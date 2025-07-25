@@ -47,7 +47,7 @@ import java.io.*;
  * <p>Otherwise return {@link Result} </p>
  *
  * @author Ciber Cai
- * @since  12 June 2014
+ * @since 12 June 2014
  */
 public final class Wellformedness implements Step {
 

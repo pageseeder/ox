@@ -15,9 +15,6 @@
  */
 package org.pageseeder.ox.pageseeder.model;
 
-import net.pageseeder.app.simple.pageseeder.model.GroupOptions;
-import org.pageseeder.bridge.model.PSGroup;
-
 /**
  * The Group Resources Sync.
  *

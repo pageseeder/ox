@@ -15,13 +15,13 @@
  */
 package org.pageseeder.ox.sql.core;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /***
  * <p>This is a basic Database Manager for handle the sqlite database. </p>

@@ -27,11 +27,16 @@ import org.pageseeder.xmlwriter.XMLWriter;
 import java.io.File;
 
 /**
+ * The type Step definition test.
+ *
  * @author Ciber Cai
  * @since 18 Jul 2016
  */
 public class StepDefinitionTest {
 
+  /**
+   * Init.
+   */
   @Before
   public void init() {
     File modelDir = new File("src/test/resources/models");
@@ -39,6 +44,11 @@ public class StepDefinitionTest {
     config.setModelsDirectory(modelDir);
   }
 
+  /**
+   * Test handler.
+   *
+   * @throws Exception the exception
+   */
   @Test
   public void testHandler() throws Exception {
     Model model = new Model("m1");

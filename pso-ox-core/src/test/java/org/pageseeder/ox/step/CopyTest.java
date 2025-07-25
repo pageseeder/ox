@@ -34,11 +34,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * The type Copy test.
+ *
  * @author Ciber Cai
  * @since 18 July 2016
  */
 public class CopyTest {
 
+  /**
+   * Init.
+   */
   @Before
   public void init() {
     File modelDir = new File("src/test/resources/models");
@@ -46,6 +51,9 @@ public class CopyTest {
     config.setModelsDirectory(modelDir);
   }
 
+  /**
+   * Test copy file.
+   */
   @Test
   public void test_copy_file() {
     try {
@@ -83,6 +91,9 @@ public class CopyTest {
     }
   }
 
+  /**
+   * Test copy directory.
+   */
   @Test
   public void test_copy_directory() {
     try {

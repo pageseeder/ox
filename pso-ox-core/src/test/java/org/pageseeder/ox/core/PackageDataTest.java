@@ -25,8 +25,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The type Package data test.
+ */
 public class PackageDataTest {
 
+  /**
+   * Init.
+   */
   @Before
   public void init() {
     File modelDir = new File("src/test/resources/models");
@@ -34,12 +40,20 @@ public class PackageDataTest {
     config.setModelsDirectory(modelDir);
   }
 
+  /**
+   * Test not null for package data.
+   */
   @Test
   public void test_not_null_for_packageData() {
     PackageData data = PackageData.newPackageData(String.valueOf(System.nanoTime()), null);
     Assert.assertNotNull(data);
   }
 
+  /**
+   * Test get file for package data.
+   *
+   * @throws IOException the io exception
+   */
   @Test
   public void test_get_File_for_packageData() throws IOException {
     File sampleFile = new File("src/test/resources/models/m1/sample.zip");
@@ -51,6 +65,9 @@ public class PackageDataTest {
     Assert.assertTrue(expectedFile.exists());
   }
 
+  /**
+   * Test properties.
+   */
   @Test
   public void test_properties() {
     File sampleFile = new File("src/test/resources/models/m1/sample.zip");
@@ -69,6 +86,11 @@ public class PackageDataTest {
 
   }
 
+  /**
+   * Test unpack.
+   *
+   * @throws Exception the exception
+   */
   @Test
   public void test_unpack() throws Exception {
     File sampleFile = new File("src/test/resources/models/m1/sample.docx");
@@ -82,6 +104,9 @@ public class PackageDataTest {
     Assert.assertTrue(data.isUnpacked());
   }
 
+  /**
+   * Test get package date.
+   */
   @Test
   public void test_get_packageDate() {
     File sampleFile = new File("src/test/resources/models/m1/sample.docx");
@@ -94,6 +119,9 @@ public class PackageDataTest {
     Assert.assertEquals(data.getOriginal(), loadedData.getOriginal());
   }
 
+  /**
+   * Test get path.
+   */
   @Test
   public void test_getPath() {
     File sampleFile = new File("src/test/resources/models/m1/sample.docx");
@@ -106,6 +134,9 @@ public class PackageDataTest {
 
   }
 
+  /**
+   * Test get file.
+   */
   @Test
   public void test_getFile() {
     File sampleFile = new File("src/test/resources/models/m1/sample.xml");
@@ -131,6 +162,9 @@ public class PackageDataTest {
     }
   }
 
+  /**
+   * Test get file by using glob pattern.
+   */
   @Test
   public void test_getFileByUsingGlobPattern() {
     File sampleFile = new File("src/test/resources/models/m1/sample.xml");
@@ -161,6 +195,9 @@ public class PackageDataTest {
     }
   }
 
+  /**
+   * Test get files by using glob pattern.
+   */
   @Test
   public void test_getFilesByUsingGlobPattern() {
     File sampleFile = new File("src/test/resources/models/m1/sample.xml");

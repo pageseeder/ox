@@ -15,8 +15,8 @@
  */
 package org.pageseeder.ox.core;
 
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.api.PackageInspector;
 import org.pageseeder.ox.util.*;
@@ -151,7 +151,7 @@ public final class PackageData implements XMLWritable, Serializable {
    * @param path the relative path in the package
    * @return the File.
    */
-  @NonNull
+  @NotNull
   public List<File> getFiles(String path) {
     List<File> files = new ArrayList<>();
     if (!StringUtils.isBlank(path)) {

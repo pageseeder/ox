@@ -1,15 +1,10 @@
 package org.pageseeder.ox.pageseeder.step;
 
 import net.pageseeder.app.simple.pageseeder.service.MemberService;
-import net.pageseeder.app.simple.vault.PSOAuthConfigManager;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
-import net.pageseeder.app.simple.vault.TokensVaultManager;
-import net.pageseeder.app.simple.vault.VaultUtils;
 import org.pageseeder.bridge.PSConfig;
-import org.pageseeder.bridge.PSCredentials;
 import org.pageseeder.bridge.model.PSMember;
 import org.pageseeder.ox.api.Result;
-import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
@@ -18,7 +13,6 @@ import org.pageseeder.ox.tool.ExtraResultStringXML;
 import org.pageseeder.ox.util.StepUtils;
 import org.pageseeder.xmlwriter.XML;
 import org.pageseeder.xmlwriter.XMLStringWriter;
-import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

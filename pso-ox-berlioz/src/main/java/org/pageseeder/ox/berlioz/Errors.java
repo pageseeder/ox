@@ -23,7 +23,6 @@ import org.pageseeder.xmlwriter.XMLWriter;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
-import java.util.Locale;
 
 /**
  * A utility class for parameters.
@@ -315,6 +314,7 @@ public final class Errors {
    *
    * @param req the req
    * @param xml the xml
+   * @param model the model
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public static void noModel(ContentRequest req, XMLWriter xml, String model) throws IOException {
@@ -339,6 +339,7 @@ public final class Errors {
    *
    * @param req the req
    * @param xml the xml
+   * @param pipelineId the pipelineId
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public static void noPipeline(ContentRequest req, XMLWriter xml, String pipelineId) throws IOException {

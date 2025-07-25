@@ -15,7 +15,7 @@
  */
 package org.pageseeder.ox.http;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,7 +73,7 @@ import java.util.Map.Entry;
  *                .response();
  * </pre>
  *
- * @Author Carlos Cabral
+ * @author Carlos Cabral
  * @since 2.2.69
  * @since 16 September 2021
  */
@@ -105,7 +105,7 @@ public final class Request extends BasicRequest implements HttpRequest {
    * Creates a new request to the url.
    *
    * @param method The HTTP method
-   * @param url   The complete url
+   * @param url    The complete url
    */
   public Request(HttpMethod method, String url) {
     super(method, url);
@@ -318,8 +318,7 @@ public final class Request extends BasicRequest implements HttpRequest {
    * Creates a new request to PageSeeder and immediately execute it.
    *
    * @param method The HTTP method
-   * @param url   The complete url including parameters
-   *
+   * @param url    The complete url including parameters
    * @return the corresponding response
    */
   public static Response response(HttpMethod method, String url) {

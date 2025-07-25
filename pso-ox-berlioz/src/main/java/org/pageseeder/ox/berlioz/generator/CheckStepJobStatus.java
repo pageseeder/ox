@@ -16,7 +16,6 @@
 package org.pageseeder.ox.berlioz.generator;
 
 import org.pageseeder.berlioz.BerliozException;
-import org.pageseeder.berlioz.content.ContentGenerator;
 import org.pageseeder.berlioz.content.ContentRequest;
 import org.pageseeder.berlioz.content.ContentStatus;
 import org.pageseeder.ox.core.JobStatus;
@@ -32,7 +31,7 @@ import java.io.IOException;
  * <h3>Parameters</h3>
  * <ul>
  *  <li><var>id</var> the job id</li>
- * </li>
+ * </ul>
  *
  * @author Carlos Cabral
  * @version 27 February 2017

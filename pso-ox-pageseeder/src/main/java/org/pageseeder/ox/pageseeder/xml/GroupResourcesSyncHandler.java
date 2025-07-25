@@ -15,12 +15,7 @@
  */
 package org.pageseeder.ox.pageseeder.xml;
 
-import net.pageseeder.app.simple.pageseeder.model.GroupOptions;
-import org.pageseeder.bridge.model.PSGroup;
 import org.pageseeder.bridge.xml.BasicHandler;
-import org.pageseeder.bridge.xml.MissingAttributeException;
-import org.pageseeder.bridge.xml.PSHandlers;
-import org.pageseeder.ox.pageseeder.model.GroupAndGroupOptionWrapper;
 import org.pageseeder.ox.pageseeder.model.GroupResourcesSync;
 import org.xml.sax.Attributes;
 

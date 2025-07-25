@@ -40,11 +40,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * The type Transformation test.
+ *
  * @author Ciber Cai
  * @since 18 July 2016
  */
 public class TransformationTest {
 
+  /**
+   * Init.
+   */
   @Before
   public void init() {
     File modelDir = new File("src/test/resources/org/pageseeder/ox/step/transformation");

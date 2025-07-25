@@ -23,7 +23,6 @@ import org.pageseeder.ox.berlioz.OXBerliozErrorMessage;
 import org.pageseeder.ox.berlioz.request.RequestHandler;
 import org.pageseeder.ox.berlioz.request.RequestHandlerFactory;
 import org.pageseeder.ox.berlioz.util.BerliozOXUtils;
-import org.pageseeder.ox.berlioz.request.FileHandler;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.core.PipelineJob;
 import org.pageseeder.ox.process.PipelineJobManager;

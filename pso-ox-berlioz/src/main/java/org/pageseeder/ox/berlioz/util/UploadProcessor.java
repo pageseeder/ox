@@ -64,9 +64,10 @@ public final class UploadProcessor {
 
   /**
    * A default constructor for UploadProcessor.
+   *
    * @param req the ContentRequest
    * @throws FileUploadException when FilUpload occurs
-   * @throws OXException
+   * @throws OXException         the ox exception
    */
   protected UploadProcessor(HttpServletRequest req) throws FileUploadException, OXException {
     LOGGER.debug("Instantiate Upload Processor");
@@ -205,7 +206,7 @@ public final class UploadProcessor {
    * Return the parameter from FileItem.
    *
    * @param name the name of the parameter.
-   * @param def the default value of the parameter.
+   * @param def  the default value of the parameter.
    * @return the specified parameter value.
    */
   public String getParameter(String name, String def) {

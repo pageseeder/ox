@@ -51,6 +51,8 @@ public final class HttpParameter {
   }
 
   /**
+   * Name string.
+   *
    * @return The parameter name (not URL encoded)
    */
   public String name() {
@@ -58,12 +60,19 @@ public final class HttpParameter {
   }
 
   /**
+   * Value string.
+   *
    * @return The parameter value (not URL encoded)
    */
   public String value() {
     return this._value;
   }
 
+  /**
+   * Append.
+   *
+   * @param query the query
+   */
   public void append(StringBuilder query) {
     try {
       query.append(URLEncoder.encode(this._name, "utf-8"));
@@ -82,6 +91,12 @@ public final class HttpParameter {
   }
 
 
+  /**
+   * New parameter http parameter.
+   *
+   * @param parameter the parameter
+   * @return the http parameter
+   */
   public static HttpParameter newParameter(String parameter) {
     try {
       int e = parameter.indexOf('=');

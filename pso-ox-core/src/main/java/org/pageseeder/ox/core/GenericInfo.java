@@ -78,7 +78,7 @@ public class GenericInfo implements XMLWritable, Serializable {
   /**
    * Adds the attributes.
    *
-   * @param name the name
+   * @param name  the name
    * @param value the value
    */
   public void addAttributes (String name, String value) {
