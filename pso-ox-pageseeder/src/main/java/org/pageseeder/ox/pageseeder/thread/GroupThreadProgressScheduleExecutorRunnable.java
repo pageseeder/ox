@@ -49,12 +49,13 @@ public class GroupThreadProgressScheduleExecutorRunnable {
   private PSThreadStatus lastStatus = null;
 
   /**
+   * Instantiates a new Group thread progress schedule executor runnable.
    *
-   * @param firstRequestXML
-   * @param threadWriter
-   * @param credentials
-   * @param psConfig
-   * @param delayInMilleseconds
+   * @param firstRequestXML     the first request xml
+   * @param threadWriter        the thread writer
+   * @param credentials         the credentials
+   * @param psConfig            the ps config
+   * @param delayInMilleseconds the delay in milleseconds
    */
   public GroupThreadProgressScheduleExecutorRunnable(String firstRequestXML, XMLWriter threadWriter,
                                                      PSCredentials credentials, PSConfig psConfig,
@@ -68,6 +69,8 @@ public class GroupThreadProgressScheduleExecutorRunnable {
 
   /**
    * Run.
+   *
+   * @throws IOException the io exception
    */
   public void run() throws IOException {
 
@@ -148,8 +151,9 @@ public class GroupThreadProgressScheduleExecutorRunnable {
   }
 
   /**
+   * Gets last status.
    *
-   * @return
+   * @return last status
    */
   public PSThreadStatus getLastStatus () {
     return this.lastStatus;

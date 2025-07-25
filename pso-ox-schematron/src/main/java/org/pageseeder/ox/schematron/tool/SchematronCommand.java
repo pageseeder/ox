@@ -89,6 +89,8 @@ public class SchematronCommand implements Command<Result> {
   }
 
   /**
+   * Sets document path.
+   *
    * @param path The path to the document to validate.
    */
   public void setDocumentPath(String path) {
@@ -96,6 +98,8 @@ public class SchematronCommand implements Command<Result> {
   }
 
   /**
+   * Sets schema.
+   *
    * @param schema The path to the schema to use within the model.
    */
   public void setSchema(String schema) {
@@ -138,8 +142,8 @@ public class SchematronCommand implements Command<Result> {
    * <p>This method will return the schematron in the model if one is found;
    * otherwise it will revert to using the default built-in schematron.
    *
+   * @param schematron the schematron
    * @return the Schematron validator used.
-   *
    * @throws SchematronException If the schematron could not be parsed as a validator.
    */
   public Validator getValidator(String schematron) throws SchematronException {
@@ -150,9 +154,11 @@ public class SchematronCommand implements Command<Result> {
   }
 
   /**
-   * @param schema
+   * Gets validator.
+   *
+   * @param schema the schema
    * @return {@link Validator}
-   * @throws SchematronException
+   * @throws SchematronException the schematron exception
    */
   public Validator getValidator(File schema) throws SchematronException {
     LOGGER.debug("Checking if schematron schema exists: {} -> {}", schema, schema.exists());
@@ -183,7 +189,6 @@ public class SchematronCommand implements Command<Result> {
    * Returns the built-in validator
    *
    * @return The built-in validator.
-   *
    * @throws SchematronException If the schematron could not be parsed as a validator.
    */
   public static Validator getBuiltinValidator() throws SchematronException {
@@ -211,11 +216,25 @@ public class SchematronCommand implements Command<Result> {
     /** the path */
     private final String _path;
 
+    /**
+     * Instantiates a new Schema result.
+     *
+     * @param model the model
+     * @param data  the data
+     * @param path  the path
+     */
     public SchemaResult(Model model, PackageData data, String path) {
       this(model, data, path, null);
     }
 
-    /** */
+    /**
+     * Instantiates a new Schema result.
+     *
+     * @param model  the model
+     * @param data   the data
+     * @param path   the path
+     * @param result the result
+     */
     public SchemaResult(Model model, PackageData data, String path, SchematronResult result) {
       super(model, data);
       this._path = path;

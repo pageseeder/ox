@@ -50,7 +50,7 @@ import java.util.List;
 /**
  * Export the project resources from one pageseeder and project and import to another PageSeeder and project or
  * to the same PageSeeder but different project
- *
+ * <p>
  * input: The xml with the projects to export and with the destination projects.
  * output: The xml with the results fo this process
  * output-resources: the folder to store the resources zip files while exporting and importing. If it is not informed. It will
@@ -219,9 +219,9 @@ public class BulkProjectResourcesSync extends PageseederStep implements Measurab
    * Get the output from step definition.
    * It accepts glob pattern.
    *
-   * @param data
-   * @param info
-   * @return
+   * @param data the data
+   * @param info the info
+   * @return output
    */
   public static File getOutput(PackageData data, StepInfo info) {
     // output file

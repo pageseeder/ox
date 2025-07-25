@@ -41,9 +41,8 @@ public class IgnoreElementsDifferenceEvaluator implements DifferenceEvaluator {
   /**
    * Instantiates a new ignore elements difference evaluator.
    *
-   *
-   * @note: It is still experimental.
-   * @param elementsName the elements name
+   * note: It is still experimental.
+   * @param elementsName the element's name
    */
   public IgnoreElementsDifferenceEvaluator(@NotNull List<String> elementsName) {
     this.elementsName = elementsName;

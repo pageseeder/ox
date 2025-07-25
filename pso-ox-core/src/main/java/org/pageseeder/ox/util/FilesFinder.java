@@ -28,7 +28,6 @@ import java.util.List;
  * If you would like to know more about glob pattern, please have a look at
  * http://docs.oracle.com/javase/javatutorials/tutorial/essential/io/fileOps.html#glob
  * <p>
- * <p>
  * By extension
  * <p>
  * *.java Matches all files with java extension into base directory.

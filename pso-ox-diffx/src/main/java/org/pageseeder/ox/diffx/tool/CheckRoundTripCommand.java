@@ -51,6 +51,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
+ * The type Check round trip command.
+ *
  * @author Christophe Lauret
  * @version 1 November 2013
  */
@@ -86,6 +88,8 @@ public final class CheckRoundTripCommand implements Command<Result> {
 
   /**
    * Create a new command for this model.
+   *
+   * @param model the model
    */
   public CheckRoundTripCommand(Model model) {
     this._model = model;
@@ -97,6 +101,8 @@ public final class CheckRoundTripCommand implements Command<Result> {
   }
 
   /**
+   * Sets base docx.
+   *
    * @param path The path to base docx to use
    */
   public void setBaseDOCX(String path) {
@@ -104,6 +110,8 @@ public final class CheckRoundTripCommand implements Command<Result> {
   }
 
   /**
+   * Sets source.
+   *
    * @param path the path to the source file within the package.
    */
   public void setSource(String path) {
@@ -111,6 +119,8 @@ public final class CheckRoundTripCommand implements Command<Result> {
   }
 
   /**
+   * Sets download.
+   *
    * @param download The public download folder.
    */
   public void setDownload(File download) {
@@ -313,6 +323,12 @@ public final class CheckRoundTripCommand implements Command<Result> {
 
     private Round round2 = null;
 
+    /**
+     * Instantiates a new Check round trip result.
+     *
+     * @param model the model
+     * @param data  the data
+     */
     public CheckRoundTripResult(Model model, PackageData data) {
       super(model, data);
     }
@@ -366,6 +382,13 @@ public final class CheckRoundTripCommand implements Command<Result> {
 
     private final int round;
 
+    /**
+     * Instantiates a new Round.
+     *
+     * @param a     the a
+     * @param b     the b
+     * @param round the round
+     */
     public Round(RoundTripData a, RoundTripData b, int round) {
       this.a = a;
       this.b = b;
@@ -403,6 +426,13 @@ public final class CheckRoundTripCommand implements Command<Result> {
 
     private File copy = null;
 
+    /**
+     * Instantiates a new Round trip data.
+     *
+     * @param f     the f
+     * @param type  the type
+     * @param round the round
+     */
     public RoundTripData(File f, String type, int round) {
       this.file = f;
       this.type = type;
@@ -430,6 +460,12 @@ public final class CheckRoundTripCommand implements Command<Result> {
       xml.closeElement();
     }
 
+    /**
+     * Checksum long.
+     *
+     * @return the long
+     * @throws IOException the io exception
+     */
     public long checksum() throws IOException {
       if (this.checksum == 0) {
         if (this.file.exists()) {
@@ -439,6 +475,13 @@ public final class CheckRoundTripCommand implements Command<Result> {
       return this.checksum;
     }
 
+    /**
+     * Save.
+     *
+     * @param download the download
+     * @param pack     the pack
+     * @throws IOException the io exception
+     */
     public void save(File download, PackageData pack) throws IOException {
       File sub = pack.getDownloadDir(download);
       String name = pack.getProperty("name", pack.id());
@@ -456,6 +499,9 @@ public final class CheckRoundTripCommand implements Command<Result> {
       }
     }
 
+    /**
+     * Count elements.
+     */
     public void countElements() {
       ElementCounter counter = new ElementCounter();
       if (!this.file.exists()) return;
@@ -509,6 +555,12 @@ public final class CheckRoundTripCommand implements Command<Result> {
       xml.closeElement();
     }
 
+    /**
+     * Same boolean.
+     *
+     * @param counter the counter
+     * @return the boolean
+     */
     public boolean same(ElementCounter counter) {
       if (this.elements.size() != counter.elements.size()) return false;
       for (Entry<String, ElementCount> e : counter.elements.entrySet()) {
@@ -531,15 +583,25 @@ public final class CheckRoundTripCommand implements Command<Result> {
     private final String _name;
     private int count = 0;
 
+    /**
+     * Instantiates a new Element count.
+     *
+     * @param name the name
+     */
     public ElementCount(String name) {
       this._name = name;
     }
 
+    /**
+     * Increment.
+     */
     public void increment() {
       this.count++;
     }
 
     /**
+     * Gets count.
+     *
      * @return the count
      */
     public int getCount() {

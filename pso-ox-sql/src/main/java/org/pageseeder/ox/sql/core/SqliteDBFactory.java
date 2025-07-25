@@ -28,7 +28,7 @@ import java.sql.Statement;
  * A factory class to deal with sqlite db.
  *
  * @author Carlos Cabral
- * @since 13/03/2025
+ * @since 13 /03/2025
  */
 public class SqliteDBFactory {
 
@@ -41,6 +41,8 @@ public class SqliteDBFactory {
   private Connection dbconn = null;
 
   /**
+   * Instantiates a new Sqlite db factory.
+   *
    * @param db the SQLite file.
    */
   public SqliteDBFactory(File db) {
@@ -66,6 +68,8 @@ public class SqliteDBFactory {
   }
 
   /**
+   * Close quietly.
+   *
    * @param connection the database connection to close.
    */
   public void closeQuietly(Connection connection) {
@@ -79,8 +83,10 @@ public class SqliteDBFactory {
   }
 
   /**
+   * Execute update.
+   *
    * @param sql the sql script to execute.
-   * @throws SQLException
+   * @throws SQLException the sql exception
    */
   public void executeUpdate(String sql) throws SQLException {
     if (this.dbconn == null) {
