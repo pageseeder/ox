@@ -1,7 +1,7 @@
 plugins {
-    id("java-library")
-    id("maven-publish")
-    alias(libs.plugins.jreleaser)
+  id("java-library")
+  id("maven-publish")
+  alias(libs.plugins.jreleaser)
 }
 
 val title: String by project
@@ -128,4 +128,9 @@ allprojects {
 
 jreleaser {
     configFile.set(file("jreleaser.toml"))
+}
+
+tasks.wrapper {
+  gradleVersion = "8.14"
+  distributionType = Wrapper.DistributionType.BIN
 }
