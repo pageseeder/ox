@@ -9,7 +9,7 @@ val gitName: String by project
 val website: String by project
 val globalVersion = file("version.txt").readText().trim()
 
-allprojects {
+subprojects {
   group = "org.pageseeder.ox"
   version = globalVersion
   description = "A Java library designed to simplify document conversion and data analysis, especially for XML, DOCX, and PDF formats.."
@@ -62,13 +62,15 @@ allprojects {
   tasks.jar {
     manifest {
       attributes(
-        "Main-Class" to "org.pageseeder.diffx.Main",
         "Implementation-Title" to project.name,
         "Implementation-Version" to project.version,
         "Implementation-Vendor" to "Allette Systems",
         "Specification-Title" to project.description,
         "Specification-Version" to project.version,
-        "Specification-Vendor" to "Allette Systems"
+        "Specification-Vendor" to "Allette Systems",
+        "Created-By" to "Gradle ${gradle.gradleVersion}",
+        "Built-By" to System.getProperty("user.name"),
+        "Build-Jdk" to System.getProperty("java.version")
       )
     }
   }
@@ -127,7 +129,7 @@ allprojects {
 }
 
 jreleaser {
-    configFile.set(file("jreleaser.toml"))
+  configFile.set(file("jreleaser.toml"))
 }
 
 tasks.wrapper {
