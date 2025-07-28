@@ -31,8 +31,7 @@ import java.nio.file.Files;
  *
  * @author Christophe Lauret
  * @author Ciber Cai
- * @since  13 November 2013
- *
+ * @since 13 November 2013
  */
 public class HTMLInspector implements PackageInspector {
 

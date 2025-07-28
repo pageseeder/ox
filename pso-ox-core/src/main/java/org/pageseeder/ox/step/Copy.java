@@ -47,7 +47,7 @@ import java.io.IOException;
  *
  * @author Carlos Cabral
  * @author Ciber Cai
- * @since  13 April 2015
+ * @since 13 April 2015
  */
 public class Copy implements Step {
 

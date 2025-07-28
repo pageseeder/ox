@@ -25,8 +25,19 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * The type Reports builder.
+ */
 public class ReportsBuilder {
 
+  /**
+   * Create psml report string.
+   *
+   * @param out     the out
+   * @param results the results
+   * @param status  the status
+   * @return the string
+   */
   public static String createPSMLReport(File out, Map<String, ValidationResult> results, ResultStatus status) {
     try {
       if (!out.getParentFile().exists()) out.getParentFile().mkdirs();
@@ -157,6 +168,10 @@ public class ReportsBuilder {
 
   /**
    * Create the CSV report
+   *
+   * @param out     the out
+   * @param results the results
+   * @return the string
    */
   public static String createCSVReport(File out, Map<String, ValidationResult> results) {
     try {

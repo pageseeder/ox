@@ -22,8 +22,9 @@ import java.util.Map;
 /**
  * A really basic caching implementation backed by a hashtable.
  *
+ * @param <T> the type parameter
  * @author Christophe Lauret
- * @since  28 October 2013
+ * @since 28 October 2013
  */
 public class BasicCache<T> {
 
@@ -38,6 +39,13 @@ public class BasicCache<T> {
   public BasicCache() {
   }
 
+  /**
+   * Get t.
+   *
+   * @param key      the key
+   * @param modified the modified
+   * @return the t
+   */
   public T get(String key, long modified) {
     CachedItem<T> cached = this.cache.get(key);
     T item = null;
@@ -52,10 +60,19 @@ public class BasicCache<T> {
     return item;
   }
 
+  /**
+   * Put.
+   *
+   * @param key  the key
+   * @param item the item
+   */
   public void put(String key, T item) {
     this.cache.put(key, new CachedItem<T>(item));
   }
 
+  /**
+   * Clear.
+   */
   public void clear() {
     this.cache.clear();
   }
@@ -76,6 +93,8 @@ public class BasicCache<T> {
 
     /**
      * Create a new cached items setting the timestamp to the current time.
+     *
+     * @param o the o
      */
     public CachedItem(T o) {
       this.item = o;
@@ -83,6 +102,8 @@ public class BasicCache<T> {
     }
 
     /**
+     * Timestamp long.
+     *
      * @return the modified
      */
     public long timestamp() {
@@ -90,6 +111,8 @@ public class BasicCache<T> {
     }
 
     /**
+     * Item t.
+     *
      * @return the cached item
      */
     public T item() {

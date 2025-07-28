@@ -31,12 +31,25 @@ public class InfoMap extends Info {
 
   private final Map<String, List<String>> _mapValues;
 
+  /**
+   * Instantiates a new Info map.
+   *
+   * @param name            the name
+   * @param extraAttributes the extra attributes
+   * @param valuesMap       the values map
+   */
   public InfoMap(String name, Map<String, String> extraAttributes, Map<String, List<String>> valuesMap) {
     super(name, InfoType.map, extraAttributes);
     Objects.requireNonNull(valuesMap);
     this._mapValues = valuesMap;
   }
 
+  /**
+   * Instantiates a new Info map.
+   *
+   * @param name      the name
+   * @param valuesMap the values map
+   */
   public InfoMap(String name, Map<String, List<String>> valuesMap) {
     super(name, InfoType.map);
     Objects.requireNonNull(valuesMap);

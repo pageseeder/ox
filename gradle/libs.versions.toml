@@ -1,0 +1,54 @@
+[versions]
+bridge = "0.11.34"
+logback = "1.3.14"
+simple = "2025.07-jdk11"
+
+[libraries]
+jetbrains-annotations = { module = "org.jetbrains:annotations", version = "26.0.2" }
+psberlioz-simple-core = { module = "net.pageseeder.app:psberlioz-simple-core", version.ref = "simple" }
+psberlioz-simple-vault = { module = "net.pageseeder.app:psberlioz-simple-vault", version.ref = "simple" }
+pso-bastille = { module = "org.pageseeder.bastille:pso-bastille", version = "0.11.1" }
+pso-berlioz = { module = "org.pageseeder.berlioz:pso-berlioz", version = "0.12.3" }
+pso-berlioz-plus = { module = "org.pageseeder.berlioz:pso-berlioz-plus", version = "0.5.0"}
+pso-bridge = { module = "org.pageseeder.bridge:pso-bridge", version.ref = "bridge" }
+pso-bridge-berlioz = { module = "org.pageseeder.bridge:pso-bridge-berlioz", version.ref = "bridge" }
+pso-cobble = { module = "org.pageseeder.cobble:pso-cobble", version = "0.3.2" }
+pso-diffx = { module = "org.pageseeder.diffx:pso-diffx", version = "0.8.1" }
+pso-psml = { module = "org.pageseeder:pso-psml", version = "1.3.1" }
+pso-schematron = { module = "org.pageseeder.schematron:pso-schematron", version = "1.2.3" }
+pso-xmlwriter = { module = "org.pageseeder.xmlwriter:pso-xmlwriter", version = "1.0.4" }
+ehcache = {module = "net.sf.ehcache:ehcache", version = "2.11.0.2.10" }
+commons-io = { module = "commons-io:commons-io", version = "2.7" }
+commons-fileupload = { module = "commons-fileupload:commons-fileupload", version = "1.5" }
+hamcrest-java = { module = "org.hamcrest:java-hamcrest", version = "2.0.0.0" }
+hancrest-junit = { module = "org.hamcrest:hamcrest-junit", version = "2.0.0.0" }
+jakarta-xml-bind-api = { module = "jakarta.xml.bind:jakarta.xml.bind-api", version = "2.3.2" }
+javax-servlet = { module = "javax.servlet:javax.servlet-api", version = "3.1.0" }
+javax-activation = { module = "com.sun.activation:javax.activation", version = "1.2.0" }
+jaxb-runtime = {module = "org.glassfish.jaxb:jaxb-runtime", version = "2.3.2" }
+jaxws-api = { module = "javax.xml.ws:jaxws-api", version = "2.3.1" }
+jtidy = { module = "net.sf.jtidy:jtidy", version = "r938" } #This library is also available in our ivy as 'w3c:jtidy:r938'
+junit = { module = "junit:junit", version = "4.13.2" }
+logback-core = { module = "ch.qos.logback:logback-core", version.ref = "logback" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+mockito-all = { module = "org.mockito:mockito-all", version = "1.10.19" }
+powermock-api-mockito = { module = "org.powermock:powermock-api-mockito", version = "1.6.6" }
+powermock-module-junit4 = { module = "org.powermock:powermock-module-junit4", version = "1.6.6" }
+powermock-mockito-release-full = { module = "org.powermock:powermock-mockito-release-full", version = "1.6.4" }
+saxon-he = { module = "net.sf.saxon:Saxon-HE", version = "10.6" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version = "2.0.9" }
+sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version = "3.49.1.0" }
+topologi-xerces = { module ="topologi:topologi-xerces", version = "03" } # It is used in the Step PSML Validate for option "wellformed"
+xmlunit = { module = "xmlunit:xmlunit", version = "1.6" }
+xmlunit-core = { module = "org.xmlunit:xmlunit-core", version = "2.3.0" }
+xmlunit-matchers = { module = "org.xmlunit:xmlunit-matchers", version = "2.3.0" }
+
+[bundles]
+#junit-testing = [
+#    "junit-jupiter-api",
+#    "junit-platform-launcher",
+#    "junit-platform-engine"
+#]
+
+[plugins]
+jreleaser = { id = "org.jreleaser", version = "1.18.0" }

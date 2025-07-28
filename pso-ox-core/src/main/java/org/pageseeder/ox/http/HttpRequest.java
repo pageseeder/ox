@@ -15,12 +15,13 @@
  */
 package org.pageseeder.ox.http;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
 
 /**
+ * The interface Http request.
  *
  * @author Carlos Cabral
  * @since 2.2.69
@@ -33,7 +34,6 @@ public interface HttpRequest {
    *
    * @param name  The name of the HTTP header
    * @param value The value of the HTTP header.
-   *
    * @return This request.
    */
   HttpRequest header(String name, String value);
@@ -48,7 +48,6 @@ public interface HttpRequest {
    *
    * @param name  The name of the HTTP parameters
    * @param value The value of the HTTP parameters.
-   *
    * @return This request.
    */
   HttpRequest parameter(String name, String value);
@@ -57,7 +56,6 @@ public interface HttpRequest {
    * Add all the parameters to this request.
    *
    * @param parameters A map of parameter names and values to add
-   *
    * @return This request.
    */
   HttpRequest parameters(Map<String, String> parameters);
@@ -71,7 +69,6 @@ public interface HttpRequest {
    * <p>This method will automatically update the "Authorization" header field.
    *
    * @param credentials The username/password, token or session to use as credentials
-   *
    * @return This request.
    */
   HttpRequest using(HttpCredentials credentials);
@@ -80,7 +77,6 @@ public interface HttpRequest {
    * Sets the time out
    *
    * @param timeout the time out
-   *
    * @return This request
    */
   HttpRequest timeout(int timeout);
@@ -89,7 +85,6 @@ public interface HttpRequest {
    * Sets the etag on this request as the "If-None-Match" request header.
    *
    * @param etag The etag to use.
-   *
    * @return this request.
    */
   HttpRequest etag(String etag);
@@ -99,10 +94,8 @@ public interface HttpRequest {
    *
    * <p>This is designed for small objects, this method will use UTF-8 encoding.
    *
-   * @param body  The body of the request
-   *
+   * @param body The body of the request
    * @return this request.
-   *
    * @throws NullPointerException if the array is <code>null</code>
    */
   HttpRequest body(String body);
@@ -113,9 +106,7 @@ public interface HttpRequest {
    * <p>This method makes a copy the specified array.
    *
    * @param body The body of the request
-   *
    * @return this request.
-   *
    * @throws NullPointerException if the array is <code>null</code>
    */
   HttpRequest body(byte[] body);
@@ -130,7 +121,6 @@ public interface HttpRequest {
    * accept gzipped responses.
    *
    * @param enable <code>true</code> to accept gzipped response; <code>false</code> otherwise.
-   *
    * @return this request.
    */
   HttpRequest gzip(boolean enable);
@@ -139,7 +129,6 @@ public interface HttpRequest {
    * Returns the HTTP header the specified name.
    *
    * @param name The name of the HTTP header (case insensitive)
-   *
    * @return The value of the corresponding parameter or <code>null</code>
    */
   @Nullable String header(String name);

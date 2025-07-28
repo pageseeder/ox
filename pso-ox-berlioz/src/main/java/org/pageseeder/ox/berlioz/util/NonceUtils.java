@@ -14,10 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 public class NonceUtils {
 
   /**
-   * Nonce is a unique code per request which is placed in the HTTP responde headers and all javascript and/or css files
+   * Nonce is a unique code per request which is placed in the HTTP response headers and all javascript and/or css files
    * an code should have a reference to it.
-   * @param req
-   * @return
+   * @param req the request
+   * @return a String
    */
   public static String getNonce(ContentRequest req) {
     return req instanceof HttpContentRequest ? getNonce((HttpContentRequest)  req) : null;
@@ -26,8 +26,8 @@ public class NonceUtils {
   /**
    * Nonce is a unique code per request which is placed in the HTTP responde headers and all javascript and/or css files
    * an code should have a reference to it.
-   * @param req
-   * @return
+   * @param req the request
+   * @return a String
    */
   public static String getNonce(HttpContentRequest req) {
     return getNonce(req.getHttpRequest());
@@ -35,10 +35,10 @@ public class NonceUtils {
 
 
   /**
-   * Nonce is a unique code per request which is placed in the HTTP responde headers and all javascript and/or css files
+   * Nonce is a unique code per request which is placed in the HTTP response headers and all javascript and/or css files
    * an code should have a reference to it.
-   * @param req
-   * @return
+   * @param req the request
+   * @return a String
    */
   public static String getNonce(HttpServletRequest req) {
     String nonce = null;

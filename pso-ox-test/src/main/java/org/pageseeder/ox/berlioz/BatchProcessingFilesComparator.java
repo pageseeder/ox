@@ -49,9 +49,9 @@ public class BatchProcessingFilesComparator {
   /**
    * Instantiates a new batch processing files comparator.
    *
-   * @param job the job
+   * @param job                          the job
    * @param expectedResultsBaseDirectory the expected results base directory
-   * @param filesToIgnore the files to ignore
+   * @param filesToIgnore                the files to ignore
    */
   public BatchProcessingFilesComparator(JobResponse job, File expectedResultsBaseDirectory, List<File> filesToIgnore) {
     super();
@@ -166,7 +166,7 @@ public class BatchProcessingFilesComparator {
    * Compare file.
    *
    * @param expected the expected
-   * @throws IOException
+   * @return the equivalent file result
    */
   public File getEquivalentFileResult(File expected) {
     String expectedFileName = expected.getAbsolutePath().replace(this._expectedResultsBaseDirectory.getAbsolutePath(), "");

@@ -38,6 +38,7 @@ import java.nio.file.Path;
  * @deprecated Please use the {@link OXGetFile}
  * TODO Remove in the version 2.3.0
  */
+@Deprecated
 public final class OXDownload implements Filter {
 
   /**  the logger. */

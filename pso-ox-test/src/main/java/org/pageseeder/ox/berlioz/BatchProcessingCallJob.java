@@ -17,8 +17,9 @@ package org.pageseeder.ox.berlioz;
 
 import org.junit.runner.RunWith;
 import org.pageseeder.ox.OXException;
+import org.pageseeder.ox.berlioz.request.*;
 import org.pageseeder.ox.berlioz.servlet.OXHandleData;
-import org.pageseeder.ox.berlioz.util.FileHandler;
+import org.pageseeder.ox.berlioz.util.BerliozOXUtils;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.core.PipelineJob;
 import org.pageseeder.ox.util.FileUtils;
@@ -48,7 +49,7 @@ import static org.mockito.Mockito.when;
  * @since 28 Mar. 2018
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(FileHandler.class)
+@PrepareForTest({ BerliozOXUtils.class, RequestHandlerFactory.class, FileHandler.class, NoFileHandler.class, URLHandler.class} )
 public class BatchProcessingCallJob {
 
   /** The model. */
@@ -91,26 +92,93 @@ public class BatchProcessingCallJob {
     StringWriter writer = new StringWriter();
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
-
     this.parameters.put("pipeline",this._pipeline);
 
     List<PackageData> packs = mockedPackageList();
     System.out.println(packs.get(0).directory());
-    List<PipelineJob> jobs = FileHandler.toPipelineJobs(packs);
+    List<PipelineJob> jobs = BerliozOXUtils.toPipelineJobs(packs);
     when(response.getWriter()).thenReturn(new PrintWriter(writer));
     when(request.getMethod()).thenReturn("POST");
     when(request.getParameter("model")).thenReturn(this._model);
     when(request.getContentType()).thenReturn("multipart/form-data; boundary=----WebKitFormBoundary8REQtuY1QyQrEfzh");
 
-    PowerMockito.mockStatic(FileHandler.class);
-    PowerMockito.when(FileHandler.receive(request)).thenReturn(packs);
-    PowerMockito.when(FileHandler.toPipelineJobs(packs)).thenReturn(jobs);
+    mockRequestHandler(request, packs);
+
+    PowerMockito.mockStatic(BerliozOXUtils.class);
+    PowerMockito.when(BerliozOXUtils.toPipelineJobs(packs)).thenReturn(jobs);
 
     // Call pipeline
     OXHandleData handler = new OXHandleData();
     handler.service(request, response);
 
     return writer.toString();
+  }
+
+  private void mockRequestHandler(HttpServletRequest request, List<PackageData> packs) throws OXException, IOException {
+    String handlerTypeParam = this.parameters.get(RequestHandler.HANDLER_TYPE_PARAMETER);
+    RequestHandlerType handlerType = BerliozOXUtils.getRequestHandlerType(handlerTypeParam);
+    RequestHandler requestHandler = null;
+    // Mock mockRequestHandlerFactory static method getInstance()
+    PowerMockito.mockStatic(RequestHandlerFactory.class);
+    // Create a mock instance of mockRequestHandlerFactory
+    RequestHandlerFactory mockRequestHandlerFactory = mock(RequestHandlerFactory.class);
+    // When getInstance is called, return the mock instance
+    when(RequestHandlerFactory.getInstance()).thenReturn(mockRequestHandlerFactory);
+
+    switch (handlerType) {
+      case FILE:
+        requestHandler = mockFileHandler(request, packs);
+        break;
+      case NOFILE:
+        requestHandler = mockNoFileHandler(request, packs);
+        break;
+      case URL:
+        requestHandler = mockURLHandler(request, packs);
+        break;
+    }
+
+    when(mockRequestHandlerFactory.getRequestHandler(request)).thenReturn(requestHandler);
+  }
+
+  private RequestHandler mockFileHandler(HttpServletRequest request, List<PackageData> packs) throws OXException, IOException {
+    // Mock static method getInstance()
+    PowerMockito.mockStatic(FileHandler.class);
+
+    // Create a mock instance of FileHandler
+    FileHandler mockFileHandler = mock(FileHandler.class);
+
+    // When getInstance is called, return the mock instance
+    when(FileHandler.getInstance()).thenReturn(mockFileHandler);
+    when(mockFileHandler.receive(request)).thenReturn(packs);
+    return mockFileHandler;
+  }
+
+  private RequestHandler mockNoFileHandler(HttpServletRequest request, List<PackageData> packs) throws OXException, IOException {
+    // Mock static method getInstance()
+    PowerMockito.mockStatic(NoFileHandler.class);
+
+    // Create a mock instance of NoFileHandler
+    NoFileHandler mockNoFileHandler = mock(NoFileHandler.class);
+
+    // When getInstance is called, return the mock instance
+    when(NoFileHandler.getInstance()).thenReturn(mockNoFileHandler);
+    when(mockNoFileHandler.receive(request)).thenReturn(packs);
+
+    return mockNoFileHandler;
+  }
+
+
+  private RequestHandler mockURLHandler(HttpServletRequest request, List<PackageData> packs) throws OXException, IOException {
+    // Mock static method getInstance()
+    PowerMockito.mockStatic(URLHandler.class);
+
+    // Create a mock instance of URLHandler
+    URLHandler mockURLHandler = mock(URLHandler.class);
+
+    // When getInstance is called, return the mock instance
+    when(URLHandler.getInstance()).thenReturn(mockURLHandler);
+    when(mockURLHandler.receive(request)).thenReturn(packs);
+    return mockURLHandler;
   }
 
   /**
@@ -126,13 +194,18 @@ public class BatchProcessingCallJob {
       dir.mkdirs();
     }
 
-    File file = new File(dir, this._input.getName());
-    FileUtils.copy(this._input, file);
+    File file = null;
+    if (this._input != null) {
+      file = new File(dir, this._input.getName());
+      FileUtils.copy(this._input, file);
+    }
     PackageData pack = PackageData.newPackageData(this._model, file);
     if (pack != null) {
 //      pack.setProperty("contenttype", item.getContentType());
-      pack.setProperty("type", toType(this._input.getName()));
-      pack.setProperty("name", toName(this._input.getName()));
+      if (this._input != null) {
+        pack.setProperty("type", toType(this._input.getName()));
+        pack.setProperty("name", toName(this._input.getName()));
+      }
       pack.setParameter("model", this._model);
       pack.setParameter("pipeline", this._pipeline);
       for (Entry<String, String> parameter : parameters.entrySet()) {

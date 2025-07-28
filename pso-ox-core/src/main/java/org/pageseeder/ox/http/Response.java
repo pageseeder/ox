@@ -15,7 +15,7 @@
  */
 package org.pageseeder.ox.http;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.pageseeder.ox.xml.XMLCopy;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
@@ -299,7 +299,6 @@ public final class Response implements HttpResponse, AutoCloseable {
    * </pre>
    *
    * @param etag The value of the "ETag" header
-   *
    * @return the corresponding etag value.
    */
   public static @Nullable String unwrapEtag(@Nullable String etag) {
@@ -1146,8 +1145,10 @@ public final class Response implements HttpResponse, AutoCloseable {
     private final XMLReader reader;
 
     /**
-     * @param reader   The XML currently processing
-     * @param handler  THe handler to use unless an error is detected.
+     * Instantiates a new Handler dispatcher.
+     *
+     * @param reader  The XML currently processing
+     * @param handler THe handler to use unless an error is detected.
      */
     public HandlerDispatcher(XMLReader reader, DefaultHandler handler) {
       this.reader = reader;

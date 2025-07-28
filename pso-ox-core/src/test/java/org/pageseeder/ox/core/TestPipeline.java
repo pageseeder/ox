@@ -30,11 +30,16 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ * The type Test pipeline.
+ *
  * @author Ciber Cai
  * @since 18 October 2016
  */
 public class TestPipeline {
 
+  /**
+   * Init.
+   */
   @Before
   public void init() {
     File modelDir = new File("src/test/resources/models");
@@ -42,6 +47,13 @@ public class TestPipeline {
     config.setModelsDirectory(modelDir);
   }
 
+  /**
+   * To xml.
+   *
+   * @throws IOException    the io exception
+   * @throws XpathException the xpath exception
+   * @throws SAXException   the sax exception
+   */
   @Test
   public void toXML() throws IOException, XpathException, SAXException {
     Pipeline pipeline1 = new Pipeline("id","name", "type");
@@ -91,6 +103,11 @@ public class TestPipeline {
 
   }
 
+  /**
+   * Pipeline handler specific.
+   *
+   * @throws Exception the exception
+   */
   @Test
   public void pipelineHandlerSpecific() throws Exception {
     Model model = new Model("m1");
@@ -124,6 +141,11 @@ public class TestPipeline {
     XMLAssert.assertXpathEvaluatesTo("text2", "pipeline/input[2]/text()", xml.toString());
   }
 
+  /**
+   * Pipeline handler default.
+   *
+   * @throws Exception the exception
+   */
   @Test
   public void pipelineHandlerDefault() throws Exception {
     Model model = new Model("m1");

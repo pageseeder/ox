@@ -15,8 +15,8 @@
  */
 package org.pageseeder.ox.tool;
 
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
@@ -31,10 +31,11 @@ import java.util.List;
 
 /**
  * The Class MultipleFilesResult.
- *
+ * <p>
  * It for steps when they receive multiple files as input (by using a folder, Glob pattern or zip) and for file there
  * is a separate process.
  *
+ * @param <T> the type parameter
  * @author Carlos Cabral
  * @since 08th August 2018
  */
@@ -48,14 +49,14 @@ public class MultipleFilesResult<T extends FileResultInfo> extends DefaultResult
   /**
    * Instantiates a new multiple files result.
    *
-   * @param model the model
-   * @param data the data
-   * @param info the info
-   * @param output the output (it can only be a zip or a file or null)
+   * @param model           the model
+   * @param data            the data
+   * @param info            the info
+   * @param output          the output (it can only be a zip or a file or null)
    * @param fileResultInfos the file result infos
    */
-  public MultipleFilesResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info,
-      @Nullable File output, @NonNull List<T> fileResultInfos) {
+  public MultipleFilesResult(@NotNull Model model, @NotNull PackageData data, @NotNull StepInfo info,
+      @Nullable File output, @NotNull List<T> fileResultInfos) {
     super(model, data, info, output);
     this._fileResultInfos = fileResultInfos;
   }
@@ -87,8 +88,8 @@ public class MultipleFilesResult<T extends FileResultInfo> extends DefaultResult
   /**
    * Parameters XML.
    *
-   * @param xml the xml
-   * @throws IOException Signals that an I/O exception has occurred.
+   * @param xml            the xml
+   * @param fileResultInfo the file result info
    */
   protected void writeFileResultInfo(XMLWriter xml, T fileResultInfo) {
     try {

@@ -37,17 +37,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * The type Simplify docx test.
+ *
  * @author Ciber Cai
  * @since 18 July 2016
  */
 public class SimplifyDOCXTest {
 
+  /**
+   * Init.
+   */
   @Before
   public void init() {
     File modelDir = new File("src/test/resources/models");
     OXConfig.get().setModelsDirectory(modelDir);
   }
 
+  /**
+   * Test process.
+   *
+   * @throws IOException the io exception
+   */
   @Test
   public void test_process() throws IOException {
     File file = new File("src/test/resources/models/m1/Sample.docx");
@@ -70,6 +80,9 @@ public class SimplifyDOCXTest {
 
   }
 
+  /**
+   * Test get input docx.
+   */
   @Test
   public void test_getInput_docx(){
     File file = new File("src/test/resources/models/m1/Sample.docx");
@@ -85,6 +98,9 @@ public class SimplifyDOCXTest {
     Assert.assertTrue(unpacked.exists());
   }
 
+  /**
+   * Test get input directory.
+   */
   @Test
   public void test_getInput_directory(){
     try {
@@ -106,6 +122,9 @@ public class SimplifyDOCXTest {
     }
   }
 
+  /**
+   * Test get output docx.
+   */
   @Test
   public void test_getOutput_docx(){
     File file = new File("src/test/resources/models/m1/Sample.docx");
@@ -121,6 +140,9 @@ public class SimplifyDOCXTest {
     Assert.assertTrue(output.exists());
   }
 
+  /**
+   * Test get output directory.
+   */
   @Test
   public void test_getOutput_directory(){
     File file = new File("src/test/resources/models/m1/Sample.docx");
@@ -137,6 +159,9 @@ public class SimplifyDOCXTest {
     Assert.assertTrue(output.exists());
   }
 
+  /**
+   * Test get output empty.
+   */
   @Test
   public void test_getOutput_empty(){
     File file = new File("src/test/resources/models/m1/Sample.docx");
@@ -152,6 +177,13 @@ public class SimplifyDOCXTest {
     Assert.assertTrue(output.exists());
   }
 
+  /**
+   * Test process with extra parameters.
+   *
+   * @throws IOException    the io exception
+   * @throws XpathException the xpath exception
+   * @throws SAXException   the sax exception
+   */
   @Test
   public void test_processWithExtraParameters() throws IOException, XpathException, SAXException {
     File file = new File("src/test/resources/models/m1/Sample.docx");

@@ -22,7 +22,7 @@ import org.pageseeder.ox.core.PackageData;
  * This interface defines the CallbackStep.
  *
  * @author Ciber Cai
- * @since  07 May 2015
+ * @since 07 May 2015
  */
 public interface CallbackStep {
 
@@ -30,9 +30,9 @@ public interface CallbackStep {
    * To process the callback step.
    *
    * @param model  the model this callback uses.
-   * @param data the data.
+   * @param data   the data.
    * @param result the current step result.
-   * @param info the step information.
+   * @param info   the step information.
    */
   void process(Model model, PackageData data, Result result, StepInfo info);
 

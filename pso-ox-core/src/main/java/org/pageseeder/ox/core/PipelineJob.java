@@ -31,7 +31,7 @@ import java.util.Random;
  * A simple java object to represent a Job for each Pipeline.
  *
  * @author Ciber Cai
- * @since  07 November 2014
+ * @since 07 November 2014
  */
 public final class PipelineJob implements XMLWritable, Serializable {
 
@@ -69,7 +69,7 @@ public final class PipelineJob implements XMLWritable, Serializable {
    * Instantiates a new pipeline job.
    *
    * @param pipeline The {@link Pipeline }
-   * @param pack The {@link PackageData }
+   * @param pack     The {@link PackageData }
    */
   public PipelineJob(Pipeline pipeline, PackageData pack) {
     if (pipeline == null) { throw new NullPointerException("pipeline is null."); }
@@ -127,7 +127,6 @@ public final class PipelineJob implements XMLWritable, Serializable {
   public JobStatus getStatus() {
     return this.status;
   }
-
 
 
   /**
@@ -230,7 +229,11 @@ public final class PipelineJob implements XMLWritable, Serializable {
     xml.attribute("id", this._id);
     xml.attribute("start", ISO8601.DATETIME.format(this._startTime));
     xml.attribute("status", this.status.toString());
-    xml.attribute("input", this._package.getOriginal().getName());
+    if (this._package.getOriginal() != null) {
+      xml.attribute("input", this._package.getOriginal().getName());
+    } else {
+      xml.attribute("input", "no-file");
+    }
     xml.attribute("mode", this.isSlow ? "slow" : "normal");
     if (this.download != null) {
       xml.attribute("path", this.download);

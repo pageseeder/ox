@@ -53,9 +53,8 @@ import java.io.*;
  * <p>If <var>schema</var> does not exist, it returns failed status of {@link SchemaResult}.</p>
  * <p>Otherwise return {@link SchemaResult}
  *
- *
  * @author Ciber Cai
- * @since  12 June 2014
+ * @since 12 June 2014
  */
 public final class SchemaValidation implements Step {
 

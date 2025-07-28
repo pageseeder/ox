@@ -24,8 +24,14 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The type Test model.
+ */
 public class TestModel {
 
+  /**
+   * Init.
+   */
   @Before
   public void init() {
     File modelDir = new File("src/test/resources/models");
@@ -33,18 +39,29 @@ public class TestModel {
     config.setModelsDirectory(modelDir);
   }
 
+  /**
+   * Test not null for default model.
+   */
   @Test
   public void test_NotNull_For_DefaultModel() {
     Model model = Model.getDefault();
     Assert.assertNotNull(model);
   }
 
+  /**
+   * Test not null for specified model.
+   */
   @Test
   public void test_NotNull_For_SpecifiedModel() {
     Model model = new Model("m1");
     Assert.assertNotNull(model);
   }
 
+  /**
+   * Test not null for pipe line.
+   *
+   * @throws Exception the exception
+   */
   @Test
   public void test_Not_Null_For_PipeLine() throws Exception {
     Model model = new Model("m1");
@@ -52,6 +69,11 @@ public class TestModel {
     Assert.assertNotNull(p);
   }
 
+  /**
+   * Test not null for step.
+   *
+   * @throws Exception the exception
+   */
   @Test
   public void test_NotNull_For_Step() throws Exception {
     Model model = new Model("m1");
@@ -61,6 +83,11 @@ public class TestModel {
     Assert.assertNotNull(step);
   }
 
+  /**
+   * Test duplicated pipeline.
+   *
+   * @throws Exception the exception
+   */
   @Test
   public void test_duplicated_pipeline() throws Exception {
     try {
@@ -72,6 +99,11 @@ public class TestModel {
     }
   }
 
+  /**
+   * Test duplicated step.
+   *
+   * @throws Exception the exception
+   */
   @Test
   public void test_duplicated_step() throws Exception {
     try {
@@ -83,6 +115,9 @@ public class TestModel {
     }
   }
 
+  /**
+   * Test list models.
+   */
   @Test
   public void test_listModels() {
     List<Model> models = Model.listModels();
@@ -97,6 +132,9 @@ public class TestModel {
 
   }
 
+  /**
+   * Test extra attributes.
+   */
   @Test
   public void test_extraAttributes(){
     try {
@@ -111,6 +149,10 @@ public class TestModel {
       Assert.assertTrue(ex.getMessage(), true);
     }
   }
+
+  /**
+   * Test extra attributes empty.
+   */
   @Test
   public void test_extraAttributes_empty(){
     try {

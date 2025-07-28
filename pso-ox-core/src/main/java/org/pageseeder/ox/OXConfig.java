@@ -21,11 +21,13 @@ import java.io.File;
  * <p>A configuration of OX.</p>
  *
  * @author Christophe Lauret
- * @since  8 November 2013
+ * @since 8 November 2013
  */
 public class OXConfig {
 
-  /** The folder name where the files will be uploaded. */
+  /**
+   * The folder name where the files will be uploaded.
+   */
   public final static String TEMP_UPLOAD_FOLDER_NAME = "upload";
   /**
    * Singleton instance.
@@ -43,6 +45,7 @@ public class OXConfig {
   private File models = null;
 
   /**
+   * Gets models directory.
    *
    * @return The directory containing the models
    */
@@ -51,6 +54,8 @@ public class OXConfig {
   }
 
   /**
+   * Sets models directory.
+   *
    * @param models The directory containing the models
    */
   public void setModelsDirectory(File models) {
@@ -58,6 +63,8 @@ public class OXConfig {
   }
 
   /**
+   * Get ox config.
+   *
    * @return the singleton
    */
   public static OXConfig get() {
@@ -65,6 +72,8 @@ public class OXConfig {
   }
 
   /**
+   * Gets ox temp folder.
+   *
    * @return the Ox template folder
    */
   public static File getOXTempFolder() {
@@ -77,6 +86,8 @@ public class OXConfig {
   }
 
   /**
+   * Gets ox temp upload folder.
+   *
    * @return the Ox template folder
    */
   public static File getOXTempUploadFolder() {

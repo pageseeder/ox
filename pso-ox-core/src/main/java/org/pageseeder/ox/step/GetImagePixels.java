@@ -40,9 +40,8 @@ import java.util.Arrays;
 /**
  * <p>.</p>
  *
- *
  * @author Carlos Cabral
- * @since  17 April 2018
+ * @since 17 April 2018
  */
 public class GetImagePixels implements Step {
 

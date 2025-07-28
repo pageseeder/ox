@@ -26,7 +26,7 @@ import java.util.zip.ZipOutputStream;
  *
  * @author Christophe Lauret
  * @author Ciber Cai
- * @since  18 December 2013
+ * @since 18 December 2013
  */
 public final class ZipUtils {
 
@@ -106,8 +106,8 @@ public final class ZipUtils {
   /**
    * Zip a set of specified file or folder.
    *
-   * @param dest The destination zip
-   * @param sources  The list of files
+   * @param dest    The destination zip
+   * @param sources The list of files
    * @throws IOException when IO error occur.
    */
   public static void zipFilesTo(File dest, File... sources) throws IOException {

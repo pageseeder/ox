@@ -23,13 +23,19 @@ package org.pageseeder.ox;
  */
 public enum OXErrorMessage implements ErrorMessage {
 
-  /** The unknown. */
+  /**
+   * The unknown.
+   */
   UNKNOWN ("OX-CORE-0000", "Unknown error."),
 
-  /** The file not selected. */
+  /**
+   * The file not selected.
+   */
   FILE_NOT_SELECTED ("OX-CORE-0001", "A file has not been selected."),
 
-  /** The file is empty. */
+  /**
+   * The file is empty.
+   */
   FILE_IS_EMPTY ("OX-CORE-0002", "This file is invalid because is empty.");
 
   /** The message. */

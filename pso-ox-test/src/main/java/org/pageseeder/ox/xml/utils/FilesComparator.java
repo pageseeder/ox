@@ -42,8 +42,8 @@ public class FilesComparator {
    * Has the logic to compare file or directory.
    *
    * @param expectedResultsBaseDirectoryOrFile the expected results base directory or file
-   * @param resultBaseDirectoryOrFile the results base directory or file
-   * @param filesToIgnore the files to ignore (the path should be based on the expected result base directory or file)
+   * @param resultBaseDirectoryOrFile          the results base directory or file
+   * @param filesToIgnore                      the files to ignore (the path should be based on the expected result base directory or file)
    */
   public FilesComparator(File expectedResultsBaseDirectoryOrFile, File resultBaseDirectoryOrFile, List<File> filesToIgnore) {
     super();
@@ -149,7 +149,7 @@ public class FilesComparator {
    * Compare file.
    *
    * @param expected the expected
-   * @throws IOException
+   * @return the equivalent file result
    */
   public File getEquivalentFileResult(File expected) {
     String expectedFileName = expected.getAbsolutePath().replace(this._expectedResultsBaseDirectoryOrFile.getAbsolutePath(), "");

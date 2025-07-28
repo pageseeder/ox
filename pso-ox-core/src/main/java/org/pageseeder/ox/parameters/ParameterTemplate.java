@@ -15,7 +15,7 @@
  */
 package org.pageseeder.ox.parameters;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
  * Defines a simple template for parameter values.
  *
  * @author Christophe Lauret
- *
  * @version Berlioz 0.11.2
  * @since Berlioz 0.8.2
  */
@@ -128,7 +127,7 @@ public final class ParameterTemplate {
    * not require to be parsed.
    *
    * @param name The value.
-   * @param def   The default value for the parameter (optional)
+   * @param def  The default value for the parameter (optional)
    * @return the corresponding template.
    */
   public static ParameterTemplate parameter(String name, String def) {

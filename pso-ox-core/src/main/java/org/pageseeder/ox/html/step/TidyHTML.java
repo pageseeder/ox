@@ -15,8 +15,8 @@
  */
 package org.pageseeder.ox.html.step;
 
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.api.StepInfo;
@@ -58,7 +58,6 @@ import java.util.Properties;
  * <h3>Return</h3>
  * <p>If <var>input</var> does not exist, it returns {@link InvalidResult}.</p>
  * <p>Otherwise return {@link TidyHTMLResult}
- *
  *
  * @author Carlos cabral
  */
@@ -242,7 +241,7 @@ public final class TidyHTML implements Step {
    * @return the input files
    * @throws IOException Signals that an I/O exception has occurred.
    */
-  private @NonNull List<File> getInputFiles(Model model, PackageData data, StepInfo info) throws IOException {
+  private @NotNull List<File> getInputFiles(Model model, PackageData data, StepInfo info) throws IOException {
 
     //Original inputs
     String inputParemeter = info.getParameter("input", info.input());
@@ -348,14 +347,14 @@ public final class TidyHTML implements Step {
     /**
      * Instantiates a new transform result.
      *
-     * @param model the model
-     * @param data the data
-     * @param info the info
-     * @param output the output
+     * @param model           the model
+     * @param data            the data
+     * @param info            the info
+     * @param output          the output
      * @param fileResultInfos the file result infos
      */
-    public TidyHTMLResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info,
-        @Nullable File output, @NonNull List<TidyFileResultInfo> fileResultInfos) {
+    public TidyHTMLResult(@NotNull Model model, @NotNull PackageData data, @NotNull StepInfo info,
+        @Nullable File output, @NotNull List<TidyFileResultInfo> fileResultInfos) {
       super(model, data, info, output, fileResultInfos);
       this._displayOutputResult = "true".equals(super.info().getParameter("display-result")) ? true : false;
     }

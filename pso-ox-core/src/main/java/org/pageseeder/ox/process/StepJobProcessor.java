@@ -28,7 +28,7 @@ import java.io.IOException;
  * <p>A thread for processing step jobs.</p>
  *
  * @author Carlos Cabral
- * @since  27 February 2017
+ * @since 27 February 2017
  */
 class StepJobProcessor implements Runnable {
 
@@ -37,6 +37,11 @@ class StepJobProcessor implements Runnable {
 
   private final StepJobQueue _queue;
 
+  /**
+   * Instantiates a new Step job processor.
+   *
+   * @param queue the queue
+   */
   StepJobProcessor(StepJobQueue queue) {
     this._queue = queue;
   }

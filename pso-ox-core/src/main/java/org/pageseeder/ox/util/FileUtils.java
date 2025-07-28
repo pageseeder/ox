@@ -15,7 +15,7 @@
  */
 package org.pageseeder.ox.util;
 
-import org.eclipse.jdt.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.pageseeder.ox.core.PackageData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ import java.util.List;
  * The Class FileUtils.
  *
  * @author Adriano Akaishi
- * @since 01/05/2017
+ * @since 01 /05/2017
  */
 public class FileUtils {
 
@@ -185,7 +185,7 @@ public class FileUtils {
   /**
    * Gets the file by extension.
    *
-   * @param data the data
+   * @param data       the data
    * @param fromFolder the from folder
    * @param extensions the extensions
    * @return the file by extension
@@ -217,7 +217,7 @@ public class FileUtils {
    * write the file content into the target.
    *
    * @param fileContent the file content
-   * @param target the target
+   * @param target      the target
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public static void write(String fileContent, File target) throws IOException {
@@ -229,7 +229,8 @@ public class FileUtils {
    * write the file content into the target.
    *
    * @param fileContent the file content
-   * @param target the target
+   * @param target      the target
+   * @param charset     the charset
    * @throws IOException Signals that an I/O exception has occurred.
    */
   public static void write(String fileContent, File target, String charset) throws IOException {
@@ -254,7 +255,8 @@ public class FileUtils {
   /**
    * Returns the content of the source file.
    *
-   * @param source the source
+   * @param source  the source
+   * @param charset the charset
    * @return the string
    * @throws IOException Signals that an I/O exception has occurred.
    */
@@ -266,14 +268,13 @@ public class FileUtils {
 
   /**
    * Compute the relative path between two files:
-   *   root             descendant            returned
-   *   /a/b/c           /a/b/c/d.txt          d.txt
-   *   /a/b/c           /a/b/c/d/e.txt        d/e.txt
-   *   /a/b/c           /a/b/d.txt            ''
+   * root             descendant            returned
+   * /a/b/c           /a/b/c/d.txt          d.txt
+   * /a/b/c           /a/b/c/d/e.txt        d/e.txt
+   * /a/b/c           /a/b/d.txt            ''
    *
-   * @param descendant  the descendant file
-   * @param root        the root folder
-   *
+   * @param descendant the descendant file
+   * @param root       the root folder
    * @return the relative path if files match, empty string otherwise
    */
   public static String relativePath(File descendant, File root) {
@@ -294,11 +295,11 @@ public class FileUtils {
   /**
    * Find files.
    *
-   * @param root the root
+   * @param root   the root
    * @param filter the filter
    * @return the list
    */
-  public static @NonNull List<File> findFiles(File root, FileFilter filter) {
+  public static @NotNull List<File> findFiles(File root, FileFilter filter) {
     if (!root.exists()) return Collections.emptyList();
     if (root.isFile()) return Collections.singletonList(root);
     List<File> all = new ArrayList<>();
@@ -312,7 +313,7 @@ public class FileUtils {
   /**
    * Find files.
    *
-   * @param root the root
+   * @param root      the root
    * @param extension the extension
    * @return the list
    */
@@ -335,11 +336,11 @@ public class FileUtils {
   /**
    * Filter.
    *
-   * @param extensionsAllowed the extensions allowed
+   * @param extensionsAllowed  the extensions allowed
    * @param isDirectoryAllowed the is directory allowed
    * @return the file filter
    */
-  public static FileFilter filter(@NonNull List<String> extensionsAllowed, boolean isDirectoryAllowed) {
+  public static FileFilter filter(@NotNull List<String> extensionsAllowed, boolean isDirectoryAllowed) {
     if (extensionsAllowed.isEmpty()) return null;
     return f -> {
       boolean isAllowed = false;

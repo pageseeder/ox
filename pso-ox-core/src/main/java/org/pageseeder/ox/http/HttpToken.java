@@ -56,8 +56,7 @@ public class HttpToken implements HttpCredentials, Serializable {
    * Creates a new PageSeeder access token.
    *
    * @param token A new PageSeeder access token.
-   *
-   * @throws NullPointerException if the token is <code>null</code>
+   * @throws NullPointerException     if the token is <code>null</code>
    * @throws IllegalArgumentException if the token is not valid.
    */
   public HttpToken(String token) {
@@ -69,8 +68,7 @@ public class HttpToken implements HttpCredentials, Serializable {
    *
    * @param token   A new PageSeeder access token.
    * @param expires When the token expires.
-   *
-   * @throws NullPointerException if the token is <code>null</code>
+   * @throws NullPointerException     if the token is <code>null</code>
    * @throws IllegalArgumentException if the token is not valid.
    */
   public HttpToken(String token, long expires) {
@@ -82,6 +80,8 @@ public class HttpToken implements HttpCredentials, Serializable {
   }
 
   /**
+   * Token string.
+   *
    * @return the actual access token.
    */
   public String token() {
@@ -89,6 +89,8 @@ public class HttpToken implements HttpCredentials, Serializable {
   }
 
   /**
+   * Expires millis long.
+   *
    * @return when the token expires in milliseconds since Epoch.
    */
   public long expiresMillis() {
@@ -96,8 +98,9 @@ public class HttpToken implements HttpCredentials, Serializable {
   }
 
   /**
-   * @return <code>true</code> if the token has expired;
-   *         <code>false</code> otherwise or if it is not known.
+   * Has expired boolean.
+   *
+   * @return <code>true</code> if the token has expired;         <code>false</code> otherwise or if it is not known.
    */
   public boolean hasExpired() {
     return System.currentTimeMillis() - this._expires > 0;

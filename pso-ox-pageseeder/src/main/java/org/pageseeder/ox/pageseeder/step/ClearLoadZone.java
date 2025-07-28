@@ -16,33 +16,24 @@
 package org.pageseeder.ox.pageseeder.step;
 
 import net.pageseeder.app.simple.core.utils.SimpleStringUtils;
-import net.pageseeder.app.simple.pageseeder.model.StartLoadingParameter;
 import net.pageseeder.app.simple.pageseeder.service.LoadingZoneService;
 import net.pageseeder.app.simple.vault.TokensVaultItem;
-import org.jetbrains.annotations.Nullable;
 import org.pageseeder.bridge.PSConfig;
-import org.pageseeder.bridge.PSCredentials;
 import org.pageseeder.bridge.model.PSGroup;
 import org.pageseeder.ox.api.Measurable;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
-import org.pageseeder.ox.pageseeder.thread.GroupThreadProgressScheduleExecutorRunnable;
 import org.pageseeder.ox.tool.DefaultResult;
 import org.pageseeder.ox.tool.ExtraResultStringXML;
 import org.pageseeder.ox.util.StepUtils;
-import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.xmlwriter.XML;
 import org.pageseeder.xmlwriter.XMLStringWriter;
-import org.pageseeder.xmlwriter.XMLWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 
 /**

@@ -25,15 +25,33 @@ import java.text.DecimalFormat;
  */
 public class FileSizeFormat {
 
+  /**
+   * The enum Unit.
+   */
   public enum Unit {
+    /**
+     * Byte unit.
+     */
     BYTE("Byte", 0),
 
+    /**
+     * Kilo byte unit.
+     */
     KILO_BYTE("KB", 1),
 
+    /**
+     * Mega byte unit.
+     */
     MEGA_BYTE("MB", 2),
 
+    /**
+     * Giga byte unit.
+     */
     GIGA_BYTE("GB", 3),
 
+    /**
+     * Tera byte unit.
+     */
     TERA_BYTE("TB", 4);
 
     private final String _text;
@@ -45,6 +63,8 @@ public class FileSizeFormat {
     }
 
     /**
+     * Gets group.
+     *
      * @return the digital group
      */
     public int getGroup() {
@@ -56,6 +76,12 @@ public class FileSizeFormat {
       return this._text;
     }
 
+    /**
+     * Gets unit.
+     *
+     * @param group the group
+     * @return the unit
+     */
     public static Unit getUnit(int group) {
       for (Unit u : values()) {
         if (u.getGroup() == group) return u;
@@ -65,10 +91,23 @@ public class FileSizeFormat {
 
   }
 
+  /**
+   * Format string.
+   *
+   * @param size the size
+   * @param unit the unit
+   * @return the string
+   */
   public String format(long size, Unit unit) {
     return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, unit.getGroup())) + unit.toString();
   }
 
+  /**
+   * Format string.
+   *
+   * @param size the size
+   * @return the string
+   */
   public String format(long size) {
     int group = (int) (Math.log10(size) / Math.log10(1024));
     return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, group)) + Unit.getUnit(group);

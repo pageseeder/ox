@@ -28,7 +28,7 @@
 <!-- PARAGRAPHS                                                                                 -->
 <!-- ========================================================================================== -->
 
-<!-- 
+<!--
   Default rule for paragraphs
  -->
 <xsl:template match="w:p">
@@ -125,7 +125,7 @@
 <!-- LISTS                                                                                      -->
 <!-- ========================================================================================== -->
 
-<!-- 
+<!--
    List Items
    Handles the first List Items and creates the lists
 -->
@@ -163,8 +163,8 @@
     </xsl:when>
     <!-- All list items thats already processed in the first list item section are ignored -->
     <xsl:when test=" preceding-sibling::w:p[1][./w:pPr/w:listPr] and (
-              preceding-sibling::w:p[1][./w:pPr/w:listPr/w:ilfo/@w:val = $listID] or 
-              preceding-sibling::w:p[1][./w:pPr/w:listPr/w:ilvl/@w:val &lt; $listLvl] or 
+              preceding-sibling::w:p[1][./w:pPr/w:listPr/w:ilfo/@w:val = $listID] or
+              preceding-sibling::w:p[1][./w:pPr/w:listPr/w:ilvl/@w:val &lt; $listLvl] or
               preceding-sibling::w:p[1][./w:pPr/w:listPr/w:ilfo/@w:val = $listID][w:pPr/w:listPr/w:ilvl/@w:val = $listLvl] or
               preceding-sibling::w:p[1][./w:pPr/w:listPr][./w:pPr/w:listPr/w:ilfo/@w:val = $listID])"/>
     <xsl:otherwise>
@@ -186,9 +186,9 @@
   <xsl:variable name="previousListDefId" select="ancestor::w:wordDocument/w:lists/w:list[@w:ilfo=$previousListID]/w:ilst/@w:val"/>
   <xsl:variable name="previousListStyleLink" select="ancestor::w:wordDocument/w:lists/w:listDef[@w:listDefId=$previousListDefId]/w:listStyleLink/@w:val"/>
   <xsl:variable name="previousStyleLink" select="ancestor::w:wordDocument/w:lists/w:listDef[@w:listDefId=$previousListDefId]/w:styleLink/@w:val"/>
-  
+
   <xsl:choose>
-     <xsl:when test="$listStyleLink = 'Numberedlistnumericstart' or 
+     <xsl:when test="$listStyleLink = 'Numberedlistnumericstart' or
                      $styleLink = 'Numberedlistnumericstart' ">
          <ol>
              <xsl:call-template name="createListItem">
@@ -196,11 +196,11 @@
              </xsl:call-template>
          </ol>
      </xsl:when>
-     <xsl:when test="$listStyleLink = 'Numberedlistalphastart' or 
+     <xsl:when test="$listStyleLink = 'Numberedlistalphastart' or
                      $styleLink = 'Numberedlistalphastart' ">
          <!--Do not apply redundant lowerAlpha class on nested lists-->
          <xsl:choose>
-             <xsl:when test="$previousListStyleLink = 'Numberedlistalphastart' or 
+             <xsl:when test="$previousListStyleLink = 'Numberedlistalphastart' or
                              $previousStyleLink = 'Numberedlistalphastart' ">
                  <ol>
                      <xsl:call-template name="createListItem">
@@ -217,7 +217,7 @@
              </xsl:otherwise>
          </xsl:choose>
      </xsl:when>
-     <xsl:when test="$listStyleLink = 'Bulletedlist' or 
+     <xsl:when test="$listStyleLink = 'Bulletedlist' or
                      $styleLink = 'Bulletedlist' ">
          <ul>
              <xsl:call-template name="createListItem">
@@ -225,10 +225,10 @@
              </xsl:call-template>
          </ul>
      </xsl:when>
-     <xsl:when test="$listStyleLink = 'Blockquotelist' or 
+     <xsl:when test="$listStyleLink = 'Blockquotelist' or
                      $styleLink = 'Blockquotelist' ">
          <xsl:choose>
-             <xsl:when test="$previousListStyleLink = 'Blockquotelist' or 
+             <xsl:when test="$previousListStyleLink = 'Blockquotelist' or
                              $previousStyleLink = 'Blockquotelist' ">
                  <ul>
                      <xsl:call-template name="createListItem">
@@ -247,7 +247,7 @@
      </xsl:when>
      <xsl:when test="$listStyleLink = 'Redundant' or $styleLink = 'Redundant' ">
        <xsl:choose>
-           <xsl:when test="$previousListStyleLink = 'Redundant' or 
+           <xsl:when test="$previousListStyleLink = 'Redundant' or
                            $previousStyleLink = 'Redundant' ">
                <ul>
                    <xsl:call-template name="createListItem">
@@ -483,7 +483,7 @@
 <!--                             <xsl:otherwise>0</xsl:otherwise> -->
 <!--                         </xsl:choose> -->
                     </xsl:variable>
-                    
+
                     <!-- Variable: Stores the number of rows down the currently selected merged cell goes down, so appropriate rowspan can be returned-->
                     <xsl:variable name="NumberOfRowsDown" select="0">
 <!--                         <xsl:choose> -->
@@ -593,7 +593,7 @@
   <xsl:variable name="previousNode" select = "./preceding-sibling::*[self::w:hlink|self::w:r][1]" />
   <xsl:choose>
     <xsl:when test ="w:r/w:rPr/w:rStyle/@w:val='Link-External' and
-              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Link-External') or 
+              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Link-External') or
               not($previousNode[self::hlink]/w:r/w:rPr/w:rStyle/@w:val = 'Link-External'))">
         <xsl:element name="a">
             <xsl:attribute name="href">
@@ -610,7 +610,7 @@
         </xsl:element>
     </xsl:when>
     <xsl:when test ="w:r/w:rPr/w:rStyle/@w:val='Link-Internal' and
-              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Link-Internal') or 
+              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Link-Internal') or
               not($previousNode[self::hlink]/w:r/w:rPr/w:rStyle/@w:val = 'Link-Internal'))">
         <xsl:element name="a">
             <xsl:attribute name="href">
@@ -624,10 +624,10 @@
             </xsl:call-template>
         </xsl:element>
     </xsl:when>
-    
-    
+
+
     <xsl:when test ="w:r/w:rPr/w:rStyle/@w:val='Link-Internalbold' and
-              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Link-Internalbold') or 
+              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Link-Internalbold') or
               not($previousNode[self::hlink]/w:r/w:rPr/w:rStyle/@w:val = 'Link-Internalbold'))">
         <xsl:element name="a">
             <xsl:attribute name="href">
@@ -644,7 +644,7 @@
         </xsl:element>
     </xsl:when>
     <xsl:when test ="w:r/w:rPr/w:rStyle/@w:val='Link-Internalitalics' and
-              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Link-Internalitalics') or 
+              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Link-Internalitalics') or
               not($previousNode[self::hlink]/w:r/w:rPr/w:rStyle/@w:val = 'Link-Internalitalics'))">
         <xsl:element name="a">
             <xsl:attribute name="href">
@@ -660,10 +660,10 @@
             </em>
         </xsl:element>
     </xsl:when>
-    
-    
+
+
     <xsl:when test ="w:r/w:rPr/w:rStyle/@w:val='Link-Newwindow' and
-              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Link-Newwindow') or 
+              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Link-Newwindow') or
               not($previousNode[self::hlink]/w:r/w:rPr/w:rStyle/@w:val = 'Link-Newwindow'))">
         <xsl:element name="a">
             <xsl:attribute name="href">
@@ -681,7 +681,7 @@
         </xsl:element>
     </xsl:when>
     <xsl:when test ="w:r/w:rPr/w:rStyle/@w:val='Link-Bookmark' and
-              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Link-Bookmark') or 
+              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Link-Bookmark') or
               not($previousNode[self::hlink]/w:r/w:rPr/w:rStyle/@w:val = 'Link-Bookmark')) ">
         <xsl:element name="a">
             <xsl:attribute name="href">
@@ -697,7 +697,7 @@
         </xsl:element>
     </xsl:when>
     <xsl:when test ="w:r/w:rPr/w:rStyle/@w:val='Link-Footnote' and
-              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Link-Footnote') or 
+              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Link-Footnote') or
               not($previousNode[self::hlink]/w:r/w:rPr/w:rStyle/@w:val = 'Link-Footnote')) ">
         <sup>
             <xsl:element name="a">
@@ -714,7 +714,7 @@
         </sup>
     </xsl:when>
     <xsl:when test ="./w:r/w:rPr/w:rStyle/@w:val='StyleBold' and
-              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'StyleBold') or 
+              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'StyleBold') or
               not($previousNode[self::hlink]/w:r/w:rPr/w:rStyle/@w:val = 'StyleBold'))">
         <strong>
             <xsl:call-template name="concatSameStyleRun">
@@ -723,7 +723,7 @@
         </strong>
     </xsl:when>
     <xsl:when test ="./w:r/w:rPr/w:rStyle/@w:val='StyleBoldItalic' and
-              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'StyleBoldItalic') or 
+              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'StyleBoldItalic') or
               not($previousNode[self::hlink]/w:r/w:rPr/w:rStyle/@w:val = 'StyleBoldItalic'))">
         <strong>
             <em>
@@ -734,7 +734,7 @@
         </strong>
     </xsl:when>
     <xsl:when test ="./w:r/w:rPr/w:rStyle/@w:val='Superscript' and
-              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Superscript') or 
+              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Superscript') or
               not($previousNode[self::hlink]/w:r/w:rPr/w:rStyle/@w:val = 'Superscript'))">
         <sup>
             <xsl:call-template name="concatSameStyleRun">
@@ -743,7 +743,7 @@
         </sup>
     </xsl:when>
     <xsl:when test ="./w:r/w:rPr/w:rStyle/@w:val='StyleItalic' and
-              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'StyleItalic') or 
+              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'StyleItalic') or
               not($previousNode[self::hlink]/w:r/w:rPr/w:rStyle/@w:val = 'StyleItalic'))">
         <em>
             <xsl:call-template name="concatSameStyleRun">
@@ -752,7 +752,7 @@
         </em>
     </xsl:when>
     <xsl:when test ="./w:r/w:rPr/w:rStyle/@w:val='StyleUnderline' and
-              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'StyleUnderline') or 
+              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'StyleUnderline') or
               not($previousNode[self::hlink]/w:r/w:rPr/w:rStyle/@w:val = 'StyleUnderline'))">
         <u>
             <xsl:call-template name="concatSameStyleRun">
@@ -761,7 +761,7 @@
         </u>
     </xsl:when>
     <xsl:when test ="./w:r/w:rPr/w:rStyle/@w:val='Nobreak' and
-              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Nobreak') or 
+              (not($previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = 'Nobreak') or
               not($previousNode[self::hlink]/w:r/w:rPr/w:rStyle/@w:val = 'Nobreak'))">
         <span class="nobreak">
             <xsl:call-template name="concatSameStyleRun">
@@ -770,7 +770,7 @@
         </span>
     </xsl:when>
     <xsl:otherwise>
-        <xsl:if test="not(($previousNode[self::w:r][not(w:rPr/w:rStyle/@w:val)]  or $previousNode[self::w:hlink]/w:r/w:rPr/w:rStyle[@w:val='Hyperlink']) and 
+        <xsl:if test="not(($previousNode[self::w:r][not(w:rPr/w:rStyle/@w:val)]  or $previousNode[self::w:hlink]/w:r/w:rPr/w:rStyle[@w:val='Hyperlink']) and
                (self::w:hlink/w:r/w:rPr/w:rStyle[@w:val='Hyperlink'] or self::w:r[not(w:rPr/w:rStyle/@w:val)]))">
             <xsl:call-template name="concatSameStyleRun">
                 <xsl:with-param name="currentNode" select ="."></xsl:with-param>
@@ -809,7 +809,7 @@
   </xsl:choose>
 </xsl:template>
 
-<!--Ensure that all word runs are not handled by the standard w:r template 
+<!--Ensure that all word runs are not handled by the standard w:r template
 as these runs are handled by the hlink template-->
 <xsl:template match="w:hlink/w:r" priority="2" />
 
@@ -819,9 +819,9 @@ as these runs are handled by the hlink template-->
   <xsl:variable name="nextNode" select = "./following-sibling::*[self::w:hlink|self::w:r][1]" />
   <xsl:choose>
     <!-- All  items thats already processed in the first item section are ignored -->
-    <xsl:when test="$previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = ./w:rPr/w:rStyle/@w:val or 
+    <xsl:when test="$previousNode[self::w:r]/w:rPr/w:rStyle/@w:val = ./w:rPr/w:rStyle/@w:val or
               $previousNode[self::w:hlink]/w:r/w:rPr/w:rStyle/@w:val = ./w:rPr/w:rStyle/@w:val or
-               (($previousNode[self::w:r][not(w:rPr/w:rStyle/@w:val)]  or $previousNode[self::w:hlink]/w:r/w:rPr/w:rStyle[@w:val='Hyperlink']) and 
+               (($previousNode[self::w:r][not(w:rPr/w:rStyle/@w:val)]  or $previousNode[self::w:hlink]/w:r/w:rPr/w:rStyle[@w:val='Hyperlink']) and
                (self::w:hlink/w:r/w:rPr/w:rStyle[@w:val='Hyperlink'] or self::w:r[not(w:rPr/w:rStyle/@w:val)])) " />
     <xsl:otherwise>
       <xsl:choose>
@@ -830,8 +830,8 @@ as these runs are handled by the hlink template-->
 <!--                   (count(descendant::w:t)>0 or  -->
 <!--                    $nextNode[self::w:hlink]/w:r/w:rPr/w:rStyle/@w:val = ./w:rPr/w:rStyle/@w:val or  -->
 <!--                    $nextNode[self::w:r]/w:rPr/w:rStyle/@w:val = ./w:rPr/w:rStyle/@w:val)"> -->
-        <xsl:when test ="(count(descendant::w:t)>0 or 
-                   $nextNode[self::w:hlink]/w:r/w:rPr/w:rStyle/@w:val = ./w:rPr/w:rStyle/@w:val or 
+        <xsl:when test ="(count(descendant::w:t)>0 or
+                   $nextNode[self::w:hlink]/w:r/w:rPr/w:rStyle/@w:val = ./w:rPr/w:rStyle/@w:val or
                    $nextNode[self::w:r]/w:rPr/w:rStyle/@w:val = ./w:rPr/w:rStyle/@w:val)">
             <a class="anchor">
             <!-- XXX -->
@@ -911,7 +911,7 @@ as these runs are handled by the hlink template-->
                 </a>
             </xsl:if>
         </xsl:when>
-        
+
         <xsl:when test ="./w:rPr/w:rStyle/@w:val='Link-Internalbold'">
             <xsl:if test="./w:instrText|following-sibling::w:r[./w:instrText][./w:rPr/w:rStyle/@w:val='Link-Internalbold']/w:instrText">
                 <a>
@@ -946,7 +946,7 @@ as these runs are handled by the hlink template-->
                 </a>
             </xsl:if>
         </xsl:when>
-        
+
         <xsl:when test ="./w:rPr/w:rStyle/@w:val='Link-External'">
             <xsl:if test="./w:instrText|following-sibling::w:r[./w:instrText][./w:rPr/w:rStyle/@w:val='Link-External']/w:instrText">
                 <a>
@@ -1073,7 +1073,7 @@ as these runs are handled by the hlink template-->
     </xsl:choose>
 </xsl:template>
 
-<!--Extracts the URL from the hyperlink instruction text by removing 
+<!--Extracts the URL from the hyperlink instruction text by removing
     'HYPERLINK' and quotes from the instruction text
     Hyperlinks with \l requires an additional # for local anchors/bookmark-->
 <xsl:template name="extractRunHyperlink">

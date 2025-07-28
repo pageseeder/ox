@@ -26,16 +26,21 @@ import java.io.IOException;
  * A Result to indicate it's invalid.
  *
  * <h3>XML Result</h3>
- * <code>{@code
- *  <result type="invalid">... </result>
- *
- * } </code>
+ * {@code
+ * <result type="invalid">... </result>
+ * }*
  *
  * @author Ciber Cai
  * @since 18 Jul 2016
  */
 public class InvalidResult extends ResultBase implements Result {
 
+  /**
+   * Instantiates a new Invalid result.
+   *
+   * @param model the model
+   * @param data  the data
+   */
   public InvalidResult(Model model, PackageData data) {
     super(model, data);
   }
@@ -51,8 +56,10 @@ public class InvalidResult extends ResultBase implements Result {
   }
 
   /**
+   * Error invalid result.
+   *
    * @param ex the Exception
-   * @return InvalidResult
+   * @return InvalidResult invalid result
    */
   public InvalidResult error(Exception ex) {
     setError(ex);

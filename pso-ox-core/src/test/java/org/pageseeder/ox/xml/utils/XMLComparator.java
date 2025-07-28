@@ -36,7 +36,7 @@ public class XMLComparator {
    * Compare XML file.
    *
    * @param expected the expected
-   * @param target the target
+   * @param target   the target
    */
   public static void compareXMLFile(File expected, File target) {
     assertNotNull("Expected File cannot be null.",expected);
@@ -48,7 +48,7 @@ public class XMLComparator {
    * Compare XML file.
    *
    * @param expected the expected
-   * @param target the target
+   * @param target   the target
    */
   public static void compareXMLString(String expected, String target) {
     assertNotNull("Expected File cannot be null.",expected);
@@ -59,8 +59,8 @@ public class XMLComparator {
   /**
    * Checks if is similar.
    *
-   * @param expected the expected
-   * @param target the target
+   * @param expected           the expected
+   * @param target             the target
    * @param attributesToIgnore the attributes to ignore
    */
   public static void isSimilar (String expected, String target, List<String> attributesToIgnore) {
@@ -70,8 +70,8 @@ public class XMLComparator {
   /**
    * Checks if is similar.
    *
-   * @param expected the expected
-   * @param target the target
+   * @param expected            the expected
+   * @param target              the target
    * @param differenceEvaluator the difference evaluator
    */
   public static void isSimilar (String expected, String target, DifferenceEvaluator differenceEvaluator) {

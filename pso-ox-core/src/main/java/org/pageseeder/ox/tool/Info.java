@@ -37,9 +37,8 @@ public abstract class Info implements XMLWritable {
   /**
    * Instantiates a new Info parameter
    *
-   * @param name
-   * @param type has three possible values string, list and map. This will indicate how the attribute value should be
-   *             displayed in the front end. The default option is string.
+   * @param name            the name
+   * @param type            has three possible values string, list and map. This will indicate how the attribute value should be             displayed in the front end. The default option is string.
    * @param extraAttributes extra attributes that can be shown if specified in header element
    */
   public Info(String name, InfoType type, Map<String, String> extraAttributes) {
@@ -53,26 +52,45 @@ public abstract class Info implements XMLWritable {
   /**
    * Instantiates a new Info parameter
    *
-   * @param name
-   * @param type has three possible values string, list and map. This will indicate how the attribute value should be
-   *         displayed in the front end. The default option is string.
+   * @param name the name
+   * @param type has three possible values string, list and map. This will indicate how the attribute value should be         displayed in the front end. The default option is string.
    */
   public Info(String name, InfoType type) {
     this(name, type, null);
   }
 
+  /**
+   * Gets name.
+   *
+   * @return the name
+   */
   public String getName() {
     return _name;
   }
 
+  /**
+   * Gets type.
+   *
+   * @return the type
+   */
   public InfoType getType() {
     return _type;
   }
 
+  /**
+   * Gets extra attributes.
+   *
+   * @return the extra attributes
+   */
   public Map<String, String> getExtraAttributes() {
     return _extraAttributes;
   }
 
+  /**
+   * Gets value.
+   *
+   * @return the value
+   */
   public abstract String getValue();
 
 

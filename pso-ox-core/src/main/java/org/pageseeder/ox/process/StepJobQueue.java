@@ -31,7 +31,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class StepJobQueue {
 
-  /** Maximo time in hour that a job will be stored in memory. */
+  /**
+   * Maximo time in hour that a job will be stored in memory.
+   */
   public static final int DEFAULT_MAX_STORED_COMPLETED_JOB = 1000;
 
   /** Singleton instance (Lazy init) */
@@ -69,6 +71,8 @@ public class StepJobQueue {
   }
 
   /**
+   * Gets instance.
+   *
    * @return the instance of ImportProcessor
    */
   protected static StepJobQueue getInstance() {
@@ -76,6 +80,9 @@ public class StepJobQueue {
   }
 
   /**
+   * Gets instance.
+   *
+   * @param maxStoredCompletedJob the max stored completed job
    * @return the instance of ImportProcessor
    */
   protected static synchronized StepJobQueue getInstance(int maxStoredCompletedJob) {
@@ -87,6 +94,8 @@ public class StepJobQueue {
   }
 
   /**
+   * Add.
+   *
    * @param job the job
    */
   protected void add(StepJob job) {
@@ -97,8 +106,10 @@ public class StepJobQueue {
   }
 
   /**
+   * Next step job.
+   *
    * @return the next processing job
-   * @throws InterruptedException
+   * @throws InterruptedException the interrupted exception
    */
   protected StepJob next() throws InterruptedException {
     StepJob job = this.waiting.take();
@@ -109,6 +120,8 @@ public class StepJobQueue {
   }
 
   /**
+   * Total int.
+   *
    * @return the total number of jobs in the queue.
    */
   protected int total() {
@@ -116,6 +129,8 @@ public class StepJobQueue {
   }
 
   /**
+   * Get step job.
+   *
    * @param id the id of the job
    * @return the StepJob
    */
@@ -141,6 +156,8 @@ public class StepJobQueue {
   }
 
   /**
+   * Gets job status.
+   *
    * @param jobid the id of the job
    * @return the status of job
    */
@@ -152,6 +169,8 @@ public class StepJobQueue {
   }
 
   /**
+   * Completed.
+   *
    * @param job set the job to completed queue
    */
   protected void completed(StepJob job) {

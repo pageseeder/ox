@@ -23,6 +23,8 @@ import org.pageseeder.ox.util.ISO8601;
 import java.io.File;
 
 /**
+ * The type File inspector.
+ *
  * @author Ciber Cai
  * @since 19 July 2016
  */
@@ -37,8 +39,8 @@ public class FileInspector implements PackageInspector {
 
   @Override
   public boolean supportsMediaType(String mediatype) {
-    // support everything
-    return true;
+    // support everything except the no-file.
+    return !"no-file".equals(mediatype);
   }
 
   @Override
@@ -50,15 +52,15 @@ public class FileInspector implements PackageInspector {
 
   private static void setFileProperties(File file, PackageData pack) {
     FileSizeFormat fmt = new FileSizeFormat();
-    if (file.isFile()) {
-      pack.setProperty(PREFIX + "length [" + file.getName() + "]", fmt.format(file.length()));
-      pack.setProperty(PREFIX + "lastModified [" + file.getName() + "]", ISO8601.format(file.lastModified(), ISO8601.DATETIME));
-    } else {
-      for (File f : file.listFiles()) {
-        setFileProperties(f, pack);
+    if (file != null) {
+      if (file.isFile()) {
+        pack.setProperty(PREFIX + "length [" + file.getName() + "]", fmt.format(file.length()));
+        pack.setProperty(PREFIX + "lastModified [" + file.getName() + "]", ISO8601.format(file.lastModified(), ISO8601.DATETIME));
+      } else {
+        for (File f : file.listFiles()) {
+          setFileProperties(f, pack);
+        }
       }
-
     }
   }
-
 }

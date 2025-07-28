@@ -35,7 +35,7 @@ public class ExtraResultProperties implements XMLWritable {
    */
   private Map<String, String> properties;
 
-   /**
+  /**
    * Instantiates a new Extra result properties.
    *
    * @param properties the map of properties

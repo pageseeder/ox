@@ -51,7 +51,7 @@ public final class ContentException extends RuntimeException {
    * Constructs a new content exception with the specified message and
    * cause.
    *
-   * @param cause   The original cause
+   * @param cause The original cause
    */
   public ContentException(Throwable cause) {
     super(cause);

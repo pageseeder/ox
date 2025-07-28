@@ -31,7 +31,7 @@ import java.io.IOException;
  * <p>A thread for processing step jobs from pipeline.</p>
  *
  * @author Ciber Cai
- * @since  07 November 2014
+ * @since 07 November 2014
  */
 class PipelineProcessor implements Runnable {
 
@@ -42,13 +42,20 @@ class PipelineProcessor implements Runnable {
 
   private final boolean _slowMode;
 
+  /**
+   * Instantiates a new Pipeline processor.
+   *
+   * @param queue the queue
+   */
   PipelineProcessor(PipelineJobQueue queue) {
     this._queue = queue;
     this._slowMode = false;
   }
 
   /**
-   * @param queue the job queue.
+   * Instantiates a new Pipeline processor.
+   *
+   * @param queue    the job queue.
    * @param slowMode whether to use slow mode
    */
   PipelineProcessor(PipelineJobQueue queue, boolean slowMode) {

@@ -59,7 +59,8 @@ public final class XMLUtils {
 
   /**
    * Parse the XML
-   * @param in defines the input stream.
+   *
+   * @param in      defines the input stream.
    * @param handler defines the handler.
    * @throws IOException the IO error occur.
    */
@@ -103,11 +104,11 @@ public final class XMLUtils {
   /**
    * Transform the XML to result.
    *
-   * @param xmlSource defines the input source
-   * @param template defines the transformer source.
-   * @param result defines the result.
+   * @param xmlSource  defines the input source
+   * @param template   defines the transformer source.
+   * @param result     defines the result.
    * @param parameters defines the list of parameter.
-   * @throws IOException the IO error occur.
+   * @throws IOException          the IO error occur.
    * @throws TransformerException the transformation error occur.
    */
   public static void transform(Source xmlSource, Templates template, Result result, Map<String, String> parameters) throws IOException, TransformerException {

@@ -27,7 +27,7 @@ import java.util.List;
  * The class that is interested in processing a tidyOXMessage
  * event implements this interface, and the object created
  * with that class is registered with a component using the
- * component's <code>addTidyOXMessageListener<code> method. When
+ * component's <code>addTidyOXMessageListener</code> method. When
  * the tidyOXMessage event occurs, that object's appropriate
  * method is invoked.
  *

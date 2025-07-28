@@ -29,12 +29,25 @@ public class InfoList extends Info {
 
   private final List<String> _values;
 
+  /**
+   * Instantiates a new Info list.
+   *
+   * @param name            the name
+   * @param extraAttributes the extra attributes
+   * @param values          the values
+   */
   public InfoList(String name, Map<String, String> extraAttributes, List<String> values) {
     super(name, InfoType.list, extraAttributes);
     Objects.requireNonNull(values);
     this._values = values;
   }
 
+  /**
+   * Instantiates a new Info list.
+   *
+   * @param name   the name
+   * @param values the values
+   */
   public InfoList(String name, List<String> values) {
     super(name, InfoType.list);
     Objects.requireNonNull(values);

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?><document id="462111" schemaversion="1.4" date="2023-06-13T17:03:00+10:00" version="current" level="portable"><documentinfo><uri id="462111" external="false" mediatype="application/vnd.pageseeder.psml+xml" created="2021-07-22T17:07:33+10:00" modified="2023-06-13T17:03:00+10:00" scheme="http" host="ps.allette.com.au" port="80" path="/ps/allette/www/website/pageseeder/4_revision_and_version_management.psml" decodedpath="/ps/allette/www/website/pageseeder/4_revision_and_version_management.psml" title="Revision and version management"><displaytitle>Revision and version management</displaytitle></uri><reversexrefs><reversexref uriid="462080" href="_local/website/pageseeder.psml" frag="14" urititle="PageSeeder" mediatype="application/vnd.pageseeder.psml+xml" id="4712284" title="Review and Annotation" type="none" forwardtype="none" forwardtitle="Learn more" forwarddisplay="manual" forwardfrag="default" labels="button-primary"/><reversexref uriid="549396" href="_local/website/_menu.psml" frag="2" urititle="_menu" mediatype="application/vnd.pageseeder.psml+xml" documenttype="references" id="5053536" title="References" config="default" type="none" forwardtype="embed" forwarddisplay="document" forwardfrag="default" level="1"/></reversexrefs></documentinfo><fragmentinfo structure-modified="2021-07-22T11:55:37+10:00"><locator id="642041" fragment="2" modified="2021-07-22T11:55:37+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642044" fragment="21" modified="2021-07-22T11:55:37+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642043" fragment="7" modified="2021-07-22T11:55:37+10:00"><labels>s-col-md-6,s-text-center,v-align-middle</labels></locator><locator id="642034" fragment="26" modified="2021-07-22T11:55:37+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="714660" fragment="24" editid="5055680" modified="2023-06-13T17:03:00+10:00"><labels>s-col,v-align-middle</labels></locator><locator id="642036" fragment="28" modified="2021-07-22T11:55:37+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642035" fragment="27" modified="2021-07-22T11:55:37+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642038" fragment="13" modified="2021-07-22T11:55:37+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642037" fragment="30" modified="2021-07-22T11:55:37+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="642040" fragment="16" modified="2021-07-22T11:55:37+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="714661" fragment="20" editid="5055679" modified="2023-06-13T17:02:59+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="22" modified="2020-10-23T13:00:32+11:00"><labels>spacer</labels></locator><locator fragment="23" modified="2020-10-23T13:01:01+11:00"><labels>spacer</labels></locator><locator fragment="25" modified="2020-10-29T16:49:07+11:00"><labels>spacer</labels></locator><locator fragment="29" modified="2020-10-29T16:52:33+11:00"><labels>spacer</labels></locator><locator fragment="31" modified="2020-11-04T12:16:25+11:00"/><locator fragment="10" modified="2020-10-29T15:05:53+11:00"/><locator fragment="11" modified="2021-07-22T11:55:37+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="12" modified="2021-07-22T11:55:37+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="14" modified="2020-10-20T15:20:25+11:00"><labels>spacer</labels></locator><locator fragment="15" modified="2020-10-20T15:20:25+11:00"><labels>spacer</labels></locator><locator fragment="17" modified="2021-07-22T11:55:37+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="18" modified="2021-07-22T11:55:37+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="19" modified="2021-07-22T11:55:37+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="1" modified="2021-07-22T11:55:37+10:00"><labels>s-text-center</labels></locator><locator fragment="100" modified="2021-07-22T11:55:37+10:00"><labels>row-start,row-bg-secondary,spacer</labels></locator><locator fragment="101" modified="2021-07-22T11:55:37+10:00"><labels>spacer</labels></locator><locator fragment="102" modified="2021-07-22T11:55:37+10:00"><labels>row-start,row-bg-white,spacer</labels></locator><locator fragment="3" modified="2021-07-22T11:55:37+10:00"><labels>s-text-center</labels></locator><locator fragment="4" modified="2021-07-22T11:55:37+10:00"><labels>s-text-center</labels></locator><locator fragment="103" modified="2021-07-22T11:55:37+10:00"><labels>spacer</labels></locator><locator fragment="104" modified="2021-07-22T11:55:37+10:00"><labels>row-start,row-bg-primary,spacer</labels></locator><locator fragment="5" modified="2021-07-22T11:55:37+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="6" modified="2021-07-22T11:55:37+10:00"><labels>s-col-md-6,v-align-middle</labels></locator><locator fragment="105" modified="2021-07-22T11:55:37+10:00"><labels>spacer</labels></locator><locator fragment="106" modified="2021-07-22T11:55:37+10:00"><labels>row-start,row-bg-white,spacer</labels></locator><locator fragment="107" modified="2021-07-22T11:55:37+10:00"><labels>spacer</labels></locator><locator fragment="8" modified="2020-10-20T15:20:25+11:00"><labels>spacer</labels></locator><locator fragment="108" modified="2021-07-22T11:55:37+10:00"><labels>row-start,row-bg-grey-lighten-4,spacer</labels></locator><locator fragment="9" modified="2020-10-29T15:05:58+11:00"/><locator fragment="109" modified="2021-07-22T11:55:37+10:00"><labels>spacer</labels></locator></fragmentinfo><metadata/><section id="content" title="content" fragmenttype="default,embed"><fragment id="100" labels="row-start,row-bg-secondary,spacer"/><fragment id="1" labels="s-text-center">
+      <heading level="1">Revision and version management</heading>
+    </fragment><fragment id="8" labels="spacer"/><fragment id="6" labels="s-col-md-6,v-align-middle">
+      <heading level="2">Overview</heading>
+      <para>Based on a model of storing saved changes, PageSeeder creates an auditable history of every structural and content edit, including moved fragments. With different presentation options for different use cases, changes can be presented according to:</para>
+      <list>
+        <item>Content changes between any two document versions,</item>
+        <item>Structural changes between any two document versions including inserted and deleted fragments,</item>
+        <item>All edits to a particular fragment including incoming cross-references,</item>
+        <item>Document changes according to versions created by multiple parent publications.</item>
+      </list>
+    </fragment><fragment id="7" labels="s-col-md-6,s-text-center,v-align-middle">
+      <para>
+        <image src="revision_and_version_management/revision-version-management-feature.png" uriid="462015" width="344" height="366" alt="revision-version-management-feature.png"/>
+      </para>
+    </fragment><fragment id="101" labels="spacer"/><fragment id="102" labels="row-start,row-bg-white,spacer"/><fragment id="11" labels="s-col,v-align-middle">
+      <heading level="3">Developers</heading>
+      <para>Access revision and version functionality from API services or batch API (Publisher). Add a version on upload to create, or overwrite, content. Publish or rollback to previous versions.</para>
+      <para>Access change history or metadata to create new views of the content lifecycle (<italic>see</italic> Comment table).</para>
+    </fragment><fragment id="2" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="revision_and_version_management/Developers.png" uriid="462150" width="640" height="440" alt="Developers.png"/>
+      </para>
+    </fragment><fragment id="14" labels="spacer"/><fragment id="13" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="revision_and_version_management/Analysts.png" uriid="462115" width="640" height="440" alt="Analysts.png"/>
+      </para>
+    </fragment><fragment id="12" labels="s-col,v-align-middle">
+      <heading level="3">Analysts</heading>
+      <para>Present changes to stakeholders in format optimized for productivity or usability. Views such as an automatically generated “comment table” can reduce reviews to only the changes and comments, rather than presenting entire documents. Semantics or commit comments can improve auditing. Get genuine reuse of content by versioning “shared” documents according to each publication that includes them. Enforce the capture of edit notes for each change committed.</para>
+    </fragment><fragment id="15" labels="spacer"/><fragment id="17" labels="s-col,v-align-middle">
+      <heading level="3">Users</heading>
+      <para>Create versions for a complete publication with one command. Find all edits by person, date or location.</para>
+    </fragment><fragment id="16" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="revision_and_version_management/Users.png" uriid="461949" width="640" height="440" alt="Users.png"/>
+      </para>
+    </fragment><fragment id="103" labels="spacer"/><fragment id="104" labels="row-start,row-bg-primary,spacer"/><fragment id="3" labels="s-text-center">
+      <heading level="2">Track Changes</heading>
+    </fragment><fragment id="22" labels="spacer"/><fragment id="18" labels="s-col,v-align-middle">
+      <heading level="3">Compare</heading>
+      <para>Compare versions of the same document or different documents side-by-side.</para>
+    </fragment><fragment id="21" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="revision_and_version_management/Compare.png" uriid="461926" width="640" height="440" alt="Compare.png"/>
+      </para>
+    </fragment><fragment id="23" labels="spacer"/><fragment id="26" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="revision_and_version_management/Structural%20changes.png" uriid="461960" width="640" height="440" alt="Structural changes.png"/>
+      </para>
+    </fragment><fragment id="19" labels="s-col,v-align-middle">
+      <heading level="3">Structural changes</heading>
+      <para>Check any structural changes made in the document.</para>
+    </fragment><fragment id="105" labels="spacer"/><fragment id="106" labels="row-start,row-bg-white,spacer"/><fragment id="4" labels="s-text-center">
+      <heading level="2">Shared Components</heading>
+    </fragment><fragment id="25" labels="spacer"/><fragment id="24" labels="s-col,v-align-middle"><heading level="3">Publication versions</heading><para>Check the version for the whole publication.</para></fragment><fragment id="27" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="revision_and_version_management/Publication%20Versions.png" uriid="461901" width="640" height="440" alt="Publication Versions.png"/>
+      </para>
+    </fragment><fragment id="107" labels="spacer"/><fragment id="108" labels="row-start,row-bg-grey-lighten-4,spacer"/><fragment id="5" labels="s-col,v-align-middle">
+      <heading level="2">Status</heading>
+      <para>Status is a value that can be assigned to a document using a workflow or task. The document status applies to the workflow associated with the document. The status of the last workflow step is the status of the document. The task status applies to comments in a discussion. The status of the last comment is the status of the task.</para>
+    </fragment><fragment id="28" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="revision_and_version_management/Status.png" uriid="461966" width="640" height="440" alt="Status.png"/>
+      </para>
+    </fragment><fragment id="29" labels="spacer"/><fragment id="30" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="revision_and_version_management/Workflow.png" uriid="462008" width="640" height="440" alt="Workflow.png"/>
+      </para>
+    </fragment><fragment id="20" labels="s-col,v-align-middle"><heading level="2">Workflow</heading><para>A workflow is a special type of task that uses document status values (e.g. Initiated, In Progress, Complete, Approved, Terminated). There can only be one workflow per document and the status of the document is the workflow status. It can have a current priority, due date and assigned to like other tasks and can use comment labels. Workflows can be created on multiple documents at the same time (using batch processing), but they are independent from each other.</para></fragment><fragment id="109" labels="spacer"/></section></document>

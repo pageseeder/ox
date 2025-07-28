@@ -16,15 +16,26 @@
 package org.pageseeder.ox.core;
 
 /**
+ * The enum Result status.
+ *
  * @author Christophe Lauret
- * @since  28 October 2013
+ * @since 28 October 2013
  */
 public enum ResultStatus {
 
+  /**
+   * Ok result status.
+   */
   OK,
 
+  /**
+   * Warning result status.
+   */
   WARNING,
 
+  /**
+   * Error result status.
+   */
   ERROR
 
 }

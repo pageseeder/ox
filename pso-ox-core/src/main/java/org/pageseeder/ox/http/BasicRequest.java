@@ -15,7 +15,7 @@
  */
 package org.pageseeder.ox.http;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -79,7 +79,7 @@ abstract class BasicRequest {
    * Creates a new request to PageSeeder.
    *
    * @param method The HTTP method
-   * @param url   The url (http://www.something.com?parameters=value)
+   * @param url    The url (http://www.something.com?parameters=value)
    */
   public BasicRequest(HttpMethod method, String url) {
     this._method = Objects.requireNonNull(method, "the HTTP method is required");
@@ -102,7 +102,6 @@ abstract class BasicRequest {
    *
    * @param name  The name of the HTTP header
    * @param value The value of the HTTP header.
-   *
    * @return This request.
    */
   public abstract BasicRequest header(String name, String value);
@@ -117,7 +116,6 @@ abstract class BasicRequest {
    *
    * @param name  The name of the HTTP parameters
    * @param value The value of the HTTP parameters.
-   *
    * @return This request.
    */
   public BasicRequest parameter(String name, String value) {
@@ -134,7 +132,6 @@ abstract class BasicRequest {
    * <p>This method will automatically update the "Authorization" header field.
    *
    * @param credentials The username/password, token or session to use as credentials
-   *
    * @return This request.
    */
   public BasicRequest using(HttpCredentials credentials) {
@@ -153,7 +150,6 @@ abstract class BasicRequest {
    * Sets the time out
    *
    * @param timeout the time out
-   *
    * @return This request
    */
   public BasicRequest timeout(int timeout) {
@@ -178,7 +174,6 @@ abstract class BasicRequest {
    * Returns the HTTP header the specified name.
    *
    * @param name The name of the HTTP header (case insensitive)
-   *
    * @return The value of the corresponding parameter or <code>null</code>
    */
   public @Nullable String header(String name) {
@@ -192,7 +187,6 @@ abstract class BasicRequest {
    * Returns the value of the first HTTP parameter matching the specified name.
    *
    * @param name The name of the parameter
-   *
    * @return The value of the corresponding parameter or <code>null</code>
    */
   public @Nullable String parameter(String name) {
@@ -234,7 +228,6 @@ abstract class BasicRequest {
    * be accessed on his behalf.
    *
    * @return the URL to access this resource.
-   *
    * @throws MalformedURLException If the URL is not well-formed
    */
   public URL toURL() throws MalformedURLException {
@@ -270,6 +263,8 @@ abstract class BasicRequest {
   }
 
   /**
+   * Timeout int.
+   *
    * @return The connection timeout on the request
    */
   public int timeout() {
@@ -308,7 +303,7 @@ abstract class BasicRequest {
   /**
    * Sets a request header.
    *
-   * @param header  The HTTP header
+   * @param header The HTTP header
    */
   protected void setHeader(HttpHeader header) {
     if (header != null) {
@@ -359,7 +354,6 @@ abstract class BasicRequest {
    * Removes the specified header.
    *
    * @param name the of the header to remove (not case sensitive)
-   *
    * @return The header that was removed
    */
   protected @Nullable HttpHeader getHeader(String name) {

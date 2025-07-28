@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Properties;
 
 /**
+ * The type Tidy command.
+ *
  * @author Christophe Lauret
  * @version 8 November 2013
  */
@@ -69,6 +71,8 @@ public class TidyCommand implements Command<Result> {
   }
 
   /**
+   * Sets html path.
+   *
    * @param htmlPath the htmlPath to set
    */
   public void setHtmlPath(String htmlPath) {
@@ -76,6 +80,8 @@ public class TidyCommand implements Command<Result> {
   }
 
   /**
+   * Sets download.
+   *
    * @param download The public download folder.
    */
   public void setDownload(File download) {
@@ -146,7 +152,7 @@ public class TidyCommand implements Command<Result> {
   /**
    * Return a new tidy configuration for the model
    *
-   * @param model
+   * @param model the model
    * @return the Tidy
    */
   public static Tidy newTidy(Model model) {
@@ -190,7 +196,9 @@ public class TidyCommand implements Command<Result> {
     private File downloadable = null;
 
     /**
+     * Instantiates a new Tidy result.
      *
+     * @param data the data
      */
     public TidyResult(PackageData data) {
       super(TidyCommand.this._model, data);
@@ -208,6 +216,8 @@ public class TidyCommand implements Command<Result> {
     }
 
     /**
+     * Gets xhtml.
+     *
      * @return the xhtml
      */
     public String getXHTML() {
@@ -215,6 +225,8 @@ public class TidyCommand implements Command<Result> {
     }
 
     /**
+     * Sets xhtml.
+     *
      * @param xhtml the xhtml to set
      */
     public void setXHTML(String xhtml) {

@@ -30,7 +30,7 @@ import static java.nio.file.FileVisitResult.CONTINUE;
 
 /**
  * Walk from the base directory and add to the list all files that match the pattern.
- *
+ * <p>
  * If you would like to know more about glob pattern, please have a look at
  * http://docs.oracle.com/javase/javatutorials/tutorial/essential/io/fileOps.html#glob
  */

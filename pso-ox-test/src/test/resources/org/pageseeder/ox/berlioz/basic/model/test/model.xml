@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<pipelines> 
+<pipelines>
   <pipeline id="basic" name="Basic Test" accepts="application/zip" default="true">
     <step id="unzip" name="Unzipping." class="org.pageseeder.ox.step.Decompression">
-     <parameter name="output" value="source" /> 
+     <parameter name="output" value="source" />
     </step>
     <step id="copy" name="Copy Source" viewable="false" class="org.pageseeder.ox.step.Copy">
       <parameter name="input"  value="source/source.xml"/>
@@ -16,8 +16,12 @@
       <parameter name="output" value="target.xml"/>
     </step>
     <step id="zip" name="Zipping." class="org.pageseeder.ox.step.Compression">
-      <parameter name="input" value="target.xml" /> 
+      <parameter name="input" value="target.xml" />
       <parameter name="output" value="target.zip"/>
     </step>
-  </pipeline> 
+  </pipeline>
+  <pipeline id="no-file" name="No file Test"  accepts="*"  default="false" page="s3">
+    <step id="nothing" name="DO nothing" class="org.pageseeder.ox.step.NOPStep">
+    </step>
+  </pipeline>
 </pipelines>

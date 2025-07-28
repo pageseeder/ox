@@ -25,23 +25,34 @@ import java.io.Serializable;
  * A simple java object to represent the job job status.
  *
  * @author Ciber Cai
- * @since  15 October 2013
+ * @since 15 October 2013
  */
 public class JobStatus implements XMLWritable, Serializable {
 
   private static final long serialVersionUID = -6772190282366148257L;
 
+  /**
+   * The enum Status.
+   */
   public enum STATUS {
-    /** to indicate the current job is stopped (not started yet). */
+    /**
+     * to indicate the current job is stopped (not started yet).
+     */
     STOPPED,
 
-    /** to indicate the current job is processing. */
+    /**
+     * to indicate the current job is processing.
+     */
     PROCESSING,
 
-    /** to indicate the current job has completed. */
+    /**
+     * to indicate the current job has completed.
+     */
     COMPLETED,
 
-    /** to indicate the current job has error. */
+    /**
+     * to indicate the current job has error.
+     */
     ERROR,
 
     ;
@@ -85,6 +96,8 @@ public class JobStatus implements XMLWritable, Serializable {
   }
 
   /**
+   * Gets percentage.
+   *
    * @return the percentage
    */
   public int getPercentage() {
@@ -93,6 +106,7 @@ public class JobStatus implements XMLWritable, Serializable {
 
   /**
    * Return true when job status is completed or job status is error.
+   *
    * @return the status whether has complete.
    */
   public boolean hasCompleted() {
@@ -100,6 +114,8 @@ public class JobStatus implements XMLWritable, Serializable {
   }
 
   /**
+   * Sets percentage.
+   *
    * @param percentage the percentage to set
    */
   public void setPercentage(int percentage) {
@@ -113,6 +129,8 @@ public class JobStatus implements XMLWritable, Serializable {
   }
 
   /**
+   * Sets job status.
+   *
    * @param status the jobStatus to set
    */
   public void setJobStatus(JobStatus.STATUS status) {
@@ -120,6 +138,8 @@ public class JobStatus implements XMLWritable, Serializable {
   }
 
   /**
+   * Gets message.
+   *
    * @return the message
    */
   public String getMessage() {
@@ -127,6 +147,8 @@ public class JobStatus implements XMLWritable, Serializable {
   }
 
   /**
+   * Sets message.
+   *
    * @param message the message to set
    */
   public void setMessage(String message) {

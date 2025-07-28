@@ -34,9 +34,10 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
+ * The type Step definition.
  *
  * @author Christophe Lauret
- * @since  8 May 2014
+ * @since 8 May 2014
  */
 public final class StepDefinition implements XMLWritable, Serializable {
 
@@ -173,73 +174,93 @@ public final class StepDefinition implements XMLWritable, Serializable {
   }
 
   /**
+   * Id string.
+   *
    * @return A unique ID for the step within the pipeline.
    */
-  public final String id() {
+  public String id() {
     return this._id;
   }
 
   /**
+   * Name string.
+   *
    * @return The step name.
    */
-  public final String name() {
+  public String name() {
     return this._name;
   }
 
   /**
+   * Model model.
+   *
    * @return The model the pipeline is part of
    */
-  public final Model model() {
+  public Model model() {
     return this._model;
   }
 
   /**
+   * Pipeline pipeline.
+   *
    * @return The pipeline this step is part of.
    */
-  public final Pipeline pipeline() {
+  public Pipeline pipeline() {
     return this._pipeline;
   }
 
   /**
+   * Async boolean.
+   *
    * @return is async.
    */
-  public final boolean async() {
+  public boolean async() {
     return this._async;
   }
 
   /**
+   * Fail on error boolean.
+   *
    * @return fails on error.
    */
-  public final boolean failOnError() {
+  public boolean failOnError() {
     return this._failOnError;
   }
 
   /**
+   * Viewable boolean.
+   *
    * @return is viewable.
    */
-  public final boolean viewable() {
+  public boolean viewable() {
     return this._viewable;
   }
 
   /**
+   * Downloadable boolean.
+   *
    * @return is downloadable.
    */
-  public final boolean downloadable() {
+  public boolean downloadable() {
     return this._downloadable;
   }
 
   /**
    * Step parameters.
+   *
+   * @return the map
    */
-  public final Map<String, String> parameters() {
+  public Map<String, String> parameters() {
     return Collections.unmodifiableMap(this._parameters);
   }
 
 
   /**
+   * Previous step definition.
+   *
    * @return The previous step if any
    */
-  public final StepDefinition previous() {
+  public StepDefinition previous() {
     if (this._position < 0) {
       this._position = findSelfPosition();
     }
@@ -247,9 +268,11 @@ public final class StepDefinition implements XMLWritable, Serializable {
   }
 
   /**
+   * Next step definition.
+   *
    * @return The next step if any
    */
-  public final StepDefinition next() {
+  public StepDefinition next() {
     if (this._position < 0) {
       this._position = findSelfPosition();
     }
@@ -257,22 +280,32 @@ public final class StepDefinition implements XMLWritable, Serializable {
   }
 
   /**
+   * Output string.
+   *
    * @return the output of this step
    */
-  public final String output() {
+  public  String output() {
     return this._output;
+  }
+
+  /**
+   * Callback step callback step.
+   *
+   * @return the callback of step.
+   */
+  public CallbackStep callbackStep() {
+    return this._callbackStep;
   }
 
   /**
    * Execute this step for specified data.
    *
    * @param data The package data
-   *
    * @return The result of this set
    */
   public Result exec(PackageData data) {
     //TODO Maybe it will need to receive the session in order to allow the steps to get user logged
-    Result result = null;
+    Result result;
     try {
       // TODO replace tokens in output and parameters
       String input = getInput(data);
@@ -286,14 +319,15 @@ public final class StepDefinition implements XMLWritable, Serializable {
       // process the callback step
       if (this._callbackStep != null) {
         try {
-          // put the step result to callback step
+          // put the step result to a callback step
           this._callbackStep.process(this._model, data, result, info);
         } catch (Exception ex) {
-          // if error occur, show the warning but doesn't effect the actual step.
+          // if an error occurs, show the warning but doesn't affect the actual step.
           LOGGER.warn("Execute callback step error.", ex);
         }
       }
     } catch (Exception ex) {
+      LOGGER.error("Step execution error.", ex);
       InvalidResult invalidResult = new InvalidResult(this._model, data);
       invalidResult.error(ex);
       invalidResult.setStatus(ResultStatus.ERROR);
@@ -317,6 +351,8 @@ public final class StepDefinition implements XMLWritable, Serializable {
   }
 
   /**
+   * Gets step.
+   *
    * @return current Step
    */
   public Step getStep() {
@@ -329,8 +365,10 @@ public final class StepDefinition implements XMLWritable, Serializable {
   }
 
   /**
+   * To xml.
+   *
    * @param result the Result
-   * @param xml the XMLWriter
+   * @param xml    the XMLWriter
    * @throws IOException when IO exception occur
    */
   public void toXML(Result result, XMLWriter xml) throws IOException {
@@ -371,8 +409,9 @@ public final class StepDefinition implements XMLWritable, Serializable {
     if (this._position > 1) {
       xml.attribute("position", this._position);
     }
-    if (next() != null) {
-      xml.attribute("next-id", next().id());
+    StepDefinition nextStep = next();
+    if (nextStep != null) {
+      xml.attribute("next-id", nextStep.id());
     }
     if (this._parameters != null) {
       for (String name : this._parameters.keySet()) {
@@ -451,7 +490,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
    * Used to construct a step definition - mostly for the benefit of the parser.
    *
    * @author Christophe Lauret
-   * @since  13 June 2014
+   * @since 13 June 2014
    */
   protected static final class Builder {
 
@@ -472,7 +511,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
     private boolean downloadable = false;
     private boolean failOnError = true;
 
-    private Map<String, String> parameters = new HashMap<String, String>();
+    private Map<String, String> parameters = new HashMap<>();
 
     /** If there are any other attributes that are not expected. */
     private Map<String, String> extraAttributes = new HashMap<>();
@@ -484,6 +523,8 @@ public final class StepDefinition implements XMLWritable, Serializable {
     private String output = null;
 
     /**
+     * Instantiates a new Builder.
+     *
      * @param model the Model.
      */
     public Builder(Model model) {
@@ -492,8 +533,10 @@ public final class StepDefinition implements XMLWritable, Serializable {
     }
 
     /**
-     * @param pipeline the pipeline to set
-     * return the {@link Builder}
+     * Sets pipeline.
+     *
+     * @param pipeline the pipeline to set return the {@link Builder}
+     * @return the pipeline
      */
     public Builder setPipeline(Pipeline pipeline) {
       this.pipeline = pipeline;
@@ -501,8 +544,10 @@ public final class StepDefinition implements XMLWritable, Serializable {
     }
 
     /**
-     * @param classname the classname to set
-     * return the {@link Builder}
+     * Sets step class.
+     *
+     * @param classname the classname to set return the {@link Builder}
+     * @return the step class
      */
     public Builder setStepClass(String classname) {
       this.classname = classname;
@@ -510,8 +555,10 @@ public final class StepDefinition implements XMLWritable, Serializable {
     }
 
     /**
-     * @param callback the callback classname to set
-     * return the {@link Builder}
+     * Sets callback.
+     *
+     * @param callback the callback classname to set return the {@link Builder}
+     * @return the callback
      */
     public Builder setCallback(String callback) {
       this.callbackClassname = callback;
@@ -519,8 +566,10 @@ public final class StepDefinition implements XMLWritable, Serializable {
     }
 
     /**
-     * @param id the id to set
-     * return the {@link Builder}
+     * Sets step id.
+     *
+     * @param id the id to set return the {@link Builder}
+     * @return the step id
      */
     public Builder setStepId(String id) {
       this.id = id;
@@ -528,9 +577,10 @@ public final class StepDefinition implements XMLWritable, Serializable {
     }
 
     /**
+     * Sets step name.
      *
-     * @param name the name of step
-     * return the {@link Builder}
+     * @param name the name of step return the {@link Builder}
+     * @return the step name
      */
     public Builder setStepName(String name) {
       this.name = name;
@@ -538,9 +588,10 @@ public final class StepDefinition implements XMLWritable, Serializable {
     }
 
     /**
+     * Sets async.
      *
-     * @param async the asyns
-     * return the {@link Builder}
+     * @param async the asyns return the {@link Builder}
+     * @return the async
      */
     public Builder setAsync(boolean async) {
       this.async = async;
@@ -548,9 +599,10 @@ public final class StepDefinition implements XMLWritable, Serializable {
     }
 
     /**
+     * Sets fail onerror.
      *
-     * @param fail the fail on error flag
-     * return the {@link Builder}
+     * @param fail the fail on error flag return the {@link Builder}
+     * @return the fail onerror
      */
     public Builder setFailOnerror(boolean fail) {
       this.failOnError = fail;
@@ -558,28 +610,33 @@ public final class StepDefinition implements XMLWritable, Serializable {
     }
 
     /**
-    *
-    * @param viewable the viewable
-    * return the {@link Builder}
-    */
-   public Builder setViewable(boolean viewable) {
+     * Sets viewable.
+     *
+     * @param viewable the viewable return the {@link Builder}
+     * @return the viewable
+     */
+    public Builder setViewable(boolean viewable) {
      this.viewable = viewable;
      return this;
    }
 
-   /**
-   *
-   * @param downloadable the downloadable
-   * return the {@link Builder}
-   */
-   public Builder setDownloadable(boolean downloadable) {
+    /**
+     * Sets downloadable.
+     *
+     * @param downloadable the downloadable return the {@link Builder}
+     * @return the downloadable
+     */
+    public Builder setDownloadable(boolean downloadable) {
     this.downloadable = downloadable;
     return this;
    }
 
     /**
-     * @param name the name of parameter
+     * Add parameter builder.
+     *
+     * @param name  the name of parameter
      * @param value the value of parameter
+     * @return the builder
      */
     public Builder addParameter(String name, String value) {
       this.parameters.put(name, value);
@@ -590,8 +647,9 @@ public final class StepDefinition implements XMLWritable, Serializable {
     /**
      * Adds the extra attributes.
      *
-     * @param name the name
+     * @param name  the name
      * @param value the value
+     * @return the builder
      */
     public Builder addExtraAttributes (String name, String value) {
       if (StringUtils.isBlank(name)) throw new IllegalArgumentException("The attribute cannot have empty name.");
@@ -615,8 +673,10 @@ public final class StepDefinition implements XMLWritable, Serializable {
     }
 
     /**
-     * @param output the output to set
-     * return the {@link Builder}
+     * Sets output.
+     *
+     * @param output the output to set return the {@link Builder}
+     * @return the output
      */
     public Builder setOutput(String output) {
       this.output = output;
@@ -646,6 +706,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
      * Build the step from the arguments of this class;
      *
      * @return the StepDefinition.
+     * @throws OXException the ox exception
      */
     @SuppressWarnings("unchecked")
     public StepDefinition build() throws OXException {

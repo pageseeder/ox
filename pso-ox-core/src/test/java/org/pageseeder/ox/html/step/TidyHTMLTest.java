@@ -15,7 +15,7 @@
  */
 package org.pageseeder.ox.html.step;
 
-import org.eclipse.jdt.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,17 +39,27 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * The type Tidy html test.
+ *
  * @author Carlos Cabral
  * @since 20 August 2018
  */
 public class TidyHTMLTest {
 
+  /**
+   * Init.
+   */
   @Before
   public void init() {
     File modelDir = new File("src/test/resources/org/pageseeder/ox/html/step/tidy");
     OXConfig.get().setModelsDirectory(modelDir);
   }
 
+  /**
+   * Test process display false.
+   *
+   * @throws IOException the io exception
+   */
   @Test
   public void test_processDisplayFalse() throws IOException {
     String outputFileName = "tidy.html";
@@ -61,6 +71,11 @@ public class TidyHTMLTest {
     process(source, outputFileName, targetExpected, resultExpected, params);
   }
 
+  /**
+   * Test process display true.
+   *
+   * @throws IOException the io exception
+   */
   @Test
   public void test_processDisplayTrue() throws IOException {
     String outputFileName = "tidy.html";
@@ -72,6 +87,11 @@ public class TidyHTMLTest {
     process(source, outputFileName, targetExpected, resultExpected, params);
   }
 
+  /**
+   * Test process input zip.
+   *
+   * @throws IOException the io exception
+   */
   @Test
   public void test_processInputZip() throws IOException {
     String outputFileName = "outcome.zip";
@@ -83,6 +103,11 @@ public class TidyHTMLTest {
     process(source, outputFileName, targetExpected, resultExpected, params);
   }
 
+  /**
+   * Test process input zip wit one file.
+   *
+   * @throws IOException the io exception
+   */
   @Test
   public void test_processInputZipWitOneFile() throws IOException {
     String outputFileName = "outcome.zip";
@@ -94,6 +119,11 @@ public class TidyHTMLTest {
     process(source, outputFileName, targetExpected, resultExpected, params);
   }
 
+  /**
+   * Test process input glob pattern.
+   *
+   * @throws IOException the io exception
+   */
   @Test
   public void test_processInputGlobPattern() throws IOException {
     PackageData data = PackageData.newPackageData("tidy-html", null);
@@ -136,7 +166,7 @@ public class TidyHTMLTest {
    * @param params the params
    * @throws IOException Signals that an I/O exception has occurred.
    */
-  private void process(File source, String outputFileName, File targetExpected, File resultExpected, @NonNull Map<String, String> params) throws IOException {
+  private void process(File source, String outputFileName, File targetExpected, File resultExpected, @NotNull Map<String, String> params) throws IOException {
     final boolean isSourceZip = FileUtils.isZip(source);
     Model model = new Model("common");
     PackageData data = PackageData.newPackageData("tidy-html", source);

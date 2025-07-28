@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE pipelines PUBLIC "-//PageSeeder//DTD::OX model 1.0//EN"
+                            "http://www.pageseeder.org/schema/ox/model-1.0.dtd">
+<pipelines icon="word" >
+
+  <pipeline id="sample-pipeline" name="Sample Pipeline"
+            description="The sample pipeline will decompress the file uploaded"
+            accepts="application/zip" default="false"
+            wait="true">
+    <input name="file">text</input>
+    <input name="config" default-value="config.txt">text2</input>
+
+    <!-- decompress uploaded file  -->
+    <step id="decompress-file" name="decompress file"  class="org.pageseeder.ox.step.Decompression"
+        async="true" downloadable="true" viewable="true" fail-on-error="false" wait="true">
+      <parameter name="output" value="myoutput"/>
+      <input name="file-step1">text-step1</input>
+      <input name="config-step1" default-value="config-step1.txt">text2-step1</input>
+    </step>
+
+  </pipeline>
+</pipelines>

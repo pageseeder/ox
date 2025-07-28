@@ -23,7 +23,11 @@ import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.berlioz.BatchProcessingFilesComparator;
 import org.pageseeder.ox.berlioz.BatchProcessingSimulator;
 import org.pageseeder.ox.berlioz.model.JobResponse;
-import org.pageseeder.ox.berlioz.util.FileHandler;
+import org.pageseeder.ox.berlioz.request.FileHandler;
+import org.pageseeder.ox.berlioz.request.NoFileHandler;
+import org.pageseeder.ox.berlioz.request.RequestHandlerFactory;
+import org.pageseeder.ox.berlioz.request.URLHandler;
+import org.pageseeder.ox.berlioz.util.BerliozOXUtils;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -43,7 +47,7 @@ import java.util.Map;
  * @since 28 Mar. 2018
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(FileHandler.class)
+@PrepareForTest({ BerliozOXUtils.class, RequestHandlerFactory.class, FileHandler.class, NoFileHandler.class, URLHandler.class} )
 public class TestPSMLValidation {
   private final static String MODEL = "psml";
   private final static File _input = new File("src/test/resources/org/pageseeder/ox/psml/basic/source/source.psml");

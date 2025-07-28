@@ -15,7 +15,7 @@
  */
 package org.pageseeder.ox.xml;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -35,7 +35,7 @@ import java.util.Map.Entry;
  * <p>This class also implements the {@link LexicalHandler} interface, so that comments can be copied if the
  * {@link XMLReader} reader supports the <code>"http://xml.org/sax/properties/lexical-handler"</code> property.
  *
- * @Author Carlos Cabral
+ * @author Carlos Cabral
  * @since 2.2.69
  * @since 16 September 2021
  */

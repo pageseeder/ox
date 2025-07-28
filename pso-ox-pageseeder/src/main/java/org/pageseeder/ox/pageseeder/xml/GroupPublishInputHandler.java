@@ -19,7 +19,10 @@ import org.pageseeder.ox.pageseeder.model.GroupPublish;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class GroupPublishInputHandler extends DefaultHandler {
 

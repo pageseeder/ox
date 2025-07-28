@@ -36,9 +36,6 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- *
- * <p></p>.
- *
  * <h3>Step Parameters</h3>
  * <ul>
  * <li><var>input</var> the PackageData property which represents the inputs
@@ -48,10 +45,8 @@ import java.util.List;
  *     in {@link PackageData}. </li>
  * </ul>
  *
- *
- *
  * @author Carlos Cabral
- * @version
+ * @version 26 March 2018
  */
 public class JoinFiles implements Step {
 
@@ -72,11 +67,11 @@ public class JoinFiles implements Step {
   /**
    * Process.
    *
-   * @param input the input
+   * @param input  the input
    * @param output the output
-   * @param model the model
-   * @param data the data
-   * @param info the info
+   * @param model  the model
+   * @param data   the data
+   * @param info   the info
    * @return the result
    */
   protected Result process(String input, String output, Model model, PackageData data, StepInfo info) {
@@ -132,10 +127,9 @@ public class JoinFiles implements Step {
     /**
      * Instantiates a new PDF to Image result.
      *
-     * @param model the model
-     * @param data the data
-     * @param info the info
-     * @param input the input
+     * @param model  the model
+     * @param data   the data
+     * @param input  the input
      * @param output the output
      */
     public JoinFilesResult(Model model, PackageData data, String input, String output) {

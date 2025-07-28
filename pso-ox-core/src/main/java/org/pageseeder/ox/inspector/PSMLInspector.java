@@ -40,7 +40,7 @@ import java.nio.charset.Charset;
  *
  * @author Christophe Lauret
  * @author Ciber Cai
- * @since  13 November 2013
+ * @since 13 November 2013
  */
 public class PSMLInspector implements PackageInspector {
 
@@ -117,6 +117,11 @@ public class PSMLInspector implements PackageInspector {
 
     private final PackageData _pack;
 
+    /**
+     * Instantiates a new Get psml handler.
+     *
+     * @param pack the pack
+     */
     public GetPSMLHandler(PackageData pack) {
       this._pack = pack;
     }

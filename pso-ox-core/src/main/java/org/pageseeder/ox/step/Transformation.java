@@ -15,8 +15,8 @@
  */
 package org.pageseeder.ox.step;
 
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.api.StepInfo;
@@ -72,9 +72,8 @@ import java.util.List;
  * <p>If <var>xsl</var> does not exist, it returns {@link InvalidResult}.</p>
  * <p>Otherwise return {@link TransformResult}
  *
- *
  * @author Ciber Cai
- * @since  17 June 2014
+ * @since 17 June 2014
  */
 public final class Transformation implements Step {
 
@@ -237,7 +236,7 @@ public final class Transformation implements Step {
    * @return the input files
    * @throws IOException Signals that an I/O exception has occurred.
    */
-  private @NonNull List<File> getInputFiles(Model model, PackageData data, StepInfo info) throws IOException {
+  private @NotNull List<File> getInputFiles(Model model, PackageData data, StepInfo info) throws IOException {
 
     //Original inputs
     String inputParemeter = StepUtils.getParameter(data, info, "input", info.input());
@@ -373,15 +372,15 @@ public final class Transformation implements Step {
     /**
      * Instantiates a new transform result.
      *
-     * @param model the model
-     * @param data the data
-     * @param info the info
-     * @param output the output
+     * @param model           the model
+     * @param data            the data
+     * @param info            the info
+     * @param output          the output
      * @param fileResultInfos the file result infos
-     * @param template the template
+     * @param template        the template
      */
-    public TransformResult(@NonNull Model model, @NonNull PackageData data, @NonNull StepInfo info,
-        @Nullable File output, @NonNull List<FileResultInfo> fileResultInfos, @NonNull File template) {
+    public TransformResult(@NotNull Model model, @NotNull PackageData data, @NotNull StepInfo info,
+        @Nullable File output, @NotNull List<FileResultInfo> fileResultInfos, @NotNull File template) {
       super(model, data, info, output, fileResultInfos);
       this._template = template;
       this._displayOutputResult = "false".equals(super.info().getParameter("display-result")) ? false : true;

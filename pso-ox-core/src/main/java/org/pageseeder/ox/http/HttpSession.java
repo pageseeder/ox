@@ -15,7 +15,7 @@
  */
 package org.pageseeder.ox.http;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
@@ -67,6 +67,8 @@ public final class HttpSession implements HttpCredentials, Serializable {
   }
 
   /**
+   * Gets j session id.
+   *
    * @return the jsessionid
    */
   public String getJSessionId() {

@@ -15,7 +15,7 @@
  */
 package org.pageseeder.ox.html.tidy;
 
-import org.eclipse.jdt.annotation.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.pageseeder.ox.core.ResultStatus;
 import org.pageseeder.ox.tool.FileResultInfo;
 import org.pageseeder.xmlwriter.XMLWriter;
@@ -38,15 +38,21 @@ public class TidyFileResultInfo extends FileResultInfo {
   /**
    * Instantiates a new file result info.
    *
-   * @param input the input
-   * @param output the output
-   * @param status the status
+   * @param input    the input
+   * @param output   the output
+   * @param status   the status
+   * @param messages the messages
    */
-  public TidyFileResultInfo(@NonNull File input,@NonNull File output,@NonNull ResultStatus status,@NonNull List<TidyMessage> messages) {
+  public TidyFileResultInfo(@NotNull File input,@NotNull File output,@NotNull ResultStatus status,@NotNull List<TidyMessage> messages) {
     super(input, output, status);
     this._messages = messages;
   }
 
+  /**
+   * Gets messages.
+   *
+   * @return the messages
+   */
   public List<TidyMessage> getMessages() {
     return this._messages;
   }

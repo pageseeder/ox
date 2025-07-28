@@ -24,7 +24,17 @@ package org.pageseeder.ox.http;
  */
 public interface HttpCredentials {
 
+  /**
+   * To header http header.
+   *
+   * @return the http header
+   */
   public HttpHeader toHeader();
 
+  /**
+   * Is session boolean.
+   *
+   * @return the boolean
+   */
   public boolean isSession();
 }

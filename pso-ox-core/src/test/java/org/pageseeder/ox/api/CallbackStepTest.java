@@ -24,11 +24,16 @@ import org.powermock.reflect.Whitebox;
 import java.lang.reflect.Method;
 
 /**
+ * The type Callback step test.
+ *
  * @author Ciber Cai
  * @since 17 Jun 2016
  */
 public class CallbackStepTest {
 
+  /**
+   * Test interface.
+   */
   @Test
   public void test_interface() {
     CallbackStep step = new CallbackStep() {

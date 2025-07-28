@@ -51,7 +51,7 @@ import java.io.IOException;
  * <p><b>Note: </b> Input and output allows dynamic/variable value.</p>
  *
  * @author Ciber Cai
- * @since  23 June 2014
+ * @since 23 June 2014
  */
 public class Decompression implements Step {
 

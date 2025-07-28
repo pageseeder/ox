@@ -15,7 +15,7 @@
  */
 package org.pageseeder.ox.http;
 
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.pageseeder.xmlwriter.XMLWriter;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * The interface Http response.
  *
  * @author Carlos Cabral
  * @since 2.2.69
@@ -85,7 +86,6 @@ public interface HttpResponse extends AutoCloseable {
    * Returns the value of the specified header.
    *
    * @param name The name of the header (case insensitive)
-   *
    * @return The corresponding value or <code>null</code>;
    */
   @Nullable String header(String name);
@@ -160,8 +160,7 @@ public interface HttpResponse extends AutoCloseable {
    * <p>It is considered XML the mediatype is equal to "text/xml" or
    * "application/xml" or ends with "+xml".
    *
-   * @return <code>true</code> if XML;
-   *         <code>false</code> otherwise.
+   * @return <code>true</code> if XML;         <code>false</code> otherwise.
    */
   boolean isXML();
 
@@ -171,8 +170,7 @@ public interface HttpResponse extends AutoCloseable {
    * <p>When this method is called BEFORE a consumer, this generally imply
    * that the content is <i>available</i>.
    *
-   * @return <code>true</code> if the code is between 200 and 299 (included);
-   *         <code>false</code>.
+   * @return <code>true</code> if the code is between 200 and 299 (included);         <code>false</code>.
    */
   boolean isSuccessful();
 
@@ -183,8 +181,7 @@ public interface HttpResponse extends AutoCloseable {
    * <p>This method returns <code>false</code> if the content has already been
    * consumed or if the connection failed and there is no content to process.
    *
-   * @return <code>true</code> if the connection can ;
-   *         <code>false</code>.
+   * @return <code>true</code> if the connection can ;         <code>false</code>.
    */
   boolean isAvailable();
 
@@ -200,9 +197,7 @@ public interface HttpResponse extends AutoCloseable {
    * <p>The input stream is NOT buffered.
    *
    * @return An input stream on the connection response if any.
-   *
    * @throws IOException If the thrown by the underlying connection.
-   * @throws IllegalStateException If the response is not available.
    */
   @Nullable InputStream getInputStream() throws IOException;
 
@@ -215,9 +210,7 @@ public interface HttpResponse extends AutoCloseable {
    * after calling this method the response content will no longer be available.
    *
    * @return A reader on the connection response if any.
-   *
    * @throws IOException If the thrown by the underlying connection.
-   * @throws IllegalStateException If the response is not available.
    */
   @Nullable Reader getReader() throws IOException;
 
@@ -230,9 +223,8 @@ public interface HttpResponse extends AutoCloseable {
    * after calling this method the response content will no longer be available.
    *
    * @param charset The charset to use to read the content
-   *
+   * @return the reader
    * @throws IOException If the thrown by the underlying connection.
-   * @throws IllegalStateException If the response is not available.
    */
   @Nullable Reader getReader(Charset charset) throws IOException;
 
@@ -242,9 +234,8 @@ public interface HttpResponse extends AutoCloseable {
    * <p>After calling this method the response content will no longer be available.
    *
    * @param out Where the output should be copied.
-   *
    * @throws IllegalStateException If the response is not available.
-   * @throws ContentException If an error occurred while consuming the content.
+   * @throws ContentException      If an error occurred while consuming the content.
    */
   void consumeBytes(OutputStream out);
 
@@ -254,7 +245,6 @@ public interface HttpResponse extends AutoCloseable {
    * <p>After calling this method the response content will no longer be available.
    *
    * @return the output content as a byte array.
-   *
    * @throws ContentException If an error occurred while consuming the content.
    */
   byte[] consumeBytes();
@@ -265,7 +255,7 @@ public interface HttpResponse extends AutoCloseable {
    * <p>After calling this method the response content will no longer be available.
    *
    * @throws IllegalStateException If the response is not available.
-   * @throws ContentException If an error occurred while consuming the content.
+   * @throws ContentException      If an error occurred while consuming the content.
    */
   void consume();
 
@@ -275,9 +265,8 @@ public interface HttpResponse extends AutoCloseable {
    * <p>After calling this method the response content will no longer be available.
    *
    * @param out Where the output should be written to.
-   *
    * @throws IllegalStateException If the response is not available.
-   * @throws ContentException If an error occurred while consuming the content.
+   * @throws ContentException      If an error occurred while consuming the content.
    */
   void consumeChars(Writer out);
 
@@ -287,9 +276,8 @@ public interface HttpResponse extends AutoCloseable {
    * <p>After calling this method the response content will no longer be available.
    *
    * @return the output as a string.
-   *
    * @throws IllegalStateException If the response is not available.
-   * @throws ContentException If an error occurred while consuming the content.
+   * @throws ContentException      If an error occurred while consuming the content.
    */
   String consumeString();
 
@@ -305,9 +293,8 @@ public interface HttpResponse extends AutoCloseable {
    * <p>After calling this method the response content will no longer be available.
    *
    * @param handler The SAX handler for the XML
-   *
    * @throws IllegalStateException If the response is not available.
-   * @throws ContentException If an error occurred while consuming the content.
+   * @throws ContentException      If an error occurred while consuming the content.
    */
   void consumeXML(DefaultHandler handler);
 
@@ -319,9 +306,8 @@ public interface HttpResponse extends AutoCloseable {
    * <p>The XML writer receives a copy of the PageSeeder XML.
    *
    * @param xml The XML to copy from PageSeeder
-   *
    * @throws IllegalStateException If the response is not available.
-   * @throws ContentException If an error occurred while consuming the content.
+   * @throws ContentException      If an error occurred while consuming the content.
    */
   void consumeXML(XMLWriter xml);
 
@@ -335,9 +321,8 @@ public interface HttpResponse extends AutoCloseable {
    *
    * @param xml       The XML to copy from PageSeeder
    * @param templates A set of templates to process the XML
-   *
    * @throws IllegalStateException If the response is not available.
-   * @throws ContentException If an error occurred while consuming the content.
+   * @throws ContentException      If an error occurred while consuming the content.
    */
   void consumeXML(XMLWriter xml, Templates templates);
 
@@ -353,9 +338,8 @@ public interface HttpResponse extends AutoCloseable {
    * @param xml        The XML to copy from PageSeeder
    * @param templates  A set of templates to process the XML
    * @param parameters Parameters to supply to the templates
-   *
    * @throws IllegalStateException If the response is not available.
-   * @throws ContentException If an error occurred while consuming the content.
+   * @throws ContentException      If an error occurred while consuming the content.
    */
   void consumeXML(XMLWriter xml, Templates templates, Map<String, String> parameters);
 

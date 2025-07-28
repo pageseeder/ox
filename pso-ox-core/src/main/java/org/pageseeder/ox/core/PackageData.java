@@ -15,8 +15,8 @@
  */
 package org.pageseeder.ox.core;
 
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.api.PackageInspector;
 import org.pageseeder.ox.util.*;
@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -36,7 +37,7 @@ import java.util.Map.Entry;
  *
  * @author Christophe Lauret
  * @author Ciber Cai
- * @since  29 October
+ * @since 29 October
  */
 public final class PackageData implements XMLWritable, Serializable {
 
@@ -96,12 +97,14 @@ public final class PackageData implements XMLWritable, Serializable {
     this._mediaType = getMediaType(file);
     this._dir = getPackageDirectory(this._id);
     this._orig = file != null ? store(file, this._dir) : null;
-    if (file != null) {
+    if (this._orig != null) {
       this._properties.setProperty(ORIGINAL_PROPERTY, this._orig.getName());
     }
   }
 
   /**
+   * Created date.
+   *
    * @return the created {@link Date }
    */
   public Date created() {
@@ -109,6 +112,8 @@ public final class PackageData implements XMLWritable, Serializable {
   }
 
   /**
+   * Id string.
+   *
    * @return The package id
    */
   public String id() {
@@ -116,6 +121,8 @@ public final class PackageData implements XMLWritable, Serializable {
   }
 
   /**
+   * Directory file.
+   *
    * @return The directory containing the package
    */
   public File directory() {
@@ -123,6 +130,8 @@ public final class PackageData implements XMLWritable, Serializable {
   }
 
   /**
+   * Gets file.
+   *
    * @param path the relative path in the package
    * @return the File.
    */
@@ -137,10 +146,12 @@ public final class PackageData implements XMLWritable, Serializable {
   }
 
   /**
+   * Gets files.
+   *
    * @param path the relative path in the package
    * @return the File.
    */
-  @NonNull
+  @NotNull
   public List<File> getFiles(String path) {
     List<File> files = new ArrayList<>();
     if (!StringUtils.isBlank(path)) {
@@ -168,24 +179,33 @@ public final class PackageData implements XMLWritable, Serializable {
 
 
   /**
+   * Gets path.
+   *
    * @param file the file in {@link PackageData}
    * @return the path in {@link PackageData}
    */
   public String getPath(File file) {
-    if (file.getAbsolutePath().startsWith(this._dir.getAbsolutePath())) { return sanity(file.getAbsolutePath().substring(this._dir.getAbsolutePath().length())); }
+
+    if (file != null && file.getAbsolutePath().startsWith(this._dir.getAbsolutePath())) {
+      return sanity(file.getAbsolutePath().substring(this._dir.getAbsolutePath().length()));
+    }
     return null;
   }
 
   /**
+   * Find by extension file.
+   *
    * @param extension the file extension.
    * @return the first file by using the extension.
    */
   public File findByExtension(String extension) {
     File[] files = this._dir.listFiles(new FilterByExtension(extension));
-    return files.length > 0 ? files[0] : null;
+    return files != null && files.length > 0 ? files[0] : null;
   }
 
   /**
+   * List by extension list.
+   *
    * @param extension the file extension
    * @return the list of files by using this extension.
    */
@@ -195,6 +215,8 @@ public final class PackageData implements XMLWritable, Serializable {
   }
 
   /**
+   * Gets original.
+   *
    * @return the Original file
    */
   public File getOriginal() {
@@ -204,8 +226,7 @@ public final class PackageData implements XMLWritable, Serializable {
   /**
    * Indicates whether the package contains an unpacked directory.
    *
-   * @return <code>true</code> the package contains an unpacked directory;
-   *         <code>false</code> otherwise.
+   * @return <code>true</code> the package contains an unpacked directory;         <code>false</code> otherwise.
    */
   public boolean isUnpacked() {
     return new File(this._dir, "unpacked").exists();
@@ -215,7 +236,9 @@ public final class PackageData implements XMLWritable, Serializable {
   // ----------------------------------------------------------------------------------------------
 
   /**
-   * @param name the name of parameter
+   * Sets parameter.
+   *
+   * @param name  the name of parameter
    * @param value the value of parameter
    */
   public void setParameter(String name, String value) {
@@ -223,6 +246,8 @@ public final class PackageData implements XMLWritable, Serializable {
   }
 
   /**
+   * Gets parameter.
+   *
    * @param name the name of parameter
    * @return the value of parameter
    */
@@ -231,10 +256,12 @@ public final class PackageData implements XMLWritable, Serializable {
   }
 
   /**
+   * Gets parameters.
+   *
    * @return the parameters in map
    */
   public Map<String, String> getParameters() {
-    Map<String, String> parameters = new HashMap<String, String>();
+    Map<String, String> parameters = new HashMap<>();
     for (Object key : this._properties.keySet()) {
       String property = key.toString();
       if (property.startsWith("parameter-")) {
@@ -250,10 +277,12 @@ public final class PackageData implements XMLWritable, Serializable {
   // ----------------------------------------------------------------------------------------------
 
   /**
+   * Gets properties.
+   *
    * @return the properties maps.
    */
   public Map<String, String> getProperties() {
-    Map<String, String> properties = new HashMap<String, String>();
+    Map<String, String> properties = new HashMap<>();
     for (Entry<Object, Object> entry : this._properties.entrySet()) {
       String key = (String) entry.getKey();
       if (!key.startsWith("parameter-")) {
@@ -264,6 +293,8 @@ public final class PackageData implements XMLWritable, Serializable {
   }
 
   /**
+   * Gets property.
+   *
    * @param name the name of the property
    * @return the value of the specified property
    */
@@ -272,7 +303,9 @@ public final class PackageData implements XMLWritable, Serializable {
   }
 
   /**
-   * @param name the name of the property
+   * Gets property.
+   *
+   * @param name     the name of the property
    * @param fallback the default value
    * @return the value of the specified property
    */
@@ -281,7 +314,9 @@ public final class PackageData implements XMLWritable, Serializable {
   }
 
   /**
-   * @param name the name of the property
+   * Sets property.
+   *
+   * @param name  the name of the property
    * @param value the value of the property
    */
   public void setProperty(String name, String value) {
@@ -289,13 +324,14 @@ public final class PackageData implements XMLWritable, Serializable {
   }
 
   /**
+   * Load properties boolean.
    *
    * @return the status whether the properties has loaded.
    */
   public boolean loadProperties() {
     File pfile = new File(directory(), PROPERTIES_FILENAME);
     if (pfile.exists()) {
-      try (InputStreamReader reader = new InputStreamReader(new FileInputStream(pfile), "utf8");) {
+      try (InputStreamReader reader = new InputStreamReader(Files.newInputStream(pfile.toPath()), StandardCharsets.UTF_8)) {
         this._properties.load(reader);
       } catch (IOException ex) {
         LOGGER.error("Cannot load properties from file {}.", pfile, ex);
@@ -313,7 +349,7 @@ public final class PackageData implements XMLWritable, Serializable {
   public boolean saveProperties() {
     File pfile = new File(directory(), PROPERTIES_FILENAME);
     LOGGER.info("saving properties of {}", this.id());
-    try (OutputStreamWriter reader = new OutputStreamWriter(new FileOutputStream(pfile), "utf8")) {
+    try (OutputStreamWriter reader = new OutputStreamWriter(Files.newOutputStream(pfile.toPath()), StandardCharsets.UTF_8)) {
       this._properties.store(reader, "");
     } catch (IOException ex) {
       LOGGER.error("Cannot save properties.");
@@ -333,7 +369,7 @@ public final class PackageData implements XMLWritable, Serializable {
     LOGGER.info("The media type for this data is {}", this._mediaType);
     List<PackageInspector> inspectors = InspectorService.getInstance().getInspectors(this._mediaType);
     // do the inspect
-    if (!inspectors.isEmpty()) {
+    if (inspectors!= null && !inspectors.isEmpty()) {
       for (PackageInspector inspector : inspectors) {
         inspector.inspect(this);
       }
@@ -344,8 +380,8 @@ public final class PackageData implements XMLWritable, Serializable {
   /**
    * Find the DOCX document and unpack its content if necessary
    *
-   * @return the status of unpack.
-   * @throws IOException
+   * @return the status of unpacking.
+   * @throws IOException the io exception
    */
   public boolean unpack() throws IOException {
     File docx = findByExtension(".docx");
@@ -385,7 +421,9 @@ public final class PackageData implements XMLWritable, Serializable {
   }
 
   /**
-   * @param download
+   * Gets download dir.
+   *
+   * @param download the download
    * @return the download dir
    */
   public File getDownloadDir(File download) {
@@ -395,6 +433,8 @@ public final class PackageData implements XMLWritable, Serializable {
   }
 
   /**
+   * Gets package data.
+   *
    * @param id the id of package data
    * @return the {@link PackageData} by specified id
    */
@@ -408,7 +448,7 @@ public final class PackageData implements XMLWritable, Serializable {
     File pfile = new File(dir, PROPERTIES_FILENAME);
     Properties prop = new Properties();
     if (pfile.exists()) {
-      try (InputStreamReader reader = new InputStreamReader(new FileInputStream(pfile), "utf8");) {
+      try (InputStreamReader reader = new InputStreamReader(Files.newInputStream(pfile.toPath()), StandardCharsets.UTF_8)) {
         prop.load(reader);
       } catch (IOException ex) {
         LOGGER.error("Cannot load properties from file {}.", pfile, ex);
@@ -425,8 +465,10 @@ public final class PackageData implements XMLWritable, Serializable {
   // ----------------------------------------------------------------------------------------------
 
   /**
+   * New package data package data.
+   *
    * @param model the name of model.
-   * @param file the original file.
+   * @param file  the original file.
    * @return the {@link PackageData}
    */
   public static PackageData newPackageData(String model, File file) {
@@ -481,7 +523,7 @@ public final class PackageData implements XMLWritable, Serializable {
    * @return the mime type by filename
    */
   private String getMediaType(File file) {
-    String mediaType = "unknown";
+    String mediaType = file != null ? "unknown" : "no-file";
     // if it's directory FIXME this could be wrong.
     if (file != null && file.isDirectory()) { mediaType = "text/directory"; }
 

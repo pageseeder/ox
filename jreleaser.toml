@@ -1,0 +1,46 @@
+[project]
+name = "ox"
+description = "OX by Allette Systems is an open-source framework designed to simplify document conversion and data analysis, especially for XML, DOCX, and PDF formats."
+longDescription = """
+OX (Open eXchange) is a powerful open-source framework developed by Allette Systems to streamline the processing of structured and unstructured documents. It enables users to:
+- Analyze markup in XML, DOCX, and PDF files
+- Compare multiple XML instances and highlight differences
+- Validate XML against XSD and Schematron schemas
+- Convert documents between formats, including DOCX/PDF to PSML
+- Configure processing pipelines via XML, with or without a user interface
+OX is especially useful for organizations dealing with large volumes of content, offering tools for batch processing, transformation, and quality assurance. It supports both automated workflows and interactive tasks—like adding bookmarks to PDFs—making it ideal for publishing, archiving, and data migration projects.
+"""
+tags = ["xml", "ox", "java", "XML Processing", "Document Conversion", "DOCX to XML", "DOCX to HTML", "DOCX to PSML", "schematron"]
+authors = ["Christophe Lauret", "Carlos Cabral", "Alberto Santos", "Jean Baptiste"]
+license = "Apache-2.0"
+inceptionYear = "2007"
+vendor = "Allette Systems"
+
+# Organization info
+[project.links]
+homepage = "https://allette.com.au/resources/ox.html"
+documentation = "https://github.com/pageseeder/ox"
+license = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+
+# Java-specific configuration
+[project.languages.java]
+groupId = "org.pageseeder.ox"
+
+# Git configuration
+[release.github]
+owner = "pageseeder"
+name = "ox"
+username = "pageseeder"
+branch = "master"
+
+# Signing configuration
+[signing]
+active = "ALWAYS"
+armored = true
+mode = "FILE"
+
+# Maven deployment configuration
+[deploy.maven.mavenCentral.sonatype]
+active = "ALWAYS"
+url = "https://central.sonatype.com/api/v1/publisher"
+stagingRepositories = ["build/staging-deploy"]

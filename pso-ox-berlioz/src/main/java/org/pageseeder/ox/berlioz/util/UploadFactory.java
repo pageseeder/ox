@@ -67,7 +67,7 @@ public class UploadFactory {
    * @param req the ContentRequest
    * @return the UploadProcessor.
    * @throws FileUploadException throw exception when FileUPload error occur.
-   * @throws OXException
+   * @throws OXException         the ox exception
    */
   public UploadProcessor make(HttpServletRequest req) throws FileUploadException, OXException {
     LOGGER.debug("Create a upload processor");

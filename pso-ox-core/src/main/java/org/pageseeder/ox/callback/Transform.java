@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ * The type Transform.
  *
  * @author ccabral
  * @since 02 December 2021
@@ -39,6 +40,7 @@ public abstract class Transform  implements CallbackStep {
    * @param data the data
    * @param info the info
    * @return the output file
+   * @throws IOException the io exception
    */
   protected File getOutputFile(PackageData data, StepInfo info) throws IOException {
     File output = null;

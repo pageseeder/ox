@@ -15,13 +15,13 @@
  */
 
 package org.pageseeder.ox.pageseeder.xml;
+
 import net.pageseeder.app.simple.core.utils.SimpleStringUtils;
+import net.pageseeder.app.simple.pageseeder.model.CommentParameter;
+import net.pageseeder.app.simple.pageseeder.model.builder.CommentParameterBuilder;
 import org.pageseeder.bridge.model.PSNotify;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
-
-import net.pageseeder.app.simple.pageseeder.model.CommentParameter;
-import net.pageseeder.app.simple.pageseeder.model.builder.CommentParameterBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

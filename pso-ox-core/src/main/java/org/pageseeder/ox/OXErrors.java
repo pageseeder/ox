@@ -33,8 +33,7 @@ import java.io.StringWriter;
  * <p>This class also includes a number of methods to turn various classes of exceptions and locators into XML.
  *
  * @author Christophe Lauret
- *
- * @since  Berlioz 0.8.3 - 1 July 2011
+ * @since Berlioz 0.8.3 - 1 July 2011
  * @since Berlioz 0.8.1
  */
 public final class OXErrors {
@@ -51,9 +50,7 @@ public final class OXErrors {
    * to the servlet container.
    *
    * @param error The throwable.
-   * @param safe  <code>true</code> to only include the StackTrace up to the servlet API;
-   *              <code>false</code> to include the complete stack trace.
-   *
+   * @param safe  <code>true</code> to only include the StackTrace up to the servlet API;              <code>false</code> to include the complete stack trace.
    * @return The stacktrace.
    */
   public static String getStackTrace(Throwable error, boolean safe) {
@@ -78,7 +75,6 @@ public final class OXErrors {
    * class prefix to the message if the message is identical to that of the exception causing it.
    *
    * @param ex the throwable.
-   *
    * @return a clean message.
    */
   public static String cleanMessage(Throwable ex) {
@@ -107,11 +103,10 @@ public final class OXErrors {
    *   <stack-trace>[exception]</stack-trace>
    *   <cause>[cause exception as XML (if any)]</cause>
    * </exception>
-   * }</pre>
+   * }*</pre>
    *
    * @param ex  The exception to turn to XML.
    * @param xml The XML writer.
-   *
    * @throws IOException Only if thrown by the XML writer.
    */
   public static void toXML(Exception ex, XMLWriter xml) throws IOException {
@@ -124,7 +119,6 @@ public final class OXErrors {
    * @param ex   The exception to turn to XML.
    * @param xml  The XML writer.
    * @param wrap Whether to wrap the XML into an element.
-   *
    * @throws IOException Only if thrown by the XML writer.
    */
   public static void toXML(Throwable ex, XMLWriter xml, boolean wrap) throws IOException {
@@ -156,11 +150,10 @@ public final class OXErrors {
    *   <cause>[cause exception as XML (if any)]</cause>
    *   <location line="[line]" column="[column]" public-id=[public-id]" system-id="[system-id]"/>
    * </exception>
-   * }</pre>
+   * }*</pre>
    *
    * @param ex  The exception to turn to XML.
    * @param xml The XML writer.
-   *
    * @throws IOException Only if thrown by the XML writer.
    */
   public static void toXML(SAXParseException ex, XMLWriter xml) throws IOException {
@@ -177,11 +170,10 @@ public final class OXErrors {
    *   <cause>[cause exception as XML (if any)]</cause>
    *   <location line="[line]" column="[column]" public-id=[public-id]" system-id="[system-id]"/>
    * </exception>
-   * }</pre>
+   * }*</pre>
    *
    * @param ex  The exception to turn to XML.
    * @param xml The XML writer.
-   *
    * @throws IOException Only if thrown by the XML writer.
    */
   public static void toXML(TransformerException ex, XMLWriter xml) throws IOException {
@@ -200,7 +192,6 @@ public final class OXErrors {
    *
    * @param locator The source locator.
    * @param xml     The XML writer.
-   *
    * @throws IOException Only if thrown by the XML writer.
    */
   public static void toXML(SourceLocator locator, XMLWriter xml) throws IOException {
@@ -237,7 +228,6 @@ public final class OXErrors {
    *
    * @param locator The source locator.
    * @param xml     The XML writer.
-   *
    * @throws IOException Only if thrown by the XML writer.
    */
   public static void toXML(Locator locator, XMLWriter xml) throws IOException {

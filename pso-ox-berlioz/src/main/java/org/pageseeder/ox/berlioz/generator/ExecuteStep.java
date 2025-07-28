@@ -17,7 +17,6 @@ package org.pageseeder.ox.berlioz.generator;
 
 import org.pageseeder.berlioz.BerliozException;
 import org.pageseeder.berlioz.GlobalSettings;
-import org.pageseeder.berlioz.content.ContentGenerator;
 import org.pageseeder.berlioz.content.ContentRequest;
 import org.pageseeder.berlioz.content.ContentStatus;
 import org.pageseeder.ox.api.Result;

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?><document id="462056" schemaversion="1.4" date="2023-06-13T17:08:19+10:00" version="current" level="portable"><documentinfo><uri id="462056" external="false" mediatype="application/vnd.pageseeder.psml+xml" created="2021-07-22T17:07:32+10:00" modified="2023-06-13T17:08:19+10:00" scheme="http" host="ps.allette.com.au" port="80" path="/ps/allette/www/website/pageseeder/3_structured_editing_and_validation.psml" decodedpath="/ps/allette/www/website/pageseeder/3_structured_editing_and_validation.psml" title="Structured editing and validation"><displaytitle>Structured editing and validation</displaytitle></uri><reversexrefs><reversexref uriid="462080" href="_local/website/pageseeder.psml" frag="12" urititle="PageSeeder" mediatype="application/vnd.pageseeder.psml+xml" id="4712282" title="Review and Annotation" type="none" forwardtype="none" forwardtitle="Learn more" forwarddisplay="manual" forwardfrag="default" labels="button-secondary"/><reversexref uriid="549396" href="_local/website/_menu.psml" frag="2" urititle="_menu" mediatype="application/vnd.pageseeder.psml+xml" documenttype="references" id="5053535" title="References" config="default" type="none" forwardtype="embed" forwarddisplay="document" forwardfrag="default" level="1"/></reversexrefs></documentinfo><fragmentinfo structure-modified="2021-07-22T11:46:23+10:00"><locator id="641961" fragment="29" modified="2021-07-22T11:46:23+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="714665" fragment="24" editid="5055691" modified="2023-06-13T17:08:18+10:00"><labels>s-col,v-align-middle</labels></locator><locator id="641964" fragment="33" modified="2021-07-22T11:46:23+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="641963" fragment="31" modified="2021-07-22T11:46:23+10:00"><labels>s-col-md-4,s-text-center</labels></locator><locator id="641966" fragment="37" modified="2021-07-22T11:46:23+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="641965" fragment="36" modified="2021-07-22T11:46:23+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="641968" fragment="40" modified="2021-07-22T11:46:23+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="641967" fragment="39" modified="2021-07-22T11:46:23+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="641954" fragment="2" modified="2021-07-22T11:46:23+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="641953" fragment="16" modified="2021-07-22T11:46:23+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="641956" fragment="7" modified="2021-07-22T11:46:23+10:00"><labels>s-col-md-6,s-text-center,v-align-middle</labels></locator><locator id="714663" fragment="21" editid="5055687" modified="2023-06-13T17:06:54+10:00"><labels>s-col,v-align-middle</labels></locator><locator id="641958" fragment="25" modified="2021-07-22T11:46:23+10:00"><labels>s-col,v-align-middle</labels></locator><locator id="714664" fragment="22" editid="5055689" modified="2023-06-13T17:07:35+10:00"><labels>s-col,v-align-middle</labels></locator><locator id="714662" fragment="20" editid="5055686" modified="2023-06-13T17:06:54+10:00"><labels>s-col,v-align-middle</labels></locator><locator id="641959" fragment="27" modified="2021-07-22T11:46:23+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator id="641952" fragment="13" modified="2021-07-22T11:46:23+10:00"><labels>s-col-md-4,s-text-center,v-align-middle</labels></locator><locator fragment="10" modified="2020-10-20T15:01:58+11:00"><labels>spacer</labels></locator><locator fragment="11" modified="2021-07-22T11:46:23+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="12" modified="2021-07-22T11:46:23+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="14" modified="2020-10-20T15:01:58+11:00"><labels>spacer</labels></locator><locator fragment="15" modified="2020-10-20T15:01:58+11:00"><labels>spacer</labels></locator><locator fragment="17" modified="2021-07-22T11:46:23+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="18" modified="2021-07-22T11:46:23+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="19" modified="2021-07-22T11:46:23+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="1" modified="2021-07-22T11:46:23+10:00"><labels>s-text-center</labels></locator><locator fragment="3" modified="2021-07-22T11:46:23+10:00"><labels>s-text-center</labels></locator><locator fragment="4" modified="2021-07-22T11:46:23+10:00"><labels>s-text-center</labels></locator><locator fragment="5" modified="2021-07-22T11:46:23+10:00"><labels>s-text-center</labels></locator><locator fragment="6" modified="2021-07-22T11:46:23+10:00"><labels>s-col-md-6,v-align-middle</labels></locator><locator fragment="8" modified="2020-10-20T15:01:58+11:00"><labels>spacer</labels></locator><locator fragment="9" modified="2020-10-29T10:26:27+11:00"/><locator fragment="23" modified="2021-07-22T11:46:23+10:00"><labels>s-col,v-align-middle</labels></locator><locator fragment="26" modified="2020-10-20T17:57:42+11:00"><labels>spacer</labels></locator><locator fragment="28" modified="2020-10-20T17:58:19+11:00"><labels>spacer</labels></locator><locator fragment="30" modified="2020-10-20T17:59:41+11:00"><labels>spacer</labels></locator><locator fragment="32" modified="2020-10-20T18:00:07+11:00"><labels>spacer</labels></locator><locator fragment="34" modified="2020-10-20T18:05:28+11:00"><labels>spacer</labels></locator><locator fragment="35" modified="2020-10-20T18:06:11+11:00"><labels>spacer</labels></locator><locator fragment="38" modified="2020-10-20T18:07:22+11:00"><labels>spacer</labels></locator><locator fragment="100" modified="2021-07-22T11:46:23+10:00"><labels>row-start,row-bg-secondary,spacer</labels></locator><locator fragment="101" modified="2021-07-22T11:46:23+10:00"><labels>row-start,row-bg-white,spacer</labels></locator><locator fragment="102" modified="2021-07-22T11:46:23+10:00"><labels>spacer</labels></locator><locator fragment="103" modified="2021-07-22T11:46:23+10:00"><labels>row-start,row-bg-primary,spacer</labels></locator><locator fragment="104" modified="2021-07-22T11:46:23+10:00"><labels>spacer</labels></locator><locator fragment="105" modified="2021-07-22T11:46:23+10:00"><labels>row-start,row-bg-white,spacer</labels></locator><locator fragment="106" modified="2021-07-22T11:46:23+10:00"><labels>spacer</labels></locator><locator fragment="107" modified="2021-07-22T11:46:23+10:00"><labels>row-start,row-bg-grey-lighten-4,spacer</labels></locator><locator fragment="108" modified="2021-07-22T11:46:23+10:00"><labels>spacer</labels></locator><locator fragment="41" modified="2020-10-20T18:10:50+11:00"><labels>spacer</labels></locator></fragmentinfo><metadata/><section id="content" title="content" fragmenttype="default,embed"><fragment id="100" labels="row-start,row-bg-secondary,spacer"/><fragment id="1" labels="s-text-center">
+      <heading level="1">Structured editing and validation</heading>
+    </fragment><fragment id="8" labels="spacer"/><fragment id="6" labels="s-col-md-6,v-align-middle">
+      <heading level="2">Overview</heading>
+      <para>The PageSeeder editing model was a conceived after years of developing, implementing, supporting and using all major SGML and XML editing applications using a range of industry-based open document standards. The design objectives were to support the following:</para>
+      <list>
+        <item>Implement any type of document structure and semantics,</item>
+        <item>Support user defined validation messages,</item>
+        <item>Provide context sensitive help for document types,</item>
+        <item>Provide a range of editing models including: 
+          <list>
+            <item>page-based,</item>
+            <item>forms,</item>
+            <item>pro-forma templates,</item>
+            <item>spreadsheet / grid oriented.</item>
+          </list>
+        </item>
+        <item>Support for large documents and complex heading, paragraph and cross-reference numbering schemes.</item>
+      </list>
+    </fragment><fragment id="7" labels="s-col-md-6,s-text-center,v-align-middle">
+      <para>
+        <image src="structured_editing_and_validation/structured-editing-validation.png" uriid="462109" width="409" height="354" alt="structured-editing-validation.png"/>
+      </para>
+    </fragment><fragment id="10" labels="spacer"/><fragment id="101" labels="row-start,row-bg-white,spacer"/><fragment id="11" labels="s-col,v-align-middle">
+      <heading level="3">Developers</heading>
+      <para>All the template, configuration files and validation rules for a custom application can be created and maintained through standard IDE tools and Git clients. Deployment can be done through familiar build and testing tools and CI / CD pipelines.</para>
+      <para>Most templates and configuration files have XML schema defined and examples are available for a range of applications and document types.</para>
+    </fragment><fragment id="2" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="structured_editing_and_validation/Developers.png" uriid="462153" width="640" height="440" alt="Developers.png"/>
+      </para>
+    </fragment><fragment id="14" labels="spacer"/><fragment id="13" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="structured_editing_and_validation/Analysts.png" uriid="462024" width="640" height="440" alt="Analysts.png"/>
+      </para>
+    </fragment><fragment id="12" labels="s-col,v-align-middle">
+      <heading level="3">Analysts</heading>
+      <para>The PageSeeder document model means that changes to document types are instantly reflected across the system in the editing, search and publishing interface. This makes PageSeeder well-suited for rapid prototyping and proof-of-concept tasks.</para>
+      <para>The ability to quickly fork an application on the same or a different server helps to test or experiment.</para>
+    </fragment><fragment id="15" labels="spacer"/><fragment id="17" labels="s-col,v-align-middle">
+      <heading level="3">Users</heading>
+      <para>The ability to immediately comment on and update the online help enables users to support each other and improve the material necessary for getting maximum productivity and quality of content. Easy to add, user definable validation rules for formatting, structure and semantics make it easy to quickly address gaps in knowledge or training.</para>
+    </fragment><fragment id="16" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="structured_editing_and_validation/Users.png" uriid="461995" width="640" height="440" alt="Users.png"/>
+      </para>
+    </fragment><fragment id="102" labels="spacer"/><fragment id="103" labels="row-start,row-bg-primary,spacer"/><fragment id="3" labels="s-text-center">
+      <heading level="2">Semantics</heading>
+    </fragment><fragment id="26" labels="spacer"/><fragment id="18" labels="s-col,v-align-middle">
+      <heading level="3">Labels</heading>
+      <para>Provide a way to add semantics to different parts of content. They can be configured for use in only designated areas or can be available anywhere.</para>
+      <list>
+        <item>Document</item>
+        <item>Link</item>
+        <item>Paragraph</item>
+        <item>Inline</item>
+        <item>Comment / task</item>
+      </list>
+    </fragment><fragment id="27" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="structured_editing_and_validation/Labels.png" uriid="462100" width="640" height="440" alt="Labels.png"/>
+      </para>
+    </fragment><fragment id="28" labels="spacer"/><fragment id="29" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="structured_editing_and_validation/Document%20type.png" uriid="462123" width="640" height="440" alt="Document type.png"/>
+      </para>
+    </fragment><fragment id="19" labels="s-col,v-align-middle">
+      <heading level="3">Document types</heading>
+      <para>Can be used for different purposes:</para>
+      <list>
+        <item>
+          <bold>Proforma document</bold> – acting as a configuration of structured objects to be filled in by users, similar to a form or legal case report.</item>
+        <item>
+          <bold>Object collection</bold> – predefined semantics to be assembled in any order, like a dictionary entry or a blog post.</item>
+      </list>
+      <para>Document types can assemble a range of functionality including validation, semantics, formatting, processing and structure.</para>
+    </fragment><fragment id="30" labels="spacer"/><fragment id="20" labels="s-col,v-align-middle"><heading level="3">Placeholders</heading><para>Is an object that refers to a metadata property on a publication. It allows the reference to be updated at any time and can be resolved into the content for publishing. Placeholders are ideal for documents where some aspect might not be finalized until the end of a workflow, such as the legal name of a party to a contract.</para></fragment><fragment id="31" labels="s-col-md-4,s-text-center">
+      <para>
+        <image src="structured_editing_and_validation/Placeholders.png" uriid="461988" width="640" height="440" alt="Placeholders.png"/>
+      </para>
+    </fragment><fragment id="32" labels="spacer"/><fragment id="33" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="structured_editing_and_validation/Transclusion.png" uriid="462057" width="640" height="440" alt="Transclusion.png"/>
+      </para>
+    </fragment><fragment id="21" labels="s-col,v-align-middle"><heading level="3">Transclusions</heading><para>A “transclusion” is a document, or document fragment, that has been embeded in another document that continues to reflect changes to the original object. An example use case for a transclusion is something like a copyright notice that might be used in different documents. Or a procedure that applies to different models of equipment. An update to the source will display in every transcluded instance.</para><para>This model makes the re-use of content more accessible and manageable.</para></fragment><fragment id="104" labels="spacer"/><fragment id="105" labels="row-start,row-bg-white,spacer"/><fragment id="4" labels="s-text-center">
+      <heading level="2">Document Templates</heading>
+    </fragment><fragment id="34" labels="spacer"/><fragment id="22" labels="s-col,v-align-middle"><heading level="3">Publications</heading><para>A "publication" is a hierarchical collection of PSML component documents joined by "embed" or "transclude" type XRefs.</para><para>The core of the feature is a process that seamlessly resolves the publication components into a single document for presentation or numbering.</para></fragment><fragment id="37" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="structured_editing_and_validation/Publications.png" uriid="461984" width="640" height="440" alt="Publications.png"/>
+      </para>
+    </fragment><fragment id="38" labels="spacer"/><fragment id="39" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="structured_editing_and_validation/Numbering.png" uriid="461981" width="640" height="440" alt="Numbering.png"/>
+      </para>
+    </fragment><fragment id="23" labels="s-col,v-align-middle">
+      <heading level="3">Numbering</heading>
+      <para>Both <monospace>&lt;heading&gt;</monospace> and <monospace>&lt;para&gt;</monospace> elements support an attribute of <monospace>@numbered</monospace> that is available through the number icon in the editing interface. Any object where this attribute has a value of <monospace>"true"</monospace> will be subject to processing by the publication config.</para>
+    </fragment><fragment id="41" labels="spacer"/><fragment id="24" labels="s-col,v-align-middle"><heading level="3">Linking</heading><para>For writers that create a lot of links, customizing the <monospace>xref-config</monospace> improves consistency and productivity by pre-configuring cross-reference (xrefs) targets into the user interface. This saves writers from having to set values with each link.</para></fragment><fragment id="40" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="structured_editing_and_validation/Linking.png" uriid="461934" width="640" height="440" alt="Linking.png"/>
+      </para>
+    </fragment><fragment id="106" labels="spacer"/><fragment id="107" labels="row-start,row-bg-grey-lighten-4,spacer"/><fragment id="5" labels="s-text-center">
+      <heading level="2">Schematron Support</heading>
+    </fragment><fragment id="35" labels="spacer"/><fragment id="25" labels="s-col,v-align-middle">
+      <heading level="3">Overview</heading>
+      <para>Schematron enables developers to implement multiple validation regimes for any document set. For further information, see the article on <link href="https://dev.pageseeder.com/guide/documents/validating_pageseeder_documents.html" uriid="461662">Validating documents</link> or the Schematron <link href="http://www.schematron.com/" uriid="461663">website</link>.
+      </para>
+    </fragment><fragment id="36" labels="s-col-md-4,s-text-center,v-align-middle">
+      <para>
+        <image src="structured_editing_and_validation/Schematron.png" uriid="462046" width="640" height="440" alt="Schematron.png"/>
+      </para>
+    </fragment><fragment id="108" labels="spacer"/></section></document>

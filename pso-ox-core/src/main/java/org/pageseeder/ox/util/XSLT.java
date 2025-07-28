@@ -31,8 +31,10 @@ import java.net.URL;
 import java.util.Map;
 
 /**
+ * The type Xslt.
+ *
  * @author Christophe Lauret
- * @since  28 October 2013
+ * @since 28 October 2013
  */
 public class XSLT {
 
@@ -51,11 +53,9 @@ public class XSLT {
    * Return the XSLT templates from the given style.
    *
    * @param url A URL to a template.
-   *
    * @return the corresponding XSLT templates object or <code>null</code> if the URL was <code>null</code>.
-   *
    * @throws TransformerConfigurationException If XSLT templates could not be loaded from the specified URL.
-   * @throws IOException If an IO error occur while reading the template
+   * @throws IOException                       If an IO error occur while reading the template
    */
   public static Templates getTemplates(URL url) throws TransformerConfigurationException, IOException {
     if (url == null) return null;
@@ -75,11 +75,9 @@ public class XSLT {
    * Return the XSLT templates from the given style.
    *
    * @param file A file to a template.
-   *
    * @return the corresponding XSLT templates object or <code>null</code> if the URL was <code>null</code>.
-   *
    * @throws TransformerConfigurationException If XSLT templates could not be loaded from the specified URL.
-   * @throws IOException If an IO error occur while reading the template
+   * @throws IOException                       If an IO error occur while reading the template
    */
   public static Templates getTemplates(File file) throws TransformerConfigurationException, IOException {
     URI uri = file.toURI();
@@ -100,12 +98,9 @@ public class XSLT {
    * <p>Use this class to load XSLT from the system.
    *
    * @param resource The path to a resource.
-   *
-   * @return the corresponding XSLT templates object;
-   *         or <code>null</code> if the resource could not be found.
-   *
+   * @return the corresponding XSLT templates object;         or <code>null</code> if the resource could not be found.
    * @throws TransformerConfigurationException If XSLT templates could not be loaded from the specified resource.
-   * @throws IOException If an IO error occur while reading the template
+   * @throws IOException                       If an IO error occur while reading the template
    */
   public static Templates getTemplatesFromResource(String resource) throws TransformerConfigurationException, IOException {
     ClassLoader loader = XSLT.class.getClassLoader();
@@ -121,10 +116,10 @@ public class XSLT {
   /**
    * Transform the XML to result.
    *
-   * @param input defines the input source
-   * @param output defines the output.
+   * @param input       defines the input source
+   * @param output      defines the output.
    * @param transformer the transformer.
-   * @throws IOException the IO error occur.
+   * @throws IOException          the IO error occur.
    * @throws TransformerException the transformation error occur.
    */
   public static void transform(org.pageseeder.ox.api.Result input, File output, Transformer transformer) throws IOException, TransformerException {
@@ -136,10 +131,10 @@ public class XSLT {
   /**
    * Transform the XML to result.
    *
-   * @param input defines the input source
-   * @param output defines the output.
+   * @param input       defines the input source
+   * @param output      defines the output.
    * @param transformer the transformer.
-   * @throws IOException the IO error occur.
+   * @throws IOException          the IO error occur.
    * @throws TransformerException the transformation error occur.
    */
   public static void transform(File input, File output, Transformer transformer) throws IOException, TransformerException {
@@ -149,10 +144,10 @@ public class XSLT {
   /**
    * Transform the XML to result.
    *
-   * @param source defines the input source
-   * @param output defines the output.
+   * @param source      defines the input source
+   * @param output      defines the output.
    * @param transformer the transformer.
-   * @throws IOException the IO error occur.
+   * @throws IOException          the IO error occur.
    * @throws TransformerException the transformation error occur.
    */
   public static void transform(Source source, Result output, Transformer transformer) throws IOException, TransformerException {
@@ -162,12 +157,12 @@ public class XSLT {
   /**
    * Builds the XSLT transformer.
    *
-   * @param xsl the xsl
+   * @param xsl  the xsl
    * @param data the data
    * @param info the info
    * @return the transformer
    * @throws TransformerConfigurationException the transformer configuration exception
-   * @throws IOException Signals that an I/O exception has occurred.
+   * @throws IOException                       Signals that an I/O exception has occurred.
    */
   public static Transformer buildXSLTTransformer (File xsl, PackageData data, StepInfo info) throws TransformerConfigurationException, IOException {
     URIResolver resolver = new CustomURIResolver(xsl.getParentFile());

@@ -34,9 +34,10 @@ public class StepUtils {
   /**
    * Get the input from the step definition, but if it is empty then it uses the file uploaded.
    * It accepts glob pattern.
-   * @param data
-   * @param info
-   * @return
+   *
+   * @param data the data
+   * @param info the info
+   * @return input input
    */
   public static File getInput(PackageData data, StepInfo info) {
     // input file
@@ -54,10 +55,10 @@ public class StepUtils {
    * If the input is null then get the package folder.
    * It accepts glob pattern.
    *
-   * @param data
-   * @param info
-   * @param input
-   * @return
+   * @param data  the data
+   * @param info  the info
+   * @param input the input
+   * @return output output
    */
   public static File getOutput(PackageData data, StepInfo info, File input) {
     // output file
@@ -78,19 +79,19 @@ public class StepUtils {
   /**
    * Get the parameter from step definition, if it is not found then gets from the request parameter.
    * Otherwise returns the fallback.
-   *
+   * <p>
    * This method also implements dynamic parameter.
    * It means that a parameter can have a value like "starting-text{extra-text}ending-text". If the extra-text is a
    * existing parameter in the PackageData or StepInfo, then the {extra-text} will be replaced by its value.
    * If extra-text does not exist, then it will be replaced by an empty value.
-   *
+   * <p>
    * In addition, the dynamic parameter can have a dafault value {extra-text=default extra text}
    *
-   * @param data PackageData
-   * @param info StepInfo
+   * @param data          PackageData
+   * @param info          StepInfo
    * @param parameterName The name of the parameter to get from step info or package data
-   * @param fallback default value.
-   * @return
+   * @param fallback      default value.
+   * @return parameter parameter
    */
   public static String getParameter(PackageData data, StepInfo info, String parameterName, String fallback) {
     String parameterValue = getParameterWithoutDynamicLogic(data, info, parameterName, fallback);
@@ -102,11 +103,11 @@ public class StepUtils {
    * Get the parameter from step definition, if it is not found then gets from the request parameter.
    * Otherwise, returns the fallback.
    *
-   * @param data PackageData
-   * @param info StepInfo
+   * @param data          PackageData
+   * @param info          StepInfo
    * @param parameterName The name of the parameter to get from step info or package data
-   * @param fallback default value.
-   * @return
+   * @param fallback      default value.
+   * @return parameter without dynamic logic
    */
   public static String getParameterWithoutDynamicLogic(PackageData data, StepInfo info, String parameterName, String fallback) {
     String parameterValue = null;
@@ -129,11 +130,11 @@ public class StepUtils {
    * Get the parameter from step definition, if it is not found then gets from the request parameter.
    * Otherwise returns the fallback.
    *
-   * @param data PackageData
-   * @param info StepInfo
+   * @param data          PackageData
+   * @param info          StepInfo
    * @param parameterName The name of the parameter to get from step info or package data
-   * @param fallback default value.
-   * @return
+   * @param fallback      default value.
+   * @return parameter int
    */
   public static int getParameterInt(PackageData data, StepInfo info, String parameterName, int fallback) {
     String parameter = getParameter(data, info, parameterName, String.valueOf(fallback));
@@ -148,11 +149,11 @@ public class StepUtils {
    * Get the parameter from step definition, if it is not found then gets from the request parameter.
    * Otherwise returns the fallback.
    *
-   * @param data PackageData
-   * @param info StepInfo
+   * @param data          PackageData
+   * @param info          StepInfo
    * @param parameterName The name of the parameter to get from step info or package data
-   * @param fallback default value.
-   * @return
+   * @param fallback      default value.
+   * @return parameter int without dynamic logic
    */
   public static int getParameterIntWithoutDynamicLogic(PackageData data, StepInfo info, String parameterName, int fallback) {
     int value = fallback;
@@ -172,11 +173,11 @@ public class StepUtils {
    * Get the parameter from step definition, if it is not found then gets from the request parameter.
    * Otherwise returns the fallback.
    *
-   * @param data PackageData
-   * @param info StepInfo
+   * @param data          PackageData
+   * @param info          StepInfo
    * @param parameterName The name of the parameter to get from step info or package data
-   * @param fallback default value.
-   * @return
+   * @param fallback      default value.
+   * @return parameter long
    */
   public static long getParameterLong(PackageData data, StepInfo info, String parameterName, long fallback) {
     String parameter = getParameter(data, info, parameterName, String.valueOf(fallback));
@@ -191,11 +192,11 @@ public class StepUtils {
    * Get the parameter from step definition, if it is not found then gets from the request parameter.
    * Otherwise returns the fallback.
    *
-   * @param data PackageData
-   * @param info StepInfo
+   * @param data          PackageData
+   * @param info          StepInfo
    * @param parameterName The name of the parameter to get from step info or package data
-   * @param fallback default value.
-   * @return
+   * @param fallback      default value.
+   * @return parameter long without dynamic logic
    */
   public static long getParameterLongWithoutDynamicLogic(PackageData data, StepInfo info, String parameterName, long fallback) {
     long value = fallback;
@@ -216,11 +217,11 @@ public class StepUtils {
    * Get the parameter from step definition, if it is not found then gets from the request parameter.
    * Otherwise returns the fallback.
    *
-   * @param data PackageData
-   * @param info StepInfo
+   * @param data          PackageData
+   * @param info          StepInfo
    * @param parameterName The name of the parameter to get from step info or package data
-   * @param fallback default value.
-   * @return
+   * @param fallback      default value.
+   * @return parameter char
    */
   public static char getParameterChar(PackageData data, StepInfo info, String parameterName, char fallback) {
     String parameter = getParameter(data, info, parameterName, String.valueOf(fallback));
@@ -233,17 +234,16 @@ public class StepUtils {
 
   /**
    * The a request or step parameter can have a dynamic value base in another one.
-   *
+   * <p>
    * Example:
    * Package data has parameter "root-folder"  with value "data"
    * parameterValue = /{root-folder}/file.xml
    * this method returns /data/file.xml
    *
-   *
-   * @param data
-   * @param info
-   * @param parameterValue
-   * @return
+   * @param data           the data
+   * @param info           the info
+   * @param parameterValue the parameter value
+   * @return string string
    */
   public static String applyDynamicParameterLogic(PackageData data, StepInfo info, String parameterValue) {
 

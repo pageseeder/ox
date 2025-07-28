@@ -23,12 +23,12 @@ import org.pageseeder.ox.core.PackageData;
  * Defines a command to run on a specific data package.
  *
  * <p>Additional parameters for the command can be specified as class attributes.
+ * <p>
+ * param R the type of results returned by this command.
  *
- * @param T the type of results returned by this command.
- *
+ * @param <R> the type parameter
  * @author Christophe Lauret
- * @since  28 October 2013
- *
+ * @since 28 October 2013
  * @deprecated this no longer as a interface
  */
 @Deprecated
@@ -47,7 +47,6 @@ public interface Command<R extends Result> {
    * <p>This method should intercept errors occurring during processing and include them in the results.
    *
    * @param data the data to process
-   *
    * @return the result of processing specific to this command and data.
    */
   R process(PackageData data);
