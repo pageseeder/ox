@@ -8,6 +8,7 @@ val title: String by project
 val gitName: String by project
 val website: String by project
 val globalVersion = file("version.txt").readText().trim()
+version = globalVersion
 
 subprojects {
   group = "org.pageseeder.ox"
