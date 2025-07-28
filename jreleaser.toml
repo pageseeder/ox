@@ -19,7 +19,7 @@ vendor = "Allette Systems"
 # Organization info
 [project.links]
 homepage = "https://allette.com.au/resources/ox.html"
-repository = "https://github.com/pageseeder/ox"
+documentation = "https://github.com/pageseeder/ox"
 license = "https://www.apache.org/licenses/LICENSE-2.0.txt"
 
 # Java-specific configuration
