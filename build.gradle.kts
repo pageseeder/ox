@@ -123,7 +123,7 @@ subprojects {
     }
     repositories {
       maven {
-        url = layout.buildDirectory.dir("staging-deploy").get().asFile.toURI()
+        url = rootProject.layout.buildDirectory.dir("staging-deploy").get().asFile.toURI()
       }
     }
   }
@@ -131,9 +131,41 @@ subprojects {
 
 jreleaser {
   configFile.set(file("jreleaser.toml"))
+  distributions {
+    subprojects.forEach { subproject ->
+      register(subproject.name) {
+        artifact {
+          path.set(subproject.layout.buildDirectory.file("libs/${subproject.name}-${project.version}.jar"))
+        }
+        artifact {
+          path.set(subproject.layout.buildDirectory.file("libs/${subproject.name}-${project.version}-sources.jar"))
+        }
+        artifact {
+          path.set(subproject.layout.buildDirectory.file("libs/${subproject.name}-${project.version}-javadoc.jar"))
+        }
+      }
+    }
+  }
 }
 
 tasks.wrapper {
   gradleVersion = "8.14"
   distributionType = Wrapper.DistributionType.BIN
+}
+
+//The root jar does not need to be generated as it does not have code
+tasks.named<Jar>("jar") {
+  enabled = false
+}
+
+tasks.register("releaseToMavenCentral") {
+  group = "allette"
+  description = "Publishes artifacts, packages them with JReleaser, deploys to Maven Central, and performs full release."
+
+  dependsOn(
+    "publish",
+    "jreleaserPackage",
+    "jreleaserDeploy",
+    "jreleaserFullRelease"
+  )
 }
