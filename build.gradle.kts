@@ -158,14 +158,16 @@ tasks.named<Jar>("jar") {
   enabled = false
 }
 
+tasks.named("jreleaserFullRelease") {
+  mustRunAfter("publish")
+}
+
 tasks.register("releaseToMavenCentral") {
   group = "allette"
   description = "Publishes artifacts, packages them with JReleaser, deploys to Maven Central, and performs full release."
 
   dependsOn(
     "publish",
-    "jreleaserPackage",
-    "jreleaserDeploy",
     "jreleaserFullRelease"
   )
 }
