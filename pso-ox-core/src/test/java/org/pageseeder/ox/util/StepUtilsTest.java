@@ -17,6 +17,8 @@ package org.pageseeder.ox.util;
 
 import org.junit.Assert;
 import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.core.StepInfoImpl;
@@ -26,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author ccabral
@@ -381,6 +384,178 @@ public class StepUtilsTest {
     Assert.assertEquals(data.id(), StepUtils.applyDynamicParameterLogic(data, info, requestParameters.get("test-data")));
     Assert.assertEquals("/folder2/" + data.id(), StepUtils.applyDynamicParameterLogic(data, info, stepParameters.get("test-info")));
   }
+
+// ==========================================
+  // getParametersStartingWith Tests
+  // ==========================================
+
+  @Test
+  public void getParametersStartingWith_shouldExtractParametersFromBothSources() {
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-data", "/folder/file");
+    requestParameters.put("other-param", "ignore-me");
+    PackageData data = createPackageData(requestParameters);
+
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-info", "/folder2/file");
+    stepParameters.put("another-param", "ignore-me-too");
+    StepInfo info = createStepInfo(stepParameters);
+
+    Map<String, String> result = StepUtils.getParametersStartingWith(data, info, "test-");
+
+    assertThat(result)
+        .hasSize(2)
+        .containsEntry("test-data", "/folder/file")
+        .containsEntry("test-info", "/folder2/file");
+  }
+
+  @Test
+  public void getParametersStartingWith_shouldOverridePackageDataWithStepInfoValue() {
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-shared", "original-value");
+    PackageData data = createPackageData(requestParameters);
+
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-shared", "overridden-value");
+    StepInfo info = createStepInfo(stepParameters);
+
+    Map<String, String> result = StepUtils.getParametersStartingWith(data, info, "test-");
+
+    assertThat(result)
+        .hasSize(1)
+        .containsEntry("test-shared", "overridden-value");
+  }
+
+  @Test
+  public void getParametersStartingWith_shouldReturnEmptyMapWhenPrefixIsNullOrEmpty() {
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-data", "val1");
+    PackageData data = createPackageData(requestParameters);
+
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-info", "val2");
+    StepInfo info = createStepInfo(stepParameters);
+
+    assertThat(StepUtils.getParametersStartingWith(data, info, null)).isEmpty();
+    assertThat(StepUtils.getParametersStartingWith(data, info, "")).isEmpty();
+  }
+
+  @Test
+  public void getParametersStartingWith_shouldHandleNullInputsGracefully() {
+    assertThat(StepUtils.getParametersStartingWith(null, null, "test-")).isEmpty();
+
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-data", "val");
+    PackageData data = createPackageData(requestParameters);
+    assertThat(StepUtils.getParametersStartingWith(data, null, "test-"))
+        .containsEntry("test-data", "val");
+
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-info", "val");
+    StepInfo info = createStepInfo(stepParameters);
+    assertThat(StepUtils.getParametersStartingWith(null, info, "test-"))
+        .containsEntry("test-info", "val");
+  }
+
+  @Test
+  public void getParametersStartingWith_shouldHandleEmptyMaps() {
+    PackageData dataWithEmptyMap = createPackageData(new HashMap<>());
+    StepInfo infoWithEmptyMap = createStepInfo(new HashMap<>());
+
+    assertThat(StepUtils.getParametersStartingWith(dataWithEmptyMap, infoWithEmptyMap, "test-")).isEmpty();
+  }
+
+  @Test
+  public void getParametersStartingWith_dynamicLogic() {
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("name", "company");
+    requestParameters.put("test-data", "val");
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-info", "{name}");
+    PackageData data = createPackageData(requestParameters);
+    StepInfo info = createStepInfo(stepParameters);
+
+    Map<String, String> result = StepUtils.getParametersStartingWith(data, info, "test-");
+
+    assertThat(result)
+        .hasSize(2)
+        .containsEntry("test-data", "val")
+        .containsEntry("test-info", "company");
+  }
+
+  // ==========================================
+  // getParameterNamesStartingWith Tests
+  // ==========================================
+
+  @Test
+  public void getParameterNamesStartingWith_shouldExtractKeySetFromBothSources() {
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-data", "/folder/{_uploaded_file}");
+    requestParameters.put("unmatched-key", "value");
+    PackageData data = createPackageData(requestParameters);
+
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-info", "/folder2/{_uploaded_file}");
+    StepInfo info = createStepInfo(stepParameters);
+
+    Set<String> result = StepUtils.getParameterNamesStartingWith(data, info, "test-");
+
+    assertThat(result)
+        .hasSize(2)
+        .containsExactlyInAnyOrder("test-data", "test-info");
+  }
+
+  @Test
+  public void getParameterNamesStartingWith_shouldDeduplicateIdenticalKeys() {
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-key", "val1");
+    PackageData data = createPackageData(requestParameters);
+
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-key", "val2");
+    StepInfo info = createStepInfo(stepParameters);
+
+    Set<String> result = StepUtils.getParameterNamesStartingWith(data, info, "test-");
+
+    assertThat(result)
+        .hasSize(1)
+        .containsExactly("test-key");
+  }
+
+  @Test
+  public void getParameterNamesStartingWith_shouldReturnEmptySetWhenPrefixIsNullOrEmpty() {
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-data", "val");
+    PackageData data = createPackageData(requestParameters);
+
+    Map<String, String> stepParameters = new HashMap<>();
+    stepParameters.put("test-info", "val");
+    StepInfo info = createStepInfo(stepParameters);
+
+    assertThat(StepUtils.getParameterNamesStartingWith(data, info, null)).isEmpty();
+    assertThat(StepUtils.getParameterNamesStartingWith(data, info, "")).isEmpty();
+  }
+
+  @Test
+  public void getParameterNamesStartingWith_shouldHandleNullInputsGracefully() {
+    Set<String> result = StepUtils.getParameterNamesStartingWith(null, null, "test-");
+
+    assertThat(result).isEmpty();
+  }
+
+  @Test
+  public void getParameterNamesStartingWith_shouldReturnUnmodifiableSet() {
+    Map<String, String> requestParameters = new HashMap<>();
+    requestParameters.put("test-data", "val");
+    PackageData data = createPackageData(requestParameters);
+
+    Set<String> result = StepUtils.getParameterNamesStartingWith(data, null, "test-");
+
+    assertThatThrownBy(() -> result.add("illegal-add"))
+        .isInstanceOf(UnsupportedOperationException.class);
+  }
+
+
 
   private PackageData createPackageData(Map<String, String> requestParameters) {
     try {

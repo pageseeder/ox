@@ -19,6 +19,7 @@ dependencies {
   testImplementation (libs.xmlunit)
   testImplementation (libs.xmlunit.core)
   testImplementation (libs.xmlunit.matchers)
+  testImplementation(libs.assertj)
 
   testImplementation(libs.jetbrains.annotations)
 }
