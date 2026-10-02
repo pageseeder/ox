@@ -53,6 +53,8 @@ subprojects {
     maven {
       url = uri("https://repo.terracotta.org/maven2/")
     }
+
+    mavenLocal()
   }
 
   tasks.test {
