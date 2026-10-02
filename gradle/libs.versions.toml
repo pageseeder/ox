@@ -1,7 +1,7 @@
 [versions]
 bridge = "0.11.34"
 logback = "1.5.34"
-simple = "2025.07-jdk11"
+simple = "2026.10-jdk11"
 
 [libraries]
 jetbrains-annotations = { module = "org.jetbrains:annotations", version = "26.0.2" }
