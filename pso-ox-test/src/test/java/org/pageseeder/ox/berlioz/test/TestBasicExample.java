@@ -31,6 +31,7 @@ import org.pageseeder.ox.berlioz.request.RequestHandlerFactory;
 import org.pageseeder.ox.berlioz.request.URLHandler;
 import org.pageseeder.ox.berlioz.util.BerliozOXUtils;
 import org.pageseeder.ox.util.FileUtils;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.xmlunit.builder.DiffBuilder;
@@ -53,6 +54,16 @@ import java.util.Map;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BerliozOXUtils.class, RequestHandlerFactory.class, FileHandler.class, NoFileHandler.class, URLHandler.class} )
+@PowerMockIgnore({
+    "javax.management.*",
+    "javax.script.*",
+    "jdk.internal.reflect.*",
+    "sun.reflect.*",
+    "com.sun.org.apache.xerces.*",
+    "javax.xml.*",
+    "org.xml.*",
+    "org.w3c.*"
+})
 public class TestBasicExample {
   private final static String MODEL = "test";
   private final static File _input = new File("src/test/resources/org/pageseeder/ox/berlioz/basic/source/source.zip");

@@ -28,6 +28,7 @@ import org.pageseeder.ox.berlioz.request.NoFileHandler;
 import org.pageseeder.ox.berlioz.request.RequestHandlerFactory;
 import org.pageseeder.ox.berlioz.request.URLHandler;
 import org.pageseeder.ox.berlioz.util.BerliozOXUtils;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -48,6 +49,16 @@ import java.util.Map;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BerliozOXUtils.class, RequestHandlerFactory.class, FileHandler.class, NoFileHandler.class, URLHandler.class} )
+@PowerMockIgnore({
+    "javax.management.*",
+    "javax.script.*",
+    "jdk.internal.reflect.*",
+    "sun.reflect.*",
+    "com.sun.org.apache.xerces.*",
+    "javax.xml.*",
+    "org.xml.*",
+    "org.w3c.*"
+})
 public class TestPSMLValidation {
   private final static String MODEL = "psml";
   private final static File _input = new File("src/test/resources/org/pageseeder/ox/psml/basic/source/source.psml");
