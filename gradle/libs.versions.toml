@@ -1,7 +1,7 @@
 [versions]
 bridge = "0.11.34"
-logback = "1.3.14"
-simple = "2025.07-jdk11"
+logback = "1.5.34"
+simple = "2026.10-jdk11"
 
 [libraries]
 jetbrains-annotations = { module = "org.jetbrains:annotations", version = "26.0.2" }
@@ -17,6 +17,7 @@ pso-diffx = { module = "org.pageseeder.diffx:pso-diffx", version = "0.8.1" }
 pso-psml = { module = "org.pageseeder:pso-psml", version = "1.3.1" }
 pso-schematron = { module = "org.pageseeder.schematron:pso-schematron", version = "1.2.3" }
 pso-xmlwriter = { module = "org.pageseeder.xmlwriter:pso-xmlwriter", version = "1.0.4" }
+assertj = { module = "org.assertj:assertj-core", version = "3.27.7"}
 ehcache = {module = "net.sf.ehcache:ehcache", version = "2.11.0.2.10" }
 commons-io = { module = "commons-io:commons-io", version = "2.7" }
 commons-fileupload = { module = "commons-fileupload:commons-fileupload", version = "1.5" }
@@ -40,8 +41,8 @@ slf4j-api = { module = "org.slf4j:slf4j-api", version = "2.0.9" }
 sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version = "3.49.1.0" }
 topologi-xerces = { module ="topologi:topologi-xerces", version = "03" } # It is used in the Step PSML Validate for option "wellformed"
 xmlunit = { module = "xmlunit:xmlunit", version = "1.6" }
-xmlunit-core = { module = "org.xmlunit:xmlunit-core", version = "2.3.0" }
-xmlunit-matchers = { module = "org.xmlunit:xmlunit-matchers", version = "2.3.0" }
+xmlunit-core = { module = "org.xmlunit:xmlunit-core", version = "2.10.4" }
+xmlunit-matchers = { module = "org.xmlunit:xmlunit-matchers", version = "2.10.4" }
 
 [bundles]
 #junit-testing = [

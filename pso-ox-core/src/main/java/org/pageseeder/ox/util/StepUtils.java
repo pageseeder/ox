@@ -15,6 +15,7 @@
  */
 package org.pageseeder.ox.util;
 
+import org.jetbrains.annotations.NotNull;
 import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.parameters.ParameterTemplate;
@@ -22,6 +23,9 @@ import org.pageseeder.ox.parameters.ParameterTemplate;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * The type Step utils.
@@ -294,5 +298,58 @@ public class StepUtils {
       }
     }
     return newValue;
+  }
+
+  /**
+   * Extracts unique parameter names from the provided {@link PackageData} and {@link StepInfo}
+   * that start with the specified prefix.
+   *
+   * @param data       the request package data containing parameters; may be null
+   * @param info       the current step information containing parameters; may be null
+   * @param startsWith the prefix that parameter names must start with
+   * @return a non-null {@link Set} of matching parameter names; empty if no matches or input parameters are null
+   */
+  @NotNull
+  public static Set<String> getParameterNamesStartingWith(@NotNull PackageData data,
+                                                          @NotNull StepInfo info,
+                                                          @NotNull String startsWith) {
+    //Even though there are the annotation, because they are not enforced at runtime by the JVM.
+    if (StringUtils.isBlank(startsWith)) {
+      return Set.of();
+    }
+
+    Stream<String> dataParams = (data != null && data.getParameters() != null)
+        ? data.getParameters().keySet().stream()
+        : Stream.empty();
+
+    Stream<String> infoParams = (info != null && info.parameters() != null)
+        ? info.parameters().keySet().stream()
+        : Stream.empty();
+
+    return Stream.concat(dataParams, infoParams)
+        .filter(param -> param != null && param.startsWith(startsWith))
+        .collect(Collectors.toUnmodifiableSet());
+  }
+
+  /**
+   * Extracts parameters (name-value pairs) from {@link PackageData} and {@link StepInfo}
+   * whose names start with the specified prefix. StepInfo parameters override PackageData parameters.
+   *
+   * @param data       the request package data; may be null
+   * @param info       the current step information; may be null
+   * @param startsWith the prefix to match; may be null
+   * @return an {@link Map} of matching key-value pairs; never null
+   */
+  @NotNull
+  public static Map<String, String> getParametersStartingWith(@NotNull PackageData data,
+                                                              @NotNull StepInfo info,
+                                                              @NotNull String startsWith) {
+    Set<String> parameterNames = getParameterNamesStartingWith(data, info, startsWith);
+    Map<String, String> parameters = new HashMap<>();
+    for (String parameterName : parameterNames) {
+      String parameterValue = getParameter(data, info, parameterName, "");
+      parameters.put(parameterName, parameterValue);
+    }
+    return parameters;
   }
 }

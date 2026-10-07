@@ -15,7 +15,6 @@
  */
 package org.pageseeder.ox.pageseeder.step;
 
-import net.pageseeder.app.simple.core.utils.SimpleXMLUtils;
 import net.pageseeder.app.simple.pageseeder.service.PublishService;
 import net.pageseeder.app.simple.pageseeder.xml.PSPublishHandler;
 import org.pageseeder.bridge.PSConfig;
@@ -26,25 +25,18 @@ import org.pageseeder.ox.api.StepInfo;
 import org.pageseeder.ox.core.Model;
 import org.pageseeder.ox.core.PackageData;
 import org.pageseeder.ox.pageseeder.model.PublishRequest;
-import org.pageseeder.ox.pageseeder.xml.PublishRequestInputHandler;
 import org.pageseeder.ox.util.StepUtils;
 import org.pageseeder.xmlwriter.XMLWriter;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 
 /**
- * Pipeline step executing batch group publishing requests specified in an input XML file.
+ * Pipeline step executing a single PageSeeder Start Group Publish request.
  *
  * @author Carlos Cabral
  * @since 1 October  2026
  */
-public class BulkGroupPublish extends AbstractPublishStep {
-
-  private PublishRequest currentBatchRequest;
+public class CallGroupPublish extends AbstractPublishStep {
 
   @Override
   protected void executePublish(
@@ -58,22 +50,9 @@ public class BulkGroupPublish extends AbstractPublishStep {
       PublishService publishService,
       XMLWriter writer
   ) throws Exception {
-    File inputXml = StepUtils.getInput(data, info);
-    if (inputXml == null || !inputXml.exists()) {
-      throw new FileNotFoundException("Input XML configuration file not found.");
-    }
-
-    List<PublishRequest> requests = readXml(inputXml);
-    if (requests.isEmpty()) {
-      return;
-    }
-
-    float percentageIncrement = 90.0F / requests.size();
-    for (PublishRequest request : requests) {
-      this.currentBatchRequest = request;
-      performPublishAndPoll(request, sessionMember, session, psConfig, interval, publishService, writer);
-      this.percentage += percentageIncrement;
-    }
+    PublishRequest request = loadRequestFromStepParameters(data, info);
+    performPublishAndPoll(request, sessionMember, session, psConfig, interval, publishService, writer);
+    this.percentage = 90.0F;
   }
 
   @Override
@@ -85,27 +64,40 @@ public class BulkGroupPublish extends AbstractPublishStep {
       PublishService publishService,
       PSPublishHandler handler
   ) throws Exception {
-    PublishRequest req = (request != null) ? request : this.currentBatchRequest;
-    PSGroup group = new PSGroup(req.getGroup());
-    PSMember member = req.getMember().isBlank() ? sessionMember : new PSMember(req.getMember());
+    PSGroup group = new PSGroup(request.getGroup());
+    PSMember member = request.getMember().isBlank() ? sessionMember : new PSMember(request.getMember());
 
     publishService.startGroupPublish(
         member,
         group,
-        req.getProject(),
-        req.getTarget(),
-        req.getType(),
-        req.getLogLevel(),
-        req.getParameters(),
+        request.getProject(),
+        request.getTarget(),
+        request.getType(),
+        request.getLogLevel(),
+        request.getParameters(),
         session,
         psConfig,
         handler
     );
   }
 
-  private List<PublishRequest> readXml(File xml) throws IOException {
-    PublishRequestInputHandler handler = new PublishRequestInputHandler();
-    SimpleXMLUtils.parseXML(new FileInputStream(xml), handler);
-    return handler.getPublishes();
+  private PublishRequest loadRequestFromStepParameters(PackageData data, StepInfo info) {
+    String project = StepUtils.getParameter(data, info, "project", "");
+    String group = StepUtils.getParameter(data, info, "group", "");
+    String member = StepUtils.getParameter(data, info, "member", "");
+    String target = StepUtils.getParameter(data, info, "target", "");
+    String type = StepUtils.getParameter(data, info, "type", "PROCESS");
+    String logLevel = StepUtils.getParameter(data, info, "log-level", "INFO");
+    Map<String, String> scriptParams = StepUtils.getParametersStartingWith(data, info, "ps-param-");
+
+    return new PublishRequest.Builder()
+        .project(project)
+        .group(group)
+        .member(member)
+        .target(target)
+        .type(type)
+        .logLevel(logLevel)
+        .parameters(scriptParams)
+        .build();
   }
 }
