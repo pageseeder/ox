@@ -17,6 +17,7 @@ package org.pageseeder.ox.step;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.pageseeder.ox.OXException;
 import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.api.StepInfo;
@@ -41,7 +42,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -85,7 +85,7 @@ public final class Transformation implements Step {
    */
   @Override
   public Result process(Model model, PackageData data, StepInfo info) {
-    Result result = null;
+    Result result;
     try {
       //## Handle input files
       List<File> inputs = getInputFiles(model, data, info);
@@ -106,12 +106,14 @@ public final class Transformation implements Step {
         zipOutput = data.getFile(getNewNameBaseOnOther("output.zip", true));
       }
 
-      if (output.getName().indexOf(".") > -1) {
-        //It is a file, therefore only creates the parent folder if necessary
-        output.getParentFile().mkdir();
-      } else {
-        //It is a folder
-        output.mkdirs();
+      if (output != null) {
+        if (output.getName().contains(".")) {
+          //It is a file, therefore only creates the parent folder if necessary
+          LOGGER.debug("Output directories created: {}", output.getParentFile().mkdir());
+        } else {
+          //It is a folder
+          LOGGER.debug("Output directories created: {}", output.mkdirs());
+        }
       }
 
       //## Handle the transformation file
@@ -129,8 +131,21 @@ public final class Transformation implements Step {
 
       try {
         Transformer transformer = XSLT.buildXSLTTransformer(xsl, data, info);
+        ResultStatus temporaryResult = ResultStatus.OK;
+        StringBuilder errors = new StringBuilder();
         for(File extraInput:inputs) {
-          fileResultInfos.add(processFile(extraInput, output, transformer));
+          FileResultInfo fileResultInfo = processFile(extraInput, output, transformer);
+          fileResultInfos.add(fileResultInfo);
+          if (fileResultInfo.getStatus() == ResultStatus.ERROR) {
+            //Just add the error status to the TransformResult. But let it to still iterate to see register any other
+            //file with problem. It is not a final decision. It could be changed in the future.
+            temporaryResult = ResultStatus.ERROR;
+            errors.append("Unable to transform file ");
+            errors.append(extraInput.getName());
+            errors.append(".\nError message: ");
+            errors.append(PathMasker.maskPath(fileResultInfo.getMessage(), data));
+            errors.append(".\n");
+          }
         }
 
         //If zip output is not null, then zip
@@ -138,7 +153,12 @@ public final class Transformation implements Step {
           ZipUtils.zip(output, zipOutput);
         }
 
-        ((TransformResult)result).done();
+        if (temporaryResult == ResultStatus.ERROR) {
+          ((TransformResult) result).setStatus(temporaryResult);
+          ((TransformResult)result).setError(new OXException(errors.toString()));
+        } else {
+          ((TransformResult) result).done();
+        }
       } catch (TransformerException | IOException ex) {
         LOGGER.error("Transform configuration exception: {}", ex.getMessage(), ex);
         ((TransformResult)result).setError(ex);
@@ -173,59 +193,17 @@ public final class Transformation implements Step {
       }
     }
 
+    String message;
     try {
       transformer.transform(new StreamSource(input), new StreamResult(finalOutput));
+      message = "";
     } catch (TransformerException ex) {
       LOGGER.error("Failed to trasnform the file {} because of '{}'", input.getAbsolutePath(), ex.getMessage());
+      message = ex.getLocalizedMessage();
       status = ResultStatus.ERROR;
     }
-    return new FileResultInfo(input, finalOutput, status);
+    return new FileResultInfo(input, finalOutput, status, message);
   }
-
-//  /**
-//   * Builds the XSLT transformer.
-//   *
-//   * @param xsl the xsl
-//   * @param data the data
-//   * @param info the info
-//   * @return the transformer
-//   * @throws TransformerConfigurationException the transformer configuration exception
-//   * @throws IOException Signals that an I/O exception has occurred.
-//   */
-//  private Transformer buildXSLTTransformer (File xsl, PackageData data, StepInfo info) throws TransformerConfigurationException, IOException {
-//    URIResolver resolver = new CustomURIResolver(xsl.getParentFile());
-//    Templates templates = XSLT.getTemplates(xsl);
-//    Transformer transformer = templates.newTransformer();
-//    transformer.setURIResolver(resolver);
-//
-//    // Add the parameters from post request
-//    for (Entry<String, String> p : data.getParameters().entrySet()) {
-//      transformer.setParameter(p.getKey(), p.getValue());
-//    }
-//
-//    String originalFileName = data.getProperty(PackageData.ORIGINAL_PROPERTY);
-//    if (originalFileName != null) {
-//      transformer.setParameter("original_file", originalFileName);
-//    }
-//    transformer.setParameter("data-id", data.id());
-//    transformer.setParameter("data-repository", data.directory().getAbsolutePath().replace('\\', '/'));
-//
-//    // Add the parameters from step definition in model.xml
-//    // these parameters should use the prefix _xslt-
-//    for (Entry<String, String> p :info.parameters().entrySet()) {
-//      if (p.getKey().startsWith("_xslt-")) {
-//        String newValue = StepUtils.applyDynamicParameterLogic(data, info, p.getValue());
-//        transformer.setParameter(p.getKey().replaceAll("_xslt-", ""), newValue);
-//      }
-//    }
-//
-//    String indent = !StringUtils.isBlank(info.parameters().get("_xslt-indent")) ? info.parameters().get("_xslt-indent") : data.getParameter("_xslt-indent");
-//    if (!StringUtils.isBlank(indent)) {
-//      transformer.setOutputProperty(OutputKeys.INDENT, indent.equalsIgnoreCase("yes")?"yes":"no");
-//    }
-//
-//    return transformer;
-//  }
 
   /**
    * If the input is a folder or zip, it gets the input files inside the folder or zip.
@@ -260,7 +238,7 @@ public final class Transformation implements Step {
     //Handle each input
     for (File input : originalInputs) {
       //TODO review the reason of the mkdirs here. If it does not exist then cannot be an input
-      input.mkdirs();
+      LOGGER.debug("Input directories created: {}", input.mkdirs());
       if (input.exists()) {
         //handle zip file
         final boolean isInputAZip =  FileUtils.isZip(input);
@@ -288,16 +266,20 @@ public final class Transformation implements Step {
    * @return the output file
    */
   private File getOutputFile(PackageData data, StepInfo info) {
-    File output = null;
+    File output;
     String outputParemeter = StepUtils.getParameter(data, info, "output", info.output());
     if (StringUtils.isBlank(outputParemeter) || outputParemeter.equals(info.input())) {
       outputParemeter = data.id() + System.nanoTime();
       output = data.getFile(outputParemeter);
-      output.mkdirs();
     } else {
       output = data.getFile(outputParemeter);
     }
-    return data.getFile(outputParemeter);
+
+    if (output != null) {
+      LOGGER.debug("Output directories created: {}", output.mkdirs());
+    }
+
+    return output;
   }
 
 
@@ -318,7 +300,7 @@ public final class Transformation implements Step {
         xsl = data.getFile(xslParameter);
       }
     } else if (unzipedFolder.isDirectory()) {
-      List<String> extensions = Arrays.asList("xsl");
+      List<String> extensions = List.of("xsl");
       FileFilter filter = FileUtils.filter(extensions, true);
       List<File> filesFound = FileUtils.findFiles(unzipedFolder, filter);
       if (!filesFound.isEmpty()) {
@@ -333,7 +315,6 @@ public final class Transformation implements Step {
    *
    * @param file the file
    * @return the file
-   * @throws IOException
    */
   private File unzipFile(File file) throws IOException {
     //It is a zip, then unzip in a folderwith the same of the zip
@@ -383,7 +364,7 @@ public final class Transformation implements Step {
         @Nullable File output, @NotNull List<FileResultInfo> fileResultInfos, @NotNull File template) {
       super(model, data, info, output, fileResultInfos);
       this._template = template;
-      this._displayOutputResult = "false".equals(super.info().getParameter("display-result")) ? false : true;
+      this._displayOutputResult = !"false".equals(super.info().getParameter("display-result"));
     }
 
     @Override
@@ -402,7 +383,6 @@ public final class Transformation implements Step {
      * Parameters XML.
      *
      * @param xml the xml
-     * @throws IOException Signals that an I/O exception has occurred.
      */
     protected void writeFileResultInfo(XMLWriter xml, FileResultInfo fileResultInfo) {
       try {
@@ -413,7 +393,7 @@ public final class Transformation implements Step {
         // Include the generated content
         if (_displayOutputResult) {
           xml.openElement("content");
-          xml.writeCDATA(new String(Files.readAllBytes(fileResultInfo.getOutput().toPath()), "UTF-8"));
+          xml.writeCDATA(Files.readString(fileResultInfo.getOutput().toPath()));
           xml.closeElement();
         }
         xml.closeElement();//parameters

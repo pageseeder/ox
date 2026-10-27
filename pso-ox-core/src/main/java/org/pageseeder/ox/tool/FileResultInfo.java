@@ -39,6 +39,9 @@ public class FileResultInfo implements XMLWritable{
   /** The status. */
   private final ResultStatus _status;
 
+  /** it could store an error, warning any other message. **/
+  private final String _message;
+
   /**
    * Instantiates a new file result info.
    *
@@ -47,10 +50,23 @@ public class FileResultInfo implements XMLWritable{
    * @param status the status
    */
   public FileResultInfo(File input, File output, ResultStatus status) {
+    this(input, output, status, "");
+  }
+
+  /**
+   * Instantiates a new file result info.
+   *
+   * @param input   the input
+   * @param output  the output
+   * @param status  the status
+   * @param message the message
+   */
+  public FileResultInfo(File input, File output, ResultStatus status, String message) {
     super();
     this._input = input;
     this._output = output;
     this._status = status;
+    this._message = message;
   }
 
   /**
@@ -72,6 +88,15 @@ public class FileResultInfo implements XMLWritable{
   }
 
   /**
+   * Gets message.
+   *
+   * @return the message
+   */
+  public String getMessage() {
+    return this._message;
+  }
+
+  /**
    * Gets the status.
    *
    * @return the status
@@ -89,6 +114,8 @@ public class FileResultInfo implements XMLWritable{
     xml.attribute("input", this._input.getName());
     xml.attribute("output", this._output.getName());
     xml.attribute("status", this._status.toString());
+    if (this._message != null)
+      xml.attribute("message", this._message);
     xml.closeElement();//result-file
   }
 }
