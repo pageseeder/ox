@@ -61,6 +61,9 @@ public abstract class AbstractPublishStep extends PageseederStep implements Meas
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPublishStep.class);
 
+  /**
+   * The Percentage.
+   */
   protected float percentage = 0.0F;
 
   @Override
@@ -122,6 +125,17 @@ public abstract class AbstractPublishStep extends PageseederStep implements Meas
 
   /**
    * Template method to perform step-specific publishing operations.
+   *
+   * @param model          the model
+   * @param data           the data
+   * @param info           the info
+   * @param sessionMember  the session member
+   * @param session        the session
+   * @param psConfig       the ps config
+   * @param interval       the interval
+   * @param publishService the publish service
+   * @param writer         the writer
+   * @throws Exception the exception
    */
   protected abstract void executePublish(
       Model model,
@@ -137,6 +151,15 @@ public abstract class AbstractPublishStep extends PageseederStep implements Meas
 
   /**
    * Initiates the publishing request, polls until completion, and writes XML results.
+   *
+   * @param request        the request
+   * @param sessionMember  the session member
+   * @param session        the session
+   * @param psConfig       the ps config
+   * @param interval       the interval
+   * @param publishService the publish service
+   * @param writer         the writer
+   * @throws IOException the io exception
    */
   protected void performPublishAndPoll(
       PublishRequest request,
@@ -191,6 +214,14 @@ public abstract class AbstractPublishStep extends PageseederStep implements Meas
 
   /**
    * Hook for subclasses to execute their specific `startGroupPublish` or `startUriPublish` call.
+   *
+   * @param request        the request
+   * @param sessionMember  the session member
+   * @param session        the session
+   * @param psConfig       the ps config
+   * @param publishService the publish service
+   * @param handler        the handler
+   * @throws Exception the exception
    */
   protected abstract void startPublishOperation(
       PublishRequest request,
@@ -201,10 +232,26 @@ public abstract class AbstractPublishStep extends PageseederStep implements Meas
       PSPublishHandler handler
   ) throws Exception;
 
+  /**
+   * Is publish completed boolean.
+   *
+   * @param status the status
+   * @return the boolean
+   */
   protected static boolean isPublishCompleted(String status) {
     return "complete".equals(status) || "cancel".equals(status) || "error".equals(status) || "fail".equals(status);
   }
 
+  /**
+   * Write publish result xml.
+   *
+   * @param request      the request
+   * @param writer       the writer
+   * @param status       the status
+   * @param errorMessage the error message
+   * @param timeSpentMs  the time spent ms
+   * @throws IOException the io exception
+   */
   protected void writePublishResultXML(
       PublishRequest request,
       XMLWriter writer,
@@ -237,6 +284,13 @@ public abstract class AbstractPublishStep extends PageseederStep implements Meas
     writer.closeElement(); // </publish>
   }
 
+  /**
+   * Write output.
+   *
+   * @param output the output
+   * @param writer the writer
+   * @param result the result
+   */
   protected void writeOutput(File output, XMLWriter writer, ResultBase result) {
     try {
       if (output != null) {
