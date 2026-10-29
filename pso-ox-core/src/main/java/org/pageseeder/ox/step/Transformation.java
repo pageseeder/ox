@@ -266,20 +266,11 @@ public final class Transformation implements Step {
    * @return the output file
    */
   private File getOutputFile(PackageData data, StepInfo info) {
-    File output;
     String outputParemeter = StepUtils.getParameter(data, info, "output", info.output());
     if (StringUtils.isBlank(outputParemeter) || outputParemeter.equals(info.input())) {
       outputParemeter = data.id() + System.nanoTime();
-      output = data.getFile(outputParemeter);
-    } else {
-      output = data.getFile(outputParemeter);
     }
-
-    if (output != null) {
-      LOGGER.debug("Output directories created: {}", output.mkdirs());
-    }
-
-    return output;
+    return data.getFile(outputParemeter);
   }
 
 
