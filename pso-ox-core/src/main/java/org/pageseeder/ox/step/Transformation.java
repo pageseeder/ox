@@ -95,25 +95,29 @@ public final class Transformation implements Step {
 
     //## Handle Output file
       File output = getOutputFile(data, info);
+
+      if (output == null) {
+        return new InvalidResult(model, data).error(new FileNotFoundException("Cannot find the output file."));
+      }
+
       final boolean isOutputAZip =  FileUtils.isZip(output);
+      final boolean isOutputAFile = output.getName().contains(".");
       File zipOutput = null;
       if (isOutputAZip) {
         zipOutput = output;
         //The the output need to be a folder
         output = data.getFile(data.id() + System.nanoTime());
-      } else if (inputs.size() > 1 || output.isDirectory()) {
+      } else if (inputs.size() > 1 || !isOutputAFile) {
         //If there is more than one input, than the output must be a zip
         zipOutput = data.getFile(getNewNameBaseOnOther("output.zip", true));
       }
 
-      if (output != null) {
-        if (output.getName().contains(".")) {
-          //It is a file, therefore only creates the parent folder if necessary
-          LOGGER.debug("Output directories created: {}", output.getParentFile().mkdir());
-        } else {
-          //It is a folder
-          LOGGER.debug("Output directories created: {}", output.mkdirs());
-        }
+      if (isOutputAFile) {
+        //It is a file, therefore only creates the parent folder if necessary
+        LOGGER.debug("Output directories created: {}", output.getParentFile().mkdir());
+      } else {
+        //It is a folder
+        LOGGER.debug("Output directories created: {}", output.mkdirs());
       }
 
       //## Handle the transformation file
@@ -266,20 +270,11 @@ public final class Transformation implements Step {
    * @return the output file
    */
   private File getOutputFile(PackageData data, StepInfo info) {
-    File output;
     String outputParemeter = StepUtils.getParameter(data, info, "output", info.output());
     if (StringUtils.isBlank(outputParemeter) || outputParemeter.equals(info.input())) {
       outputParemeter = data.id() + System.nanoTime();
-      output = data.getFile(outputParemeter);
-    } else {
-      output = data.getFile(outputParemeter);
     }
-
-    if (output != null) {
-      LOGGER.debug("Output directories created: {}", output.mkdirs());
-    }
-
-    return output;
+    return data.getFile(outputParemeter);
   }
 
 
