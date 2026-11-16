@@ -177,7 +177,6 @@ public class PackagePathValidatorTest {
         "data//workbook.xml",
         "data/workbook.xml?path=secret",
         "data/workbook.xml#anchor",
-        "data/*.xml",
         "data/%2e%2e/secret.xml",
         "data/trailing-dot.",
         "data/trailing-space ",
@@ -188,6 +187,53 @@ public class PackagePathValidatorTest {
       try {
         validator.validateDefinitionPath(payload, "input");
         fail("Expected IllegalArgumentException for invalid path: " + payload);
+      } catch (IllegalArgumentException expected) {
+        // Expected
+      }
+    }
+  }
+
+  @Test
+  public void testInputGlobWildcardsAllowedWithValidExtension() {
+    // Allowed on input when targeting files with an allowlisted extension
+    validator.validateDefinitionPath("initial-unzipped/*.xlsx", "input");
+    validator.validateDefinitionPath("/initial-unzipped/*.xml", "input");
+    validator.validateDefinitionPath("initial-unzipped/report-*.csv", "input");
+
+    Path resolved = validator.resolveAndValidate(packageDir, "initial-unzipped/*.xlsx", "input");
+    assertNotNull(resolved);
+    assertTrue(resolved.startsWith(packageDir.toPath().toAbsolutePath().normalize()));
+  }
+
+  @Test
+  public void testUnsafeOrDisallowedWildcardsBlocked() {
+    // 1. Wildcard on "output" is not allowed
+    try {
+      validator.validateDefinitionPath("output/*.xlsx", "output");
+      fail("Expected IllegalArgumentException for wildcard in output parameter");
+    } catch (IllegalArgumentException expected) {
+      // Expected
+    }
+
+    // 2. Wildcard in directory segment (e.g., "*/file.xlsx" or "**/file.xlsx") is not allowed
+    try {
+      validator.validateDefinitionPath("*/workbook.xlsx", "input");
+      fail("Expected IllegalArgumentException for wildcard in directory segment");
+    } catch (IllegalArgumentException expected) {
+      // Expected
+    }
+
+    // 3. Bare wildcard "*" or "*.*" without an allowlisted extension is not allowed
+    String[] unsafeGlobs = {
+        "initial-unzipped/*",
+        "initial-unzipped/*.*",
+        "initial-unzipped/*.jsp",
+        "initial-unzipped/*.sh"
+    };
+    for (String payload : unsafeGlobs) {
+      try {
+        validator.validateDefinitionPath(payload, "input");
+        fail("Expected IllegalArgumentException for unsafe glob: " + payload);
       } catch (IllegalArgumentException expected) {
         // Expected
       }
