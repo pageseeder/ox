@@ -85,7 +85,7 @@ public final class PackagePathValidator {
   }
 
   /**
-   * 2. RUNTIME VALIDATION & RESOLUTION (Use inside Step execution).
+   * 2. RUNTIME VALIDATION and RESOLUTION (Use inside Step execution).
    * Validates the runtime parameter (rejecting any unresolved placeholders) and resolves
    * it safely inside {@code packageDir}. Works for both files and directories, whether
    * the target already exists (input) or is about to be created (output).
