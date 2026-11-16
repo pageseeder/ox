@@ -8,12 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -29,13 +24,14 @@ public final class PackagePathValidator {
 
   /** Static segment pattern for models.xml (optionally allows {placeholder} tokens). */
   private static final Pattern SAFE_DEFINITION_SEGMENT =
-      Pattern.compile("^[A-Za-z0-9_{][A-Za-z0-9_.\\-{}\\- ]{0,254}$");
+      Pattern.compile("^[A-Za-z0-9_{][A-Za-z0-9_.{}\\- ]{0,254}$");
 
   /** Default safe extensions for OX pipeline inputs and outputs (lowercase, without leading dot). */
   public static final Set<String> DEFAULT_ALLOWED_EXTENSIONS = Collections.unmodifiableSet(
       new HashSet<>(Arrays.asList(
           "xml", "json", "html", "htm", "xhtml", "txt", "csv", "css", "js", "svg", "png", "jpg", "jpeg", "gif", "webp",
-          "pdf", "zip", "docx", "xlsx", "pptx", "epub", "md", "yaml", "yml", "xsl", "xslt", "sch", "sql", "properties"
+          "pdf", "zip", "docx", "xlsx", "pptx", "epub", "md", "yaml", "yml", "xsl", "xslt", "sch", "sql", "psml",
+          "properties"
       )));
 
   private final Set<String> allowedExtensions;
