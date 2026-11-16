@@ -22,6 +22,7 @@ import org.pageseeder.ox.api.Result;
 import org.pageseeder.ox.api.Step;
 import org.pageseeder.ox.step.NOPStep;
 import org.pageseeder.ox.tool.InvalidResult;
+import org.pageseeder.ox.util.PackagePathValidator;
 import org.pageseeder.ox.util.StringUtils;
 import org.pageseeder.xmlwriter.XMLWritable;
 import org.pageseeder.xmlwriter.XMLWriter;
@@ -493,7 +494,7 @@ public final class StepDefinition implements XMLWritable, Serializable {
    * @since 13 June 2014
    */
   protected static final class Builder {
-
+    private final PackagePathValidator inputOutpuValidator = new PackagePathValidator();
     private final Model _model;
 
     private Pipeline pipeline;
@@ -639,6 +640,9 @@ public final class StepDefinition implements XMLWritable, Serializable {
      * @return the builder
      */
     public Builder addParameter(String name, String value) {
+      if ("input".equalsIgnoreCase(name) || "output".equalsIgnoreCase(name)) {
+        inputOutpuValidator.validateDefinitionPath(value, name);
+      }
       this.parameters.put(name, value);
       return this;
     }
