@@ -105,7 +105,12 @@ public final class PackagePathValidator {
     // Strict runtime lexical check (no {placeholders} allowed at runtime)
     validateLexicalPath(rawPath, paramName, false);
 
-    String cleaned = rawPath.endsWith("/") ? rawPath.substring(0, rawPath.length() - 1) : rawPath;
+    // Strip leading '/' (package-root relative) and trailing '/' (directory marker)
+    String cleaned = rawPath.startsWith("/") ? rawPath.substring(1) : rawPath;
+    if (cleaned.endsWith("/")) {
+      cleaned = cleaned.substring(0, cleaned.length() - 1);
+    }
+
     Path baseDir = packageDir.toPath().toAbsolutePath().normalize();
     Path candidate = baseDir.resolve(cleaned).normalize();
 
@@ -139,9 +144,10 @@ public final class PackagePathValidator {
       throw new IllegalArgumentException("Path too long for " + paramName);
     }
 
-    // Reject absolute paths, Windows drive letters, backslashes, matrix params (;), and control chars
-    if (rawPath.startsWith("/") || rawPath.startsWith("\\") || rawPath.contains(":")) {
-      throw new IllegalArgumentException("Absolute paths or schemes not allowed for " + paramName + ": " + rawPath);
+    // Reject Windows drive letters, UNC backslashes, schemes (https:), matrix params (;), and control chars.
+    // Note: A single leading '/' is permitted as a package-root-relative path (e.g., "/original/psml").
+    if (rawPath.startsWith("\\") || rawPath.contains(":")) {
+      throw new IllegalArgumentException("Windows root paths or schemes not allowed for " + paramName + ": " + rawPath);
     }
     for (int i = 0; i < rawPath.length(); i++) {
       char c = rawPath.charAt(i);
@@ -153,8 +159,13 @@ public final class PackagePathValidator {
       throw new IllegalArgumentException("Empty path segment '//' not allowed in " + paramName + ": " + rawPath);
     }
 
-    boolean explicitlyDirectory = rawPath.endsWith("/");
-    String trimmed = explicitlyDirectory ? rawPath.substring(0, rawPath.length() - 1) : rawPath;
+    // Strip single leading '/' (package-root relative) and optional trailing '/' (explicit directory)
+    String withoutLeading = rawPath.startsWith("/") ? rawPath.substring(1) : rawPath;
+    boolean explicitlyDirectory = withoutLeading.endsWith("/");
+    String trimmed = explicitlyDirectory
+        ? withoutLeading.substring(0, withoutLeading.length() - 1)
+        : withoutLeading;
+
     if (trimmed.isEmpty()) {
       throw new IllegalArgumentException("Root directory '/' is not a valid " + paramName + " path");
     }
@@ -178,7 +189,6 @@ public final class PackagePathValidator {
     // and contains a dot (indicating a filename rather than an extensionless directory name).
     String lastSegment = segments[segments.length - 1];
     if (!explicitlyDirectory && lastSegment.indexOf('.') >= 0) {
-      // If definition allows placeholders like "{filename}.xml", check the suffix after the last dot
       int lastDot = lastSegment.lastIndexOf('.');
       String ext = lastSegment.substring(lastDot + 1).toLowerCase(Locale.ROOT);
       if (allowPlaceholders && ext.startsWith("{") && ext.endsWith("}")) {

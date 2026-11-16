@@ -52,18 +52,18 @@ public class PackagePathValidatorTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testConstructorRejectsEmptyExtensions() {
-    new PackagePathValidator(Collections.<String>emptySet(), true);
+    new PackagePathValidator(Collections.emptySet(), true);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testConstructorRejectsBlankOnlyExtensions() {
-    new PackagePathValidator(new HashSet<String>(Arrays.asList(" ", ".")), true);
+    new PackagePathValidator(new HashSet<>(Arrays.asList(" ", ".")), true);
   }
 
   @Test
   public void testCustomExtensionNormalizationCaseInsensitive() {
     PackagePathValidator custom = new PackagePathValidator(
-        new HashSet<String>(Arrays.asList(".XML", "  Json ")), false);
+        new HashSet<>(Arrays.asList(".XML", "  Json ")), false);
 
     custom.validateDefinitionPath("data/output.xml", "output");
     custom.validateDefinitionPath("data/output.JSON", "output");
@@ -170,7 +170,6 @@ public class PackagePathValidatorTest {
   @Test
   public void testDefinitionBlocksAbsolutePathsSchemesAndIllegalChars() {
     String[] invalidPaths = {
-        "/etc/passwd",
         "\\Windows\\System32\\cmd.exe",
         "C:/Windows/win.ini",
         "https://webhook.site/test.xml",
@@ -260,22 +259,58 @@ public class PackagePathValidatorTest {
     assertTrue(secretFile.createNewFile());
 
     Path symlinkDir = packageDir.toPath().resolve("linked-dir");
-    boolean symlinkCreated = false;
     try {
       Files.createSymbolicLink(symlinkDir, outsideDir.toPath());
-      symlinkCreated = true;
     } catch (UnsupportedOperationException | IOException e) {
       // Skip test on Windows environments without symlink privileges
       assumeTrue("Symbolic links not supported in this test environment", false);
     }
 
-    if (symlinkCreated) {
+    try {
+      validator.resolveAndValidate(packageDir, "linked-dir/secret.xml", "input");
+      fail("Expected SecurityException when resolving path through symlink outside packageDir");
+    } catch (SecurityException expected) {
+      assertTrue(expected.getMessage().contains("Symlink escape blocked"));
+    }
+  }
+
+  @Test
+  public void testPackageRootRelativePathsAreAllowedAndContained() {
+    // Static definition check
+    validator.validateDefinitionPath("/original/psml", "output");
+    validator.validateDefinitionPath("/original/psml/", "output");
+    validator.validateDefinitionPath("/original/psml/document.xml", "input");
+
+    // Runtime resolution check: resolves inside packageDir, NEVER OS root
+    Path resolvedDir = validator.resolveAndValidate(packageDir, "/original/psml", "output");
+    assertEquals(
+        packageDir.toPath().resolve("original/psml").toAbsolutePath().normalize(),
+        resolvedDir);
+    assertTrue(resolvedDir.startsWith(packageDir.toPath().toAbsolutePath().normalize()));
+  }
+
+  @Test
+  public void testLeadingSlashTraversalStillBlocked() {
+    String[] invalidPaths = {
+        "/",
+        "//etc/passwd",
+        "/../bin/sh",
+        "/original/../../bin/sh",
+        "\\Windows\\System32\\cmd.exe",
+        "C:/Windows/win.ini",
+        "https://webhook.site/test.xml",
+        "https:/webhook.site/test.xml"
+    };
+
+    for (String payload : invalidPaths) {
       try {
-        validator.resolveAndValidate(packageDir, "linked-dir/secret.xml", "input");
-        fail("Expected SecurityException when resolving path through symlink outside packageDir");
-      } catch (SecurityException expected) {
-        assertTrue(expected.getMessage().contains("Symlink escape blocked"));
+        validator.validateDefinitionPath(payload, "input");
+        fail("Expected IllegalArgumentException for invalid path: " + payload);
+      } catch (IllegalArgumentException expected) {
+        // Expected
       }
     }
   }
+
+
 }
