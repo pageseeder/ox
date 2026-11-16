@@ -18,4 +18,5 @@ dependencies {
   runtimeOnly (libs.logback.core)
 
   testImplementation (libs.junit)
+  testImplementation (libs.mockito.all)
 }
