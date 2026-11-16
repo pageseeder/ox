@@ -74,7 +74,7 @@ import java.util.stream.Collectors;
  *   <li>Safe response headers (nosniff, no-store, RFC 6266 filename).</li>
  * </ul>
  *
- * @author
+ * @author Carlos and Adriano
  * @version 16 Nov 2026 (hardened, fail-closed, JDK 11)
  */
 public final class OXGetFile extends HttpServlet {
