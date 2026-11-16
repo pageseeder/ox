@@ -20,6 +20,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.pageseeder.ox.OXConfig;
+import org.pageseeder.ox.OXException;
 import org.pageseeder.xmlwriter.XML.NamespaceAware;
 import org.pageseeder.xmlwriter.XMLStringWriter;
 import org.pageseeder.xmlwriter.XMLWriter;
@@ -92,5 +93,64 @@ public class StepDefinitionTest {
     XMLAssert.assertXpathEvaluatesTo("text2-step2", "pipeline/step[2]/input[2]/text()", xml.toString());
   }
 
+  @Test
+  public void testAnyValidParameter () {
+    try {
+      StepDefinition.Builder build = createBasicBuilder();
+      build.addParameter("group", "project-groups");
+      StepDefinition stepDefinition = build.build();
+      Assert.assertEquals("project-groups", stepDefinition.parameters().get("group"));
+    } catch (OXException ex) {
+      Assert.fail(ex.getMessage());
+    }
+  }
 
+  @Test
+  public void testValidInput () {
+    try {
+      StepDefinition.Builder build = createBasicBuilder();
+      build.addParameter("input", "test.xml");
+      StepDefinition stepDefinition = build.build();
+      Assert.assertEquals("test.xml", stepDefinition.parameters().get("input"));
+    } catch (OXException ex) {
+      Assert.fail(ex.getMessage());
+    }
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testInvalidInput () {
+    StepDefinition.Builder build = createBasicBuilder();
+    build.addParameter("input", "test.exe");
+  }
+
+  @Test
+  public void testValidOutput () {
+    try {
+      StepDefinition.Builder build = createBasicBuilder();
+      build.addParameter("output", "test.xml");
+      StepDefinition stepDefinition = build.build();
+      Assert.assertEquals("test.xml", stepDefinition.parameters().get("output"));
+    } catch (OXException ex) {
+      Assert.fail(ex.getMessage());
+    }
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testInvalidOutput () {
+    StepDefinition.Builder build = createBasicBuilder();
+    build.addParameter("output", "test.exe");
+  }
+
+
+  public StepDefinition.Builder createBasicBuilder(){
+    String id = "TEST-1234-5678";
+    Model model = new Model("test");
+    Pipeline pipeline = new Pipeline(id, "pipe-test", ".txt");
+    StepDefinition.Builder build = new StepDefinition.Builder(model);
+    build.setPipeline(pipeline);
+    build.setStepId(id);
+    build.addParameter("input", "test.xml");
+
+    return build;
+  }
 }
