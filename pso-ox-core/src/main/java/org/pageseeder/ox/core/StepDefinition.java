@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -714,44 +715,13 @@ public final class StepDefinition implements XMLWritable, Serializable {
      * @return the StepDefinition.
      * @throws OXException the ox exception
      */
-    @SuppressWarnings("unchecked")
     public StepDefinition build() throws OXException {
       StepDefinition definition;
       try {
-        Step step;
-
-        // if not class name defined uses NOPStep instead
-        if (this.classname == null) {
-          this.classname = NOPStep.class.getName();
-        }
-
-        // Instantiate the step
-        try {
-          // try to get the class
-          Class<Step> c = (Class<Step>) Class.forName(this.classname);
-          step = c.newInstance();
-        } catch (ClassNotFoundException ex) {
-          throw new OXException("Cannot find Class " + this.classname, ex);
-        } catch (InstantiationException ex) {
-          throw new OXException("Cannot instance of a class " + this.classname, ex);
-        } catch (ClassCastException ex) {
-          throw new OXException("Cannot instance of a Step class " + this.classname, ex);
-        }
+        Step step = loadStep();
 
         // Instantiate the callback step
-        CallbackStep callback = null;
-        try {
-          if (!StringUtils.isBlank(this.callbackClassname)) {
-            Class<CallbackStep> c = (Class<CallbackStep>) Class.forName(this.callbackClassname);
-            callback = c.newInstance();
-          }
-        } catch (ClassNotFoundException ex) {
-          throw new OXException("Cannot find Class " + this.callbackClassname, ex);
-        } catch (InstantiationException ex) {
-          throw new OXException("Cannot instance of a class " + this.callbackClassname, ex);
-        } catch (ClassCastException ex) {
-          throw new OXException("Cannot instance of a Callback Step class " + this.callbackClassname, ex);
-        }
+        CallbackStep callback = loadCallback();
 
         if (callback != null) {
           definition = new StepDefinition(this._model, this.pipeline, this.id, this.name, this.parameters, this.output,
@@ -765,5 +735,56 @@ public final class StepDefinition implements XMLWritable, Serializable {
       }
       return definition;
     }
+
+    private CallbackStep loadCallback() throws OXException {
+      CallbackStep callback = null;
+      if (!StringUtils.isBlank(this.callbackClassname)) {
+        try {
+          // Passing false loads the class without initializing it, so static blocks only run once it passes the type check.
+          Class<? extends CallbackStep> c =
+              Class.forName(this.callbackClassname, false, getClass().getClassLoader())
+                  .asSubclass(CallbackStep.class);
+          callback = c.getDeclaredConstructor().newInstance();
+        } catch (ClassNotFoundException
+                 | ClassCastException
+                 | NoSuchMethodException
+                 | InstantiationException
+                 | IllegalAccessException e) {
+          throw new OXException("Cannot instantiate callback: " + this.callbackClassname, e);
+        } catch (InvocationTargetException e) {
+          // Exception thrown by the constructor itself, properly unwrapped
+          throw new OXException("Constructor of " + this.callbackClassname + " failed", e.getCause());
+        }
+      }
+      return callback;
+    }
+
+    private Step loadStep() throws OXException {
+      Step step;
+
+      // if not class name defined uses NOPStep instead
+      if (StringUtils.isBlank(this.classname)) {
+        this.classname = NOPStep.class.getName();
+      }
+
+      try {
+        // Passing false loads the class without initializing it, so static blocks only run once it passes the type check.
+        Class<? extends Step> c =
+            Class.forName(this.classname, false, getClass().getClassLoader())
+                .asSubclass(Step.class);
+        step = c.getDeclaredConstructor().newInstance();
+      } catch (ClassNotFoundException
+               | ClassCastException
+               | NoSuchMethodException
+               | InstantiationException
+               | IllegalAccessException e) {
+        throw new OXException("Cannot instantiate step: " + this.classname, e);
+      } catch (InvocationTargetException e) {
+        // Exception thrown by the constructor itself, properly unwrapped
+        throw new OXException("Constructor of " + this.classname + " failed", e.getCause());
+      }
+      return step;
+    }
   }
+
 }

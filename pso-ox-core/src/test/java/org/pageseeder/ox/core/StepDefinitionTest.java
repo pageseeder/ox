@@ -21,6 +21,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.pageseeder.ox.OXConfig;
 import org.pageseeder.ox.OXException;
+import org.pageseeder.ox.callback.TransformOutput;
+import org.pageseeder.ox.step.Decompression;
+import org.pageseeder.ox.step.NOPStep;
 import org.pageseeder.xmlwriter.XML.NamespaceAware;
 import org.pageseeder.xmlwriter.XMLStringWriter;
 import org.pageseeder.xmlwriter.XMLWriter;
@@ -65,7 +68,7 @@ public class StepDefinitionTest {
     pipeline.toXML(xml);
     xml.flush();
     xml.close();
-    System.out.println(xml.toString());
+    System.out.println(xml);
     XMLAssert.assertXpathEvaluatesTo("sample-pipeline", "pipeline/@id", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("decompress-file", "pipeline/step[1]/@id", xml.toString());
     XMLAssert.assertXpathEvaluatesTo("decompress file", "pipeline/step[1]/@name", xml.toString());
@@ -147,16 +150,100 @@ public class StepDefinitionTest {
     build.addParameter("xslt", "../../test.xsl");
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testValidXslt () {
+    try {
+      StepDefinition.Builder build = createBasicBuilder();
+      build.addParameter("xslt", "test.xsl");
+      build.addParameter("xslt", "subfolder/test.xsl");
+      build.addParameter("xslt", "/subfolder/test.xsl");
+      StepDefinition stepDefinition = build.build();
+      Assert.assertEquals("/subfolder/test.xsl", stepDefinition.parameters().get("xslt"));
+    } catch (OXException ex) {
+      Assert.fail(ex.getMessage());
+    }
+  }
+
+  @Test
+  public void testDefaultStep () {
+    try {
+      StepDefinition.Builder build = createBasicBuilder();
+      StepDefinition stepDefinition = build.build();
+      Assert.assertEquals(NOPStep.class, stepDefinition.getStep().getClass());
+    } catch (OXException ex) {
+      Assert.fail(ex.getMessage());
+    }
+  }
+
+  @Test
+  public void testValidStep () {
+    try {
+      StepDefinition.Builder build = createBasicBuilder();
+      build.setStepClass("org.pageseeder.ox.step.Decompression");
+      StepDefinition stepDefinition = build.build();
+      Assert.assertEquals(Decompression.class, stepDefinition.getStep().getClass());
+    } catch (OXException ex) {
+      Assert.fail(ex.getMessage());
+    }
+  }
+
+  @Test(expected = OXException.class)
+  public void testNonExistingStep () throws OXException {
+    //This class does not exist
     StepDefinition.Builder build = createBasicBuilder();
-    build.addParameter("xslt", "test.xsl");
-    build.addParameter("xslt", "subfolder/test.xsl");
-    build.addParameter("xslt", "/subfolder/test.xsl");
+    build.setStepClass("org.non.existing.step.Fake");
+    build.build();
+  }
+
+  @Test(expected = OXException.class)
+  public void testNotSubStep () throws OXException {
+    //This class is not subclass of Step
+    StepDefinition.Builder build = createBasicBuilder();
+    build.setStepClass("org.pageseeder.ox.callback.Transform");
+    build.build();
+  }
+
+  @Test
+  public void testDefaultCallbackStep () {
+    try {
+      StepDefinition.Builder build = createBasicBuilder();
+      StepDefinition stepDefinition = build.build();
+      Assert.assertNull(stepDefinition.callbackStep());
+    } catch (OXException ex) {
+      Assert.fail(ex.getMessage());
+    }
+  }
+
+  @Test
+  public void testValidCallbackStep () {
+    try {
+      StepDefinition.Builder build = createBasicBuilder();
+      build.setCallback("org.pageseeder.ox.callback.TransformOutput");
+      StepDefinition stepDefinition = build.build();
+      Assert.assertEquals(TransformOutput.class, stepDefinition.callbackStep().getClass());
+    } catch (OXException ex) {
+      Assert.fail(ex.getMessage());
+    }
+  }
+
+  @Test(expected = OXException.class)
+  public void testNonExistingCallbackStep () throws OXException {
+    //This class does not exist
+    StepDefinition.Builder build = createBasicBuilder();
+    build.setCallback("org.non.existing.callback.Fake");
+    build.build();
+  }
+
+  @Test(expected = OXException.class)
+  public void testNotSubCallbackStep () throws OXException {
+    //This class is not subclass of Step
+    StepDefinition.Builder build = createBasicBuilder();
+    build.setCallback("org.pageseeder.ox.step.Decompression");
+    build.build();
   }
 
 
-  public StepDefinition.Builder createBasicBuilder(){
+  private  StepDefinition.Builder createBasicBuilder(){
     String id = "TEST-1234-5678";
     Model model = new Model("test");
     Pipeline pipeline = new Pipeline(id, "pipe-test", ".txt");
