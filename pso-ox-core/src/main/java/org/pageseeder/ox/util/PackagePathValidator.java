@@ -1,6 +1,17 @@
-/**
- * Copyright (c) 2026 Allette systems pty. ltd.
+/*
+ * Copyright 2026 Allette Systems (Australia)
+ * http://www.allette.com.au
  *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.pageseeder.ox.util;
 
@@ -8,13 +19,17 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
- * Validates step {@code input} and {@code output} paths both statically (when parsing
- * {@code models.xml} into a {@code StepDefinition}) and dynamically (when executing a
- * {@code Step} against a package directory).
+ * Validates step {@code input}, {@code output}, and {@code xslt} paths both statically (when
+ * parsing {@code models.xml} into a {@code StepDefinition}) and dynamically (when executing a
+ * {@code Step} against a base directory).
  */
 public final class PackagePathValidator {
 
@@ -74,37 +89,36 @@ public final class PackagePathValidator {
 
   /**
    * 1. STATIC VALIDATION (Use when building StepDefinition from models.xml).
-   * Validates syntax, blocks traversal (".."), matrix params (";"), absolute paths,
-   * and enforces the extension allowlist when a file extension is present.
+   * Validates syntax, blocks traversal (".."), matrix params (";"), absolute OS paths,
+   * and enforces extension rules ({@code .xsl} only for {@code xslt}, allowlist for {@code input}/{@code output}).
    *
-   * @param rawPath the input or output parameter value from models.xml (may be null/blank)
-   * @param paramName "input" or "output" (used for clear error messages)
+   * @param rawPath the input, output, or xslt parameter value from models.xml (may be null/blank)
+   * @param paramName "input", "output", or "xslt"
    * @throws IllegalArgumentException if the path is unsafe or has a disallowed extension
    */
   public void validateDefinitionPath(String rawPath, String paramName) {
     if (rawPath == null || rawPath.trim().isEmpty()) {
-      return; // Omitted input/output defaults to uploaded file or step default
+      return; // Omitted input/output/xslt defaults to step default
     }
     validateLexicalPath(rawPath, paramName, this.allowPlaceholdersInDefinition);
   }
 
   /**
-   * 2. RUNTIME VALIDATION and RESOLUTION (Use inside Step execution).
+   * 2. RUNTIME VALIDATION AND RESOLUTION (Use inside Step execution).
    * Validates the runtime parameter (rejecting any unresolved placeholders) and resolves
-   * it safely inside {@code packageDir}. Works for both files and directories, whether
-   * the target already exists (input) or is about to be created (output).
+   * it safely inside {@code baseDirectory} (e.g., packageDir or modelDir).
    *
-   * @param packageDir the root directory of the current OX package
-   * @param rawPath the runtime input or output path (may be null/blank)
-   * @param paramName "input" or "output"
-   * @return the canonical, containment-verified {@link Path} inside {@code packageDir},
+   * @param baseDirectory the root directory (package folder for input/output, or model folder for xslt)
+   * @param rawPath the runtime input, output, or xslt path (may be null/blank)
+   * @param paramName "input", "output", or "xslt"
+   * @return the canonical, containment-verified {@link Path} inside {@code baseDirectory},
    *         or {@code null} if {@code rawPath} was null/blank
    * @throws SecurityException if traversal, symlink escape, or invalid path is detected
    * @throws IllegalArgumentException if syntax or extension rules are violated
    */
-  public Path resolveAndValidate(File packageDir, String rawPath, String paramName) {
-    if (packageDir == null) {
-      throw new IllegalArgumentException("Package directory must not be null");
+  public Path resolveAndValidate(File baseDirectory, String rawPath, String paramName) {
+    if (baseDirectory == null) {
+      throw new IllegalArgumentException("Base directory must not be null");
     }
     if (rawPath == null || rawPath.trim().isEmpty()) {
       return null;
@@ -113,17 +127,14 @@ public final class PackagePathValidator {
     // Strict runtime lexical check (no {placeholders} allowed at runtime)
     validateLexicalPath(rawPath, paramName, false);
 
-    // Strip leading '/' (package-root relative) and trailing '/' (directory marker)
+    // Strip leading '/' (root-relative) and trailing '/' (directory marker)
     String cleaned = rawPath.startsWith("/") ? rawPath.substring(1) : rawPath;
     if (cleaned.endsWith("/")) {
       cleaned = cleaned.substring(0, cleaned.length() - 1);
     }
 
-    Path baseDir = packageDir.toPath().toAbsolutePath().normalize();
+    Path baseDir = baseDirectory.toPath().toAbsolutePath().normalize();
 
-    // If the input contains a wildcard glob in the filename (e.g., "initial-unzipped/*.xlsx"),
-    // resolve and verify the parent directory on disk first so Windows Paths.resolve()
-    // does not throw InvalidPathException on '*'.
     int lastSlash = cleaned.lastIndexOf('/');
     String parentRel = (lastSlash >= 0) ? cleaned.substring(0, lastSlash) : "";
     String leafName = (lastSlash >= 0) ? cleaned.substring(lastSlash + 1) : cleaned;
@@ -136,12 +147,7 @@ public final class PackagePathValidator {
     // Verify parent directory symlink containment on disk
     verifyRealPathContainment(baseDir, targetParent, paramName, rawPath);
 
-    // If leaf contains '*', return the validated parent path or construct a safe File/Path representation
     if (leafName.contains("*")) {
-      // Return targetParent resolved with a placeholder or handle via File;
-      // Note: On Linux/macOS Path.resolve("*.xlsx") works, while on Windows '*' is illegal in java.nio.file.Path.
-      // Returning new File(targetParent.toFile(), leafName).toPath() works on Linux/macOS;
-      // on Windows, if your Step uses File/DirectoryScanner, resolve the parent dir + glob separately.
       try {
         Path candidate = targetParent.resolve(leafName).normalize();
         if (!candidate.startsWith(baseDir) || candidate.equals(baseDir)) {
@@ -149,7 +155,6 @@ public final class PackagePathValidator {
         }
         return candidate;
       } catch (java.nio.file.InvalidPathException e) {
-        // Windows filesystem rejects '*' in java.nio.file.Path; parent containment is already verified above.
         return targetParent;
       }
     }
@@ -200,7 +205,7 @@ public final class PackagePathValidator {
       throw new IllegalArgumentException("Empty path segment '//' not allowed in " + paramName + ": " + rawPath);
     }
 
-    // Strip single leading '/' (package-root relative) and optional trailing '/' (explicit directory)
+    // Strip single leading '/' (root-relative) and optional trailing '/' (explicit directory)
     String withoutLeading = rawPath.startsWith("/") ? rawPath.substring(1) : rawPath;
     boolean explicitlyDirectory = withoutLeading.endsWith("/");
     String trimmed = explicitlyDirectory
@@ -209,6 +214,11 @@ public final class PackagePathValidator {
 
     if (trimmed.isEmpty()) {
       throw new IllegalArgumentException("Root directory '/' is not a valid " + paramName + " path");
+    }
+
+    boolean isXsltParam = "xslt".equalsIgnoreCase(paramName);
+    if (isXsltParam && explicitlyDirectory) {
+      throw new IllegalArgumentException("Directory path is not allowed for xslt: " + rawPath);
     }
 
     String[] segments = trimmed.split("/", -1);
@@ -248,7 +258,24 @@ public final class PackagePathValidator {
           "Wildcard in " + paramName + " must specify an allowed file extension: " + rawPath);
     }
 
-    // Check file extension on the final segment if it is not explicitly a directory ("dir/")
+    // Strict check for "xslt": must be a file ending specifically in ".xsl"
+    if (isXsltParam) {
+      int lastDot = lastSegment.lastIndexOf('.');
+      if (lastDot < 0) {
+        throw new IllegalArgumentException("XSLT path must specify a .xsl file, not a directory: " + rawPath);
+      }
+      String ext = lastSegment.substring(lastDot + 1).toLowerCase(Locale.ROOT);
+      if (allowPlaceholders && ext.startsWith("{") && ext.endsWith("}")) {
+        return;
+      }
+      if (!"xsl".equals(ext)) {
+        throw new IllegalArgumentException(
+            "File extension '." + ext + "' is not allowed for xslt (only .xsl is permitted): " + rawPath);
+      }
+      return;
+    }
+
+    // Check file extension on the final segment for input/output if it is not explicitly a directory ("dir/")
     // and contains a dot (indicating a filename rather than an extensionless directory name).
     if (!explicitlyDirectory && lastSegment.indexOf('.') >= 0) {
       int lastDot = lastSegment.lastIndexOf('.');

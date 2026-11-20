@@ -358,5 +358,127 @@ public class PackagePathValidatorTest {
     }
   }
 
+  // =========================================================================
+  // 4. XSLT Parameter Validation Tests
+  // =========================================================================
+
+  @Test
+  public void testXsltAllowsValidXslFilesInModelDirectory() throws IOException {
+    File modelDir = tempFolder.newFolder("pbs-website-model");
+    File subDir = new File(modelDir, "folder");
+    assertTrue(subDir.mkdirs());
+    File testXsl = new File(subDir, "test.xsl");
+    assertTrue(testXsl.createNewFile());
+
+    // 1. Static models.xml validation
+    validator.validateDefinitionPath("test.xsl", "xslt");
+    validator.validateDefinitionPath("folder/test.xsl", "xslt");
+    validator.validateDefinitionPath("/folder/test.xsl", "xslt");
+    validator.validateDefinitionPath("folder/UPPERCASE.XSL", "xslt");
+
+    // 2. Runtime resolution inside modelDir
+    Path resolvedRelative = validator.resolveAndValidate(modelDir, "folder/test.xsl", "xslt");
+    assertNotNull(resolvedRelative);
+    assertEquals(testXsl.toPath().toAbsolutePath().normalize(), resolvedRelative);
+
+    Path resolvedRootRelative = validator.resolveAndValidate(modelDir, "/folder/test.xsl", "xslt");
+    assertNotNull(resolvedRootRelative);
+    assertEquals(testXsl.toPath().toAbsolutePath().normalize(), resolvedRootRelative);
+  }
+
+  @Test
+  public void testXsltAllowsNullBlankAndPlaceholderInDefinition() {
+    validator.validateDefinitionPath(null, "xslt");
+    validator.validateDefinitionPath("", "xslt");
+    validator.validateDefinitionPath("   ", "xslt");
+    validator.validateDefinitionPath("folder/{stylesheet}.xsl", "xslt");
+    validator.validateDefinitionPath("folder/test.{ext}", "xslt");
+  }
+
+  @Test
+  public void testXsltRejectsDirectoriesAndExtensionlessPaths() throws IOException {
+    File modelDir = tempFolder.newFolder("model-dir-check");
+    String[] directoryPayloads = {
+        "folder/",
+        "/folder/",
+        "folder/test",
+        "/folder/test"
+    };
+
+    for (String payload : directoryPayloads) {
+      try {
+        validator.validateDefinitionPath(payload, "xslt");
+        fail("Expected IllegalArgumentException for directory xslt path: " + payload);
+      } catch (IllegalArgumentException expected) {
+        // Expected
+      }
+
+      try {
+        validator.resolveAndValidate(modelDir, payload, "xslt");
+        fail("Expected IllegalArgumentException at runtime for directory xslt path: " + payload);
+      } catch (IllegalArgumentException expected) {
+        // Expected
+      }
+    }
+  }
+
+  @Test
+  public void testXsltRejectsNonXslExtensions() throws IOException {
+    File modelDir = tempFolder.newFolder("model-ext-check");
+    String[] nonXslFiles = {
+        "test.xslt",
+        "folder/test.xml",
+        "folder/test.jsp",
+        "folder/test.js",
+        "folder/test.sh",
+        "folder/test.css"
+    };
+
+    for (String payload : nonXslFiles) {
+      try {
+        validator.validateDefinitionPath(payload, "xslt");
+        fail("Expected IllegalArgumentException for non-.xsl file: " + payload);
+      } catch (IllegalArgumentException expected) {
+        // Expected
+      }
+
+      try {
+        validator.resolveAndValidate(modelDir, payload, "xslt");
+        fail("Expected IllegalArgumentException at runtime for non-.xsl file: " + payload);
+      } catch (IllegalArgumentException expected) {
+        // Expected
+      }
+    }
+  }
+
+  @Test
+  public void testXsltRejectsWildcardsTraversalAndMatrixParameters() throws IOException {
+    File modelDir = tempFolder.newFolder("model-attack-check");
+    String[] maliciousXslts = {
+        "*.xsl",
+        "folder/*.xsl",
+        "../hardcopy/grouping-brief-comprehensive.xsl",
+        "../../etc/test.xsl",
+        "test.xsl;.css",
+        "folder/test.xsl;jsessionid=123",
+        "https://webhook.site/evil.xsl"
+    };
+
+    for (String payload : maliciousXslts) {
+      try {
+        validator.validateDefinitionPath(payload, "xslt");
+        fail("Expected IllegalArgumentException for malicious xslt payload: " + payload);
+      } catch (IllegalArgumentException expected) {
+        // Expected
+      }
+
+      try {
+        validator.resolveAndValidate(modelDir, payload, "xslt");
+        fail("Expected IllegalArgumentException at runtime for malicious xslt payload: " + payload);
+      } catch (IllegalArgumentException expected) {
+        // Expected
+      }
+    }
+  }
 
 }
