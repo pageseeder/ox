@@ -141,6 +141,20 @@ public class StepDefinitionTest {
     build.addParameter("output", "test.exe");
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testInvalidXslt () {
+    StepDefinition.Builder build = createBasicBuilder();
+    build.addParameter("xslt", "../../test.xsl");
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testValidXslt () {
+    StepDefinition.Builder build = createBasicBuilder();
+    build.addParameter("xslt", "test.xsl");
+    build.addParameter("xslt", "subfolder/test.xsl");
+    build.addParameter("xslt", "/subfolder/test.xsl");
+  }
+
 
   public StepDefinition.Builder createBasicBuilder(){
     String id = "TEST-1234-5678";

@@ -640,7 +640,9 @@ public final class StepDefinition implements XMLWritable, Serializable {
      * @return the builder
      */
     public Builder addParameter(String name, String value) {
-      if ("input".equalsIgnoreCase(name) || "output".equalsIgnoreCase(name)) {
+      if ("input".equalsIgnoreCase(name)
+          || "output".equalsIgnoreCase(name)
+          || "xslt".equalsIgnoreCase(name)) {
         inputOutpuValidator.validateDefinitionPath(value, name);
       }
       this.parameters.put(name, value);
